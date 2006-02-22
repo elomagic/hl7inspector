@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<!-- 
+    HL7 Inspector installation file.
+    
+    To compile it :
+    - go in the bin directory where you installed IzPack
+    - call "compile ../sample/install.xml -b ../sample"
+-->
+
+<installation version="1.0">
+
+    <!-- 
+    The info section.
+    The meaning of the tags should be natural ...
+    -->
+    <info>
+        <appname>HL7 Inspector</appname>
+        <appversion>2.1</appversion>
+        <authors>
+            <author name="Carsten Rambow" email="hl7inspector@elomagic.de"/>
+        </authors>
+        <url>http://www.elomagic.de/</url>
+        <javaversion>1.5</javaversion>
+    </info>    
+    
+    <!-- 
+    The gui preferences indication.
+    Sets the installer window to 640x480. It will not be able to change the size.
+    -->
+    <guiprefs height="600" resizable="yes" width="800">
+        <laf name="metouia">
+            <os family="unix" />
+        </laf>
+        <laf name="looks">
+            <os family="windows" />
+            <param name="variant" value="extwin" />
+        </laf>
+    </guiprefs>
+    
+    <!-- 
+    The locale section.
+    Asks here to include the English and French langpacks.
+    -->
+    <locale>
+        <langpack iso3="eng"/>
+    </locale>
+    
+    <!-- 
+    The resources section.
+    The ids must be these ones if you want to use the LicencePanel and/or the InfoPanel.
+    -->
+    <resources>
+        <res id="LicencePanel.licence" src="license/license-gpl.txt"/>
+        <res id="InfoPanel.info" src="readme.txt"/>
+        <res id="ImgPacksPanel.img.0" src="izpack/core.png"/>
+        <res id="ImgPacksPanel.img.1" src="izpack/doc-html.png"/>
+        <res id="ImgPacksPanel.img.2" src="izpack/doc-pdf.png"/>
+        <res id="ImgPacksPanel.img.3" src="izpack/src.png"/>
+        <res id="Installer.image.0" src="izpack/border1.png" />        
+        <res id="Installer.image.1" src="izpack/border2.png" />        
+        <res id="Installer.image.2" src="izpack/border3.png" />        
+        <res id="Installer.image.3" src="izpack/border4.png" />
+        <res id="Installer.image.4" src="izpack/border5.png" />        
+        <res id="Installer.image.5" src="izpack/border6.png" />        
+        <res id="Installer.image.6" src="izpack/border8.png" />        
+        <res id="shortcutSpec.xml" src="izpack/shortcutSpec.xml"/>        
+    </resources> 
+    
+    <!-- 
+    The panels section.
+    We indicate here which panels we want to use. The order will be respected.
+    -->
+    <panels>
+        <panel classname="HelloPanel"/>
+        <panel classname="InfoPanel"/>
+        <panel classname="LicencePanel"/>
+        <panel classname="ImgPacksPanel"/>
+        <panel classname="TargetPanel"/> 
+        <panel classname="ShortcutPanel"/>
+        <panel classname="InstallPanel"/>
+        <panel classname="FinishPanel"/>
+    </panels>
+    
+    <!-- 
+    The packs section.
+    We specify here our packs.
+    -->
+    <packs>
+        <pack name="Core" required="yes">
+            <description>The base files</description>
+            <file src="readme.txt" targetdir="$INSTALL_PATH"/>
+            <fileset dir="license/" includes="*" targetdir="$INSTALL_PATH/license"/>
+            <file src="izpack/application.ico" targetdir="$INSTALL_PATH"/>
+            <!--<file src="dist/hl7inspector.jar" targetdir="$INSTALL_PATH"/>-->
+            <fileset dir="dist/" includes="*" targetdir="$INSTALL_PATH"/>
+        </pack>
+        <pack name="Samples" required="No">
+            <description>Profile and HL7 message samples</description>
+            <fileset dir="samples/" includes="*" targetdir="$INSTALL_PATH/samples"/>
+        </pack>        
+    </packs>
+
+    <!-- The native libraries to add -->
+    <native type="izpack" name="ShellLink.dll"/>
+    
+</installation>

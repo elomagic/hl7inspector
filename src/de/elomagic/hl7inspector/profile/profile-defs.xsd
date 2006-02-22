@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 4 U (http://www.xmlspy.com) by Vangelis (Vangelis) -->
+<xs:schema elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:element name="profile-defs">
+    <xs:annotation>
+        <xs:documentation>Comment describing your root element</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+    <xs:sequence>
+        <xs:element name="description" type="xs:string" nillable="true"/>
+        <xs:element name="segment" maxOccurs="unbounded">
+        <xs:complexType>
+        <xs:all>
+            <xs:element name="segment-item">
+            <xs:complexType>
+            <xs:sequence>
+                <xs:element name="segment-description" type="xs:string"/>
+                <xs:element name="segment-chapter" type="xs:string"/>
+                <xs:element name="field-item" maxOccurs="unbounded">
+                <xs:complexType>
+                <xs:all>
+                    <xs:element name="field-id"/>
+                    <xs:element name="field-index" type="xs:integer"/>
+                    <xs:element name="field-length" type="xs:integer" default="0"/>
+                    <xs:element name="repeatable" type="xs:boolean" default="false"/>
+                    <xs:element name="required" type="xs:string" default="O"/>
+                </xs:all>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="data-element" maxOccurs="unbounded">
+        <xs:complexType>
+        <xs:all>
+            <xs:element name="data-element-item">
+            <xs:complexType>
+            <xs:all>
+                <xs:element name="element-id" type="xs:string"/>
+                <xs:element name="element-description" type="xs:string"/>
+                <xs:element name="element-data-type" type="xs:string"/>
+            </xs:all>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+            </xs:complexType>
+        </xs:element>
+        <xs:element name="data-type" maxOccurs="unbounded">
+        <xs:complexType>
+        <xs:all>
+            <xs:element name="data-type-item">
+            <xs:complexType>
+            <xs:all>
+                <xs:element name="data-type-index" type="xs:integer"/>
+                <xs:element name="data-type" type="xs:string"/>
+                <xs:element name="type-description" type="xs:string"/>
+                <xs:element name="parent-data-type" type="xs:string"/>
+            </xs:all>
+                </xs:complexType>
+            </xs:element>
+        </xs:all>
+            </xs:complexType>
+        </xs:element>
+    </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
