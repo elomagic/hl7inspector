@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ package de.elomagic.hl7inspector.hl7.model;
 
 import de.elomagic.hl7inspector.utils.StringEscapeUtils;
 import de.elomagic.hl7inspector.validate.ValidateStatus;
+import java.util.Enumeration;
 import java.util.Vector;
 
 /**
@@ -33,7 +34,7 @@ public abstract class Hl7Object {
     public void parse(String text) {
         // FEATURE Dynamic encoding support (Custimize encoding)
         
-        objList.clear();
+        clear();
         
         try {
             StringBuffer subText = new StringBuffer();
@@ -81,29 +82,52 @@ public abstract class Hl7Object {
         }
     }
     
+    public void clear() {
+        objList.clear();
+        htmlText = null;
+        nodeText = null;
+        validationText = "";
+        description = "";
+        val = null;
+        
+        Hl7Object parent = getParent();
+        while (parent != null) {
+            parent.htmlText = null;
+            parent.nodeText = null;
+            parent.val = null;
+            parent.validationText = "";
+            
+            parent = parent.getParent();
+        }
+        
+        
+    }
+    
     private void add(Hl7Object obj) {
         obj.setRoot(getRoot());
         obj.setParent(this);
-        objList.add(obj);        
+        objList.add(obj);
     }
     
-    public void add(String text) {
+    public Hl7Object add(String text) {
         Hl7Object obj = getNewClientInstance();
         obj.setRoot(getRoot());
         obj.setParent(this);
         obj.parse(text);
         objList.add(obj);
+        
+        return obj;
     }
     
     private String validationText = "";
     public String getValidationText() { return validationText; }
-    public void setValidationText(String value) { validationText = value; }    
+    public void setValidationText(String value) { validationText = value; }
     
     private String description = "";
     public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description.trim(); }    
+    public void setDescription(String description) { this.description = description.trim(); }
     
-    private String nodeText = null;    
+    private String nodeText = null;
     public String getText() { return nodeText; }
     public void setText(String value) { nodeText = value; }
     
@@ -111,21 +135,21 @@ public abstract class Hl7Object {
     public ValidateStatus getValidateStatus() { return val; }
     public void setValidateStatus(ValidateStatus v) { val = v; }
     
-    private String htmlText = null;    
+    private String htmlText = null;
     public String toHtmlEscapedString() {
         if (htmlText == null) {
             htmlText = StringEscapeUtils.escapeHtml(toString());
         }
         
-        return htmlText;        
+        return htmlText;
     }
     
     public String toString() {
         StringBuffer sb = new StringBuffer();
         for (int i=0; i<objList.size(); i++) {
             if (!((this instanceof Segment) && (i == 1) && (get(0).toString().equals("MSH"))))  {
-              sb.append(objList.get(i).toString());
-              sb.append(getSubDelimiter());
+                sb.append(objList.get(i).toString());
+                sb.append(getSubDelimiter());
             }
         }
         
@@ -154,7 +178,7 @@ public abstract class Hl7Object {
     public abstract char getSubDelimiter();
     
     public abstract Hl7Object getNewClientInstance();
-        
+    
     public int size() { return objList.size(); }
     
     public int sizeCompressed() {
@@ -193,7 +217,7 @@ public abstract class Hl7Object {
             r = getParent().indexOf(this);
         }
         
-        return r;        
+        return r;
     }
     
     public int indexOf(Hl7Object value) { return objList.indexOf(value); }
@@ -214,4 +238,27 @@ public abstract class Hl7Object {
     private Vector<Hl7Object> objList = new Vector<Hl7Object>();
     private Object    root    = null;
     private Hl7Object parent  = null;
+    
+    // TODO Muste be implemented
+    // Interface TreeNode
+    
+    /** Returns the children of the receiver as an Enumeration. */
+    public Enumeration 	children() { return objList.elements(); }
+    
+    //** Returns true if the receiver allows children. */
+    public boolean getAllowsChildren() { return getNewClientInstance() != null; }            
+    
+    /** Returns the number of children TreeNodes the receiver contains. */
+    public int getChildCount() { return objList.size(); }            
+            
+/*             TreeNode 	getChildAt(int childIndex)
+            Returns the child TreeNode at index childIndex.
+            
+            int 	getIndex(TreeNode node)
+            Returns the index of node in the receivers children.
+            TreeNode 	getParent()
+            Returns the parent TreeNode of the receiver.
+            boolean 	isLeaf()
+            Returns true if the receiver is a leaf.
+ */
 }
