@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,12 +20,14 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
+import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.ToolKit;
 import de.elomagic.hl7inspector.io.Frame;
 import de.elomagic.hl7inspector.io.SendOptionsBean;
+import de.elomagic.hl7inspector.utils.History;
 import java.awt.BorderLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
@@ -42,22 +44,25 @@ public class SendOptionsDialog extends BaseDialog {
     public SendOptionsDialog() {
         super(Desktop.getInstance());
         
-        init();        
+        init();
     }
     
     private void init() {
         getBanner().setVisible(false);
-                
+        
         setTitle("Send Options");
         //setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setModal(true);
         
+        History h = new History(StartupProperties.SENDER_OPTIONS_DEST);
+        //h.read(StartupProperties.getInstance());
+        if (h.size() == 0) h.set("localhost:2100");
+        cbDest          = new JComboBox(h.getVector());
+        cbDest.setEditable(true);
+        
         cbStartChar     = new JComboBox();
         cbStopChar1     = new JComboBox();
         cbStopChar2     = new JComboBox();
-        edDestHost      = new JTextField();    
-        cbDestPort      = new JComboBox(new String[] { "2100", "2200", "2300", "5555", "5556" } );
-        cbDestPort.setEditable(true);
         cbEncoding      = new JComboBox(new String[] { "ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16" });
         cbReuse         = new JCheckBox();
         cbReuse.setToolTipText("Reuse socket for next the message.");
@@ -106,9 +111,9 @@ public class SendOptionsDialog extends BaseDialog {
         cbStopChar2.setModel(new DefaultComboBoxModel(model));
         
         FormLayout layout = new FormLayout(
-        "0dlu, p, 4dlu, 50dlu, 4dlu, p, 2dlu, 50dlu, 4dlu, p, 2dlu, 50dlu, p:grow",
+                "0dlu, p, 4dlu, 50dlu, 4dlu, p, 2dlu, 50dlu, 4dlu, p, 2dlu, 50dlu, p:grow",
 //            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
-        "p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p");   // rows
+                "p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p");   // rows
         
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();
@@ -117,37 +122,36 @@ public class SendOptionsDialog extends BaseDialog {
         // 1st row
         builder.add(new GradientLabel("Destination"),        cc.xyw(1,   1,  13));
         
-        // 2nd row
-        builder.addLabel("Host:",             cc.xy(2,   3));      // Ok
-        builder.add(edDestHost,                cc.xyw(4,   3,  10));
-        
         // 3rd row
-        builder.addLabel("Port:",             cc.xy(2,   5));        // Ok
-        builder.add(cbDestPort,              cc.xy(4,   5));
-        
+        builder.addLabel("Hostname and port of destination: <hostname>:<port>", cc.xyw(2, 3, 12));        // Ok
+
+        // 2nd row
+        builder.addLabel("Host/Port:",              cc.xy(2, 5));      // Ok
+        builder.add(cbDest,                         cc.xyw(4, 5, 10));
+                
         // 4th row
-        builder.add(new GradientLabel("Options"),       cc.xyw(1,   7,  13));
+        builder.add(new GradientLabel("Options"),   cc.xyw(1,   7,  13));
         
         // 5th row
-        builder.addLabel("Encoding:",       cc.xyw(2,   9,  3));
-        builder.add(cbEncoding,           cc.xyw(4,   9,  2));
+        builder.addLabel("Encoding:",               cc.xyw(2,   9,  3));
+        builder.add(cbEncoding,                     cc.xyw(4,   9,  2));
         
         // 6th row
-        builder.addLabel("Reuse:",          cc.xyw(2,   11,  3));
-        builder.add(cbReuse,                cc.xyw(4,   11,  2));
+        builder.addLabel("Reuse:",                  cc.xyw(2,   11,  3));
+        builder.add(cbReuse,                        cc.xyw(4,   11,  2));
         
         // 8th row
         builder.add(new GradientLabel("Message Frame:"),         cc.xyw(1, 15, 13));
-                
+        
         // 12th row
-        builder.addLabel("Start char:",       cc.xy(2, 17));       // Ok
-        builder.add(cbStartChar,             cc.xy(4, 17));
+        builder.addLabel("Start char:",             cc.xy(2, 17));       // Ok
+        builder.add(cbStartChar,                    cc.xy(4, 17));
         
-        builder.addLabel("1. Stop char :",    cc.xy(6, 17));
-        builder.add(cbStopChar1,             cc.xy(8, 17));
+        builder.addLabel("1. Stop char :",          cc.xy(6, 17));
+        builder.add(cbStopChar1,                    cc.xy(8, 17));
         
-        builder.addLabel("2. Stop char:",     cc.xy(10, 17));
-        builder.add(cbStopChar2,             cc.xy(12, 17));        
+        builder.addLabel("2. Stop char:",           cc.xy(10, 17));
+        builder.add(cbStopChar2,                    cc.xy(12, 17));
         
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
         
@@ -158,48 +162,63 @@ public class SendOptionsDialog extends BaseDialog {
         setBounds(ToolKit.centerFrame(this, this.getOwner()));
     }
     
-    public void setOptions(SendOptionsBean bean) {        
+    public void setOptions(SendOptionsBean bean) {
         cbStartChar.setSelectedIndex(bean.getFrame().getStartFrame());
         cbStopChar1.setSelectedIndex(bean.getFrame().getStopFrame()[0]);
         cbStopChar2.setSelectedIndex((bean.getFrame().getStopFrameLength() < 2)?cbStopChar2.getItemCount()-1:bean.getFrame().getStopFrame()[1]);
-        edDestHost.setText(bean.getHost());
-        cbDestPort.setSelectedItem(Integer.toString(bean.getPort()));
+//        cbDest.setSelectedItem(bean.getHost().concat(Integer.toString(bean.getPort())));        
         cbEncoding.setSelectedItem(bean.getEncoding());
         cbReuse.setSelected(bean.isReuseSocket());
     }
     
     public void ok() {
         try {
+            String hp = cbDest.getSelectedItem().toString();
+            
+            if (cbDest.getSelectedItem().toString().indexOf(':') == -1) {
+                throw new Exception("Invalid destination format! Syntax for destination is <hostname>:<port>. Example: localhost:2100");
+            }
+            
+            String host = hp.substring(0, hp.indexOf(':'));
+            String port = hp.substring(hp.indexOf(':')+1);
+            
             try {
-                Integer.parseInt(cbDestPort.getSelectedItem().toString());
+                Integer.parseInt(port);
             } catch (Exception ee) {
                 throw new Exception("Destination port must an integer value!");
             }
             
-            if (edDestHost.getText().length() == 0) {
+            if (host.length() == 0) {
                 throw new Exception("Destination host missing!");
             }
             
-            super.ok();            
+            History h = new History(StartupProperties.SENDER_OPTIONS_DEST);
+            h.set(cbDest.getSelectedItem().toString());
+            
+            super.ok();
         } catch (Exception e) {
-            SimpleDialog.error(e.getMessage());            
-        }        
-    }    
+            SimpleDialog.error(e.getMessage());
+        }
+    }
     
     public SendOptionsBean getOptions() {
+        String hp = cbDest.getSelectedItem().toString();
+        String host = hp.substring(0, hp.indexOf(':'));
+        String port = hp.substring(hp.indexOf(':')+1);
+                
         Frame frame = new Frame();
         frame.setStartChar((char)cbStartChar.getSelectedIndex());
         int stops = (cbStopChar2.getSelectedIndex() < cbStopChar2.getItemCount()-1)?2:1;
         if (stops == 1) {
             frame.setStopChars( new char[] { (char)cbStopChar1.getSelectedIndex() } );
         } else {
-            frame.setStopChars( new char[] { (char)cbStopChar1.getSelectedIndex(), (char)cbStopChar2.getSelectedIndex() } );            
+            frame.setStopChars( new char[] { (char)cbStopChar1.getSelectedIndex(), (char)cbStopChar2.getSelectedIndex() } );
         }
-
+        
         SendOptionsBean bean = new SendOptionsBean();
         bean.setFrame(frame);
-        bean.setHost(edDestHost.getText());
-        bean.setPort(Integer.parseInt(cbDestPort.getSelectedItem().toString()));
+        bean.setHost(host);
+        bean.setPort(Integer.parseInt(port));
         bean.setEncoding(cbEncoding.getSelectedItem().toString());
         bean.setReuseSocket(cbReuse.isSelected());
         
@@ -209,8 +228,7 @@ public class SendOptionsDialog extends BaseDialog {
     private JComboBox       cbStartChar;
     private JComboBox       cbStopChar1;
     private JComboBox       cbStopChar2;
-    private JTextField      edDestHost;
-    private JComboBox       cbDestPort;
+    private JComboBox       cbDest;
     private JComboBox       cbEncoding;
     private JCheckBox       cbReuse;
 }
