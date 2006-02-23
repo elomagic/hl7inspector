@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,9 @@
 
 package de.elomagic.hl7inspector.gui;
 
+import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.awt.datatransfer.DataFlavor;
@@ -25,6 +27,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Iterator;
 import javax.swing.*;
@@ -35,7 +39,7 @@ import org.apache.log4j.Logger;
  *
  * @author rambow
  */
-public class Hl7TreePane extends JScrollPane implements DropTargetListener  {
+public class Hl7TreePane extends JScrollPane implements DropTargetListener {
     
     /** Creates a new instance of Hl7Tree */
     public Hl7TreePane() { init(null); }
@@ -46,6 +50,9 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener  {
         tree = (model == null)?new Hl7Tree():new Hl7Tree(model);
         tree.setCellRenderer(new TreeCellRenderer());
         tree.setOpaque(false);
+        if (StartupProperties.getInstance().isDebugFileOutput()) {
+            tree.setComponentPopupMenu(new TreePopupMenu());
+        }
         
         new DropTarget(tree, this);
         
