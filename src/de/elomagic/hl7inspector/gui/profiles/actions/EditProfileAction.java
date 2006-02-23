@@ -50,26 +50,30 @@ public class EditProfileAction extends AbstractAction {
             if (list.getSelectedValue() != null) {
                 ProfileFile file = (ProfileFile)list.getSelectedValue();
                 
-                ProfileDefinitionDialog dialog = new ProfileDefinitionDialog(file);
-                if (dialog.ask()) {
-                    try {
-                        FileOutputStream fout = new FileOutputStream(dialog.getProfileFile());
+                if (!file.exists()) {
+                    SimpleDialog.error("Profile not found!");
+                } else {                
+                    ProfileDefinitionDialog dialog = new ProfileDefinitionDialog(file);
+                    if (dialog.ask()) {
                         try {
-                            dialog.getProfile().saveToStream(fout);
-                            dialog.getProfileFile().setDescription(dialog.getProfile().getName());
-                        } finally {
-                            fout.close();
-                        }                        
-                        
-                        StartupProperties.getInstance().setProperty(StartupProperties.DEFAULT_PROFILE, (file).toString());
-                        
-                        if (file.equals(new ProfileFile(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, "")))) {
-                            Desktop.getInstance().setProfileFile(file);
-                        }
-                    } catch (Exception ee) {
-                        Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-                        SimpleDialog.error(ee);
-                    }                    
+                            FileOutputStream fout = new FileOutputStream(dialog.getProfileFile());
+                            try {
+                                dialog.getProfile().saveToStream(fout);
+                                dialog.getProfileFile().setDescription(dialog.getProfile().getName());
+                            } finally {
+                                fout.close();
+                            }                        
+
+                            StartupProperties.getInstance().setProperty(StartupProperties.DEFAULT_PROFILE, (file).toString());
+
+                            if (file.equals(new ProfileFile(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, "")))) {
+                                Desktop.getInstance().setProfileFile(file);
+                            }
+                        } catch (Exception ee) {
+                            Logger.getLogger(getClass()).error(ee.getMessage(), ee);
+                            SimpleDialog.error(ee);
+                        }                    
+                    }
                 }
             } else {
                 SimpleDialog.error("No profile selected!");
