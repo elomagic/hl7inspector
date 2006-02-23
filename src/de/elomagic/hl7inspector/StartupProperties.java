@@ -19,12 +19,14 @@ package de.elomagic.hl7inspector;
 
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.utils.History;
 import java.awt.Color;
 import java.awt.SystemColor;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.security.KeyStore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -71,6 +73,7 @@ public class StartupProperties extends Properties {
             }
             
             createProfiles();
+            createKeyStores();
         } catch (Exception e) {
             if (!(e instanceof FileNotFoundException)) {
                 SimpleDialog.error(e) ;
@@ -81,6 +84,10 @@ public class StartupProperties extends Properties {
     public void save() {
         try {
             setProfiles();
+            setKeyStores();
+            
+//            History history = new History(StartupProperties.SENDER_OPTIONS_DEST);
+//            history.write(this);
             
             String wp = getUserHomePath(true);
             
@@ -182,9 +189,8 @@ public class StartupProperties extends Properties {
         setPhrases(v);
     }
     
-    public Vector<ProfileFile> getProfiles() {
-        return profiles;
-    }
+    
+    public Vector<ProfileFile> getProfiles() { return profiles; }
     
     private void setProfiles() {
         int q = 0;
@@ -200,7 +206,7 @@ public class StartupProperties extends Properties {
         } while (s.length() != 0);
         
         for (int i=0; i<profiles.size(); i++) {
-            ProfileFile profile = ((ProfileFile)profiles.get(i));
+            ProfileFile profile = profiles.get(i);
             setProperty(PROFILE_FILE.concat(".").concat(Integer.toString(i+1)), profile.getAbsolutePath());
             setProperty(PROFILE_DESCRIPTION.concat(".").concat(Integer.toString(i+1)), profile.getDescription());
         }
@@ -227,6 +233,50 @@ public class StartupProperties extends Properties {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
         }
     }
+    
+    public Vector<File> getKeyStores() { return keyStoreFiles; }    
+
+    private void setKeyStores() {
+        int q = 0;
+        String s = "";
+        do {
+            q++;
+            s = getProperty(KEYSTORE_FILE.concat(".").concat(Integer.toString(q+1)), "");
+            
+            if (s.length() != 0) {
+                remove(KEYSTORE_FILE.concat(".").concat(Integer.toString(q)));
+//                remove(PROFILE_DESCRIPTION.concat(".").concat(Integer.toString(q)));
+            }
+        } while (s.length() != 0);
+        
+        for (int i=0; i<keyStoreFiles.size(); i++) {
+            File keyStoreFile = keyStoreFiles.get(i);
+            setProperty(KEYSTORE_FILE.concat(".").concat(Integer.toString(i+1)), keyStoreFile.getAbsolutePath());
+//            setProperty(PROFILE_DESCRIPTION.concat(".").concat(Integer.toString(i+1)), profile.getDescription());
+        }
+    }
+    
+    private void createKeyStores() {
+        keyStoreFiles.clear();
+        
+        int i = 0;
+        try {
+            String s = null; 
+            do {
+                i++;
+                
+                s = getProperty(KEYSTORE_FILE.concat(".").concat(Integer.toString(i)));
+                
+                if (s != null) {
+                    File file = new File(s);
+//                    file.setDescription(getProperty(PROFILE_DESCRIPTION.concat(".").concat(Integer.toString(i))));
+                    keyStoreFiles.add(file);
+                }
+            } while (s != null);
+        } catch (Exception e) {
+            Logger.getLogger(getClass()).error(e.getMessage(), e);
+        }
+    }    
     
     public Calendar getLastUpdateCheck() throws ParseException { 
         Calendar c = Calendar.getInstance();
@@ -316,12 +366,15 @@ public class StartupProperties extends Properties {
     }    
         
     private Vector<ProfileFile> profiles = new Vector<ProfileFile>();
+    private Vector<File> keyStoreFiles = new Vector<File>();
     
     public final static String APP_ONE_INSTANCE         = "application-one-instance";
     public final static String APP_LOOK_AND_FEEL        = "application-look-and-feel";
     public final static String APP_DEBUG_FILE           = "application-debug-file";
     
     public final static String DEFAULT_PROFILE          = "profile-default";
+    public final static String DEFAULT_PRIVATE_KEYSTORE = "security-default-private-keystore";
+    public final static String DEFAULT_PUBLIC_KEYSTORE  = "security-default-public-keystore";
     
     public final static String DESKTOP_X                = "desktop.x";
     public final static String DESKTOP_Y                = "desktop.y";
@@ -341,12 +394,17 @@ public class StartupProperties extends Properties {
     public final static String EXTERNAL_FILE_VIEWER     = "external-file-viewer";
     public final static String EXTERNAL_HEX_VIEWER      = "external-hex-viewer";
     
+    public final static String SENDER_OPTIONS_DEST      = "sender.options.destination";
+    
     public final static String RECENT_FILE              = "recent-file";
     
     public final static String PHRASE_HISTORY           = "phrase-history";
     
     public final static String PROFILE_FILE             = "profile-file";
     public final static String PROFILE_DESCRIPTION      = "profile-description";
+    
+    public final static String KEYSTORE_FILE             = "keystore-file";
+//    public final static String PROFILE_DESCRIPTION      = "profile-description";    
     
     public final static String DEFAULT_FRAME_START      = "default-frame-start";
     public final static String DEFAULT_FRAME_STOP1      = "default-frame-stop1";
