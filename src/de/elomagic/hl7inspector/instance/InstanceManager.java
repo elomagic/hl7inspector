@@ -152,7 +152,7 @@ public class InstanceManager extends Thread {
     private final static InstanceManager instance = new InstanceManager();
     
     private final static String APP_GUID            = "1ddf4bc0-4977-11da-8cd6-0800200c9a66";
-    private final static int    APP_INSTANCE_PORT   = 49152;
+    private final static int    APP_INSTANCE_PORT   = 49153;
     
     private boolean terminating = false;
 }
