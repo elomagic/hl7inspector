@@ -26,29 +26,32 @@ public class SendOptionsBean {
     /** Creates a new instance of SendOptionsBean */
     public SendOptionsBean() { }
     
-    private Frame       frame       = new Frame();
-    private String      host        = "localhost";
-    private int         port        = 2100;
-    private String      encoding    = "ISO-8859-1";
-    private boolean     reuseSocket = true;
+    private Frame       frame           = new Frame();
+    private String      host            = "localhost";
+    private int         port            = 2100;
+    private String      encoding        = "ISO-8859-1";
+    private boolean     reuseSocket     = true;
+    private boolean     encryption      = false;
+    private boolean     authentication  = false;
 
     public Frame getFrame() { return frame; }
-
     public void setFrame(Frame frame) { this.frame = frame; }
 
     public String getHost() { return host; }
-
     public void setHost(String host) { this.host = host; }
 
     public int getPort() { return port; }
-
     public void setPort(int port) { this.port = port; }
 
     public String getEncoding() { return encoding; }
-
     public void setEncoding(String encoding) { this.encoding = encoding; }
 
     public boolean isReuseSocket() { return reuseSocket; }
-
     public void setReuseSocket(boolean reuseSocket) { this.reuseSocket = reuseSocket; }        
+
+    public boolean isEncryption() { return encryption; }
+    public void setEncryption(boolean encryption) { this.encryption = encryption; }
+
+    public boolean isAuthentication() { return authentication; }
+    public void setAuthentication(boolean authentication) { this.authentication = authentication; }
 }
