@@ -75,6 +75,12 @@ public class MainMenuBar extends JMenuBar {
         menuItem.add(miSendWindow);
         menuItem.addSeparator();
         menuItem.add(new JMenuItem(new ProfileManagerAction()));
+        
+        if (StartupProperties.getInstance().isDebugFileOutput()) {
+            menuItem.add(new JMenuItem(new KeyStoreManagerAction()));
+                    
+        }
+        
         menuItem.addSeparator();
         menuItem.add(new JMenuItem(new OptionsAction()));
         add(menuItem);

@@ -28,12 +28,12 @@ import javax.swing.AbstractListModel;
 public class VectorListModel extends AbstractListModel {
   
   /** Creates a new instance of ProfileManagerModel */
-  public VectorListModel(Vector<ProfileFile> v) { 
+  public VectorListModel(Vector v) { 
     super(); 
     vector = v; 
   }
   
-  public void add(ProfileFile object) {
+  public void add(Object object) {
     vector.add(object);
     fireIntervalAdded(this, vector.size(), vector.size()-1);
   }
@@ -51,6 +51,6 @@ public class VectorListModel extends AbstractListModel {
 
   public int getSize() { return vector.size(); }
   
-  private Vector<ProfileFile> vector;
+  private Vector<Object> vector;
   
 }
