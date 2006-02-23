@@ -33,17 +33,21 @@ public class ViewNodeDescriptionAction extends AbstractAction {
     
     /** Creates a new instance of FileNewAction */
     public ViewNodeDescriptionAction(String value) {
-        super(value, ResourceLoader.loadImageIcon("view_text.png"));
+        super(value);
         
-        putValue(SHORT_DESCRIPTION, "View node description from the selected profile.");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        init();
     }    
     
     public ViewNodeDescriptionAction() {
-        super("View node description", ResourceLoader.loadImageIcon("view_text.png"));//icon);
+        super("View node description");
         
+        init();        
+    }
+    
+    public void init() {         
+        putValue(SMALL_ICON, ResourceLoader.loadImageIcon("view_text.png"));        
         putValue(SHORT_DESCRIPTION, "View node description from the selected profile.");
-//        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));        
     }
     
     public void actionPerformed(ActionEvent e) {
