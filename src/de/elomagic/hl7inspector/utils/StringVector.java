@@ -17,6 +17,7 @@
 
 package de.elomagic.hl7inspector.utils;
 
+import java.util.Enumeration;
 import java.util.Vector;
 
 /**
@@ -27,6 +28,12 @@ public class StringVector extends Vector<String> {
     
     /** Creates a new instance of StringVector */
     public StringVector() { }
+    
+    public StringVector(Enumeration enu) { 
+        while (enu.hasMoreElements()) {
+            add(enu.nextElement().toString());            
+        }    
+    }    
     
     public StringVector(String text) { parse(text); }
     
