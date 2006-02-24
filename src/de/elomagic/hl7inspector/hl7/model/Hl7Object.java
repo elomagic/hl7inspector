@@ -84,23 +84,20 @@ public abstract class Hl7Object {
     
     public void clear() {
         objList.clear();
-        htmlText = null;
-        nodeText = null;
-        validationText = "";
         description = "";
-        val = null;
         
-        Hl7Object parent = getParent();
-        while (parent != null) {
-            parent.htmlText = null;
-            parent.nodeText = null;
-            parent.val = null;
-            parent.validationText = "";
+        resetTreeData(this);
+    }
+    
+    private void resetTreeData(Hl7Object o) {
+        while (o != null) {
+            o.htmlText = null;
+            o.nodeText = null;
+            o.val = null;
+            o.validationText = "";
             
-            parent = parent.getParent();
-        }
-        
-        
+            o = o.getParent();
+        }                       
     }
     
     private void add(Hl7Object obj) {
@@ -119,6 +116,14 @@ public abstract class Hl7Object {
         return obj;
     }
     
+    public void remove(Hl7Object child) {        
+        Hl7Object parent = child.getParent();
+        
+        objList.remove(child);        
+        
+        resetTreeData(parent);
+    }
+        
     private String validationText = "";
     public String getValidationText() { return validationText; }
     public void setValidationText(String value) { validationText = value; }
