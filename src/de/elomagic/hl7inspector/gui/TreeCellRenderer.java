@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,10 +45,10 @@ import org.apache.log4j.Logger;
 public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ implements javax.swing.tree.TreeCellRenderer {
     
     /** Creates a new instance of TreeCellRenderer */
-    public TreeCellRenderer() { 
+    public TreeCellRenderer() {
         setBackground(SystemColor.textHighlight);
     }
-        
+    
     public Component getTreeCellRendererComponent(
             JTree tree,
             Object value,
@@ -63,49 +63,52 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
         boolean highlight = FindBar.getInstance().isHighlight() && FindBar.getInstance().isVisible();
         
         StringBuffer sb = new StringBuffer();
-                
+        
         TreeModel model = (TreeModel)tree.getModel();
-        int index = -1;        
+        int index = -1;
         
         String nodeText = "";
         
-        if (model instanceof Hl7TreeModel) {            
+        if (model instanceof Hl7TreeModel) {
             if (value instanceof Hl7Object) {
                 Hl7Object hl7Object = (Hl7Object)value;
                 
                 Hl7Object parent = hl7Object.getParent();
-                                
+                
                 if (!(value instanceof de.elomagic.hl7inspector.hl7.model.Segment)) {
                     if (value instanceof de.elomagic.hl7inspector.hl7.model.Message) {
                         index = model.getIndexOfChild(hl7Object.getRoot(), value)+1;
                     } else if ((value instanceof de.elomagic.hl7inspector.hl7.model.Field)
-                            && (parent.size() < 2)) {             
+                    && (parent.size() < 2)) {
                         index = parent.getIndex();
                     } else if (value instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) {
                         index = hl7Object.getIndex();
                     } else {
                         index = hl7Object.getIndex()+1;
                     }
-
-                    sb.append("<font color=\"#");
-                    sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB()&0xffffff));
+                    
+                    sb.append("<font ");
+                    if (!sel) {
+                        sb.append("color=\"#");
+                        sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB()&0xffffff));
+                    }
                     sb.append("\"><B>");
-
+                    
                     sb.append("&lt;#");
                     sb.append(index);
                     sb.append("&gt; ");
-
-                    sb.append("</B></font>");                                           
+                    
+                    sb.append("</B></font>");
                 }
-
+                
                 if ((value instanceof de.elomagic.hl7inspector.hl7.model.Message) && (prop.getTreeViewMode() == 1)) {
-                    Message m = (Message)value;                    
-
+                    Message m = (Message)value;
+                    
                     // Get date/time
                     String d = m.get(0).get(7).toHtmlEscapedString();
                     try {
                         String p = "yyyyMMddHHmmss";
-                        p = p.substring(0, d.length());                        
+                        p = p.substring(0, d.length());
                         Date dt = new SimpleDateFormat(p).parse(d);
                         d = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(dt);
                         sb.append(d);
@@ -114,7 +117,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                         Logger.getLogger(getClass()).warn(e.getMessage(), e);
                     }
                     sb.append(' ');
-
+                    
                     // Append Source and destination
                     sb.append(m.get(0).get(5).toHtmlEscapedString());
                     sb.append(" &gt; ");
@@ -122,22 +125,26 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     sb.append(' ');
                     sb.append("<B>");
                     sb.append(m.get(0).get(9).toHtmlEscapedString());
-                    sb.append("</B>");                        
+                    sb.append("</B>");
                 } else {
                     nodeText = hl7Object.toHtmlEscapedString();
-
-                    boolean truncate = ((prop.getTreeNodeLength() != 0) && (prop.getTreeNodeLength() < nodeText.length()));                
-
+                    
+                    boolean truncate = ((prop.getTreeNodeLength() != 0) && (prop.getTreeNodeLength() < nodeText.length()));
+                    
                     if (truncate) {
                         if (nodeText.length() > prop.getTreeNodeLength()) {
                             nodeText = nodeText.substring(0, prop.getTreeNodeLength());
                         }
                         sb.append(nodeText);
 //                        sb.delete(prop.getTreeNodeLength(), sb.length());
-                        sb.append("<font color=\"#");
-                        sb.append(Integer.toHexString(SystemColor.magenta.getRGB()&0xffffff));
+                        
+                        sb.append("<font ");
+                        if (!sel) {
+                            sb.append("color=\"#");
+                            sb.append(Integer.toHexString(SystemColor.magenta.getRGB()&0xffffff));
+                        }
                         sb.append("\"><B>###</B></font>");
-                    } else {                    
+                    } else {
                         sb.append(nodeText);
                     }
                 }
@@ -146,45 +153,45 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
         
         String v = sb.toString();
         String ov = v;
-	
+        
         if (highlight) {
-	    String phrase = FindBar.getInstance().getEscapedPhrase();
-	    
-	    if (phrase.length() != 0) {                   
-		boolean caseSensitive = FindBar.getInstance().isCaseSensitive();
-
-		if (!caseSensitive) {
-		    v = v.toUpperCase();
-		    phrase = phrase.toUpperCase();
-		}
-
-		int i = v.indexOf(phrase);
-
-		if (i != -1) {
-		    String nv = "";
-                    int oi = 0;		
-
-		    while (i != -1) {
-			String op = ov.substring(i, i+phrase.length());
-			
-			nv = nv.concat(ov.substring(oi, i));
-			nv = nv.concat("<font color=\"#ff0000\"><b>");
-			nv = nv.concat(op);
-			nv = nv.concat("</b></font>");
-			i = i + phrase.length();
-			oi = i;
-			i = v.indexOf(phrase, oi);
-		    }
-
-		    v = nv.concat(ov.substring(oi));
-		} else {
-		    v = ov;
-		}
-	    }
+            String phrase = FindBar.getInstance().getEscapedPhrase();
+            
+            if (phrase.length() != 0) {
+                boolean caseSensitive = FindBar.getInstance().isCaseSensitive();
+                
+                if (!caseSensitive) {
+                    v = v.toUpperCase();
+                    phrase = phrase.toUpperCase();
+                }
+                
+                int i = v.indexOf(phrase);
+                
+                if (i != -1) {
+                    String nv = "";
+                    int oi = 0;
+                    
+                    while (i != -1) {
+                        String op = ov.substring(i, i+phrase.length());
+                        
+                        nv = nv.concat(ov.substring(oi, i));
+                        nv = nv.concat("<font color=\"#ff0000\"><b>");
+                        nv = nv.concat(op);
+                        nv = nv.concat("</b></font>");
+                        i = i + phrase.length();
+                        oi = i;
+                        i = v.indexOf(phrase, oi);
+                    }
+                    
+                    v = nv.concat(ov.substring(oi));
+                } else {
+                    v = ov;
+                }
+            }
         }
         
         sb = new StringBuffer(v);
-                
+        
         setOpaque(sel);
         
         // Get node description
@@ -192,7 +199,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
             Hl7Object obj = (Hl7Object)value;
 //            setToolTipText(obj.getValidationText());
             
-            if (((Hl7TreeModel)model).isViewDescription()) {                        
+            if (((Hl7TreeModel)model).isViewDescription()) {
                 Profile profile = Desktop.getInstance().getProfile();
                 
                 String desc = obj.getText();
@@ -201,9 +208,9 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                 
                 if (desc == null) {
                     desc = "";
-                    // Get segment type 
+                    // Get segment type
                     Hl7Object o = obj;
-                    while (!((o instanceof de.elomagic.hl7inspector.hl7.model.Segment) || (o instanceof de.elomagic.hl7inspector.hl7.model.Message))) 
+                    while (!((o instanceof de.elomagic.hl7inspector.hl7.model.Segment) || (o instanceof de.elomagic.hl7inspector.hl7.model.Message)))
                         o = o.getParent();
                     if (o != null) {
                         segType = o.get(0).toString();
@@ -219,18 +226,18 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     
                     int fieldIndex = index;
                     if ((o.getParent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField)) {
-                    //    && (o.getParent().size() > 1))                    
+                        //    && (o.getParent().size() > 1))
                         fieldIndex = o.getParent().getIndex();
                     }
                     
                     MessageDescriptor md = new MessageDescriptor(profile);
-
+                    
                     if (value instanceof de.elomagic.hl7inspector.hl7.model.Segment) {
                         try {
                             SegmentItem segDef = profile.getSegmentList().getSegment(segType);
-
+                            
                             if (segDef != null) {
-                                desc = segDef.getDescription();                                
+                                desc = segDef.getDescription();
                                 tt.add("Segment Name: ".concat(segDef.getDescription()));
                                 if (segDef.getChapter().length() != 0) tt.add("Chapter: ".concat(segDef.getChapter()));
                             }
@@ -246,7 +253,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                             if (de.getTable().length() != 0) tt.add("Table: ".concat(de.getTable()));
                         }
                     } else if (value instanceof de.elomagic.hl7inspector.hl7.model.Field) {
-                        DataElement de = md.getDataElement((Hl7Object)value);                        
+                        DataElement de = md.getDataElement((Hl7Object)value);
 //                        DataElement de = profile.getDataElementList().getDataElement(segType, index);
                         if (de != null) {
                             desc = "[".concat(de.getDataType()).concat("] ").concat(de.getName());
@@ -268,7 +275,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     } else if (value instanceof de.elomagic.hl7inspector.hl7.model.Subcomponent) {
                         DataElement de = profile.getDataElementList().getDataElement(segType, fieldIndex);
                         if (de != null) {
-                            int compIndex = obj.getParent().getIndex()+1;                            
+                            int compIndex = obj.getParent().getIndex()+1;
                             DataTypeItem dt = profile.getDataTypeList().getDataType(de.getDataType(), compIndex);
                             if (dt != null) {
                                 dt = profile.getDataTypeList().getDataType(dt.getDataType(), index);
@@ -279,7 +286,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                                     if (dt.getTable().length() != 0) tt.add("Table: ".concat(dt.getTable()));
                                 }
                             }
-                        }                    
+                        }
                     }
                     
                     desc = StringEscapeUtils.escapeHtml(desc);
@@ -288,16 +295,19 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     obj.setDescription(tt.toString('\n'));
                     
 //                    setToolTipText(tt.toString());
-                }                    
-
+                }
+                
                 if (desc.length() != 0) {
-                    sb.append("<font color=\"#");
-                    sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB()&0xffffff));
+                    sb.append("<font ");
+                    if (!sel) {
+                        sb.append("color=\"#");
+                        sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB()&0xffffff));
+                    }
                     sb.append("\"><B> (");
                     sb.append(desc);
                     sb.append(")</B></font>");
                 }
-            }            
+            }
         }
         
         String fontName = prop.getTreeFontName();
@@ -307,7 +317,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
         } else
             sb.insert(0, "<html><body><font face=\"" +  fontName + "\">");
         
-        sb.append("</font>");        
+        sb.append("</font>");
         sb.append("</body></html>");
         
         //boolean c = !(getText().equals(v));
@@ -322,8 +332,8 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                 if ((value instanceof RepetitionField) && (!(value instanceof EncodingObject)))
                     setIcon(ResourceLoader.loadImageIcon("repeatfield.png"));
                 else
-                    setIcon(ResourceLoader.loadImageIcon("hole_white.gif"));                
-            }                        
+                    setIcon(ResourceLoader.loadImageIcon("hole_white.gif"));
+            }
         } else {
             setIcon(ResourceLoader.loadImageIcon("hole_white.gif"));
         }
