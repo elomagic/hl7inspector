@@ -329,7 +329,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
             if (obj.getValidateStatus() != null) {
                 setIcon(obj.getValidateStatus().getIcon());
             } else {
-                if ((value instanceof RepetitionField) && (!(value instanceof EncodingObject)))
+                if ((obj instanceof RepetitionField) && (obj.size() != 0) && (!(obj instanceof EncodingObject)))
                     setIcon(ResourceLoader.loadImageIcon("repeatfield.png"));
                 else
                     setIcon(ResourceLoader.loadImageIcon("hole_white.gif"));
