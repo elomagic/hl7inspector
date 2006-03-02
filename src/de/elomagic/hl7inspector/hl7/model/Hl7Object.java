@@ -43,11 +43,25 @@ public abstract class Hl7Object {
             while (p < text.length()) {
                 char c = text.charAt(p);
                 
-                if (!((text.equals("^~\\&")) && (p == 3)) && (c == Delimiters.DEFAULT_ESCAPE_CHAR)) {
+                if (!((text.startsWith("MSH|^~\\&")) && (p == 6)) && (c == Delimiters.DEFAULT_ESCAPE_CHAR)) {
                     // Wenn Escapezeichen kommt dann nächstes Zeichen nicht interpretieren
-                    subText = subText.append(c);
-                    p++;
-                    if (text.length() > p) {
+//                    subText = subText.append(c);
+//                    p++;
+//                    if (text.length() > p) {
+//                        subText = subText.append(c);
+//                    }
+                    
+                    // Wenn Escapezeichen kommt dann nächstes Zeichen nicht interpretieren
+                    
+                    do {
+                        subText = subText.append(c);
+                        p++;
+                        
+                        if (text.length() > p) {
+                            c = text.charAt(p);
+                        }
+                    } while ((text.length() > p) && (c != Delimiters.DEFAULT_ESCAPE_CHAR));
+                    if (c == Delimiters.DEFAULT_ESCAPE_CHAR) {
                         subText = subText.append(c);
                     }
                 } else {
@@ -97,7 +111,7 @@ public abstract class Hl7Object {
             o.validationText = "";
             
             o = o.getParent();
-        }                       
+        }
     }
     
     private void add(Hl7Object obj) {
@@ -116,14 +130,14 @@ public abstract class Hl7Object {
         return obj;
     }
     
-    public void remove(Hl7Object child) {        
+    public void remove(Hl7Object child) {
         Hl7Object parent = child.getParent();
         
-        objList.remove(child);        
+        objList.remove(child);
         
         resetTreeData(parent);
     }
-        
+    
     private String validationText = "";
     public String getValidationText() { return validationText; }
     public void setValidationText(String value) { validationText = value; }
@@ -251,14 +265,14 @@ public abstract class Hl7Object {
     public Enumeration 	children() { return objList.elements(); }
     
     //** Returns true if the receiver allows children. */
-    public boolean getAllowsChildren() { return getNewClientInstance() != null; }            
+    public boolean getAllowsChildren() { return getNewClientInstance() != null; }
     
     /** Returns the number of children TreeNodes the receiver contains. */
-    public int getChildCount() { return objList.size(); }            
-            
+    public int getChildCount() { return objList.size(); }
+    
 /*             TreeNode 	getChildAt(int childIndex)
             Returns the child TreeNode at index childIndex.
-            
+ 
             int 	getIndex(TreeNode node)
             Returns the index of node in the receivers children.
             TreeNode 	getParent()
