@@ -54,5 +54,6 @@ public class ScrollableEditorPane extends JPanel {
     private WindowCaptionPanel  captionPane;
                     
     public WindowCaptionPanel getCaption() { return captionPane; }
+    public JScrollPane getScrollPane() { return scrollPane; }
     public JEditorPane getEditorPane() { return editorPane; }             
 }

@@ -20,12 +20,16 @@ package de.elomagic.hl7inspector.gui.actions;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.HL7ObjectEditor;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.hl7.Hl7Encoder;
+import de.elomagic.hl7inspector.hl7.model.Delimiters;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -35,18 +39,20 @@ public class EditMessageItemAction extends AbstractAction {
     
     /** Creates a new instance of FileNewAction */
     public EditMessageItemAction(Hl7Object o) {
-        super("Edit " +  getObjectDescription(o) + ".");
+        super("Edit selected " + getObjectDescription(o));
         
-        init(o);
+        init();
     }
     
-    private void init(Hl7Object o) {
-        hl7o = o;
+    public EditMessageItemAction() {
+        super();
         
-//        String name = o.getClass().getName();
-        
+        init();
+    }    
+    
+    private void init() {        
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("edit.png"));
-        putValue(SHORT_DESCRIPTION, "Edit" +  getObjectDescription(o) + ".");
+        putValue(SHORT_DESCRIPTION, "Edit selected node");
 //        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
     }
     
@@ -56,16 +62,15 @@ public class EditMessageItemAction extends AbstractAction {
         return s;
     }
     
-    private Hl7Object hl7o;
-    
     public void actionPerformed(ActionEvent e) {
-        HL7ObjectEditor editor = new HL7ObjectEditor();
+        TreePath path = Desktop.getInstance().getTree().getSelectionPath();            
+        Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();        
         
-        editor.setValue(hl7o.toString());
-        
-        if (editor.ask()) {
+        HL7ObjectEditor editor = new HL7ObjectEditor();        
+        editor.setValue(hl7o);        
+        if (editor.ask()) {            
             Hl7Object o = hl7o.getNewClientInstance();
-            hl7o.parse(editor.getValue());
+            hl7o.parse(editor.getValue(new Delimiters()));
             
             Desktop.getInstance().getTree().repaint();
         }

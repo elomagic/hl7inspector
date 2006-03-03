@@ -113,5 +113,46 @@ public class MessageDescriptor {
         
     }
     
-    
+    public String getDescription(Hl7Object o, boolean htmlFormated) {
+        String BR = (htmlFormated)?"<BR>":Character.toString((char)13);
+        String HS = (htmlFormated)?"<B>":"";
+        String HE = (htmlFormated)?"</B>":"";
+        
+        String s = "";
+        
+        if (o instanceof Segment) {
+            SegmentItem seg = getSegmentType(o);
+            if (seg != null) {
+                s = HS.concat(seg.getId() + " " + seg.getDescription().concat(HE).concat(BR));
+                s = s + "Chapter: " + seg.getChapter();
+            }
+        } else if ((o instanceof Field) || (o instanceof RepetitionField)){
+            DataElement de = getDataElement(o);
+            if (de != null) {
+                s = HS.concat(de.getSegment() + "." + de.getSequence() + " " + de.getName().concat(HE).concat(BR));
+                s = s + "Chapter: " + de.getChapter().concat(BR);
+                s = s + "Data Type: " + de.getDataType().concat(BR);
+                s = s + "Data Element Id: " + de.getItem().concat(BR);
+                s = s + "Length: " + Integer.toString(de.getLen()).concat(BR);
+                s = s + "Table: " + de.getTable().concat(BR);
+                s = s + "Repetition: " + de.getRepeatable().concat(BR);
+            }
+        } else if ((o instanceof Component) || (o instanceof Subcomponent)){
+            DataTypeItem dt = getDataType(o);
+            if (dt != null) {
+                s = HS.concat(dt.getParentDataType() + "." + dt.getIndex() + " " + dt.getDescription().concat(HE).concat(BR));
+                s = s + "Chapter: " + dt.getChapter().concat(BR);
+                s = s + "Data Type: " + dt.getDataType().concat(BR);
+                s = s + "Length: " + Integer.toString(dt.getLength()).concat(BR);
+                s = s + "Table: " + dt.getTable().concat(BR);
+                s = s + "Optionality: " + dt.getOptionality().concat(BR);
+            }
+        }
+        
+        if ((htmlFormated) && (s.length() != 0)) {
+            s = "<font face=\"Arial\">".concat(s).concat("</font>");
+        }
+        
+        return s;
+    }
 }

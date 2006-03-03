@@ -250,50 +250,20 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     }
     
     private void showHl7ObjectDetails(Hl7Object o) {
-        MessageDescriptor md = new MessageDescriptor(getProfile());
-        
         String s = "";
         
-        String NO_DESCRIPTION_FOUND = "No description in profile found.";
         
         if (detailsPanel.isVisible()) {            
-            if (o instanceof Segment) {
-                SegmentItem seg = md.getSegmentType(o);
-                if (seg != null) {
-                    s = "<H3>" + seg.getId() + " " + seg.getDescription() + "</H3><BR>";
-                    s = s + "Chapter: " + seg.getChapter();
-                } else {
-                    s = NO_DESCRIPTION_FOUND;
-                }
-            } else if ((o instanceof Field) || (o instanceof RepetitionField)){
-                DataElement de = md.getDataElement(o);
-                if (de != null) {                
-                    s = "<H3>" + de.getSegment() + "." + de.getSequence() + " " + de.getName() + "</H3><BR>";                
-                    s = s + "Chapter: " + de.getChapter() + "<BR>";
-                    s = s + "Data Type: " + de.getDataType() + "<BR>";
-                    s = s + "Data Element Id: " + de.getItem() + "<BR>";
-                    s = s + "Length: " + Integer.toString(de.getLen()) + "<BR>";
-                    s = s + "Table: " + de.getTable() + "<BR>";
-                    s = s + "Repetition: " + de.getRepeatable() + "<BR>";
-                } else {
-                    s = NO_DESCRIPTION_FOUND;
-                }
-            } else if ((o instanceof Component) || (o instanceof Subcomponent)){
-                DataTypeItem dt = md.getDataType(o);
-                if (dt != null) {
-                    s = "<H3>" + dt.getParentDataType() + "." + dt.getIndex() + " " + dt.getDescription() + "</H3><BR>";                
-                    s = s + "Chapter: " + dt.getChapter() + "<BR>";
-                    s = s + "Data Type: " + dt.getDataType() + "<BR>";
-                    s = s + "Length: " + Integer.toString(dt.getLength()) + "<BR>";
-                    s = s + "Table: " + dt.getTable() + "<BR>";
-                    s = s + "Optionality: " + dt.getOptionality() + "<BR>";                    
-                } else {
-                    s = NO_DESCRIPTION_FOUND;                    
-                }                
+            String NO_DESCRIPTION_FOUND = "No description in profile found.";                
+    
+            MessageDescriptor md = new MessageDescriptor(getProfile());
+            
+            s = md.getDescription(o, true);
+            
+            if (s.length() == 0) {
+                s = NO_DESCRIPTION_FOUND;
             }
         }
-        
-        s = "<font face=\"Arial\">" + s + "</font>";
         
         detailsPanel.getEditorPane().setText(s);        
     }

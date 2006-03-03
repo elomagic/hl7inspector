@@ -32,6 +32,8 @@ public class Delimiters {
         subcomponentDelimiter = value.charAt(4);
     }
     
+    public Delimiters() { }
+    
     public final static char DEFAULT_REPETITION      = '~';
     public final static char DEFAULT_FIELD           = '|';
     public final static char DEFAULT_COMPONENT       = '^';

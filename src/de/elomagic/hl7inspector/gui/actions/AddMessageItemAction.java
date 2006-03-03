@@ -20,6 +20,7 @@ package de.elomagic.hl7inspector.gui.actions;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.HL7ObjectEditor;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.hl7.model.Delimiters;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
@@ -35,19 +36,18 @@ import javax.swing.tree.TreePath;
  */
 public class AddMessageItemAction extends AbstractAction {
     
-    /** Creates a new instance of FileNewAction */    
+    /** Creates a new instance of FileNewAction */
     public AddMessageItemAction(Class c) {
-        super("Insert " +  getObjectDescription(c) + ".");
+        super("Add " + getObjectDescription(c));
         
         init(c);
-    }
-
+    }    
     
     private void init(Class cl) {
         c = cl;
         
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("edit_add.png"));
-        putValue(SHORT_DESCRIPTION, "Add" + getObjectDescription(c) + ".");
+        putValue(SHORT_DESCRIPTION, "Add " + getObjectDescription(c) + ".");
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
     }
     
@@ -62,14 +62,12 @@ public class AddMessageItemAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         HL7ObjectEditor editor = new HL7ObjectEditor();
         
-        //editor.setValue(hl7o.toString());
-        
         if (editor.ask()) {
             // TODO Add node with given value
-            TreePath path = Desktop.getInstance().getTree().getSelectionPath();            
+            TreePath path = Desktop.getInstance().getTree().getSelectionPath();
             
             Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();
-            Hl7Object o = hl7o.add(editor.getValue());
+            Hl7Object o = hl7o.add(editor.getValue(new Delimiters()));
             
             Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
             

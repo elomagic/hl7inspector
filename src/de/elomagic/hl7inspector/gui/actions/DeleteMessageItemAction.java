@@ -40,7 +40,7 @@ public class DeleteMessageItemAction extends AbstractAction {
     
     private void init() {
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("edit_remove.png"));
-        putValue(SHORT_DESCRIPTION, "Delete selected node(s).");
+        putValue(SHORT_DESCRIPTION, "Delete selected node(s)");
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
     }
     

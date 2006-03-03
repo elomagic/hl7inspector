@@ -19,10 +19,9 @@ package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.gui.actions.*;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 import javax.swing.tree.TreePath;
@@ -41,17 +40,22 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
         removeAll();
         
         TreePath selPath = Desktop.getInstance().getTree().getSelectionPath();
-        Hl7Object hl7o = (selPath!= null)?(Hl7Object)(selPath.getLastPathComponent()):null;
-        
-        if (hl7o != null) {
-            add(new JMenuItem(new EditMessageItemAction(hl7o)));
-            
-            if (hl7o.getNewClientInstance() != null) {
-                add(new JMenuItem(new AddMessageItemAction(hl7o.getNewClientInstance().getClass())));
+        if (selPath != null) {
+            if (selPath.getLastPathComponent() instanceof Hl7Object) {
+                Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
+                
+                if (!Message.class.equals(hl7o.getClass())) {
+                    add(new JMenuItem(new EditMessageItemAction(hl7o)));
+                }
+                
+//                if (hl7o.getNewClientInstance() != null) {
+//                    add(new JMenuItem(new AddMessageItemAction(hl7o.getNewClientInstance().getClass())));
+//                }
+                
+                add(new JMenuItem(new DeleteMessageItemAction()));
+                
+                addSeparator();
             }
-            add(new JMenuItem(new DeleteMessageItemAction()));
-            
-            addSeparator();
         }
         
         add(new JMenuItem(new FileSaveAsAction()));
@@ -91,7 +95,7 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
     private JCheckBoxMenuItem   miSendWindow        = new JCheckBoxMenuItem(new SendMessageAction());
     
     // Interface PopupMenuListener
-    public void popupMenuWillBecomeVisible(PopupMenuEvent e) { createMenusItems(); }    
-    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) { }    
+    public void popupMenuWillBecomeVisible(PopupMenuEvent e) { createMenusItems(); }
+    public void popupMenuWillBecomeInvisible(PopupMenuEvent e) { }
     public void popupMenuCanceled(PopupMenuEvent e) { }
 }
