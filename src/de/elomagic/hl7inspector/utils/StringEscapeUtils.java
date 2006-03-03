@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -62,6 +62,8 @@ public class StringEscapeUtils {
                 else if (c == '\n')
                     // Handle Newline
                     sb.append("&lt;br/&gt;");
+                else if (c == '/')
+                    sb.append("&frasl;");
                 else {
                     int ci = 0xffff & c;
                     if (ci < 160 )
@@ -91,7 +93,7 @@ public class StringEscapeUtils {
             } else {
                 int q = str.indexOf(';', i);
                 String token = str.substring(i, q-i);
-                                                
+                
                 if (token.equals("&gt"))
                     sb.append('>');
                 else if (token.equals("&amp;"))
@@ -175,13 +177,13 @@ public class StringEscapeUtils {
                 else if (token.equals("&reg"))
                     sb.append('®');
                 else if (token.startsWith("&#")) {
-                    int uc = Integer.parseInt(token.substring(2));                    
+                    int uc = Integer.parseInt(token.substring(2));
                     sb.append((char)uc);
-                } else 
-                    sb.append('?');              
-            }             
-        }        
+                } else
+                    sb.append('?');
+            }
+        }
         
-        return sb.toString();        
+        return sb.toString();
     }
 }
