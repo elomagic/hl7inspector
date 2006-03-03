@@ -31,6 +31,8 @@ import de.elomagic.hl7inspector.utils.StringVector;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.text.DateFormat;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.JLabel;
@@ -87,18 +89,19 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                         index = hl7Object.getIndex()+1;
                     }
                     
-                    sb.append("<font ");
                     if (!sel) {
-                        sb.append("color=\"#");
+                        sb.append("<font color=\"#");
                         sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB()&0xffffff));
+                        sb.append("\">");
                     }
-                    sb.append("\"><B>");
                     
-                    sb.append("&lt;#");
+                    sb.append("<B>&lt;#");
                     sb.append(index);
-                    sb.append("&gt; ");
+                    sb.append("&gt;</B>");
                     
-                    sb.append("</B></font>");
+                    if (!sel) {
+                        sb.append("</font>");
+                    }
                 }
                 
                 if ((value instanceof de.elomagic.hl7inspector.hl7.model.Message) && (prop.getTreeViewMode() == 1)) {
@@ -110,7 +113,8 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                         String p = "yyyyMMddHHmmss";
                         p = p.substring(0, d.length());
                         Date dt = new SimpleDateFormat(p).parse(d);
-                        d = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss").format(dt);
+                        
+                        d = DateFormat.getDateTimeInstance().format(dt);
                         sb.append(d);
                     } catch(Exception e) {
                         sb.append(d);
@@ -138,12 +142,17 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                         sb.append(nodeText);
 //                        sb.delete(prop.getTreeNodeLength(), sb.length());
                         
-                        sb.append("<font ");
                         if (!sel) {
-                            sb.append("color=\"#");
+                            sb.append("<font color=\"#");
                             sb.append(Integer.toHexString(SystemColor.magenta.getRGB()&0xffffff));
+                            sb.append("\">");
                         }
-                        sb.append("\"><B>###</B></font>");
+                        
+                        sb.append("<B>###</B></font>");
+                        
+                        if (!sel) {
+                            sb.append("</font>");
+                        }
                     } else {
                         sb.append(nodeText);
                     }
@@ -194,7 +203,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
         
         setOpaque(sel);
         
-        // Get node description
+// Get node description
         if (value instanceof Hl7Object) {
             Hl7Object obj = (Hl7Object)value;
 //            setToolTipText(obj.getValidationText());
@@ -298,14 +307,18 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                 }
                 
                 if (desc.length() != 0) {
-                    sb.append("<font ");
                     if (!sel) {
-                        sb.append("color=\"#");
+                        sb.append("<font color=\"#");
                         sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB()&0xffffff));
+                        sb.append("\">");
                     }
-                    sb.append("\"><B> (");
+                    sb.append("<B> (");
                     sb.append(desc);
-                    sb.append(")</B></font>");
+                    sb.append(")</B>");
+                    
+                    if (sel) {
+                        sb.append("</font>");
+                    }
                 }
             }
         }
@@ -313,14 +326,14 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
         String fontName = prop.getTreeFontName();
         
         if (sel) {
-            sb.insert(0, "<html><body><font face=\"" +  fontName + "\" color=\"#" + Integer.toHexString(SystemColor.textHighlightText.getRGB()&0xffffff) + "\">");
+            sb.insert(0, "<html><font face=\"" + fontName + "\" color=\"#" + Integer.toHexString(SystemColor.textHighlightText.getRGB()&0xffffff) + "\">");
         } else
-            sb.insert(0, "<html><body><font face=\"" +  fontName + "\">");
+            sb.insert(0, "<html><font face=\"" + fontName + "\">");
         
         sb.append("</font>");
-        sb.append("</body></html>");
+        sb.append("</html>");
         
-        //boolean c = !(getText().equals(v));
+//boolean c = !(getText().equals(v));
         setText(sb.toString());
         
         if (value instanceof Hl7Object) {
