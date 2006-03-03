@@ -17,9 +17,7 @@
 
 package de.elomagic.hl7inspector.gui;
 
-import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
-import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.awt.datatransfer.DataFlavor;
@@ -27,8 +25,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Iterator;
 import javax.swing.*;
@@ -50,9 +46,7 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
         tree = (model == null)?new Hl7Tree():new Hl7Tree(model);
         tree.setCellRenderer(new TreeCellRenderer());
         tree.setOpaque(false);
-        if (StartupProperties.getInstance().isDebugFileOutput()) {
-            tree.setComponentPopupMenu(new TreePopupMenu());
-        }
+        tree.setComponentPopupMenu(new TreePopupMenu());
         
         new DropTarget(tree, this);
         
