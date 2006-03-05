@@ -33,6 +33,7 @@ public class EncodingObject extends RepetitionField {
     public char getSubDelimiter() { return (char)0; }
     
     public Hl7Object getNewClientInstance() { return null; }
+    public Class getChildClass() { return null; }
     
     private  String value = "^~\\&";
     

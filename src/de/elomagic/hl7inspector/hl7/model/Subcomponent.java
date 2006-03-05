@@ -33,7 +33,8 @@ public class Subcomponent extends Hl7Object {
     
     public char getSubDelimiter() { return (char)0; }
     
-    public Hl7Object getNewClientInstance() { return null; }
+    public Class getChildClass() { return null; }
+    
     
     private  String value = "";
     

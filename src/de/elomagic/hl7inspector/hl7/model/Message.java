@@ -31,7 +31,7 @@ public class Message extends Hl7Object {
   
   public char getSubDelimiter() { return (char)0x0d; }
   
-  public Hl7Object getNewClientInstance() { return new Segment(); }     
+  public Class getChildClass() { return Segment.class; }
 
   private String source = "";
   public void setSource(String messageSource) { source = messageSource; }

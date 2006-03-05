@@ -48,9 +48,9 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
                     add(new JMenuItem(new EditMessageItemAction(hl7o)));
                 }
                 
-//                if (hl7o.getNewClientInstance() != null) {
-//                    add(new JMenuItem(new AddMessageItemAction(hl7o.getNewClientInstance().getClass())));
-//                }
+                if (hl7o.getChildClass() != null) {
+                    add(new JMenuItem(new AddMessageItemAction(hl7o.getChildClass())));
+                }
                 
                 if (!(hl7o instanceof Message)) {
                     add(new JMenuItem(new ClearMessageItemAction()));

@@ -120,12 +120,18 @@ public abstract class Hl7Object {
         objList.add(obj);
     }
     
-    public Hl7Object add(String text) {
-        Hl7Object obj = getNewClientInstance();
+    public Hl7Object add(String text) throws Exception {
+        Class child = getChildClass();
+        if (child == null) {
+            throw new Exception("Child items are not allowed for this item type");
+        }
+        
+        Hl7Object obj = (Hl7Object)(child.newInstance());
         obj.setRoot(getRoot());
         obj.setParent(this);
         obj.parse(text);
         objList.add(obj);
+        
         
         return obj;
     }
@@ -196,7 +202,7 @@ public abstract class Hl7Object {
     
     public abstract char getSubDelimiter();
     
-    public abstract Hl7Object getNewClientInstance();
+    public abstract Class getChildClass();
     
     public int size() { return objList.size(); }
     
@@ -265,7 +271,7 @@ public abstract class Hl7Object {
     public Enumeration 	children() { return objList.elements(); }
     
     //** Returns true if the receiver allows children. */
-    public boolean getAllowsChildren() { return getNewClientInstance() != null; }
+    public boolean getAllowsChildren() { return getChildClass() != null; }
     
     /** Returns the number of children TreeNodes the receiver contains. */
     public int getChildCount() { return objList.size(); }

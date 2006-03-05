@@ -59,7 +59,7 @@ public class EditMessageItemAction extends AbstractAction {
     private final static String getObjectDescription(Hl7Object o) {
         String s = o.getClass().getName();
         s = s.substring(s.lastIndexOf(".")+1);
-        return s;
+        return s.toLowerCase();
     }
     
     public void actionPerformed(ActionEvent e) {
@@ -69,7 +69,6 @@ public class EditMessageItemAction extends AbstractAction {
         HL7ObjectEditor editor = new HL7ObjectEditor();        
         editor.setValue(hl7o);        
         if (editor.ask()) {            
-            Hl7Object o = hl7o.getNewClientInstance();
             hl7o.parse(editor.getValue(new Delimiters()));
             
             Desktop.getInstance().getTree().repaint();

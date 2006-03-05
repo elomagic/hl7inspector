@@ -19,10 +19,8 @@ package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.hl7.model.Field;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.RepetitionField;
-import de.elomagic.hl7inspector.hl7.model.Segment;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.awt.event.ActionEvent;

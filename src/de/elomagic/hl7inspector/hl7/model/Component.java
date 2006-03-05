@@ -28,5 +28,6 @@ public class Component extends Hl7Object {
   
   public char getSubDelimiter() { return '&' ; }
   
-  public Hl7Object getNewClientInstance() { return new Subcomponent(); }            
+  public Class getChildClass() { return Subcomponent.class; }
+  
 }
