@@ -164,6 +164,21 @@ public class Hl7TreeModel implements TreeModel {
     
     public String toString() { return "Parsed hl7 messages"; }
     
+    /** @deprecated */
+    public void fireTreeNodesRemoved(TreePath path, int _index, Hl7Object o) {
+        int         index[] = new int[1];
+        Object      nodes[] = new Object[1];        
+        
+        index[0] = _index;
+        nodes[0] = o;
+        
+        TreeModelEvent e = new TreeModelEvent(this, path.getParentPath(), index, nodes);
+        
+        for (int i = 0; i < listenerList.size(); i++) {
+            ((TreeModelListener)listenerList.elementAt(i)).treeNodesRemoved(e);
+        }        
+    }
+    
     public void fireTreeNodesInsert(TreePath parentPath, Object[] newNodes) {
         int index[] = new int[newNodes.length];
         
@@ -178,7 +193,19 @@ public class Hl7TreeModel implements TreeModel {
         }
     }
     
-    protected void fireTreeStructureChanged(Object root) {
+    public void fireTreeStructureChanged(TreePath path) {
+        if (_locked == 0) {
+            int len = listenerList.size();
+            
+            TreeModelEvent e = new TreeModelEvent(this, path);
+            
+            for (int i = 0; i < len; i++) {
+                ((TreeModelListener)listenerList.elementAt(i)).treeStructureChanged(e);
+            }
+        }
+    }    
+    
+    public void fireTreeStructureChanged(Object root) {
         if (_locked == 0) {
             int len = listenerList.size();
             

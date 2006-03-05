@@ -44,7 +44,7 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
             if (selPath.getLastPathComponent() instanceof Hl7Object) {
                 Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
                 
-                if (!Message.class.equals(hl7o.getClass())) {
+                if (!(hl7o instanceof Message)) {
                     add(new JMenuItem(new EditMessageItemAction(hl7o)));
                 }
                 
@@ -52,7 +52,9 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
 //                    add(new JMenuItem(new AddMessageItemAction(hl7o.getNewClientInstance().getClass())));
 //                }
                 
-                add(new JMenuItem(new DeleteMessageItemAction()));
+                if (!(hl7o instanceof Message)) {
+                    add(new JMenuItem(new ClearMessageItemAction()));
+                }
                 
                 addSeparator();
             }
