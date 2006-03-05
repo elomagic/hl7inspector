@@ -29,6 +29,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 import javax.swing.tree.TreePath;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -38,42 +39,45 @@ public class AddMessageItemAction extends AbstractAction {
     
     /** Creates a new instance of FileNewAction */
     public AddMessageItemAction(Class c) {
-        super("Add " + getObjectDescription(c));
+        super("Append empty " + getObjectDescription(c));
         
         init(c);
-    }    
+    }
     
     private void init(Class cl) {
         c = cl;
         
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("edit_add.png"));
-        putValue(SHORT_DESCRIPTION, "Add " + getObjectDescription(c) + ".");
+        putValue(SHORT_DESCRIPTION, "Append empty " + getObjectDescription(c) + ".");
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
     }
     
     private final static String getObjectDescription(Class c) {
         String s = c.getName();
         s = s.substring(s.lastIndexOf(".")+1);
-        return s;
+        return s.toLowerCase();
     }
     
     private Class c;
     
     public void actionPerformed(ActionEvent e) {
-        HL7ObjectEditor editor = new HL7ObjectEditor();
-        
-        if (editor.ask()) {
-            // TODO Add node with given value
+        try {
             TreePath path = Desktop.getInstance().getTree().getSelectionPath();
             
             Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();
-            Hl7Object o = hl7o.add(editor.getValue(new Delimiters()));
+            
+            Hl7Object o = hl7o.add("");
             
             Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
             
             model.fireTreeNodesInsert(path, new Object[] { o });
             
-//            Desktop.getInstance().getTree().repaint();
+            if (model.isCompactView()) {
+                SimpleDialog.info("Empty items are only visible in the non compressed view.");
+            }
+        } catch (Exception ee) {
+            Logger.getLogger(getClass()).error(ee.getMessage(), ee);
+            SimpleDialog.error(ee);
         }
     }
 }
