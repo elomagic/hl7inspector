@@ -44,11 +44,17 @@ public class AddMessageItemAction extends AbstractAction {
         init(c);
     }
     
+    public AddMessageItemAction() {
+        super("Append empty item");
+        
+        init(c);
+    }    
+    
     private void init(Class cl) {
         c = cl;
         
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("edit_add.png"));
-        putValue(SHORT_DESCRIPTION, "Append empty " + getObjectDescription(c) + ".");
+        //putValue(SHORT_DESCRIPTION, "Append empty " + getObjectDescription(c) + ".");
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
     }
     

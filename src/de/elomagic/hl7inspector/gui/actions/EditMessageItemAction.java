@@ -45,7 +45,7 @@ public class EditMessageItemAction extends AbstractAction {
     }
     
     public EditMessageItemAction() {
-        super();
+        super("Edit selected node");
         
         init();
     }    

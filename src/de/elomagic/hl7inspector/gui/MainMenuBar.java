@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,12 +19,15 @@ package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.actions.*;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.io.File;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -49,13 +52,17 @@ public class MainMenuBar extends JMenuBar {
         miFile.addChangeListener(new RecentFileMenuListener());
         add(miFile);
         
-/*        menuItem = new JMenu("Edit");
-        menuItem.add(new JMenuItem(new DeleteMessageAction()));
-        add(menuItem);*/
+        miEdit = new JMenu("Edit");
+        miEdit.addChangeListener(new EditMenuListener());
+        miEdit.add(miEditItem);
+        miEdit.add(miEditAppendItem);
+        miEdit.add(miEditClearItem);
+//        menuItem.add(new JMenuItem(new DeleteMessageAction()));
+        add(miEdit);
         
         JMenu menuItem = new JMenu("Search");
         menuItem.add(new JMenuItem(new FindWindowAction()));
-        add(menuItem);        
+        add(menuItem);
         
         viewMenu.addChangeListener(new ViewMenuListener());
         viewMenu.add(miCompactView);
@@ -65,7 +72,7 @@ public class MainMenuBar extends JMenuBar {
         viewMenu.addSeparator();
         viewMenu.add(new JMenuItem(new ValidateMessageAction()));
         add(viewMenu);
-                
+        
         menuItem = new JMenu("Tools");
         menuItem.add(new JMenuItem(new ViewTextFile()));
         menuItem.add(new JMenuItem(new ViewHexFile()));
@@ -78,7 +85,6 @@ public class MainMenuBar extends JMenuBar {
         
         if (StartupProperties.getInstance().isDebugFileOutput()) {
             menuItem.add(new JMenuItem(new KeyStoreManagerAction()));
-                    
         }
         
         menuItem.addSeparator();
@@ -109,7 +115,11 @@ public class MainMenuBar extends JMenuBar {
     }
     
     private JMenu               miOpenRecentFiles   = new JMenu("Open recent files");
-    private JMenu               miFile;
+    private JMenu               miEdit;
+    private JMenuItem           miEditItem          = new JMenuItem(new EditMessageItemAction());
+    private JMenuItem           miEditAppendItem    = new JMenuItem(new AddMessageItemAction());
+    private JMenuItem           miEditClearItem     = new JMenuItem(new ClearMessageItemAction());
+    
     private JMenu               viewMenu            = new JMenu("View");
     private JCheckBoxMenuItem   miCompactView       = new JCheckBoxMenuItem(new ViewCompressedAction());
     private JCheckBoxMenuItem   miNodeDescription   = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
@@ -121,7 +131,29 @@ public class MainMenuBar extends JMenuBar {
     class RecentFileMenuListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
             if (((JMenuItem)e.getSource()).isSelected()) {
-                createRecentFilesMenu();                
+                createRecentFilesMenu();
+            }
+        }
+    }
+    
+    class EditMenuListener implements ChangeListener {
+        public void stateChanged(ChangeEvent e) {
+            if (((JMenuItem)e.getSource()).isSelected()) {
+                               
+                for (int i=0; i<miEdit.getItemCount(); i++) {
+                    miEdit.getItem(i).setEnabled(false);
+                }                
+                
+                TreePath selPath = Desktop.getInstance().getTree().getSelectionPath();
+                if (selPath != null) {
+                    if (selPath.getLastPathComponent() instanceof Hl7Object) {
+                        Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
+                        
+                        miEditItem.setEnabled(!(hl7o instanceof Message));                                                
+                        miEditAppendItem.setEnabled(hl7o.getChildClass() != null);                        
+                        miEditClearItem.setEnabled(!(hl7o instanceof Message));                        
+                    }
+                }
             }
         }
     }
@@ -130,14 +162,14 @@ public class MainMenuBar extends JMenuBar {
         public void stateChanged(ChangeEvent e) {
             if (((JMenuItem)e.getSource()).isSelected()) {
                 Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
-                               
+                
                 miCompactView.setSelected(model.isCompactView());
                 miNodeDescription.setSelected(model.isViewDescription());
-                miNodeDetails.setSelected(Desktop.getInstance().getDetailsWindow().isVisible());                
+                miNodeDetails.setSelected(Desktop.getInstance().getDetailsWindow().isVisible());
                 miParseWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getInputTraceWindow()) != -1);
                 miReceiveWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getReceiveWindow()) != -1);
                 miSendWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getSendWindow()) != -1);
             }
         }
-    }    
+    }
 }

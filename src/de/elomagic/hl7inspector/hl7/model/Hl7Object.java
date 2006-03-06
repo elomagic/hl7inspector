@@ -169,6 +169,12 @@ public abstract class Hl7Object {
         return htmlText;
     }
     
+    private String getTypeDescription() {
+        String s = getClass().getName();
+        s = s.substring(s.lastIndexOf(".")+1);
+        return s.toLowerCase();
+    }    
+    
     public String toString() {
         StringBuffer sb = new StringBuffer();
         for (int i=0; i<objList.size(); i++) {
