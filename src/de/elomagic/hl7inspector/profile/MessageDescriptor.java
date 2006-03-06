@@ -44,7 +44,7 @@ public class MessageDescriptor {
 
         Segment s = (Segment)getObjectOfType(o, Segment.class);        
         if (s != null) {
-            seg = p.getSegmentList().getSegment(((Segment)s).get(0).toString());
+            seg = (s.size() == 0)?null:p.getSegmentList().getSegment(((Segment)s).get(0).toString());
         }
         
         return seg;
