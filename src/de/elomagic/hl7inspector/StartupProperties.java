@@ -329,7 +329,7 @@ public class StartupProperties extends Properties {
     public String getTreeFontName() { return getProperty(TREE_FONT_NAME, "Arial"); }
     public void setTreeFontName(String name) { setProperty(TREE_FONT_NAME, name); }    
     
-    public boolean isDebugFileOutput() { return getProperty(APP_DEBUG_FILE, "t").equals("t"); }
+    public boolean isDebugFileOutput() { return getProperty(APP_DEBUG_FILE, "f").equals("t"); }
     public void setDebuFileOutput(boolean value) { setProperty(APP_DEBUG_FILE, value?"t":"f"); }
     
     public boolean isDetailsWindowVisible() { return "t".equals(getProperty(DESKTOP_DETAILS_VISIBLE)); }
