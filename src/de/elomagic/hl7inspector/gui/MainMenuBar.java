@@ -19,6 +19,7 @@ package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.actions.*;
+import de.elomagic.hl7inspector.hl7.model.EncodingObject;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
@@ -139,19 +140,22 @@ public class MainMenuBar extends JMenuBar {
     class EditMenuListener implements ChangeListener {
         public void stateChanged(ChangeEvent e) {
             if (((JMenuItem)e.getSource()).isSelected()) {
-                               
+                
                 for (int i=0; i<miEdit.getItemCount(); i++) {
                     miEdit.getItem(i).setEnabled(false);
-                }                
+                }
                 
                 TreePath selPath = Desktop.getInstance().getTree().getSelectionPath();
                 if (selPath != null) {
                     if (selPath.getLastPathComponent() instanceof Hl7Object) {
                         Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
                         
-                        miEditItem.setEnabled(!(hl7o instanceof Message));                                                
-                        miEditAppendItem.setEnabled(hl7o.getChildClass() != null);                        
-                        miEditClearItem.setEnabled(!(hl7o instanceof Message));                        
+                        if (!(hl7o instanceof EncodingObject)) {
+                            
+                            miEditItem.setEnabled(!(hl7o instanceof Message));
+                            miEditAppendItem.setEnabled(hl7o.getChildClass() != null);
+                            miEditClearItem.setEnabled(!(hl7o instanceof Message));
+                        }
                     }
                 }
             }

@@ -24,6 +24,7 @@ import de.elomagic.hl7inspector.hl7.Hl7Encoder;
 import de.elomagic.hl7inspector.hl7.model.Delimiters;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -71,7 +72,8 @@ public class EditMessageItemAction extends AbstractAction {
         if (editor.ask()) {            
             hl7o.parse(editor.getValue(new Delimiters()));
             
-            Desktop.getInstance().getTree().repaint();
+            Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
+            model.fireTreeStructureChanged(path);
         }
     }
 }

@@ -18,6 +18,7 @@
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.gui.actions.*;
+import de.elomagic.hl7inspector.hl7.model.EncodingObject;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
@@ -44,19 +45,21 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
             if (selPath.getLastPathComponent() instanceof Hl7Object) {
                 Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
                 
-                if (!(hl7o instanceof Message)) {
-                    add(new JMenuItem(new EditMessageItemAction(hl7o)));
+                if (!(hl7o instanceof EncodingObject)) {
+                    if (!(hl7o instanceof Message)) {
+                        add(new JMenuItem(new EditMessageItemAction(hl7o)));
+                    }
+                    
+                    if (hl7o.getChildClass() != null) {
+                        add(new JMenuItem(new AddMessageItemAction(hl7o.getChildClass())));
+                    }
+                    
+                    if (!(hl7o instanceof Message)) {
+                        add(new JMenuItem(new ClearMessageItemAction()));
+                    }
+                    
+                    addSeparator();
                 }
-                
-                if (hl7o.getChildClass() != null) {
-                    add(new JMenuItem(new AddMessageItemAction(hl7o.getChildClass())));
-                }
-                
-                if (!(hl7o instanceof Message)) {
-                    add(new JMenuItem(new ClearMessageItemAction()));
-                }
-                
-                addSeparator();
             }
         }
         
