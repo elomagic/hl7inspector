@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,18 +45,18 @@ public class StartupProperties extends Properties {
     private StartupProperties() {
         super();
         
-        String wp = getUserHomePath(false);        
+        String wp = getUserHomePath(false);
         try {
             
             File file = new File(wp.concat(CONFIG_FILE));
             FileInputStream fin = null;
             
             if (!file.exists()) {
-                File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));                
+                File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));
                 
                 if (oldFile.exists()) {
                     if (SimpleDialog.confirmYesNo("Import configruation from HL7 Inspector 2.0 ?") == SimpleDialog.YES_OPTION) {
-                        fin = new FileInputStream(oldFile);                        
+                        fin = new FileInputStream(oldFile);
                     } else {
                         fin = new FileInputStream(wp.concat(CONFIG_FILE));
                     }
@@ -65,11 +65,13 @@ public class StartupProperties extends Properties {
                 fin = new FileInputStream(wp.concat(CONFIG_FILE));
             }
             
-            try {
-                loadFromXML(fin);
-                //load(fin);
-            } finally {
-                fin.close();
+            if (fin != null) {
+                try {
+                    loadFromXML(fin);
+                    //load(fin);
+                } finally {
+                    fin.close();
+                }
             }
             
             createProfiles();
@@ -110,18 +112,18 @@ public class StartupProperties extends Properties {
         String wp = System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.1").concat(File.separator);
         
         if ((!(new File(wp).exists())) && (create)) {
-                new File(wp).mkdir();
-        }        
+            new File(wp).mkdir();
+        }
         
         return wp;
-    }       
+    }
     
     public final static StartupProperties getInstance() { return prop; }
     
     public Vector<File> getRecentFiles() {
         Vector<File> v = new Vector<File>();
         int i = 0;
-        try {            
+        try {
             String s = null;
             do {
                 i++;
@@ -130,7 +132,7 @@ public class StartupProperties extends Properties {
                 
                 if (s != null) {
                     File file = new File(s);
-                
+                    
                     if (file.exists()) {
                         v.add(file);
                     }
@@ -217,7 +219,7 @@ public class StartupProperties extends Properties {
         
         int i = 0;
         try {
-            String s = null; 
+            String s = null;
             do {
                 i++;
                 
@@ -234,8 +236,8 @@ public class StartupProperties extends Properties {
         }
     }
     
-    public Vector<File> getKeyStores() { return keyStoreFiles; }    
-
+    public Vector<File> getKeyStores() { return keyStoreFiles; }
+    
     private void setKeyStores() {
         int q = 0;
         String s = "";
@@ -261,7 +263,7 @@ public class StartupProperties extends Properties {
         
         int i = 0;
         try {
-            String s = null; 
+            String s = null;
             do {
                 i++;
                 
@@ -276,22 +278,22 @@ public class StartupProperties extends Properties {
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
         }
-    }    
+    }
     
-    public Calendar getLastUpdateCheck() throws ParseException { 
+    public Calendar getLastUpdateCheck() throws ParseException {
         Calendar c = Calendar.getInstance();
-        c.setTime(new SimpleDateFormat("yyyy.MM.dd").parse(getProperty(AUTOUPDATE_LAST_CHECK, "1980.01.01"))); 
+        c.setTime(new SimpleDateFormat("yyyy.MM.dd").parse(getProperty(AUTOUPDATE_LAST_CHECK, "1980.01.01")));
         return c;
-    }    
+    }
     
     public void setLastUpdateCheck(Calendar c) { setProperty(AUTOUPDATE_LAST_CHECK, new SimpleDateFormat("yyyy.MM.dd").format(c.getTime())); }
     
     public boolean isAutoUpdateAsk() { return getProperty(AUTOUPDATE_ASK, "t").equals("t"); }
     public void setAutoUpdateAsk(boolean value) { setProperty(AUTOUPDATE_ASK, value?"t":"f"); }
-
+    
     public int getAutoUpdatePeriod() { return Integer.parseInt(getProperty(AUTOUPDATE_PERIOD, "30")); }
     public void setAutoUpdatePeriod(int period) { setProperty(AUTOUPDATE_PERIOD, Integer.toString(period)); }
-
+    
     public boolean isDesktopImage() { return getProperty(DESKTOP_IMAGE, "t").equals("t"); }
     public void setDesktopImage(boolean value) { setProperty(DESKTOP_IMAGE, value?"t":"f"); }
     
@@ -304,7 +306,7 @@ public class StartupProperties extends Properties {
     
     public File getExternalFileViewer() { return getProperty(EXTERNAL_FILE_VIEWER, "").equals("")?null:new File(getProperty(EXTERNAL_FILE_VIEWER, "")); }
     public void setExternalFileViewer(File value) { setProperty(EXTERNAL_FILE_VIEWER, value==null?"":value.getAbsolutePath()); }
-        
+    
     public File getExternalHexViewer() { return getProperty(EXTERNAL_HEX_VIEWER, "").equals("")?null:new File(getProperty(EXTERNAL_HEX_VIEWER, "")); }
     public void setExternalHexViewer(File value) { setProperty(EXTERNAL_HEX_VIEWER, value==null?"":value.getAbsolutePath()); }
     
@@ -313,12 +315,12 @@ public class StartupProperties extends Properties {
     
     public int getProxyMode() { return Integer.parseInt("0" + getProperty(NETWORK_PROXY_MODE, "1")); }
     public void setProxyMode(int mode) { setProperty(NETWORK_PROXY_MODE, Integer.toString(mode)); }
-
+    
     public String getProxyHost() { return getProperty(NETWORK_PROXY_HOST, ""); }
     public void setProxyHost(String host) { setProperty(NETWORK_PROXY_HOST, host); }
     
     public int getProxyPort() { return Integer.parseInt("0" + getProperty(NETWORK_PROXY_PORT, "0")); }
-    public void setProxyPort(int port) { setProperty(NETWORK_PROXY_PORT, Integer.toString(port)); }    
+    public void setProxyPort(int port) { setProperty(NETWORK_PROXY_PORT, Integer.toString(port)); }
     
     public int getTreeNodeLength() { return Integer.parseInt(getProperty(TREE_NODE_LENGTH, "128")); }
     public void setTreeNodeLength(int nodeLen) { setProperty(TREE_NODE_LENGTH, Integer.toString(nodeLen)); }
@@ -327,7 +329,7 @@ public class StartupProperties extends Properties {
     public void setTreeViewMode(int mode) { setProperty(TREE_VIEW_MODE, Integer.toString(mode)); }
     
     public String getTreeFontName() { return getProperty(TREE_FONT_NAME, "Arial"); }
-    public void setTreeFontName(String name) { setProperty(TREE_FONT_NAME, name); }    
+    public void setTreeFontName(String name) { setProperty(TREE_FONT_NAME, name); }
     
     public boolean isDebugFileOutput() { return getProperty(APP_DEBUG_FILE, "f").equals("t"); }
     public void setDebuFileOutput(boolean value) { setProperty(APP_DEBUG_FILE, value?"t":"f"); }
@@ -340,7 +342,7 @@ public class StartupProperties extends Properties {
         Color c = null;
         
         try {
-            c = (p == null)?null:new Color(Integer.parseInt(p, 16));            
+            c = (p == null)?null:new Color(Integer.parseInt(p, 16));
         } catch (Exception e) {
             c = null;
         }
@@ -363,8 +365,8 @@ public class StartupProperties extends Properties {
     
     public void setColor(String COLOR_LABEL, Color c) {
         setProperty(COLOR_LABEL, (c==null)?null:Integer.toHexString(c.getRGB()));
-    }    
-        
+    }
+    
     private Vector<ProfileFile> profiles = new Vector<ProfileFile>();
     private Vector<File> keyStoreFiles = new Vector<File>();
     
@@ -404,7 +406,7 @@ public class StartupProperties extends Properties {
     public final static String PROFILE_DESCRIPTION      = "profile-description";
     
     public final static String KEYSTORE_FILE             = "keystore-file";
-//    public final static String PROFILE_DESCRIPTION      = "profile-description";    
+//    public final static String PROFILE_DESCRIPTION      = "profile-description";
     
     public final static String DEFAULT_FRAME_START      = "default-frame-start";
     public final static String DEFAULT_FRAME_STOP1      = "default-frame-stop1";
@@ -419,7 +421,7 @@ public class StartupProperties extends Properties {
     public final static String NETWORK_PROXY_MODE       = "network-proxy-mode";
     public final static String NETWORK_PROXY_HOST       = "network-proxy-host";
     public final static String NETWORK_PROXY_PORT       = "network-proxy-port";
-                
+    
     private final static StartupProperties prop = new StartupProperties();
     
     private String CONFIG_FILE = "hl7inspector.properties";
