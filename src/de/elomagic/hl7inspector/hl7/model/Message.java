@@ -48,4 +48,22 @@ public class Message extends Hl7Object {
   
   /** @deprecated */
   public File getFile() { return null; }
+  
+  public int indexOfName(String segmentName) {
+      int r = -1;
+      
+      for (int i=0; (i<size()) && (r == -1); i++) {
+          if (get(i).size() != 0) {
+              if (segmentName.equals(get(i).get(0).toString())) {
+                  r = i;
+              }
+          }
+      }
+      
+      return r;
+  }
+  
+  public Segment getSegment(String segName) {
+      return (indexOfName(segName) == -1)?null:(Segment)get(indexOfName(segName));
+  }
 }
