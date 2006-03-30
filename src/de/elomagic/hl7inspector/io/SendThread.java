@@ -17,6 +17,7 @@
 
 package de.elomagic.hl7inspector.io;
 
+import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.Segment;
 import java.io.IOException;
@@ -148,7 +149,7 @@ public class SendThread extends Thread implements IOCharListener {
     private Message readAcknowledge() throws IOException {
         fireStatusEvent("Waiting for acknowledge message...");
         
-        MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, MessageParserStreamReader.FRAMED_FORMAT, options.getFrame());
+        MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, StreamFormat.FRAMED, options.getFrame());
         messageReader.addListener(this);
         Message message = messageReader.readMessage();
         

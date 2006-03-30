@@ -19,6 +19,7 @@ package de.elomagic.hl7inspector.io;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.ImportOptionBean;
+import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.Segment;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
@@ -40,7 +41,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
     /** Creates a new instance of ReceiveThread */
     public ReceiveThread() {
         options.setSource("IP Socket");
-        options.setImportMode(MessageParserStreamReader.FRAMED_FORMAT);
+        options.setImportMode(StreamFormat.FRAMED);
     }
     
     public Frame getFrame() { return options.getFrame(); }
@@ -101,7 +102,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
                         writer  = new OutputStreamWriter(socket.getOutputStream());
                         reader  = new InputStreamReader(socket.getInputStream());
                         
-                        MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, MessageParserStreamReader.FRAMED_FORMAT, options.getFrame());
+                        MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, StreamFormat.FRAMED, options.getFrame());
                         try {
                             messageReader.addListener(this);
                             

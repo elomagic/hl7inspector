@@ -17,6 +17,7 @@
 
 package de.elomagic.hl7inspector.io;
 
+import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import de.elomagic.hl7inspector.hl7.model.Delimiters;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import java.io.IOException;
@@ -32,21 +33,13 @@ import java.util.Vector;
 public class MessageParserStreamReader {
     
     /** Creates a new instance of FileParserStream */
-    public MessageParserStreamReader(Reader reader, int format, Frame frame) {
+    public MessageParserStreamReader(Reader reader, StreamFormat format, Frame frame) {
         this.reader = reader;
         this.format = format;
         this.frame = frame;
     }
     
-    public final static int AUTO_DETECT_FORMAT  = 0;
-    public final static int FRAMED_FORMAT       = 1;
-    public final static int LINE_FORMAT         = 2;
-    
-    public enum StreamFormat { AUTO_DETECT, FRAMED, TEXT_LINE };    
-    
-    public Message readMessage() throws IOException {
-        return readNextMessage();
-    }
+    public Message readMessage() throws IOException { return readNextMessage(); }
     
     public boolean available() { return false; }
     
@@ -56,7 +49,7 @@ public class MessageParserStreamReader {
     public void removeListener(IOCharListener value) { listener.remove(value); }
     
     private Reader reader;
-    private int format;
+    private StreamFormat format;
     private Frame frame;
     private LineNumberReader  lineReader = null;
     private long bytesReads = 0;
@@ -70,7 +63,7 @@ public class MessageParserStreamReader {
         
         // Format detection
         Character cc = null;
-        if (format == AUTO_DETECT_FORMAT) {
+        if (format == StreamFormat.AUTO_DETECT) {
             int c = reader.read();
             if (c == -1) {
                 throw new IOException("Error: End of stream reached.");
@@ -79,13 +72,13 @@ public class MessageParserStreamReader {
             cc = new Character((char)c);
             bytesReads++;
             
-            format = (cc.charValue() == frame.getStartFrame())?FRAMED_FORMAT:LINE_FORMAT;
+            format = (cc.charValue() == frame.getStartFrame())?StreamFormat.FRAMED:StreamFormat.TEXT_LINE;
             
-            fireCharReceived("Using parser format: " + ((format==FRAMED_FORMAT)?"FRAMED_FORMAT":"LINE_FORMAT"));
+            fireCharReceived("Using parser format: " + ((format==StreamFormat.FRAMED)?"FRAMED_FORMAT":"LINE_FORMAT"));
         }
         
         switch (format) {
-            case FRAMED_FORMAT: { // Framed messages
+            case FRAMED: { // Framed messages
                 boolean done = false;
                 char c;
                 
@@ -141,7 +134,7 @@ public class MessageParserStreamReader {
                                 
                 break;
             }
-            case LINE_FORMAT: { // Unframed messages
+            case TEXT_LINE: { // Unframed messages
                 if (lineReader == null) {
                     lineReader = new LineNumberReader(reader);
                 }

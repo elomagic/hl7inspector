@@ -113,6 +113,10 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                         if (d.length() != 0) {                        
                             String pt = "yyyyMMddHHmmss";
                             
+                            if (d.length() > pt.length()) {
+                                d = d.substring(0, pt.length());
+                            }
+                            
                             String p = (pt.length() == d.length())?pt:pt.substring(0, d.length());
                             Date dt = new SimpleDateFormat(p).parse(d);
 

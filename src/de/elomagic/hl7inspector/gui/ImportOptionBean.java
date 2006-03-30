@@ -29,22 +29,24 @@ public class ImportOptionBean {
     public ImportOptionBean() {
     }
     
-    private boolean     readBottom      = false;
-    private boolean     useRegExpr      = false;
-    private boolean     negReg          = false;
-    private String      phrase          = "";
-    private int         importMode      = 0;
-    private Character   startChar       = new Character((char)11);
-    private Character   stopChar1       = new Character((char)28);
-    private Character   stopChar2       = new Character((char)13);
-    private int         bufferSize      = 100;
-    private boolean     clearBuffer     = false;
-    private String      source          = "";
-    private long        fileSize        = -1;
-    private String      sourceLabel     = "Name:";
-    private boolean     caseSensitive   = false;
-    private String      encoding        = "ISO-8859-1";
-    private boolean     validate        = false;
+    public enum StreamFormat { AUTO_DETECT, FRAMED, TEXT_LINE };     
+    
+    private boolean         readBottom      = false;
+    private boolean         useRegExpr      = false;
+    private boolean         negReg          = false;
+    private String          phrase          = "";
+    private StreamFormat    importMode      = StreamFormat.AUTO_DETECT;
+    private Character       startChar       = new Character((char)11);
+    private Character       stopChar1       = new Character((char)28);
+    private Character       stopChar2       = new Character((char)13);
+    private int             bufferSize      = 100;
+    private boolean         clearBuffer     = false;
+    private String          source          = "";
+    private long            fileSize        = -1;
+    private String          sourceLabel     = "Name:";
+    private boolean         caseSensitive   = false;
+    private String          encoding        = "ISO-8859-1";
+    private boolean         validate        = false;
             
             public Frame getFrame() { return new Frame(startChar, stopChar1, stopChar2); }
     
@@ -64,9 +66,9 @@ public class ImportOptionBean {
     
     public void setPhrase(String phrase) { this.phrase = phrase; }
     
-    public int getImportMode() { return importMode; }
+    public StreamFormat getImportMode() { return importMode; }
     
-    public void setImportMode(int importMode) { this.importMode = importMode; }
+    public void setImportMode(StreamFormat importMode) { this.importMode = importMode; }
     
     public void setFrame(Frame frame) {
         startChar = new Character(frame.getStartFrame());

@@ -21,6 +21,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
 import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.AbstractAction;
@@ -54,9 +55,9 @@ public class ImportOptionsDialog extends BaseDialog {
         ((SpinnerNumberModel)spBuffer.getModel()).setValue(new Integer(defaultOptions.getBufferSize()));
         cbCaseSense.setSelected(defaultOptions.isCaseSensitive());
         cbClearBuffer.setSelected(defaultOptions.isClearBuffer());
-        rbModeAuto.setSelected(defaultOptions.getImportMode() == 0);
-        rbModeStream.setSelected(defaultOptions.getImportMode() == 1);
-        rbModeParse.setSelected(defaultOptions.getImportMode() == 2);
+        rbModeAuto.setSelected(defaultOptions.getImportMode() == StreamFormat.AUTO_DETECT);
+        rbModeStream.setSelected(defaultOptions.getImportMode() == StreamFormat.FRAMED);
+        rbModeParse.setSelected(defaultOptions.getImportMode() == StreamFormat.TEXT_LINE);
         cbNegateReg.setSelected(defaultOptions.isNegReg());
         cbReadBottom.setSelected(defaultOptions.isReadBottom());
         cbbStartChar.setSelectedIndex((defaultOptions.getStartChar()==null)?16:(int)defaultOptions.getStartChar().charValue());
@@ -66,7 +67,7 @@ public class ImportOptionsDialog extends BaseDialog {
         cbEncoding.setSelectedItem(defaultOptions.getEncoding());        
         cbRegExpr.setSelected(defaultOptions.isUseRegExpr());
         
-        updateParseModeButtons(defaultOptions.getImportMode() != 1);
+        updateParseModeButtons(defaultOptions.getImportMode() != StreamFormat.FRAMED);
         
         lblSource.setText(defaultOptions.getSource());
         lblSource.setToolTipText(defaultOptions.getSource());
@@ -98,7 +99,7 @@ public class ImportOptionsDialog extends BaseDialog {
         } catch (Exception e) {
             result.setFileSize(-1);
         }
-        result.setImportMode(rbModeParse.isSelected()?2:(rbModeStream.isSelected()?1:0));
+        result.setImportMode(rbModeParse.isSelected()?StreamFormat.TEXT_LINE:(rbModeStream.isSelected()?StreamFormat.FRAMED:StreamFormat.AUTO_DETECT));
         result.setNegReg(cbNegateReg.isSelected());
         result.setPhrase((cbbPhrase.getSelectedItem() == null)?"":cbbPhrase.getSelectedItem().toString());
         result.setReadBottom(cbReadBottom.isSelected());
