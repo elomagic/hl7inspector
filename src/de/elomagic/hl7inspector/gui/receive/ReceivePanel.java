@@ -17,6 +17,7 @@
 
 package de.elomagic.hl7inspector.gui.receive;
 
+import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.ImportOptionsDialog;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.images.ResourceLoader;
@@ -35,7 +36,7 @@ import org.apache.log4j.Logger;
  *
  * @author rambow
  */
-public class ReceivePanel extends CharacterMonitor {
+public class ReceivePanel extends CharacterMonitor implements ActionListener {
     
     /** Creates a new instance of ReceivePanel */
     public ReceivePanel() {
@@ -51,10 +52,16 @@ public class ReceivePanel extends CharacterMonitor {
         getToolBar().addSeparator();
         getToolBar().add(btStart);
         getToolBar().add(btStop);
-        getToolBar().addSeparator();
-        getToolBar().add(btPort);
-        getToolBar().add(btOptions);
         
+        if (StartupProperties.getInstance().isDebugFileOutput()) {
+            getToolBar().addSeparator();
+            getToolBar().add(btSeqAuth);
+            getToolBar().add(btSeqCrypt);
+        }
+
+        getToolBar().addSeparator();       
+        getToolBar().add(btPort);
+        getToolBar().add(btOptions);        
     } 
     
     private ReceiveThread thread = null;    
@@ -63,6 +70,8 @@ public class ReceivePanel extends CharacterMonitor {
     private AbstractButton  btStop      = createButton(JToggleButton.class, "stop_service.png", "Stop receiving message service.", "STOP");
     private AbstractButton  btPort      = createButton(JButton.class, "server.png", "Setup network", "SETUP");
     private AbstractButton  btOptions   = createButton(JButton.class, "preferences-desktop.png", "Setup import options", "OPTIONS");
+    private AbstractButton  btSeqAuth   = createButton(JToggleButton.class, "kgpg_sign.png", "Client authentication", "AUTH");
+    private AbstractButton  btSeqCrypt  = createButton(JToggleButton.class, "encrypt.png", "Encrypt communication", "CRYPT");
     
     private void initThread() {
         ReceiveThread t = new ReceiveThread();
@@ -81,7 +90,7 @@ public class ReceivePanel extends CharacterMonitor {
         thread = t;
     }
     
-    private void buttonClickPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("START")) {
             thread.start();
         } else if (e.getActionCommand().equals("STOP")) {
@@ -114,6 +123,10 @@ public class ReceivePanel extends CharacterMonitor {
             } finally {
 //                setAlwaysOnTop(true);
             }
+        } else if (e.getActionCommand().equals("AUTH")) {
+            thread.setAuthentication(btSeqAuth.isSelected());
+        } else if (e.getActionCommand().equals("CRYPT")) {
+            thread.setEncryption(btSeqCrypt.isSelected());
         } else {
             Logger.getLogger(getClass()).error("Unknown ActionCommand '" + e.getActionCommand() + "'.");
         }
@@ -127,11 +140,7 @@ public class ReceivePanel extends CharacterMonitor {
             result.setIcon(ResourceLoader.loadImageIcon(imageName));
             result.setToolTipText(text);
             result.setActionCommand(cmd);
-            result.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    buttonClickPerformed(e);
-                }
-            });            
+            result.addActionListener(this);            
         } catch (Exception e) {
             result = null;
             Logger.getLogger(getClass()).error(e.getMessage(), e);
@@ -145,6 +154,8 @@ public class ReceivePanel extends CharacterMonitor {
         btStart.setEnabled(false);
         btStop.setEnabled(true);
         btPort.setEnabled(false);
+        btSeqCrypt.setEnabled(false);
+        btSeqAuth.setEnabled(false);        
         btOptions.setEnabled(false);
     }
 
@@ -153,6 +164,8 @@ public class ReceivePanel extends CharacterMonitor {
         btStop.setEnabled(false);
         btStop.setSelected(true);
         btPort.setEnabled(true);
+        btSeqCrypt.setEnabled(true);
+        btSeqAuth.setEnabled(true);            
         btOptions.setEnabled(true);
 
         initThread();        

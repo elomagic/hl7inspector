@@ -42,6 +42,8 @@ public class MessageParserStreamReader {
     public final static int FRAMED_FORMAT       = 1;
     public final static int LINE_FORMAT         = 2;
     
+    public enum StreamFormat { AUTO_DETECT, FRAMED, TEXT_LINE };    
+    
     public Message readMessage() throws IOException {
         return readNextMessage();
     }
@@ -92,7 +94,7 @@ public class MessageParserStreamReader {
                     c = (cc != null)?cc.charValue():(char)reader.read();
                     
                     if (c == 0xffff) {
-                        throw new IOException("Error: End of stream reached.");
+                        throw new IOException("End of stream reached.");
                     }
                     
                     bytesReads++;
@@ -100,46 +102,43 @@ public class MessageParserStreamReader {
                     
                 } while (c != frame.getStartFrame());
                 
-                Vector<String> msgText = new Vector<String>();
-                
-                String msgCache = "";
+                StringBuffer sb = new StringBuffer();
                 
                 while (!done) {
-                    String line = readSegment();
-                    bytesReads = bytesReads + line.length() + 1;
+                    int m = reader.read();
                     
-                    line = msgCache.concat(line);
-                    
-                    msgCache = "";
-                    msgText.add(line);
-                    
-                    // Next chars, may be the end frame
-                    char ec[] = new char[frame.getStopFrameLength()];
-                    
-                    int r = reader.read(ec);
-                    if (r == -1) {
-                        throw new IOException("Error: End of stream reached.");
+                    if (c == -1) {
+                        throw new IOException("End of stream reached.");
                     }
                     
-                    bytesReads = bytesReads + r;
-                    fireCharReceived(new String(ec));
-                    
-                    // Is end frame received
-                    done = Arrays.equals(ec, frame.getStopFrame());
-                    
-                    if (!done) {
-                        msgCache = new String(ec);
+                    bytesReads++;
+                    sb.append((char)m);
+                    fireCharReceived((char)m);
+
+                    // Check on stop frame
+                    if (sb.length() >= frame.getStopFrameLength()) {
+                        char ec[] = new char[frame.getStopFrameLength()];
+                        sb.getChars(sb.length()-frame.getStopFrameLength(), sb.length(), ec, 0);
+    
+                        done = Arrays.equals(ec, frame.getStopFrame());                        
+                        
+                        if (done)  {
+                            // Cut stop frame
+                            sb.delete(sb.length()-frame.getStopFrameLength(), sb.length());                            
+                        }
                     }
                 }
                 
-                StringBuffer m = new StringBuffer();
-                for (int i=0; i<msgText.size(); i++) {
-                    m = m.append(msgText.get(i).toString()).append((char)0xd);
-                }
+                if (sb.charAt(sb.length()-1) != 0x0d) {
+                    fireCharReceived("Warning: Last segment have no segment termination char 0x0d !");
+                    sb.append((char)0xd);
+                }                
                 
                 result = new Message();
-                result.parse(m.toString());
+                String msg = sb.toString();
                 
+                result.parse(msg);
+                                
                 break;
             }
             case LINE_FORMAT: { // Unframed messages
@@ -207,29 +206,6 @@ public class MessageParserStreamReader {
         }
         
         return result;
-    }
-    
-    public String readSegment() throws IOException {
-        StringBuffer sb = new StringBuffer();
-        
-        int c = reader.read();
-        if (c == -1) {
-            throw new IOException("Error: End of stream reached.");
-        }
-        
-        fireCharReceived((char)c);
-        
-        while (c != 0x0d) {
-            sb.append((char)c);
-            
-            c = reader.read();
-            if (c == -1) {
-                throw new IOException("Error: End of stream reached.");
-            }            
-            fireCharReceived((char)c);
-        }
-        
-        return sb.toString();        
     }
     
     protected void fireCharReceived(String s) {

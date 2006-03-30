@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,12 +18,16 @@
 package de.elomagic.hl7inspector.io;
 
 import de.elomagic.hl7inspector.hl7.model.Message;
+import de.elomagic.hl7inspector.hl7.model.Segment;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Vector;
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import org.apache.log4j.Logger;
 /**
  *
@@ -32,13 +36,13 @@ import org.apache.log4j.Logger;
 public class SendThread extends Thread implements IOCharListener {
     
     /** Creates a new instance of ReceiveThread */
-    public SendThread() { }    
+    public SendThread() { }
     
-    public SendOptionsBean getOptions() { return options; }    
+    public SendOptionsBean getOptions() { return options; }
     public void setOptions(SendOptionsBean o) { options = o; }
     
     public void setMessages(Vector<Message> list) { messages = list; }
-        
+    
     public void terminateRequest() {
         /*if (!terminate) {
             fireStatusEvent("Cancel sending message...");
@@ -56,7 +60,7 @@ public class SendThread extends Thread implements IOCharListener {
                 Logger.getLogger(getClass()).warn(e.getMessage(), e);
             }
         }
-    }    
+    }
     
     public void run() {
         fireThreadStartedEvent();
@@ -64,7 +68,13 @@ public class SendThread extends Thread implements IOCharListener {
             while ((!terminate) && (!done)) {
                 try {
                     if (socket == null) {
+                        if ((options.isAuthentication()) || options.isEncryption()) {
+                            fireStatusEvent("Security enabled. (Encryption=" + Boolean.toString(options.isEncryption()) + ", Authentication=" + Boolean.toString(options.isAuthentication()) + ")");
+                        }
+                        
                         fireStatusEvent("Connecting system " + options.getHost() + ":" + options.getPort() + "...");
+                        
+                        SSLSocketFactory sf = (SSLSocketFactory)SSLSocketFactory.getDefault();
                         
                         socket = new Socket();
                         socket.connect(new InetSocketAddress(options.getHost(), options.getPort()));
@@ -76,44 +86,46 @@ public class SendThread extends Thread implements IOCharListener {
                     }
                 } catch (Exception e) {
                     Logger.getLogger(getClass()).warn(e.getMessage(), e);
-                    fireStatusEvent((e.getMessage()!=null)?e.getMessage():e.toString()); 
-                    terminateRequest();                    
+                    fireStatusEvent((e.getMessage()!=null)?e.getMessage():e.toString());
+                    terminateRequest();
                 }
             }
             
             if (socket != null) {
 //                if (socket.isConnected()) {
-                    fireStatusEvent("Disconnecting from system " + options.getHost() + ":" + options.getPort() + "...");
+                fireStatusEvent("Disconnecting from system " + options.getHost() + ":" + options.getPort() + "...");
 /*                    if (writer != null) {
                         writer.close();
                     }
                     if (reader != null) {
                         reader.close();
                     }*/
-                    socket.close();
-                    fireStatusEvent("System " + options.getHost() + ":" + options.getPort() + " disconnected.");
+                socket.close();
+                fireStatusEvent("System " + options.getHost() + ":" + options.getPort() + " disconnected.");
 //                }
-            }                        
+            }
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e, e);
-            fireStatusEvent((e.getMessage()!=null)?e.getMessage():e.toString());            
+            fireStatusEvent((e.getMessage()!=null)?e.getMessage():e.toString());
         }
-        fireStatusEvent("Send messages server stopped.");        
-        fireThreadStoppedEvent();        
+        fireStatusEvent("Send messages server stopped.");
+        fireThreadStoppedEvent();
     }
-        
-    private void sendMessages() throws IOException { 
+    
+    private void sendMessages() throws IOException {
         while ((messages.size() > 0) && (!terminate)) {
             Message message = messages.get(0);
-
+            
             writeMessage(message);
             
             message = readAcknowledge();
             
+            evaluateAcknowledge(message);
+            
             messages.remove(0);
         }
         done = true;
-        fireStatusEvent("All selected messaged send."); 
+        fireStatusEvent("All selected messaged send.");
     }
     
     private void writeMessage(Message message) throws IOException {
@@ -128,10 +140,10 @@ public class SendThread extends Thread implements IOCharListener {
             
             fireCharSendEvent(c);
             writer.write(c);
-        }        
+        }
         writer.flush();
-        fireStatusEvent("Message send.");        
-    }    
+        fireStatusEvent("Message send.");
+    }
     
     private Message readAcknowledge() throws IOException {
         fireStatusEvent("Waiting for acknowledge message...");
@@ -145,19 +157,48 @@ public class SendThread extends Thread implements IOCharListener {
         return message;
     }
     
-    public void addListener(IOThreadListener value) { listener.add(value); }    
+    private void evaluateAcknowledge(Message message) {
+        Segment msa = message.getSegment("MSA");
+        Segment err = message.getSegment("ERR");
+        
+        if (msa == null) {
+            fireStatusEvent("Invalid acknowledge message structure. Segment MSA is missing.");
+        } else {
+            if (msa.size() < 1) {
+                fireStatusEvent("Invalid segment MSA. Field MSA-1 is missing.");
+            } else {
+                String ac = msa.get(1).toString();
+                
+                String status;
+                
+                if ((ac.equals("AA")) || (ac.equals("CA"))) {
+                    status = "Evaluate acknowledge: Application | Commit Accept";
+                } else if ((ac.equals("AE")) || (ac.equals("CE"))) {
+                    status = "Evaluate acknowledge: Application | Commit Error !!!";
+                } else if ((ac.equals("AR")) || (ac.equals("CR"))) {
+                    status = "Evaluate acknowledge: Application | Commit Reject !!!";
+                } else {
+                    status = "Evaluate acknowledge: Unkown or missing acknowledge code in field MSA-1 !!!";
+                }
+                
+                fireStatusEvent(status);
+            }
+        }        
+    }
+    
+    public void addListener(IOThreadListener value) { listener.add(value); }
     public void removeListener(IOThreadListener value) { listener.remove(value); }
     
     private SendOptionsBean options     = new SendOptionsBean();
     private Vector<Message> messages    = new Vector<Message>();
-           
+    
     private Socket              socket;
     private OutputStreamWriter  writer;
     private InputStreamReader   reader;
     
     private boolean     terminate   = false;
     private boolean     done        = false;
-        
+    
     protected void fireThreadStartedEvent() {
         for (int i=0; i<listener.size();i++)
             listener.get(i).threadStarted(this);
@@ -176,17 +217,17 @@ public class SendThread extends Thread implements IOCharListener {
     protected void fireCharSendEvent(char c) {
         for (int i=0; i<listener.size();i++)
             listener.get(i).charSend(this, c);
-    }    
+    }
     
     protected void fireStatusEvent(String text) {
         for (int i=0; i<listener.size();i++)
             listener.get(i).status(this, text);
-    }        
+    }
     
     private Vector<IOThreadListener> listener = new Vector<IOThreadListener>();
-
+    
     // Interface IOCharListener
     public void charSend(Object source, char c) { fireCharSendEvent(c); }
-
+    
     public void charReceived(Object source, char c) { fireCharReceivedEvent(c); }
 }

@@ -17,9 +17,12 @@
 
 package de.elomagic.hl7inspector.gui.sender;
 
+import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.io.SendOptionsBean;
 import de.elomagic.hl7inspector.io.SendThread;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -34,7 +37,7 @@ import org.apache.log4j.Logger;
  *
  * @author rambow
  */
-public class SendPanel extends CharacterMonitor {
+public class SendPanel extends CharacterMonitor implements ActionListener {
     
     /** Creates a new instance of SendPanel */
     public SendPanel() {
@@ -50,6 +53,13 @@ public class SendPanel extends CharacterMonitor {
         getToolBar().addSeparator();
         getToolBar().add(btStart);
         getToolBar().add(btStop);
+        
+        if (StartupProperties.getInstance().isDebugFileOutput()) {
+            getToolBar().addSeparator();
+            getToolBar().add(btSeqAuth);
+            getToolBar().add(btSeqCrypt);            
+        }
+        
         getToolBar().addSeparator();
         getToolBar().add(btOptions);
     } 
@@ -59,6 +69,9 @@ public class SendPanel extends CharacterMonitor {
     private AbstractButton  btStart     = createButton(JToggleButton.class, "start_service.png", "Send selected messages", "START");
     private AbstractButton  btStop      = createButton(JToggleButton.class, "stop_service.png", "Cancel sending message", "STOP");
     private AbstractButton  btOptions   = createButton(JButton.class, "preferences-desktop.png", "Setup sender options", "OPTIONS");
+    private AbstractButton  btSeqAuth   = createButton(JToggleButton.class, "kgpg_sign.png", "Server authentication", "AUTH");
+    private AbstractButton  btSeqCrypt  = createButton(JToggleButton.class, "encrypt.png", "Encrypt communication", "CRYPT");
+    
     
     private void initThread() {
         SendThread t = new SendThread();
@@ -77,10 +90,14 @@ public class SendPanel extends CharacterMonitor {
         thread = t;
     }    
   
-    private void buttonClickPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("START")) {
-            thread.setMessages(Desktop.getInstance().getTree().getSelectedMessages());
-            thread.start();
+            if (Desktop.getInstance().getTree().getSelectedMessages().size() == 0) {
+                SimpleDialog.error("No message(s) selected. Please select the message(s) you want to send.");                
+            } else {
+                thread.setMessages(Desktop.getInstance().getTree().getSelectedMessages());
+                thread.start();
+            }
         } else if (e.getActionCommand().equals("STOP")) {
             if (thread != null) {
                 thread.terminateRequest();
@@ -97,6 +114,10 @@ public class SendPanel extends CharacterMonitor {
             } finally {
 //                setAlwaysOnTop(true);
             }
+        } else if (e.getActionCommand().equals("AUTH")) {
+            thread.getOptions().setAuthentication(btSeqAuth.isSelected());            
+        } else if (e.getActionCommand().equals("CRYPT")) {
+            thread.getOptions().setEncryption(btSeqCrypt.isSelected());            
         } else {
             Logger.getLogger(getClass()).error("Unknown ActionCommand '" + e.getActionCommand() + "'.");
         }
@@ -110,12 +131,7 @@ public class SendPanel extends CharacterMonitor {
             result.setIcon(ResourceLoader.loadImageIcon(imageName));
             result.setToolTipText(text);
             result.setActionCommand(cmd);
-            result.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    buttonClickPerformed(e);
-                }
-            });
-            
+            result.addActionListener(this);            
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
         }
@@ -127,6 +143,8 @@ public class SendPanel extends CharacterMonitor {
     public void threadStarted(Thread source) { 
         btStart.setEnabled(false);
         btStop.setEnabled(true);
+        btSeqCrypt.setEnabled(false);
+        btSeqAuth.setEnabled(false);
         btOptions.setEnabled(false);
     }
 
@@ -134,6 +152,8 @@ public class SendPanel extends CharacterMonitor {
         btStart.setEnabled(true);
         btStop.setEnabled(false);
         btStop.setSelected(true);
+        btSeqCrypt.setEnabled(true);
+        btSeqAuth.setEnabled(true);
         btOptions.setEnabled(true);
 
         initThread();        
@@ -141,6 +161,5 @@ public class SendPanel extends CharacterMonitor {
     
     public String getTitle() { return  "Message Sender"; }
 
-    public ImageIcon getIcon() { return  ResourceLoader.loadImageIcon("send.png"); }
-    
+    public ImageIcon getIcon() { return  ResourceLoader.loadImageIcon("send.png"); }    
 }
