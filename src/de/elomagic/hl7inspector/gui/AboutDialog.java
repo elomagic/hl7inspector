@@ -36,7 +36,9 @@ import java.util.Calendar;
 import java.util.Date;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JTabbedPane;
 
 /**
  *
@@ -57,9 +59,14 @@ public class AboutDialog extends BaseDialog {
         
         setDialogMode(BaseDialog.CLOSE_DIALOG);        
         setTitle("About Dialog");
-        setResizable(false);
+        setResizable(true);
         
-        setLayout(new BorderLayout(4, 4));
+        setLayout(new BorderLayout());        
+        
+        JTabbedPane tabbedPane = new JTabbedPane();
+        getContentPane().add(tabbedPane, BorderLayout.CENTER);
+        
+        // Start with tabbed page 1
         
         lblLogo.setPreferredSize(new Dimension(64, 64));
         lblCompany  = new JLabel("elomagic");
@@ -92,18 +99,63 @@ public class AboutDialog extends BaseDialog {
         builder.add(lblLicense,     cc.xy(4, 7));
 
         builder.add(lblContact,     cc.xy(4, 9));
-                
-        getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
         
-        // Button pan
+        JPanel p = builder.getPanel();        
+        int h = p.getPreferredSize().height;
         
+        tabbedPane.add("About", p);
+        
+        // Start with tabbed page 2
+        
+        layout = new FormLayout(
+                "p, 8dlu, p:grow",
+//            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
+                "p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, p:grow");   // rows
+        
+        builder = new PanelBuilder(layout);
+        builder.setDefaultDialogBorder();
+        
+        cc = new CellConstraints();
+        
+        // 1st row
+        JLabel title = new JLabel("HL7 Inspector Product Information");
+        title.setFont(Font.decode("Arial"));
+        title.setFont(title.getFont().deriveFont(Font.BOLD));
+        title.setFont(title.getFont().deriveFont(Float.parseFloat("20")));
+        
+        builder.add(title,        cc.xyw(1, 1, 3));
+        
+        // 2nd row
+        builder.addLabel("Product Version:",                                    cc.xy(1, 3));
+        builder.add(new JLabel(Hl7Inspector.getVersionString()),                cc.xy(3, 3));
+        
+        builder.addLabel("Operation System:",                                   cc.xy(1, 5));
+        builder.add(new JLabel(getProperty("os.name")+" "+getProperty("os.version")+" running on "+getProperty("os.arch")),        cc.xy(3, 5));
+
+        builder.addLabel("Java:",                                               cc.xy(1, 7));
+        builder.add(new JLabel(getProperty("java.version")),   cc.xy(3, 7));
+
+        builder.addLabel("VM:",                                                 cc.xy(1, 9));
+        builder.add(new JLabel(getProperty("java.vm.name")+" "+getProperty("java.vm.version")),     cc.xy(3, 9));
+
+        builder.addLabel("Vendor:",                                             cc.xy(1, 11));
+        builder.add(new JLabel(getProperty("java.vendor")),    cc.xy(3, 11));
+                               
+//        builder.addLabel("System Locale:",                                    cc.xy(1, 13));
+//        builder.add(new JLabel(System.getProperty("java.version", "Unkown")),     cc.xy(3, 13));
+        
+        p = builder.getPanel();        
+        tabbedPane.add("Details", p);
+
         pack();
         
         //setSize(300, getPreferredSize()!=null?getPreferredSize().height:230);
-        setSize(getPreferredSize());
+        setSize(getPreferredSize().width, 300);
         
         setBounds(ToolKit.centerFrame(this, this.getOwner()));
     }
+    
+    private String getProperty(String key) { return System.getProperty(key, "Unknown"); }
     
     private JLabel          lblLogo     = new JLabel(ResourceLoader.loadImageIcon("64x64/hl7inspector.png"));
     private JLabel          lblCompany;
