@@ -110,10 +110,10 @@
         
         <delete file="${dist.dir}/hl7inspector_final.jar"/>-->
         
-        <copy file="${libs.forms-1.0.5.classpath}" todir="${dist.dir}"/>        
+        <copy file="${libs.forms-1.0.6.classpath}" todir="${dist.dir}"/>        
         <copy file="${libs.logging-log4j-1.2.12.classpath}" todir="${dist.dir}"/>
-        <copy file="${libs.looks-1.3.2.classpath}" todir="${dist.dir}"/>
-        <copy file="${libs.l2fprod-common-0.2-dev.classpath}" todir="${dist.dir}"/>
+        <copy file="${libs.looks-2.0.1.classpath}" todir="${dist.dir}"/>
+        <copy file="${libs.l2fprod-common-6.2.classpath}" todir="${dist.dir}"/>
         <copy file="${libs.nanoxml-lite-2.2.3.classpath}" todir="${dist.dir}"/>
         
         <property name="launch4j.dir" location="C:\Programme\Launch4j" />
