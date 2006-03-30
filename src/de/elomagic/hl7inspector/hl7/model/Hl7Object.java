@@ -184,7 +184,7 @@ public abstract class Hl7Object {
             }
         }
         
-        if ((sb.length() != 0) && (!(this instanceof Segment))) {
+        if ((sb.length() != 0) && (!(this instanceof Message))) {
             sb.deleteCharAt(sb.length()-1);
         }
         
