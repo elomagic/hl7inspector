@@ -63,7 +63,12 @@ public class SendOptionsDialog extends BaseDialog {
         cbStartChar     = new JComboBox();
         cbStopChar1     = new JComboBox();
         cbStopChar2     = new JComboBox();
-        cbEncoding      = new JComboBox(new String[] { "ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16" });
+        cbEncoding     = new JComboBox(new String[] { "ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16" });
+        try {
+            cbEncoding.setSelectedItem("ISO-8859-1");
+        } catch (Exception e) {
+            cbEncoding.setSelectedItem("US-ASCII");                        
+        }
         cbReuse         = new JCheckBox();
         cbReuse.setToolTipText("Reuse socket for next the message.");
         

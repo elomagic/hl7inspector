@@ -53,16 +53,16 @@ public class SaveDialog extends BaseDialog {
     
     public MessageWriterBean getOptions() {
         MessageWriterBean options = new MessageWriterBean();
-        options.setDataFileExtension(editDataExt.getSelectedItem().toString());
+        options.setDataFileExtension((editDataExt.getSelectedItem() != null)?editDataExt.getSelectedItem().toString():"");
         options.setDataFilePrefix(editPrefix.getText());
         options.setDestinationFolder(new File(editDestFolder.getText()));
         options.setFrame(frame);
         options.setGenerateSempahore(btGenSema.isSelected());
         options.setManyFiles(btManyFiles.isSelected());
         options.setOnlySelectedFiles(btSelected.isSelected());
-        options.setSemaphoreExtension(editSemaExt.getSelectedItem().toString());
+        options.setSemaphoreExtension((editSemaExt.getSelectedItem() != null)?editSemaExt.getSelectedItem().toString():"");
         options.setSingleFileName((editFilename.getText().length()!=0)?new File(editFilename.getText()):null);
-        options.setEncoding(cbEncoding.getSelectedItem().toString());
+        options.setEncoding((cbEncoding.getSelectedItem()!= null)?cbEncoding.getSelectedItem().toString():"");
         
         return options;
     }

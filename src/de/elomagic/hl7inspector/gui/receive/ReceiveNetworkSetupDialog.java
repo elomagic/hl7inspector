@@ -52,6 +52,7 @@ public class ReceiveNetworkSetupDialog extends BaseDialog {
         
         cbServerPort    = new JComboBox(new String[] { "2100", "2200", "2300", "5555", "5556" } );
         cbServerPort.setEditable(true);
+        cbServerPort.setSelectedItem("");
         cbReuse         = new JCheckBox();
         cbReuse.setToolTipText("Reuse socket for next the message.");
                 

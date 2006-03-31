@@ -63,7 +63,7 @@ public class TreeViewPanel extends AbstractPanel {
         cbFont                  = new JComboBox(ge.getAvailableFontFamilyNames());
         cbFont.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                editFontSample.setFont(Font.decode(cbFont.getSelectedItem().toString()));
+                editFontSample.setFont(Font.decode((cbFont.getSelectedItem()!=null)?cbFont.getSelectedItem().toString():""));
             }
         });
         cbFont.setEditable(false);                

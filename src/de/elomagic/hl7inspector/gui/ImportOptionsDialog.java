@@ -74,8 +74,9 @@ public class ImportOptionsDialog extends BaseDialog {
         
         lblFileSize.setText((defaultOptions.getFileSize()==-1)?"?":""+defaultOptions.getFileSize());
         
+        cbbPhrase.setSelectedItem("");
         cbbPhrase.setFocusable(true);
-        cbbPhrase.requestFocusInWindow();
+        cbbPhrase.requestFocusInWindow();        
         
         return ask();
     }
