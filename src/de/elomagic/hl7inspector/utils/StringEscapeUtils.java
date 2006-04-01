@@ -51,20 +51,18 @@ public class StringEscapeUtils {
                 lastWasBlankChar = false;
                 //
                 // HTML Special Chars
-                if (c == '"')
+                if (c == '"') {
                     sb.append("&quot;");
-                else if (c == '&')
+                } else if (c == '&') {
                     sb.append("&amp;");
-                else if (c == '<')
+                } else if (c == '<') {
                     sb.append("&lt;");
-                else if (c == '>')
+                } else if (c == '>') {
                     sb.append("&gt;");
-                else if (c == '\n')
+                } else if (c == '\n') {
                     // Handle Newline
                     sb.append("&lt;br/&gt;");
-                else if (c == '/')
-                    sb.append("&frasl;");
-                else {
+                } else {
                     int ci = 0xffff & c;
                     if (ci < 160 )
                         // nothing special only 7 Bit
