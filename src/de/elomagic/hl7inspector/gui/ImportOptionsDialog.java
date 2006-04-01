@@ -67,7 +67,7 @@ public class ImportOptionsDialog extends BaseDialog {
         cbEncoding.setSelectedItem(defaultOptions.getEncoding());        
         cbRegExpr.setSelected(defaultOptions.isUseRegExpr());
         
-        updateParseModeButtons(defaultOptions.getImportMode() != StreamFormat.FRAMED);
+        updateParseModeButtons(defaultOptions.getImportMode() != StreamFormat.TEXT_LINE);
         
         lblSource.setText(defaultOptions.getSource());
         lblSource.setToolTipText(defaultOptions.getSource());
