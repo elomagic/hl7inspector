@@ -83,10 +83,10 @@ public class ReceivePanel extends CharacterMonitor implements ActionListener {
             t.setFrame(thread.getFrame());
             t.setReUseSocket(thread.isReuseSocket());
             t.setPort(thread.getPort());
+            t.setOptions(thread.getOptions());
         }
         
-        t.addListener(this);
-        
+        t.addListener(this);        
         thread = t;
     }
     
