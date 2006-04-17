@@ -61,12 +61,14 @@ public class FindBar extends JPanel {
     private String phrase = "";
     
     public String getEscapedPhrase() { 
-        if (!phrase.equals(editPhrase.getText())) {
-            escapedPhrase = StringEscapeUtils.escapeHtml(editPhrase.getText());
+        if (!phrase.equals(getPhrase())) {
+            escapedPhrase = StringEscapeUtils.escapeHtml(getPhrase());
         }
                 
         return escapedPhrase;
     }
+    
+    public String getPhrase() { return editPhrase.getText(); }
     
     public boolean isCaseSensitive() { return cbCaseSensitive.isSelected(); }
     public boolean isHighlight() { return btHighlight.isSelected(); }
