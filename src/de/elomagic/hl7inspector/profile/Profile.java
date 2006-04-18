@@ -40,8 +40,10 @@ import nanoxml.XMLElement;
 public class Profile {
     
     /** Creates a new instance of Profile */
-    public Profile() {
-    }
+    public Profile() { }
+    
+    public final static Profile getDefault() { return profile; }    
+    private final static Profile profile = new Profile();
         
     public void loadFromStream(InputStream in) throws Exception {
         dataElementList.clear();
