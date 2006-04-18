@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -39,10 +39,10 @@ public class MessageDescriptor {
     private Message msg;
     private Profile p;
     
-    public SegmentItem getSegmentType(Hl7Object o) {        
+    public SegmentItem getSegmentType(Hl7Object o) {
         SegmentItem seg = null;
-
-        Segment s = (Segment)getObjectOfType(o, Segment.class);        
+        
+        Segment s = (Segment)getObjectOfType(o, Segment.class);
         if (s != null) {
             seg = (s.size() == 0)?null:p.getSegmentList().getSegment(((Segment)s).get(0).toString());
         }
@@ -53,16 +53,16 @@ public class MessageDescriptor {
     public DataElement getDataElement(Hl7Object o) {
         DataElement de = null;
         
-        Hl7Object field = (Field)getObjectOfType(o, Field.class);        
+        Hl7Object field = (Field)getObjectOfType(o, Field.class);
         if (field == null) {
-            field = getObjectOfType(o, RepetitionField.class);                    
+            field = getObjectOfType(o, RepetitionField.class);
         }
         
         if (field != null) {
             int index = field.getIndex();
             
             if (field.getParent() instanceof RepetitionField) {
-                index = field.getParent().getIndex();                
+                index = field.getParent().getIndex();
             }
             
             SegmentItem seg = getSegmentType(o);
@@ -70,7 +70,7 @@ public class MessageDescriptor {
             if (seg != null) {
                 de = p.getDataElementList().getDataElement(seg.getId(), index);
             }
-        }        
+        }
         
         return de;
     }
@@ -88,7 +88,7 @@ public class MessageDescriptor {
             Component c = (Component)getObjectOfType(o, Component.class);
             if (c != null) {
                 DataElement de = getDataElement(o);
-                if (de != null) {           
+                if (de != null) {
                     dt = p.getDataTypeList().getDataType(de.getDataType(), c.getIndex()+1);
                 }
             }
@@ -103,14 +103,44 @@ public class MessageDescriptor {
         while ((child.getParent() != null) && (result == null)) {
             if (child.getClass().equals(hl7ObjectClass)) {
                 result = child;
-            }            
-           
+            }
+            
             child = child.getParent();
         }
         
         return result;
         
         
+    }
+    
+    public String getSimpleDescription(Hl7Object o, boolean htmlFormated) {
+        String HS = (htmlFormated)?"<B>":"";
+        String HE = (htmlFormated)?"</B>":"";
+        
+        String s = "";
+        
+        if (o instanceof Segment) {
+            SegmentItem seg = getSegmentType(o);
+            if (seg != null) {
+                s = HS.concat(seg.getDescription().concat(HE));
+            }
+        } else if ((o instanceof Field) || (o instanceof RepetitionField)){
+            DataElement de = getDataElement(o);
+            if (de != null) {
+                s = HS.concat("[" + de.getDataType() + "] " + de.getName().concat(HE));
+            }
+        } else if ((o instanceof Component) || (o instanceof Subcomponent)){
+            DataTypeItem dt = getDataType(o);
+            if (dt != null) {
+                s = HS.concat("[" + dt.getDataType() + "] " + dt.getDescription().concat(HE));
+            }
+        }
+        
+        if ((htmlFormated) && (s.length() != 0)) {
+            s = "<font face=\"Arial\">".concat(s).concat("</font>");
+        }
+        
+        return s;
     }
     
     public String getDescription(Hl7Object o, boolean htmlFormated) {
