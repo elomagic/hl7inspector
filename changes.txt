@@ -1,4 +1,4 @@
-Ver. 2.1.0.49x
+Ver. 2.1.0.491
 
 * Character encoding ignored when receiving message on IP socket. Fixed
 * Character encoding ignored when writing message to file. Fixed
