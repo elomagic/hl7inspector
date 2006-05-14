@@ -99,8 +99,8 @@ public class ReceiveThread extends Thread implements IOCharListener {
                             fireStatusEvent("Connecting from " + socket.getInetAddress().getHostName() + "(" + socket.getInetAddress().getHostAddress() + ").");
                         }
                         
-                        writer  = new OutputStreamWriter(socket.getOutputStream());
-                        reader  = new InputStreamReader(socket.getInputStream());
+                        writer  = new OutputStreamWriter(socket.getOutputStream(), options.getEncoding());
+                        reader  = new InputStreamReader(socket.getInputStream(), options.getEncoding());
                         
                         MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, StreamFormat.FRAMED, options.getFrame());
                         try {
