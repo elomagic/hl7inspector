@@ -59,7 +59,7 @@ public class MessageWriterThread extends Thread {
                 try {                
                     if (bean.isManyFiles()) {
                         messageFile = createDataFile(i);
-                        wout = new OutputStreamWriter(new FileOutputStream(messageFile));
+                        wout = new OutputStreamWriter(new FileOutputStream(messageFile), bean.getEncoding());
                     }                    
                     writeMessage(message);                    
                 } finally {
