@@ -21,6 +21,7 @@ import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
+import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.validate.Validator;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
@@ -56,7 +57,7 @@ public class ValidateMessageAction extends AbstractAction {
                     try {
                         Message msg = messages.get(i);
 
-                        Validator val = new Validator(d.getProfile());
+                        Validator val = new Validator(Profile.getDefault());
                         val.validate(msg);
                     } catch (Exception ee) {
                         Logger.getLogger(getClass()).error(ee.getMessage(), ee);

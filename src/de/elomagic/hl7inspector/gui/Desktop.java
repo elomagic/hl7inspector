@@ -166,6 +166,8 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     public void setProfileFile(ProfileFile file) {
         if (file.exists()) {
             try {
+                Profile profile = Profile.getDefault();
+                
                 FileInputStream fin = new FileInputStream(file);
                 try {
                     profile.loadFromStream(fin);
@@ -210,11 +212,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     public SendPanel getSendWindow() { return sp; }
     private SendPanel sp = new SendPanel();    
     
-    public Profile getProfile() { return profile; }
-    
     private final static Desktop    desk = new Desktop();
-    
-    private Profile                 profile = new Profile();
     
     private JSplitPane              middlePanel;
     private JSplitPane              mainPanel;
@@ -256,7 +254,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         if (detailsPanel.isVisible()) {            
             String NO_DESCRIPTION_FOUND = "No description in profile found.";                
     
-            MessageDescriptor md = new MessageDescriptor(getProfile());
+            MessageDescriptor md = new MessageDescriptor(Profile.getDefault());
             
             s = md.getDescription(o, true);
             

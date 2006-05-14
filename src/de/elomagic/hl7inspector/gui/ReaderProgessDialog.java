@@ -25,6 +25,7 @@ import de.elomagic.hl7inspector.io.MessageImportEvent;
 import de.elomagic.hl7inspector.io.MessageImportListener;
 import de.elomagic.hl7inspector.io.MessageImportThread;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
+import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.validate.Validator;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -186,7 +187,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
 
             if (options.isValidate()) {
                 try {
-                    Validator val = new Validator(Desktop.getInstance().getProfile());
+                    Validator val = new Validator(Profile.getDefault());
                     val.validate(msg);
                 } catch (Exception ee) {
                     Logger.getLogger(getClass()).error(ee.getMessage(), ee);

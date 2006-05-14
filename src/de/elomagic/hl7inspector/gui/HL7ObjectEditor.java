@@ -29,6 +29,7 @@ import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.RepetitionField;
 import de.elomagic.hl7inspector.hl7.model.Subcomponent;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
+import de.elomagic.hl7inspector.profile.Profile;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -155,7 +156,7 @@ public class HL7ObjectEditor extends BaseDialog {
         boolean b = (value.indexOf('|') != -1) || (value.indexOf('&') != -1) || (value.indexOf('~') != -1) || (value.indexOf('\\') != -1);
         cbEncode.setSelected(!b); 
         
-        MessageDescriptor md = new MessageDescriptor(Desktop.getInstance().getProfile());            
+        MessageDescriptor md = new MessageDescriptor(Profile.getDefault());
         String desc = md.getDescription(o, true);
         setDescription(desc);
     }

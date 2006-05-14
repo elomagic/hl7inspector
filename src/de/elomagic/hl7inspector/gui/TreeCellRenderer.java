@@ -216,7 +216,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 //            setToolTipText(obj.getValidationText());
             
             if (((Hl7TreeModel)model).isViewDescription()) {
-                Profile profile = Desktop.getInstance().getProfile();
+                Profile profile = Profile.getDefault();
                 
                 String desc = obj.getText();
                 StringVector tt = new StringVector();
