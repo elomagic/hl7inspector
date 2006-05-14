@@ -235,7 +235,7 @@ public class SaveDialog extends BaseDialog {
     }
     
     private void selectFilename() {
-        JFileChooser fc = new JFileChooser(editFilename.getText());
+        JFileChooser fc = new JFileChooser(new File(editFilename.getText()).getParent());
         fc.addChoosableFileFilter(new Hl7FileFilter());
 
         if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
