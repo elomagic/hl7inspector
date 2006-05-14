@@ -1,0 +1,15 @@
+Ver. 2.1.0.49x
+
+* Character encoding ignored when receiving message on IP socket. Fixed
+* Character encoding ignored when writing message to file. Fixed
+* Encoding of backslash character in tree nodes failed. Fixed
+* Comboboxes of frames are disabled when open import dialog with parameter "FRAME" format. Fixed
+* NullPointerException occur when using class method JComboBox.getSelectedItem with JDK6. Fixed
++ Libraries dependencies of JGoodies and L2FProd upgraded to latest version
++ About dialog: Tabbed panel with product information properties added.
+* Some little UI bugs fixed.
+* Some little internal changes.
+
+-----
+
+Ver. 2.1.0.488
