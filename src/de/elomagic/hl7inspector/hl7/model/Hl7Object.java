@@ -21,6 +21,7 @@ import de.elomagic.hl7inspector.utils.StringEscapeUtils;
 import de.elomagic.hl7inspector.validate.ValidateStatus;
 import java.util.Enumeration;
 import java.util.Vector;
+import javax.swing.tree.TreePath;
 
 /**
  *
@@ -173,7 +174,7 @@ public abstract class Hl7Object {
         String s = getClass().getName();
         s = s.substring(s.lastIndexOf(".")+1);
         return s.toLowerCase();
-    }    
+    }
     
     public String toString() {
         StringBuffer sb = new StringBuffer();
@@ -198,6 +199,25 @@ public abstract class Hl7Object {
         }
         
         return r;
+    }
+    
+    public TreePath getPath(Object rootNode) {
+        Vector<Object> v = new Vector<Object>();
+        
+        Hl7Object o = this;
+        v.add(o);
+        
+        while (o.getParent() != null) {
+            o = o.getParent();
+            
+            v.insertElementAt(o, 0);
+        }
+        
+        v.insertElementAt(rootNode, 0);
+                
+        TreePath path = new TreePath(v.toArray());
+        
+        return path;
     }
     
     public Hl7Object getParent() { return parent; }
