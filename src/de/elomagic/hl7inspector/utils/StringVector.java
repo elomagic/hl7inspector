@@ -86,6 +86,11 @@ public class StringVector extends Vector<String> {
             sb.append(seperatorChar);
         }
         
+        
+        if (sb.length() != 0) {
+            sb.deleteCharAt(sb.length()-1);            
+        }        
+        
         return sb.toString().trim();
     }
     
