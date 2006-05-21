@@ -66,7 +66,7 @@ public class MessageParserStreamReader {
         if (format == StreamFormat.AUTO_DETECT) {
             int c = reader.read();
             if (c == -1) {
-                throw new IOException("Error: End of stream reached.");
+                throw new EndOfStreamException();
             }            
             
             cc = new Character((char)c);
@@ -87,7 +87,7 @@ public class MessageParserStreamReader {
                     c = (cc != null)?cc.charValue():(char)reader.read();
                     
                     if (c == 0xffff) {
-                        throw new IOException("End of stream reached.");
+                        throw new EndOfStreamException();
                     }
                     
                     bytesReads++;
@@ -101,7 +101,7 @@ public class MessageParserStreamReader {
                     int m = reader.read();
                     
                     if (c == -1) {
-                        throw new IOException("End of stream reached.");
+                        throw new EndOfStreamException();
                     }
                     
                     bytesReads++;

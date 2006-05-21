@@ -23,6 +23,7 @@ import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.Segment;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
+import de.elomagic.hl7inspector.utils.StringVector;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
@@ -88,34 +89,38 @@ public class ReceiveThread extends Thread implements IOCharListener {
             if ((isAuthentication()) || isEncryption()) {
                 fireStatusEvent("Security enabled. (Encryption=" + Boolean.toString(isEncryption()) + ", Authentication=" + Boolean.toString(isAuthentication()) + ")");
             }
-            fireStatusEvent("Listen on port " + port);
+            fireStatusEvent("Listening on port " + port);
             ServerSocket server = new ServerSocket(port);
             try {
                 while (!terminate) {
-                    socket = server.accept();
                     try {
-//                        socket.setSoTimeout(5000);
-                        if (!terminate) {
-                            fireStatusEvent("Connecting from " + socket.getInetAddress().getHostName() + "(" + socket.getInetAddress().getHostAddress() + ").");
-                        }
-                        
-                        writer  = new OutputStreamWriter(socket.getOutputStream(), options.getEncoding());
-                        reader  = new InputStreamReader(socket.getInputStream(), options.getEncoding());
-                        
-                        MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, StreamFormat.FRAMED, options.getFrame());
+                        socket = server.accept();
                         try {
-                            messageReader.addListener(this);
+//                        socket.setSoTimeout(5000);
+                            if (!terminate) {
+                                fireStatusEvent("Connecting from " + socket.getInetAddress().getHostName() + "(" + socket.getInetAddress().getHostAddress() + ").");
+                            }
                             
-                            while ((!terminate) && (reuse)) {
-                                fireStatusEvent("Waiting for data...");
-                                Message message = messageReader.readMessage();
-                                handleMessage(message);
+                            writer  = new OutputStreamWriter(socket.getOutputStream(), options.getEncoding());
+                            reader  = new InputStreamReader(socket.getInputStream(), options.getEncoding());
+                            
+                            MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, StreamFormat.FRAMED, options.getFrame());
+                            try {
+                                messageReader.addListener(this);
+                                
+                                while ((!terminate) && (reuse)) {
+                                    fireStatusEvent("Waiting for data...");
+                                    Message message = messageReader.readMessage();
+                                    handleMessage(message);
+                                }
+                            } finally {
+                                messageReader.removeListener(this);
                             }
                         } finally {
-                            messageReader.removeListener(this);
+                            socket.close();
                         }
-                    } finally {
-                        socket.close();
+                    } catch (EndOfStreamException ex) {
+                        fireStatusEvent("End of stream detected. Still listening on port " + port);
                     }
                 }
             } finally {
@@ -168,10 +173,39 @@ public class ReceiveThread extends Thread implements IOCharListener {
             OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream());
             try {
                 Segment msh = message.getSegment("MSH");
-                                
+                
                 out.write(options.getFrame().getStartFrame());
-                out.write("MSH|^~\\&|" + msh.get(5).toString() + "|" + msh.get(6).toString() + "|" + msh.get(3).toString() + "|" + msh.get(4).toString() + "|" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) +  "|||".concat("\r"));
-                out.write("MSA|AA".concat("\r"));
+                
+                StringVector seg = new StringVector();
+                seg.add("MSH");
+                seg.add("^~\\&");
+                seg.add(getField(msh, 5)); // Field 3
+                seg.add(getField(msh, 6)); // Field 4
+                seg.add(getField(msh, 3)); // Field 5
+                seg.add(getField(msh, 4)); // Field 6
+                seg.add(new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())); // Field 7
+                seg.add(""); // Field 8
+                seg.add("ACK");//^^" + msh.get(9).toString()); // Field 9
+                seg.add(getField(msh, 10)); // Field 10
+                seg.add(getField(msh, 11)); // Field 11
+                seg.add(getField(msh, 12)); // Field 12
+                seg.add(""); // Field 13
+                seg.add(""); // Field 14
+                seg.add(""); // Field 15
+                seg.add(""); // Field 16
+                seg.add(""); // Field 17                
+                seg.add(getField(msh, 18)); // Field 18
+                out.write(seg.toString('|'));
+                out.write("\r");
+                
+                seg = new StringVector();
+                seg.add("MSA");
+                seg.add("AA");
+                seg.add(getField(msh, 10));
+                
+                out.write(seg.toString('|'));
+                out.write("\r");
+                
                 out.write(options.getFrame().getStopFrame());
             } finally {
                 out.flush();
@@ -180,6 +214,15 @@ public class ReceiveThread extends Thread implements IOCharListener {
             fireStatusEvent(e.getMessage());
             Logger.getLogger(getClass()).error(e.getMessage(), e);
         }
+    }
+    
+    private String getField(Segment seg, int index) {
+        String result = "";
+        
+        if (seg.size() >= index) {
+            result = seg.get(index).toString(); 
+        }         
+        return result;
     }
     
     // protected methods
