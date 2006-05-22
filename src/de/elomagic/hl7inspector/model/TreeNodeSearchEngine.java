@@ -37,7 +37,7 @@ public class TreeNodeSearchEngine {
             startingNode = rootNode;            
         }
         
-        int level = 0;
+        //int level = 0;
         
         System.out.println(startingNode.getClass().getName());
         
@@ -48,7 +48,7 @@ public class TreeNodeSearchEngine {
         if (t.indexOf(phrase) != -1) {
             Hl7Object ho = (Hl7Object)o;
             
-            for (int i=0; (i<ho.getChildCount()) && (result == null); i++) {
+            for (int i=0; (i<ho.getChildCount()) && (result == null) && (!ho.isSinglePath()); i++) {
                 t = ho.get(i).toString();
                 if (t.indexOf(phrase) != -1) {
                     result = findNextNode(phrase, rootNode, ho.get(i), forward);
@@ -59,14 +59,15 @@ public class TreeNodeSearchEngine {
                 }
             }
         } else {            
-            Hl7Object h = (Hl7Object)o;
+            Object parent = null;
+            if (o instanceof Hl7Object) {
+                parent = ((Hl7Object)o).getParent();
+            }
             
-            while ((result == null) && (h.getParent() != null)) {
-                result = findNextNode(phrase, rootNode, h.getParent(), forward);
+            while ((result == null) && (parent != null)) {
+                result = findNextNode(phrase, rootNode, parent, forward);
             }
         }
-        
         return result;
     }
-    
 }
