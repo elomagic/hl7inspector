@@ -19,6 +19,7 @@ package de.elomagic.hl7inspector.model;
 
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import javax.swing.tree.TreePath;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -30,7 +31,8 @@ public class TreeNodeSearchEngine {
     private TreeNodeSearchEngine() {
     }    
     
-    public final static TreePath findNextNode(String phrase, Object rootNode, Object startingNode, boolean forward) {        
+    public final static TreePath findNextNode(String phrase, boolean caseSensitive, Object rootNode, Object startingNode, boolean forward) {        
+        Logger log = Logger.getLogger(TreeNodeSearchEngine.class);
         TreePath result = null;
         
         if (startingNode == null) {
@@ -38,20 +40,30 @@ public class TreeNodeSearchEngine {
         }
         
         //int level = 0;
-        
-        System.out.println(startingNode.getClass().getName());
+
+        log.debug(startingNode.getClass().getName());
         
         Object o = startingNode;
         
         String t = o.toString();
+        
+        if (!caseSensitive) {
+            t = t.toUpperCase();
+            phrase = phrase.toUpperCase();
+        }        
         
         if (t.indexOf(phrase) != -1) {
             Hl7Object ho = (Hl7Object)o;
             
             for (int i=0; (i<ho.getChildCount()) && (result == null) && (!ho.isSinglePath()); i++) {
                 t = ho.get(i).toString();
+
+                if (!caseSensitive) {
+                    t = t.toUpperCase();
+                }                
+                
                 if (t.indexOf(phrase) != -1) {
-                    result = findNextNode(phrase, rootNode, ho.get(i), forward);
+                    result = findNextNode(phrase, caseSensitive, rootNode, ho.get(i), forward);
                     
                     if (result == null) {
                         result = ho.getPath(rootNode);
@@ -65,9 +77,10 @@ public class TreeNodeSearchEngine {
             }
             
             while ((result == null) && (parent != null)) {
-                result = findNextNode(phrase, rootNode, parent, forward);
+                result = findNextNode(phrase, caseSensitive, rootNode, parent, forward);
             }
         }
+        
         return result;
-    }
+    }        
 }
