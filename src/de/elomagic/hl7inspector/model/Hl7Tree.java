@@ -25,6 +25,7 @@ import java.awt.event.MouseMotionListener;
 import java.util.Vector;
 import javax.swing.JToolTip;
 import javax.swing.JTree;
+import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
@@ -36,7 +37,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
     /** Creates a new instance of Hl7Tree */
     public Hl7Tree() { super(); init(); }
     
-    public Hl7Tree(Hl7TreeModel model) { super(model); init(); }
+    public Hl7Tree(Hl7TreeModel model) { super((TreeModel)model); init(); }
     
     private void init() {
         setExpandsSelectedPaths(true);
