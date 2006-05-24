@@ -21,13 +21,14 @@ import de.elomagic.hl7inspector.utils.StringEscapeUtils;
 import de.elomagic.hl7inspector.validate.ValidateStatus;
 import java.util.Enumeration;
 import java.util.Vector;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 /**
  *
  * @author rambow
  */
-public abstract class Hl7Object {
+public abstract class Hl7Object implements TreeNode {
     
     /** Creates a new instance of Hl7Object */
     public Hl7Object() { }
@@ -214,13 +215,13 @@ public abstract class Hl7Object {
         }
         
         v.insertElementAt(rootNode, 0);
-                
+        
         TreePath path = new TreePath(v.toArray());
         
         return path;
     }
     
-    public Hl7Object getParent() { return parent; }
+    //public Hl7Object getParent() { return parent; }
     public void setParent(Hl7Object parent) { this.parent = parent; }
     
     public void setRoot(Object value) { root = value; }
@@ -271,9 +272,9 @@ public abstract class Hl7Object {
         return r;
     }
     
-    public int indexOf(Hl7Object value) { return objList.indexOf(value); }
+    public int indexOf(TreeNode value) { return objList.indexOf(value); }
     
-    public int indexCompressedOf(Hl7Object value) {
+    public int indexCompressedOf(TreeNode value) {
         int idx = indexOf(value);
         int r = 0;
         for (int i=0;i<idx;i++) {
@@ -290,26 +291,80 @@ public abstract class Hl7Object {
     private Object    root    = null;
     private Hl7Object parent  = null;
     
+    private final static String COMPRESSED_KEY = Hl7Object.class.getName().concat(".compressed");
+    
     // TODO Muste be implemented
     // Interface TreeNode
     
     /** Returns the children of the receiver as an Enumeration. */
-    public Enumeration 	children() { return objList.elements(); }
+    public Enumeration children() { 
+        Vector<TreeNode> result = new Vector<TreeNode>();
+        
+        for (int i=0; i<getChildCount(); i++) {            
+            result.add(getChildAt(i));
+        }
+        
+        return result.elements(); 
+    }
     
-    //** Returns true if the receiver allows children. */
+    /** 
+     * Returns true if the receiver allows children. 
+     */
     public boolean getAllowsChildren() { return getChildClass() != null; }
     
-    /** Returns the number of children TreeNodes the receiver contains. */
-    public int getChildCount() { return objList.size(); }
+    /** 
+     * Returns the number of children TreeNodes the receiver contains. 
+     */
+    public int getChildCount() { 
+        boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
+        return (compressed)?sizeCompressed():size();
+    }
     
-/*             TreeNode 	getChildAt(int childIndex)
-            Returns the child TreeNode at index childIndex.
- 
-            int 	getIndex(TreeNode node)
-            Returns the index of node in the receivers children.
-            TreeNode 	getParent()
-            Returns the parent TreeNode of the receiver.
-            boolean 	isLeaf()
-            Returns true if the receiver is a leaf.
- */
+    /**
+     * Returns the child TreeNode at index childIndex.
+     */
+    public TreeNode getChildAt(int childIndex) {
+        if (this instanceof Segment) {
+            childIndex++; // Filter segment from fields
+        }
+
+        TreeNode result = null;
+        
+        boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
+
+        if (!compressed) {
+            result = get(childIndex);
+        } else {
+            result = getCompressed(childIndex);
+        }
+
+        if ((result instanceof RepetitionField) && (result.getChildCount() == 1)) {
+            result = result.getChildAt(0);
+        }
+
+        return result;
+    }
+    
+    /**
+     * Returns the index of node in the receivers children.
+     */
+    public int getIndex(TreeNode node) {
+        boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
+
+        int result = -1;
+        
+        result = (compressed)?getParent().indexCompressedOf(node):getParent().indexOf(node);                
+        return result;
+    }
+    
+    /**
+     * Returns the parent TreeNode of the receiver.
+     */
+    //public TreeNode getParent() { return parent; }
+    public Hl7Object getParent() { return parent; }    
+    
+    /**
+     * Returns true if the receiver is a leaf.
+     */
+    public boolean isLeaf() { return isSinglePath(); }
 }
