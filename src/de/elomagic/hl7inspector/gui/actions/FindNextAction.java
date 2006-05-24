@@ -20,10 +20,12 @@ import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.FindBar;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.model.TreeNodeSearchEngine;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 /**
@@ -46,21 +48,21 @@ public class FindNextAction extends AbstractAction {
                 
         if (d.getTree().getModel().getRoot() != null) {
             String phrase = f.getEscapedPhrase();
+            boolean cs = f.isCaseSensitive();
             if ((phrase.length() != 0) && (d.getTree().getModel().getChildCount(d.getTree().getModel().getRoot()) != 0)) {
                 int row = d.getTree().getSelectionModel().getLeadSelectionRow()+1;
                 
-                TreePath path = null;
-                if (row < d.getTree().getRowCount()) {
-                    path = d.getTree().findNextNode(phrase, row, true);
-                }
+                TreeNode startingNode = (TreeNode)((d.getTree().getSelectionPath() != null)?d.getTree().getSelectionPath().getLastPathComponent():d.getTree().getModel().getRoot());
+                
+                TreePath path = TreeNodeSearchEngine.findNextNode(phrase, cs, (TreeNode)d.getTree().getModel().getRoot(), startingNode, 0, true);
 
                 if (path == null) 
                     SimpleDialog.info("The end of message tree reached.");
                 else {
-                    int pr = d.getTree().getRowForPath(path.getParentPath());
+                    d.getTree().expandPath(path.getParentPath());
+                    
                     row = d.getTree().getRowForPath(path);
 
-                    d.getTree().expandRow(pr);
                     d.getTree().scrollRowToVisible(row);
                     d.getTree().setSelectionRow(row);
                 }

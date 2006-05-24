@@ -18,6 +18,7 @@
 package de.elomagic.hl7inspector.model;
 
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import org.apache.log4j.Logger;
 
@@ -29,58 +30,67 @@ public class TreeNodeSearchEngine {
     
     /** Creates a new instance of TextNodeSearchEngine */
     private TreeNodeSearchEngine() {
-    }    
+    }
     
-    public final static TreePath findNextNode(String phrase, boolean caseSensitive, Object rootNode, Object startingNode, boolean forward) {        
-        Logger log = Logger.getLogger(TreeNodeSearchEngine.class);
+    public final static TreePath findNextNode(String phrase, boolean caseSensitive, TreeNode rootNode, TreeNode startingNode, int index, boolean forward) {
+//        Logger log = Logger.getLogger(TreeNodeSearchEngine.class);
         TreePath result = null;
         
         if (startingNode == null) {
-            startingNode = rootNode;            
+            startingNode = rootNode;
         }
         
-        //int level = 0;
-
-        log.debug(startingNode.getClass().getName());
+//        log.debug(startingNode.getClass().getName());
         
-        Object o = startingNode;
-        
-        String t = o.toString();
+        String t = startingNode.toString();
         
         if (!caseSensitive) {
             t = t.toUpperCase();
             phrase = phrase.toUpperCase();
-        }        
+        }
         
-        if (t.indexOf(phrase) != -1) {
-            Hl7Object ho = (Hl7Object)o;
-            
-            for (int i=0; (i<ho.getChildCount()) && (result == null) && (!ho.isSinglePath()); i++) {
-                t = ho.get(i).toString();
-
+        if (((t.indexOf(phrase) != -1) || (startingNode instanceof Hl7TreeModel))) {// && (o.isLeaf())) {
+            for (int i=index; (i<startingNode.getChildCount()) && (result == null); i++) {
+                t = startingNode.getChildAt(i).toString();
+                
                 if (!caseSensitive) {
                     t = t.toUpperCase();
-                }                
+                }
                 
                 if (t.indexOf(phrase) != -1) {
-                    result = findNextNode(phrase, caseSensitive, rootNode, ho.get(i), forward);
+                    result = findNextNode(phrase, caseSensitive, rootNode, startingNode.getChildAt(i), 0, forward);
                     
-                    if (result == null) {
-                        result = ho.getPath(rootNode);
+                    if ((result == null)) { //&& (!startingNode.isLeaf())){
+                        result = (startingNode instanceof Hl7Object)?((Hl7Object)startingNode).getPath(rootNode):(new TreePath(rootNode));
                     }
                 }
             }
-        } else {            
-            Object parent = null;
-            if (o instanceof Hl7Object) {
-                parent = ((Hl7Object)o).getParent();
+            
+            if ((result == null)) {// && (!startingNode.isLeaf())) {
+                result = (startingNode instanceof Hl7Object)?((Hl7Object)startingNode).getPath(rootNode):(new TreePath(rootNode));
             }
+        } else {
+            TreeNode parent = ((TreeNode)startingNode).getParent();
+            
+            int idx = parent.getIndex((TreeNode)startingNode);
             
             while ((result == null) && (parent != null)) {
-                result = findNextNode(phrase, caseSensitive, rootNode, parent, forward);
+                t = parent.toString();
+                
+                if (!caseSensitive) {
+                    t = t.toUpperCase();
+                    phrase = phrase.toUpperCase();
+                }
+                
+                if (t.indexOf(phrase) != -1) {
+                    result = findNextNode(phrase, caseSensitive, rootNode, parent, idx+1, forward);
+                } else {
+                    parent = ((TreeNode)parent).getParent();
+                    idx = 0;
+                }
             }
         }
         
         return result;
-    }        
+    }
 }

@@ -21,6 +21,7 @@ import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.RepetitionField;
 import de.elomagic.hl7inspector.hl7.model.Segment;
+import java.util.Enumeration;
 import java.util.Vector;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -32,7 +33,7 @@ import javax.swing.tree.TreePath;
  *
  * @author rambow
  */
-public class Hl7TreeModel implements TreeModel {
+public class Hl7TreeModel implements TreeModel, TreeNode {
     
     /** Creates a new instance of Hl7TreeModel */
     public Hl7TreeModel() { }
@@ -227,4 +228,45 @@ public class Hl7TreeModel implements TreeModel {
     public boolean isViewDescription() { return viewDescription; }
     
     public void setViewDescription(boolean viewDescription) { this.viewDescription = viewDescription; }
+
+    // Interface TreeNode
+    
+    /**
+     * Returns the child <code>TreeNode</code> at index 
+     * <code>childIndex</code>.
+     */
+    public TreeNode getChildAt(int childIndex) { return objList.get(childIndex); }
+
+    /**
+     * Returns the index of <code>node</code> in the receivers children.
+     * If the receiver does not contain <code>node</code>, -1 will be
+     * returned.
+     */
+    public int getIndex(TreeNode node) { return objList.indexOf(node); }
+
+    /**
+     * Returns true if the receiver is a leaf.
+     */
+    public boolean isLeaf() { return objList.size() != 0; }
+
+    /**
+     * Returns the parent <code>TreeNode</code> of the receiver.
+     */
+    public TreeNode getParent() { return null; }
+
+    /**
+     * Returns the number of children <code>TreeNode</code>s the receiver
+     * contains.
+     */
+    public int getChildCount() { return objList.size(); }
+
+    /**
+     * Returns true if the receiver allows children.
+     */
+    public boolean getAllowsChildren() { return true; }
+
+    /**
+     * Returns the children of the receiver as an <code>Enumeration</code>.
+     */
+    public Enumeration children() { return objList.elements(); }
 }

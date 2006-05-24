@@ -112,7 +112,7 @@ public abstract class Hl7Object implements TreeNode {
             o.val = null;
             o.validationText = "";
             
-            o = o.getParent();
+            o = o.getHl7Parent();
         }
     }
     
@@ -139,7 +139,7 @@ public abstract class Hl7Object implements TreeNode {
     }
     
     public void remove(Hl7Object child) {
-        Hl7Object parent = child.getParent();
+        Hl7Object parent = child.getHl7Parent();
         
         objList.remove(child);
         
@@ -202,7 +202,7 @@ public abstract class Hl7Object implements TreeNode {
         return r;
     }
     
-    public TreePath getPath(Object rootNode) {
+    public TreePath getPath(TreeNode rootNode) {
         Vector<Object> v = new Vector<Object>();
         
         Hl7Object o = this;
@@ -221,7 +221,7 @@ public abstract class Hl7Object implements TreeNode {
         return path;
     }
     
-    //public Hl7Object getParent() { return parent; }
+    public Hl7Object getHl7Parent() { return parent; }
     public void setParent(Hl7Object parent) { this.parent = parent; }
     
     public void setRoot(Object value) { root = value; }
@@ -265,8 +265,8 @@ public abstract class Hl7Object implements TreeNode {
     public int getIndex() {
         int r = -1;
         
-        if (getParent() != null) {
-            r = getParent().indexOf(this);
+        if (getHl7Parent() != null) {
+            r = getHl7Parent().indexOf(this);
         }
         
         return r;
@@ -315,9 +315,12 @@ public abstract class Hl7Object implements TreeNode {
     /** 
      * Returns the number of children TreeNodes the receiver contains. 
      */
-    public int getChildCount() { 
+    public int getChildCount() {
         boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
-        return (compressed)?sizeCompressed():size();
+
+        int result = (compressed)?sizeCompressed():size();
+        
+        return (isSinglePath())?0:result;
     }
     
     /**
@@ -353,15 +356,22 @@ public abstract class Hl7Object implements TreeNode {
 
         int result = -1;
         
-        result = (compressed)?getParent().indexCompressedOf(node):getParent().indexOf(node);                
+        result = (compressed)?getHl7Parent().indexCompressedOf(node):getHl7Parent().indexOf(node);                
         return result;
     }
     
     /**
      * Returns the parent TreeNode of the receiver.
      */
-    //public TreeNode getParent() { return parent; }
-    public Hl7Object getParent() { return parent; }    
+    public Hl7Object getParent() {
+        Hl7Object result = parent;
+        
+        if ((parent instanceof RepetitionField) && (parent.size() == 1)) {
+            result = parent.getParent();
+        }
+        
+        return result;                
+    }
     
     /**
      * Returns true if the receiver is a leaf.

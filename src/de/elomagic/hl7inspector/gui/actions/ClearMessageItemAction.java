@@ -67,8 +67,8 @@ public class ClearMessageItemAction extends AbstractAction {
                 TreePath path = Desktop.getInstance().getTree().getSelectionPath();
                 Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();
                 hl7o.clear();
-                if ((hl7o.getParent() instanceof RepetitionField) && (hl7o.getParent().getChildCount() == 1)) {
-                    hl7o.getParent().clear();
+                if ((hl7o.getHl7Parent() instanceof RepetitionField) && (hl7o.getHl7Parent().getChildCount() == 1)) {
+                    hl7o.getHl7Parent().clear();
                 }
                 
                 Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();

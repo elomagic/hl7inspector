@@ -75,7 +75,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
             if (value instanceof Hl7Object) {
                 Hl7Object hl7Object = (Hl7Object)value;
                 
-                Hl7Object parent = hl7Object.getParent();
+                Hl7Object parent = hl7Object.getHl7Parent();
                 
                 if (!(value instanceof de.elomagic.hl7inspector.hl7.model.Segment)) {
                     if (value instanceof de.elomagic.hl7inspector.hl7.model.Message) {
@@ -227,7 +227,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     // Get segment type
                     Hl7Object o = obj;
                     while (!((o instanceof de.elomagic.hl7inspector.hl7.model.Segment) || (o instanceof de.elomagic.hl7inspector.hl7.model.Message)))
-                        o = o.getParent();
+                        o = o.getHl7Parent();
                     if (o != null) {
                         segType = o.get(0).toString();
                         if (segType.length() > 3) {
@@ -237,13 +237,13 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     
                     o = obj;
                     
-                    while (!(o.getParent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) && o.getParent() != null)
-                        o = o.getParent();
+                    while (!(o.getHl7Parent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) && o.getHl7Parent() != null)
+                        o = o.getHl7Parent();
                     
                     int fieldIndex = index;
-                    if ((o.getParent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField)) {
-                        //    && (o.getParent().size() > 1))
-                        fieldIndex = o.getParent().getIndex();
+                    if ((o.getHl7Parent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField)) {
+                        //    && (o.getHl7Parent().size() > 1))
+                        fieldIndex = o.getHl7Parent().getIndex();
                     }
                     
                     MessageDescriptor md = new MessageDescriptor(profile);
@@ -291,7 +291,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     } else if (value instanceof de.elomagic.hl7inspector.hl7.model.Subcomponent) {
                         DataElement de = profile.getDataElementList().getDataElement(segType, fieldIndex);
                         if (de != null) {
-                            int compIndex = obj.getParent().getIndex()+1;
+                            int compIndex = obj.getHl7Parent().getIndex()+1;
                             DataTypeItem dt = profile.getDataTypeList().getDataType(de.getDataType(), compIndex);
                             if (dt != null) {
                                 dt = profile.getDataTypeList().getDataType(dt.getDataType(), index);

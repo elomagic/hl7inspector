@@ -61,8 +61,8 @@ public class MessageDescriptor {
         if (field != null) {
             int index = field.getIndex();
             
-            if (field.getParent() instanceof RepetitionField) {
-                index = field.getParent().getIndex();
+            if (field.getHl7Parent() instanceof RepetitionField) {
+                index = field.getHl7Parent().getIndex();
             }
             
             SegmentItem seg = getSegmentType(o);
@@ -80,7 +80,7 @@ public class MessageDescriptor {
         
         Subcomponent s = (Subcomponent)getObjectOfType(o, Subcomponent.class);
         if (s != null) {
-            DataTypeItem pdt = getDataType(s.getParent());
+            DataTypeItem pdt = getDataType(s.getHl7Parent());
             if (pdt != null) {
                 dt = p.getDataTypeList().getDataType(pdt.getDataType(), s.getIndex()+1);
             }
@@ -100,12 +100,12 @@ public class MessageDescriptor {
     public final static Hl7Object getObjectOfType(Hl7Object child, Class hl7ObjectClass) {
         Hl7Object result = null;
         
-        while ((child.getParent() != null) && (result == null)) {
+        while ((child.getHl7Parent() != null) && (result == null)) {
             if (child.getClass().equals(hl7ObjectClass)) {
                 result = child;
             }
             
-            child = child.getParent();
+            child = child.getHl7Parent();
         }
         
         return result;

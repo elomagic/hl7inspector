@@ -120,16 +120,16 @@ public class Validator {
         int fieldSeq = -1;
         DataElement de = null;
         
-        while ((obj.getParent() != null) && (!(obj.getParent() instanceof Segment))) {
+        while ((obj.getHl7Parent() != null) && (!(obj.getHl7Parent() instanceof Segment))) {
             if (obj instanceof Field) {
-                fieldSeq = obj.getParent().getIndex();
+                fieldSeq = obj.getHl7Parent().getIndex();
             }
             
-            obj = obj.getParent();
+            obj = obj.getHl7Parent();
         }
         
         if (obj instanceof RepetitionField) {
-            String segName = obj.getParent().get(0).toString();
+            String segName = obj.getHl7Parent().get(0).toString();
 
             if (fieldSeq == -1) {
                 fieldSeq = obj.getIndex();
@@ -147,13 +147,13 @@ public class Validator {
             if (obj instanceof Component) {
                 s = ".".concat(Integer.toString(obj.getIndex()+1));
             } else if (obj instanceof Field) {
-                s = "-".concat(Integer.toString(obj.getParent().getIndex())).concat(s);
+                s = "-".concat(Integer.toString(obj.getHl7Parent().getIndex())).concat(s);
             } else if ((obj instanceof RepetitionField) && (s.indexOf('-') == -1)){
                 s = "-".concat(Integer.toString(obj.getIndex())).concat(s);
             } else if (obj instanceof Segment) {
                 s = obj.get(0).toString().concat(s);
             }            
-            obj = obj.getParent();
+            obj = obj.getHl7Parent();
         }                
         
         return s;
@@ -166,7 +166,7 @@ public class Validator {
             if (obj instanceof Segment) {
                 seg = obj.get(0).toString();
             }
-            obj = obj.getParent();
+            obj = obj.getHl7Parent();
         }        
         
         return seg;
