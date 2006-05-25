@@ -18,9 +18,10 @@
 package de.elomagic.hl7inspector.model;
 
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import org.apache.log4j.Logger;
+//import org.apache.log4j.Logger;
 
 /**
  *
@@ -40,8 +41,6 @@ public class TreeNodeSearchEngine {
             startingNode = rootNode;
         }
         
-//        log.debug(startingNode.getClass().getName());
-        
         String t = startingNode.toString();
         
         if (!caseSensitive) {
@@ -51,30 +50,32 @@ public class TreeNodeSearchEngine {
         
         if (((t.indexOf(phrase) != -1) || (startingNode instanceof Hl7TreeModel))) {// && (o.isLeaf())) {
             for (int i=index; (i<startingNode.getChildCount()) && (result == null); i++) {
-                t = startingNode.getChildAt(i).toString();
+                TreeNode node = startingNode.getChildAt(i);
+                String tt = node.toString();
                 
                 if (!caseSensitive) {
-                    t = t.toUpperCase();
+                    tt = tt.toUpperCase();
                 }
                 
-                if (t.indexOf(phrase) != -1) {
-                    result = findNextNode(phrase, caseSensitive, rootNode, startingNode.getChildAt(i), 0, forward);
+                if (tt.indexOf(phrase) != -1) {
+                    if (!node.isLeaf()) {
+                        result = ((Hl7Object)node).getPath(rootNode);
+                    } else {
+                        result = findNextNode(phrase, caseSensitive, rootNode, node, 0, forward);
+                    }
                     
                     if ((result == null)) { //&& (!startingNode.isLeaf())){
-                        result = (startingNode instanceof Hl7Object)?((Hl7Object)startingNode).getPath(rootNode):(new TreePath(rootNode));
+                        result = (startingNode instanceof Hl7Object)?((Hl7Object)node).getPath(rootNode):(new TreePath(rootNode));
                     }
                 }
             }
-            
-            if ((result == null)) {// && (!startingNode.isLeaf())) {
-                result = (startingNode instanceof Hl7Object)?((Hl7Object)startingNode).getPath(rootNode):(new TreePath(rootNode));
-            }
-        } else {
-            TreeNode parent = ((TreeNode)startingNode).getParent();
-            
-            int idx = parent.getIndex((TreeNode)startingNode);
+        } else {        
+        //if ((result == null) && (t.indexOf(phrase) == -1)) {
+            TreeNode node = startingNode;
+            TreeNode parent = (node instanceof Message)?rootNode:startingNode.getParent();
             
             while ((result == null) && (parent != null)) {
+                int idx = parent.getIndex(node);
                 t = parent.toString();
                 
                 if (!caseSensitive) {
@@ -82,11 +83,13 @@ public class TreeNodeSearchEngine {
                     phrase = phrase.toUpperCase();
                 }
                 
-                if (t.indexOf(phrase) != -1) {
+                if ((t.indexOf(phrase) != -1) || (parent instanceof Hl7TreeModel)) {
                     result = findNextNode(phrase, caseSensitive, rootNode, parent, idx+1, forward);
-                } else {
-                    parent = ((TreeNode)parent).getParent();
-                    idx = 0;
+                } 
+                
+                if (result == null) {
+                    node = parent;
+                    parent = (node instanceof Message)?rootNode:parent.getParent();
                 }
             }
         }

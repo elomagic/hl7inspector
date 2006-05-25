@@ -291,7 +291,7 @@ public abstract class Hl7Object implements TreeNode {
     private Object    root    = null;
     private Hl7Object parent  = null;
     
-    private final static String COMPRESSED_KEY = Hl7Object.class.getName().concat(".compressed");
+    public final static String COMPRESSED_KEY = Hl7Object.class.getName().concat(".compressed");
     
     // TODO Muste be implemented
     // Interface TreeNode
@@ -356,7 +356,7 @@ public abstract class Hl7Object implements TreeNode {
 
         int result = -1;
         
-        result = (compressed)?getHl7Parent().indexCompressedOf(node):getHl7Parent().indexOf(node);                
+        result = (compressed)?indexCompressedOf(node):indexOf(node);                
         return result;
     }
     
@@ -376,5 +376,5 @@ public abstract class Hl7Object implements TreeNode {
     /**
      * Returns true if the receiver is a leaf.
      */
-    public boolean isLeaf() { return isSinglePath(); }
+    public boolean isLeaf() { return !isSinglePath(); }
 }

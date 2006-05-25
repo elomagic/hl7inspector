@@ -1,3 +1,10 @@
+Ver. 2.1.0.x RC1
+
+* Message receiver: Required fields in acknowledge message are empty. Fixed.
++ Message receiver still listening when end of message stream reached.
++ Tree node search improved.
+* Some little bug fixes to prevent against application crash.
+
 Ver. 2.1.0.491
 
 * Character encoding ignored when receiving message on IP socket. Fixed

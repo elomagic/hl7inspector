@@ -37,7 +37,10 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     
     /** Creates a new instance of Hl7TreeModel */
     public Hl7TreeModel() { }
-    public Hl7TreeModel(boolean compressedView) { compressed = compressedView; }
+    public Hl7TreeModel(boolean compressedView) { 
+        compressed = compressedView; 
+        System.setProperty(Hl7Object.COMPRESSED_KEY, (compressed)?"t":"f");
+    }
     
     public void addMessage(Message message) {
         //_changed = true;
@@ -50,6 +53,8 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     
     public void setCompressedView(boolean value) {
         compressed = value;
+        System.setProperty(Hl7Object.COMPRESSED_KEY, (value)?"t":"f");
+        
         fireTreeStructureChanged(this);
     }
     
