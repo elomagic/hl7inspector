@@ -320,7 +320,11 @@ public abstract class Hl7Object implements TreeNode {
 
         int result = (compressed)?sizeCompressed():size();
         
-        return (isSinglePath())?0:result;
+        if ((this instanceof Segment) && (result > 0)) {
+            result--;
+        }
+        
+        return (isSinglePath() && !(this instanceof RepetitionField))?0:result;
     }
     
     /**
@@ -341,7 +345,7 @@ public abstract class Hl7Object implements TreeNode {
             result = getCompressed(childIndex);
         }
 
-        if ((result instanceof RepetitionField) && (result.getChildCount() == 1)) {
+        if ((result instanceof RepetitionField) && (result.getChildCount() > 0)) {
             result = result.getChildAt(0);
         }
 
@@ -352,11 +356,18 @@ public abstract class Hl7Object implements TreeNode {
      * Returns the index of node in the receivers children.
      */
     public int getIndex(TreeNode node) {
-        boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
-
         int result = -1;
+        int c = getChildCount();
+        int i = 0;
         
-        result = (compressed)?indexCompressedOf(node):indexOf(node);                
+        while ((i < c) && (result == -1)) {
+            if (getChildAt(i).equals(node)) {
+                result = i;
+            }
+
+            i++;
+        }
+        
         return result;
     }
     
