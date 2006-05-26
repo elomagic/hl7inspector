@@ -54,7 +54,8 @@ public class SegmentItem extends Properties {
     
     public XMLElement getXMLElement() {
         XMLElement xml = new XMLElement();
-        xml.setName(getId());
+        xml.setName("segment");
+        xml.setAttribute("id", getId());
         
         XMLElement el = new XMLElement();
         el.setName("id");

@@ -50,7 +50,8 @@ public class TableItem {
     
     public XMLElement getXMLElement() {
         XMLElement xml = new XMLElement();
-        xml.setName(getId());
+        xml.setName("table");
+        xml.setAttribute("id", getId());
         
         XMLElement el = new XMLElement();
         el.setName("id");

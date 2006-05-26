@@ -36,13 +36,13 @@ public class DataTypeItem {
     }
     
     public DataTypeItem(XMLElement xml) {
-        setParentDataType(xml.getContent());
-        
         Vector v = xml.getChildren();
         for (int i=0;i<v.size();i++) {
             XMLElement el = (XMLElement)v.get(i);
             
-            if (el.getName().equals("index")) {
+            if (el.getName().equals("parent")) {
+                setParentDataType(el.getContent());
+            } else if (el.getName().equals("index")) {
                 setIndex(Integer.parseInt(el.getContent()));
             } else if (el.getName().equals("parent")) {
                 setParentDataType(el.getContent());
@@ -66,7 +66,8 @@ public class DataTypeItem {
     
     public XMLElement getXMLElement() {
         XMLElement xml = new XMLElement();
-        xml.setName(getParentDataType());
+        xml.setName("data-type");
+        xml.setAttribute("id", getParentDataType());
         
         XMLElement el = new XMLElement();
         el.setName("parent");
