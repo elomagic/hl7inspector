@@ -18,10 +18,8 @@
 package de.elomagic.hl7inspector.model;
 
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.hl7.model.Message;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-//import org.apache.log4j.Logger;
 
 /**
  *
@@ -33,24 +31,33 @@ public class TreeNodeSearchEngine {
     private TreeNodeSearchEngine() {
     }
     
-    public final static TreePath findNextNode(String phrase, boolean caseSensitive, TreeNode rootNode, TreeNode startingNode, int index, boolean forward) {
-//        Logger log = Logger.getLogger(TreeNodeSearchEngine.class);
-        TreePath result = null;
+    public final static TreePath findNextNode(String phrase, boolean caseSensitive, TreeNode sNode) throws Exception {
+        TreePath result = findNode(phrase, caseSensitive, sNode, 0);
         
-        if (startingNode == null) {
-            startingNode = rootNode;
+        if (result == null) {
+            result = findNode2(phrase, caseSensitive, sNode);
         }
         
-        String t = startingNode.toString();
+        return result;
+    }
+    
+    private final static TreePath findNode(String phrase, boolean caseSensitive, TreeNode sNode, int index) throws Exception {
+        TreePath result = null;
+        
+        if (sNode == null) {
+            throw new Exception("No starting node selected.");
+        }
+        
+        String t = sNode.toString();
         
         if (!caseSensitive) {
             t = t.toUpperCase();
             phrase = phrase.toUpperCase();
         }
         
-        if (((t.indexOf(phrase) != -1) || (startingNode instanceof Hl7TreeModel))) {// && (o.isLeaf())) {
-            for (int i=index; (i<startingNode.getChildCount()) && (result == null); i++) {
-                TreeNode node = startingNode.getChildAt(i);
+        if (((t.indexOf(phrase) != -1) || (sNode instanceof Hl7TreeModel))) {
+            for (int i=index; (i<sNode.getChildCount()) && (result == null); i++) {
+                TreeNode node = sNode.getChildAt(i);
                 String tt = node.toString();
                 
                 if (!caseSensitive) {
@@ -59,41 +66,47 @@ public class TreeNodeSearchEngine {
                 
                 if (tt.indexOf(phrase) != -1) {
                     if (!node.isLeaf()) {
-                        result = ((Hl7Object)node).getPath(rootNode);
+                        result = ((Hl7Object)node).getPath();
                     } else {
-                        result = findNextNode(phrase, caseSensitive, rootNode, node, 0, forward);
+                        result = findNode(phrase, caseSensitive, node, 0);
                     }
                     
                     if ((result == null)) { //&& (!startingNode.isLeaf())){
-                        result = (startingNode instanceof Hl7Object)?((Hl7Object)node).getPath(rootNode):(new TreePath(rootNode));
+                        result = ((Hl7Object)node).getPath();
                     }
                 }
             }
-        } else {        
-        //if ((result == null) && (t.indexOf(phrase) == -1)) {
-            TreeNode node = startingNode;
-            TreeNode parent = (node instanceof Message)?rootNode:startingNode.getParent();
             
-            while ((result == null) && (parent != null)) {
-                int idx = parent.getIndex(node);
-                t = parent.toString();
-                
-                if (!caseSensitive) {
-                    t = t.toUpperCase();
-                    phrase = phrase.toUpperCase();
-                }
-                
-                if ((t.indexOf(phrase) != -1) || (parent instanceof Hl7TreeModel)) {
-                    result = findNextNode(phrase, caseSensitive, rootNode, parent, idx+1, forward);
-                } 
-                
-                if (result == null) {
-                    node = parent;
-                    parent = (node instanceof Message)?rootNode:parent.getParent();
-                }
+//            if (sNode.equals(result)) {
+//                result = null;
+//            }
+        }
+        return result;
+    }
+    
+    private final static TreePath findNode2(String phrase, boolean caseSensitive, TreeNode sNode) throws Exception {
+        TreePath result = null;
+        TreeNode node = sNode;
+        TreeNode parent = sNode.getParent();
+        
+        while ((result == null) && (parent != null)) {
+            int idx = parent.getIndex(node);
+            String t = parent.toString();
+            
+            if (!caseSensitive) {
+                t = t.toUpperCase();
+                phrase = phrase.toUpperCase();
+            }
+            
+            if ((t.indexOf(phrase) != -1) || (parent instanceof Hl7TreeModel)) {
+                result = findNode(phrase, caseSensitive, parent, idx+1);
+            }
+            
+            if (result == null) {
+                node = parent;
+                parent = parent.getParent();
             }
         }
-        
         return result;
     }
 }

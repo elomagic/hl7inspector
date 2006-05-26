@@ -41,6 +41,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     
     public void addMessage(Message message) {
         message.setRoot(this);
+        message.setParent(this);
         objList.add(message);
         fireTreeStructureChanged(this);
     }

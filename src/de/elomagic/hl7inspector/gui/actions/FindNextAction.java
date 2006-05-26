@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -45,28 +45,32 @@ public class FindNextAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         Desktop d = Desktop.getInstance();
         FindBar f = FindBar.getInstance();
-                
-        if (d.getTree().getModel().getRoot() != null) {
-            String phrase = f.getEscapedPhrase();
-            boolean cs = f.isCaseSensitive();
-            if ((phrase.length() != 0) && (d.getTree().getModel().getChildCount(d.getTree().getModel().getRoot()) != 0)) {
-                int row = d.getTree().getSelectionModel().getLeadSelectionRow()+1;
-                
-                TreeNode startingNode = (TreeNode)((d.getTree().getSelectionPath() != null)?d.getTree().getSelectionPath().getLastPathComponent():d.getTree().getModel().getRoot());
-                
-                TreePath path = TreeNodeSearchEngine.findNextNode(phrase, cs, (TreeNode)d.getTree().getModel().getRoot(), startingNode, 0, true);
-
-                if (path == null) 
-                    SimpleDialog.info("The end of message tree reached.");
-                else {
-                    d.getTree().expandPath(path.getParentPath());
+        
+        try {
+            if (d.getTree().getModel().getRoot() != null) {
+                String phrase = f.getEscapedPhrase();
+                boolean cs = f.isCaseSensitive();
+                if ((phrase.length() != 0) && (d.getTree().getModel().getChildCount(d.getTree().getModel().getRoot()) != 0)) {
+                    int row = d.getTree().getSelectionModel().getLeadSelectionRow()+1;
                     
-                    row = d.getTree().getRowForPath(path);
-
-                    d.getTree().scrollRowToVisible(row);
-                    d.getTree().setSelectionRow(row);
+                    TreeNode startingNode = (TreeNode)((d.getTree().getSelectionPath() != null)?d.getTree().getSelectionPath().getLastPathComponent():d.getTree().getModel().getRoot());
+                    
+                    TreePath path = TreeNodeSearchEngine.findNextNode(phrase, cs, startingNode);
+                    
+                    if (path == null)
+                        SimpleDialog.info("The end of message tree reached.");
+                    else {
+                        d.getTree().expandPath(path.getParentPath());
+                        
+                        row = d.getTree().getRowForPath(path);
+                        
+                        d.getTree().scrollRowToVisible(row);
+                        d.getTree().setSelectionRow(row);
+                    }
                 }
             }
+        } catch (Exception ex) {
+            SimpleDialog.error(ex.getMessage());
         }
     }
     

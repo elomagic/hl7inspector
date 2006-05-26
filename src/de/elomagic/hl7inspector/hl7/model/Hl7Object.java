@@ -118,7 +118,7 @@ public abstract class Hl7Object implements TreeNode {
     
     private void add(Hl7Object obj) {
         obj.setRoot(getRoot());
-        obj.setParent(this);
+        obj.setHl7Parent(this);
         objList.add(obj);
     }
     
@@ -130,10 +130,9 @@ public abstract class Hl7Object implements TreeNode {
         
         Hl7Object obj = (Hl7Object)(child.newInstance());
         obj.setRoot(getRoot());
-        obj.setParent(this);
+        obj.setHl7Parent(this);
         obj.parse(text);
         objList.add(obj);
-        
         
         return obj;
     }
@@ -202,10 +201,11 @@ public abstract class Hl7Object implements TreeNode {
         return r;
     }
     
+    /** @deprecated */
     public TreePath getPath(TreeNode rootNode) {
         Vector<Object> v = new Vector<Object>();
         
-        Hl7Object o = this;
+        TreeNode o = this;
         v.add(o);
         
         while (o.getParent() != null) {
@@ -221,8 +221,25 @@ public abstract class Hl7Object implements TreeNode {
         return path;
     }
     
+    public TreePath getPath() {
+        Vector<Object> v = new Vector<Object>();
+        
+        TreeNode o = this;
+        v.add(o);
+        
+        while (o.getParent() != null) {
+            o = o.getParent();
+            
+            v.insertElementAt(o, 0);
+        }
+        
+        TreePath path = new TreePath(v.toArray());
+        
+        return path;
+    }    
+    
     public Hl7Object getHl7Parent() { return parent; }
-    public void setParent(Hl7Object parent) { this.parent = parent; }
+    public void setHl7Parent(Hl7Object parent) { this.parent = parent; }
     
     public void setRoot(Object value) { root = value; }
     public Object getRoot() { return root; }
@@ -345,7 +362,7 @@ public abstract class Hl7Object implements TreeNode {
             result = getCompressed(childIndex);
         }
 
-        if ((result instanceof RepetitionField) && (result.getChildCount() > 0)) {
+        if ((result instanceof RepetitionField) && (result.getChildCount() == 1)) {
             result = result.getChildAt(0);
         }
 
@@ -374,8 +391,8 @@ public abstract class Hl7Object implements TreeNode {
     /**
      * Returns the parent TreeNode of the receiver.
      */
-    public Hl7Object getParent() {
-        Hl7Object result = parent;
+    public TreeNode getParent() {
+        TreeNode result = parent;
         
         if ((parent instanceof RepetitionField) && (parent.size() == 1)) {
             result = parent.getParent();

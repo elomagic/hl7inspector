@@ -18,6 +18,7 @@
 package de.elomagic.hl7inspector.hl7.model;
 
 import java.io.File;
+import javax.swing.tree.TreeNode;
 import org.apache.log4j.Logger;
 
 /**
@@ -44,7 +45,12 @@ public class Message extends Hl7Object {
           source = "";
           Logger.getLogger(getClass()).error(e.getMessage(), e);
       }
-  }  
+  }
+  
+  private TreeNode parent;
+  
+  public TreeNode getParent() { return parent; }
+  public void setParent(TreeNode value) { parent = value; }
   
   /** @deprecated */
   public File getFile() { return null; }

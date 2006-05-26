@@ -88,7 +88,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
                 Hl7Object node = (Hl7Object)path.getLastPathComponent();
                 
                 while (!(node instanceof Message))
-                    node = node.getParent();
+                    node = node.getHl7Parent();
                 
                 Message message = (Message)node;
                 
