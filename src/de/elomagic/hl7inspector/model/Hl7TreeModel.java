@@ -36,14 +36,10 @@ import javax.swing.tree.TreePath;
 public class Hl7TreeModel implements TreeModel, TreeNode {
     
     /** Creates a new instance of Hl7TreeModel */
-    public Hl7TreeModel() { }
-    public Hl7TreeModel(boolean compressedView) { 
-        compressed = compressedView; 
-        System.setProperty(Hl7Object.COMPRESSED_KEY, (compressed)?"t":"f");
-    }
+    public Hl7TreeModel() { setCompressedView(true); }
+    public Hl7TreeModel(boolean compressedView) { setCompressedView(compressedView); }
     
     public void addMessage(Message message) {
-        //_changed = true;
         message.setRoot(this);
         objList.add(message);
         fireTreeStructureChanged(this);
@@ -52,10 +48,12 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     public Vector<Message> getMessages() { return objList; }
     
     public void setCompressedView(boolean value) {
-        compressed = value;
-        System.setProperty(Hl7Object.COMPRESSED_KEY, (value)?"t":"f");
+        if (value != compressed) {
+            compressed = value;
+            System.setProperty(Hl7Object.COMPRESSED_KEY, (value)?"t":"f");
         
-        fireTreeStructureChanged(this);
+            fireTreeStructureChanged(this);
+        }
     }
     
     public boolean isCompactView() { return compressed; }
@@ -84,11 +82,15 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     
     // Interface TreeModel
     public boolean isLeaf(Object node) {
+        boolean result;
+        
         if (node instanceof Hl7TreeModel) {
-            return objList.size() == 0;
+            result = objList.size() == 0;
         } else {
-            return ((Hl7Object)node).isSinglePath();
+            result = ((Hl7Object)node).isSinglePath();
         }
+        
+        return result;
     }
        
     public int getChildCount(Object parent) {
@@ -227,7 +229,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     
     private Vector<TreeModelListener> listenerList = new Vector<TreeModelListener>();
     
-    private boolean compressed = true;
+    private boolean compressed;// = true;
     private boolean viewDescription = false;
     
     public boolean isViewDescription() { return viewDescription; }
