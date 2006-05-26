@@ -148,7 +148,7 @@
         <zip destfile="${basedir}/dist/hl7inspector-${app.version}-src.zip">
             <zipfileset dir="src" prefix="hl7inspector-${app.version}/src"/>
             <zipfileset dir="license" prefix="hl7inspector-${app.version}/license"/>
-            <zipfileset dir="." includes="readme.txt, build.xml, build.number" prefix="hl7inspector-${app.version}"/>
+            <zipfileset dir="." includes="readme.txt, changes.txt, build.xml, build.number" prefix="hl7inspector-${app.version}"/>
             <zipfileset dir="samples" prefix="hl7inspector-${app.version}/samples"/>
             <zipfileset dir="izpack" prefix="hl7inspector-${app.version}/izpack"/>
             <zipfileset dir="launch4j" prefix="hl7inspector-${app.version}/launch4j"/>
@@ -158,7 +158,7 @@
         <tar destfile="${basedir}/dist/hl7inspector-${app.version}-src.tar">        
             <tarfileset dir="src" prefix="hl7inspector-${app.version}/src"/>
             <tarfileset dir="license" prefix="hl7inspector-${app.version}/license"/>
-            <tarfileset dir="." includes="readme.txt, build.xml, build.number" prefix="hl7inspector-${app.version}"/>
+            <tarfileset dir="." includes="readme.txt, changes.txt, build.xml, build.number" prefix="hl7inspector-${app.version}"/>
             <tarfileset dir="samples" prefix="hl7inspector-${app.version}/samples"/>
             <tarfileset dir="izpack" prefix="hl7inspector-${app.version}/izpack"/>
             <tarfileset dir="launch4j" prefix="hl7inspector-${app.version}/launch4j"/>
