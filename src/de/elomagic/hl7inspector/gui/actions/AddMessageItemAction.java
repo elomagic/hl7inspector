@@ -22,6 +22,7 @@ import de.elomagic.hl7inspector.gui.HL7ObjectEditor;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.hl7.model.Delimiters;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.awt.event.ActionEvent;
@@ -72,18 +73,25 @@ public class AddMessageItemAction extends AbstractAction {
             
             Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();
             
-            Hl7Object o = hl7o.add("");
+            String v = "";
+            
+            if (hl7o instanceof Message) {
+                // todo: Select segment type
+                v = "ZZZ";
+            }
+            
+            Hl7Object o = hl7o.add(v);
             
             Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
-            
-            model.fireTreeNodesInsert(path, new Object[] { o });
-            
-            if (model.isCompactView()) {
+                        
+            if (model.isCompactView() &&(v.length() == 0)) {
                 SimpleDialog.info("Empty items are only visible in the non compressed view.");
+            } else {
+                model.fireTreeNodesInsert(path, new Object[] { o });
             }
-        } catch (Exception ee) {
-            Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-            SimpleDialog.error(ee);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+            SimpleDialog.error(ex);
         }
     }
 }
