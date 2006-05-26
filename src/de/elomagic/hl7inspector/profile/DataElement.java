@@ -68,7 +68,8 @@ public class DataElement {
     
     public XMLElement getXMLElement() {
         XMLElement xml = new XMLElement();
-        xml.setName(getItem());
+        xml.setName("data-element");
+        xml.setAttribute("id", getItem());
         
         XMLElement el = new XMLElement();
         el.setName("item");
