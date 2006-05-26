@@ -1,4 +1,4 @@
-Ver. 2.1.0.x RC1
+Ver. 2.1.0.497 RC1
 
 * Message receiver: Required fields in acknowledge message are empty. Fixed.
 * Null pointer exception occur when appending segment in compact view mode. Fixed.

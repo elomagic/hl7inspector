@@ -89,6 +89,7 @@
         <pack name="Core" required="yes">
             <description>The base files</description>
             <file src="readme.txt" targetdir="$INSTALL_PATH"/>
+            <file src="changes.txt" targetdir="$INSTALL_PATH"/>
             <fileset dir="license/" includes="*" targetdir="$INSTALL_PATH/license"/>
             <file src="izpack/application.ico" targetdir="$INSTALL_PATH"/>
             <!--<file src="dist/hl7inspector.jar" targetdir="$INSTALL_PATH"/>-->
