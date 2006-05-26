@@ -79,6 +79,7 @@ public class FindBar extends JPanel {
         
         if (value) {
             btNext.getRootPane().setDefaultButton(btNext);
+            editPhrase.selectAll();
         }
     }
     
