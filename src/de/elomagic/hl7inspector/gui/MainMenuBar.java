@@ -45,9 +45,9 @@ public class MainMenuBar extends JMenuBar {
         miFile.add(new JMenuItem(new FileOpenAction()));
         miFile.add(miOpenRecentFiles);
         miFile.add(new JMenuItem(new FileSaveAsAction()));
-        /* FEATURE Print message support needed
-        menuItem.addSeparator();
-        menuItem.add(new JMenuItem(new PrintAction())); */
+        // FEATURE Print message support needed
+        miFile.addSeparator();
+        miFile.add(new JMenuItem(new PrintAction())); 
         miFile.addSeparator();
         miFile.add(new JMenuItem(new ExitAction()));
         miFile.addChangeListener(new RecentFileMenuListener());
