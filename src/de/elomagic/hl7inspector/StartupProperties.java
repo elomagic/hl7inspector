@@ -18,10 +18,14 @@
 package de.elomagic.hl7inspector;
 
 import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.print.HFFormat;
 import de.elomagic.hl7inspector.profile.ProfileFile;
 import de.elomagic.hl7inspector.utils.History;
+import de.elomagic.hl7inspector.utils.StringVector;
 import java.awt.Color;
 import java.awt.SystemColor;
+import java.awt.print.PageFormat;
+import java.awt.print.Paper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -76,6 +80,7 @@ public class StartupProperties extends Properties {
             
             createProfiles();
             createKeyStores();
+            readPrinterSetup();
         } catch (Exception e) {
             if (!(e instanceof FileNotFoundException)) {
                 SimpleDialog.error(e) ;
@@ -87,6 +92,7 @@ public class StartupProperties extends Properties {
         try {
             setProfiles();
             setKeyStores();
+            savePrinterSetup();
             
 //            History history = new History(StartupProperties.SENDER_OPTIONS_DEST);
 //            history.write(this);
@@ -280,6 +286,58 @@ public class StartupProperties extends Properties {
         }
     }
     
+    public void savePrinterSetup() {
+        PageFormat pf = HFFormat.getInstance();
+        
+        StringVector sv = new StringVector();
+        sv.add(Double.toString(pf.getImageableX()));
+        sv.add(Double.toString(pf.getImageableY()));
+        sv.add(Double.toString(pf.getImageableWidth()));
+        sv.add(Double.toString(pf.getImageableHeight()));
+                
+        setProperty(PRINTER_PAGE_BORDER, sv.toString(','));
+        setProperty(PRINTER_PAGE_ORIENTATION, Integer.toString(pf.getOrientation()));
+        setProperty(PRINTER_PAGE_SIZE, Double.toString(pf.getWidth()) + "," + Double.toString(pf.getHeight()));
+    }
+    
+    public void readPrinterSetup() {
+        try {
+            if (containsKey(PRINTER_PAGE_BORDER)) {
+                StringVector sv = new StringVector(getProperty(PRINTER_PAGE_BORDER), ',');
+
+                PageFormat pf = HFFormat.getInstance();
+
+                Paper paper = pf.getPaper();
+                paper.setImageableArea(
+                        Double.parseDouble(sv.get(0)),
+                        Double.parseDouble(sv.get(1)),
+                        Double.parseDouble(sv.get(2)),
+                        Double.parseDouble(sv.get(3)));  
+                
+                pf.setPaper(paper);
+            }
+            
+            if (containsKey(PRINTER_PAGE_SIZE)) {
+                StringVector sv = new StringVector(getProperty(PRINTER_PAGE_SIZE), ',');
+
+                PageFormat pf = HFFormat.getInstance();
+
+                Paper paper = pf.getPaper();
+                paper.setSize(
+                        Double.parseDouble(sv.get(0)),
+                        Double.parseDouble(sv.get(1)));
+                
+                pf.setPaper(paper);
+            }            
+
+            if (containsKey(PRINTER_PAGE_ORIENTATION)) {
+                HFFormat.getInstance().setOrientation(Integer.parseInt(getProperty(PRINTER_PAGE_ORIENTATION)));
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+        }
+    }    
+    
     public Calendar getLastUpdateCheck() throws ParseException {
         Calendar c = Calendar.getInstance();
         c.setTime(new SimpleDateFormat("yyyy.MM.dd").parse(getProperty(AUTOUPDATE_LAST_CHECK, "1980.01.01")));
@@ -388,6 +446,10 @@ public class StartupProperties extends Properties {
     public final static String COLOR_NODE_TEXT          = "tree-node-text-color";
     public final static String COLOR_NODE_DESCRIPTION   = "tree-node-description-color";
     public final static String COLOR_NODE_TRUNCATE      = "tree-node-truncate-color";
+
+    public final static String PRINTER_PAGE_BORDER      = "printer-page-border";
+    public final static String PRINTER_PAGE_ORIENTATION = "printer-page-orientation";
+    public final static String PRINTER_PAGE_SIZE        = "printer-page-size";
     
     public final static String TREE_NODE_LENGTH         = "tree-node-length";
     public final static String TREE_VIEW_MODE           = "tree-view-mode";
