@@ -34,19 +34,19 @@ public class PrintSetupAction extends AbstractAction {
     public PrintSetupAction() {
         super("Page Setup...", ResourceLoader.loadImageIcon("document-properties.png"));
         
-        putValue(SHORT_DESCRIPTION, "Page Setup.");
+        putValue(SHORT_DESCRIPTION, "Page Setup");
     }
     
     public void actionPerformed(ActionEvent e) {
         PrinterJob job = PrinterJob.getPrinterJob();
         
         if (job.getPrintService() != null) {
-            PageFormat defFormat = HFFormat.getInstance();
-            PageFormat newFormat = job.pageDialog(defFormat);
+            PageFormat defFormat = job.validatePage(HFFormat.getInstance());
+            PageFormat newFormat = job.validatePage(job.pageDialog(defFormat));
             
             if (defFormat != newFormat) {
+                HFFormat.getInstance().setOrientation(newFormat.getOrientation());                
                 HFFormat.getInstance().setPaper(newFormat.getPaper());
-                HFFormat.getInstance().setOrientation(newFormat.getOrientation());
             }
         } else {
             SimpleDialog.error("No printer available.");
