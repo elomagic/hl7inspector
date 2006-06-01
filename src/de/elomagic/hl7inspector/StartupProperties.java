@@ -290,10 +290,10 @@ public class StartupProperties extends Properties {
         PageFormat pf = HFFormat.getInstance();
         
         StringVector sv = new StringVector();
-        sv.add(Double.toString(pf.getImageableX()));
-        sv.add(Double.toString(pf.getImageableY()));
-        sv.add(Double.toString(pf.getImageableWidth()));
-        sv.add(Double.toString(pf.getImageableHeight()));
+        sv.add(Double.toString(pf.getPaper().getImageableX()));
+        sv.add(Double.toString(pf.getPaper().getImageableY()));
+        sv.add(Double.toString(pf.getPaper().getImageableWidth()));
+        sv.add(Double.toString(pf.getPaper().getImageableHeight()));
                 
         setProperty(PRINTER_PAGE_BORDER, sv.toString(','));
         setProperty(PRINTER_PAGE_ORIENTATION, Integer.toString(pf.getOrientation()));
@@ -302,20 +302,9 @@ public class StartupProperties extends Properties {
     
     public void readPrinterSetup() {
         try {
-            if (containsKey(PRINTER_PAGE_BORDER)) {
-                StringVector sv = new StringVector(getProperty(PRINTER_PAGE_BORDER), ',');
-
-                PageFormat pf = HFFormat.getInstance();
-
-                Paper paper = pf.getPaper();
-                paper.setImageableArea(
-                        Double.parseDouble(sv.get(0)),
-                        Double.parseDouble(sv.get(1)),
-                        Double.parseDouble(sv.get(2)),
-                        Double.parseDouble(sv.get(3)));  
-                
-                pf.setPaper(paper);
-            }
+            if (containsKey(PRINTER_PAGE_ORIENTATION)) {
+                HFFormat.getInstance().setOrientation(Integer.parseInt(getProperty(PRINTER_PAGE_ORIENTATION)));
+            }                        
             
             if (containsKey(PRINTER_PAGE_SIZE)) {
                 StringVector sv = new StringVector(getProperty(PRINTER_PAGE_SIZE), ',');
@@ -330,9 +319,20 @@ public class StartupProperties extends Properties {
                 pf.setPaper(paper);
             }            
 
-            if (containsKey(PRINTER_PAGE_ORIENTATION)) {
-                HFFormat.getInstance().setOrientation(Integer.parseInt(getProperty(PRINTER_PAGE_ORIENTATION)));
-            }
+            if (containsKey(PRINTER_PAGE_BORDER)) {
+                StringVector sv = new StringVector(getProperty(PRINTER_PAGE_BORDER), ',');
+
+                PageFormat pf = HFFormat.getInstance();
+
+                Paper paper = pf.getPaper();
+                paper.setImageableArea(
+                        Double.parseDouble(sv.get(0)),
+                        Double.parseDouble(sv.get(1)),
+                        Double.parseDouble(sv.get(2)),
+                        Double.parseDouble(sv.get(3)));  
+                
+                pf.setPaper(paper);
+            }            
         } catch (Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
