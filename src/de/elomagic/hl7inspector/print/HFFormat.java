@@ -45,9 +45,9 @@ public class HFFormat extends PageFormat implements Printable {
     }
     
     private final static PageFormat INSTANCE = new HFFormat();
-    public final static PageFormat getInstance() { return INSTANCE; }    
+    public final static PageFormat getInstance() { return INSTANCE; }
     
-    private static final Font font = new Font("Serif", Font.ITALIC, 10);    
+    private static final Font font = new Font("Serif", Font.ITALIC, 10);
     private static final float height = (float) (0.25 * 72);
     
     public double getImageableHeight() {
@@ -57,24 +57,6 @@ public class HFFormat extends PageFormat implements Printable {
         }
         
         return imageableHeight;
-    }
-    
-    public int print(Graphics g, PageFormat format, int pageIndex) {
-        Graphics2D g2d = (Graphics2D) g.create();
-        g2d.setFont(font);
-        
-        int y = (int) (super.getImageableY() + getImageableHeight());
-        
-        g2d.setPaint(Color.gray);
-        g2d.drawLine(0, y, (int) super.getImageableWidth(), y);
-        
-        g2d.setPaint(Color.black);
-        drawString(g2d, Hl7Inspector.APPLICATION_NAME + " " + Hl7Inspector.getVersionString(), Label.LEFT_ALIGNMENT);
-        drawString(g2d, "Page #" + (pageIndex+1), Label.RIGHT_ALIGNMENT);
-        
-        g2d.dispose();
-        
-        return Printable.PAGE_EXISTS;
     }
     
     private void drawString(Graphics2D g2d, String s, float alignment) {
@@ -91,6 +73,26 @@ public class HFFormat extends PageFormat implements Printable {
         }
         
         g2d.drawString(s, (int)x, (int)y);
+    }
+    
+    // Interface Printable
+    
+    public int print(Graphics g, PageFormat format, int pageIndex) {
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setFont(font);
+        
+        int y = (int) (super.getImageableY() + getImageableHeight());
+        
+        g2d.setPaint(Color.gray);
+        g2d.drawLine(0, y, (int) super.getImageableWidth(), y);
+        
+        g2d.setPaint(Color.black);
+        drawString(g2d, Hl7Inspector.APPLICATION_NAME + " " + Hl7Inspector.getVersionString(), Label.LEFT_ALIGNMENT);
+        drawString(g2d, "Page #" + (pageIndex+1), Label.RIGHT_ALIGNMENT);
+        
         g2d.dispose();
-    }    
+        g2d = null;
+        
+        return Printable.PAGE_EXISTS;
+    }
 }
