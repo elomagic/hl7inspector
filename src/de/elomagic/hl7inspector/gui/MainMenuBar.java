@@ -48,6 +48,7 @@ public class MainMenuBar extends JMenuBar {
         // FEATURE Print message support needed
         miFile.addSeparator();
         miFile.add(new JMenuItem(new PrintAction())); 
+        miFile.add(new JMenuItem(new PrintSetupAction())); 
         miFile.addSeparator();
         miFile.add(new JMenuItem(new ExitAction()));
         miFile.addChangeListener(new RecentFileMenuListener());
