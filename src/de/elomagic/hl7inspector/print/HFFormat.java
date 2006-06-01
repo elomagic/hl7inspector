@@ -72,27 +72,30 @@ public class HFFormat extends PageFormat implements Printable {
             x = (float) (super.getImageableWidth() - r.getWidth());
         }
         
-        g2d.drawString(s, (int)x, (int)y);
+        g2d.drawString(s, x, y);
     }
     
     // Interface Printable
     
     public int print(Graphics g, PageFormat format, int pageIndex) {
         Graphics2D g2d = (Graphics2D) g.create();
-        g2d.setFont(font);
-        
-        int y = (int) (super.getImageableY() + getImageableHeight());
-        
-        g2d.setPaint(Color.gray);
-        g2d.drawLine(0, y, (int) super.getImageableWidth(), y);
-        
-        g2d.setPaint(Color.black);
-        drawString(g2d, Hl7Inspector.APPLICATION_NAME + " " + Hl7Inspector.getVersionString(), Label.LEFT_ALIGNMENT);
-        drawString(g2d, "Page #" + (pageIndex+1), Label.RIGHT_ALIGNMENT);
-        
-        g2d.dispose();
-        g2d = null;
+        try {
+            g2d.setFont(font);
+            
+            int y = (int) (super.getImageableY() + getImageableHeight());
+            
+            g2d.setPaint(Color.gray);
+            g2d.drawLine(0, y, (int) super.getImageableWidth(), y);
+            
+            g2d.setPaint(Color.black);
+            drawString(g2d, Hl7Inspector.APPLICATION_NAME + " " + Hl7Inspector.getVersionString(), Label.LEFT_ALIGNMENT);
+            drawString(g2d, "Page #" + (pageIndex+1), Label.RIGHT_ALIGNMENT);
+            
+        } finally {
+            g2d.dispose();
+            g2d = null;
+        }
         
         return Printable.PAGE_EXISTS;
-    }
+    }    
 }
