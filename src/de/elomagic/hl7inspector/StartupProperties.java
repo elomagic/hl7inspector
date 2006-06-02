@@ -30,7 +30,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.security.KeyStore;
+//import java.security.KeyStore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -56,10 +56,14 @@ public class StartupProperties extends Properties {
             FileInputStream fin = null;
             
             if (!file.exists()) {
-                File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));
+                File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.1").concat(File.separator).concat(CONFIG_FILE));
+                
+                if (!oldFile.exists()) {
+                    oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));
+                }
                 
                 if (oldFile.exists()) {
-                    if (SimpleDialog.confirmYesNo("Import configruation from HL7 Inspector 2.0 ?") == SimpleDialog.YES_OPTION) {
+                    if (SimpleDialog.confirmYesNo("Import configruation from an older HL7 Inspector ?") == SimpleDialog.YES_OPTION) {
                         fin = new FileInputStream(oldFile);
                     } else {
                         fin = new FileInputStream(wp.concat(CONFIG_FILE));
@@ -115,7 +119,7 @@ public class StartupProperties extends Properties {
     }
     
     public final static String getUserHomePath(boolean create) {
-        String wp = System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.1").concat(File.separator);
+        String wp = System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.2").concat(File.separator);
         
         if ((!(new File(wp).exists())) && (create)) {
             new File(wp).mkdir();
