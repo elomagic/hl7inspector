@@ -28,6 +28,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterJob;
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
  *
@@ -47,11 +49,13 @@ public class HFFormat extends PageFormat implements Printable {
     private final static PageFormat INSTANCE = new HFFormat();
     public final static PageFormat getInstance() { return INSTANCE; }
     
-    private static final Font font = new Font("Serif", Font.ITALIC, 10);
+    private static final Font font = new Font("Serif", Font.ITALIC, 8);
     private static final float height = (float) (0.25 * 72);
     
+    public double getImageableY() { return super.getImageableY() + height; }
+    
     public double getImageableHeight() {
-        double imageableHeight = super.getImageableHeight() - height;
+        double imageableHeight = super.getImageableHeight() - height - height;
         if (imageableHeight < 0) {
             imageableHeight = 0;
         }
@@ -59,20 +63,27 @@ public class HFFormat extends PageFormat implements Printable {
         return imageableHeight;
     }
     
-    private void drawString(Graphics2D g2d, String s, float alignment) {
-        LineMetrics metrics = font.getLineMetrics(s, g2d.getFontRenderContext());
+    private void drawString(Graphics2D g2d, String text, float alignment, boolean header) {
+        LineMetrics metrics = font.getLineMetrics(text, g2d.getFontRenderContext());
         
-        float y = (float) (super.getImageableY() + super.getImageableHeight()- metrics.getDescent() - metrics.getLeading());
+        float y;
+        if (header) {
+            y = (float) super.getImageableY() + height;
+            
+        } else {
+            y = (float) (super.getImageableY() + super.getImageableHeight()- metrics.getDescent() - metrics.getLeading());
+        }
+        
         float x = 0;
         
         if (alignment == Label.LEFT_ALIGNMENT) {
-            x = 0;
+            x = (float)super.getImageableX();
         } else if (alignment == Label.RIGHT_ALIGNMENT) {
-            Rectangle2D r = font.getStringBounds(s, g2d.getFontRenderContext());
-            x = (float) (super.getImageableWidth() - r.getWidth());
+            Rectangle2D r2d = font.getStringBounds(text, g2d.getFontRenderContext());
+            x = (float) (super.getImageableX() + super.getImageableWidth() - r2d.getWidth());
         }
         
-        g2d.drawString(s, x, y);
+        g2d.drawString(text, x, y);
     }
     
     // Interface Printable
@@ -82,20 +93,35 @@ public class HFFormat extends PageFormat implements Printable {
         try {
             g2d.setFont(font);
             
+            // Draw header
+            g2d.setPaint(Color.gray);
+            g2d.drawLine(
+                    0, 
+                    (int) (height+super.getImageableY()), 
+                    (int) (super.getImageableX() + super.getImageableWidth()), 
+                    (int) (height+super.getImageableY()));
+            
+            g2d.setPaint(Color.black);
+            drawString(g2d, Hl7Inspector.APPLICATION_NAME + " " + Hl7Inspector.getVersionString(), Label.LEFT_ALIGNMENT, true);
+            drawString(g2d, DateFormat.getDateTimeInstance().format(new Date()), Label.RIGHT_ALIGNMENT, true);
+            
+            // Draw footer
             int y = (int) (super.getImageableY() + getImageableHeight());
             
             g2d.setPaint(Color.gray);
-            g2d.drawLine(0, y, (int) super.getImageableWidth(), y);
+            g2d.drawLine(
+                    0, 
+                    y, 
+                    (int) (super.getImageableX() + super.getImageableWidth()), 
+                    y);
             
             g2d.setPaint(Color.black);
-            drawString(g2d, Hl7Inspector.APPLICATION_NAME + " " + Hl7Inspector.getVersionString(), Label.LEFT_ALIGNMENT);
-            drawString(g2d, "Page #" + (pageIndex+1), Label.RIGHT_ALIGNMENT);
-            
+            drawString(g2d, Hl7Inspector.APPLICATION_NAME + " " + Hl7Inspector.getVersionString(), Label.LEFT_ALIGNMENT, false);
+            drawString(g2d, "Page #" + (pageIndex+1), Label.RIGHT_ALIGNMENT, false);
         } finally {
             g2d.dispose();
-            g2d = null;
         }
         
         return Printable.PAGE_EXISTS;
-    }    
+    }
 }

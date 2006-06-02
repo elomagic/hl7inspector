@@ -19,10 +19,12 @@ package de.elomagic.hl7inspector.print;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
+import javax.swing.JTree;
 
 
 /**
@@ -33,19 +35,28 @@ import java.awt.print.PrinterException;
  * the top of a page.
  */
 public final class TilePrintable implements Printable {
-    public TilePrintable(Printable printable, Point2D origin) {
-        this.printable = printable;
+    public TilePrintable(Point2D origin, JTree tree, double scale) {
         this.origin = origin;
+        this.tree = tree;
+        this.scale = scale;
     }
     
-    private Printable printable;
     private Point2D origin;
+    private double scale;
+    private JTree tree;
     
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
         Graphics2D g2 = (Graphics2D) graphics.create();
         try {
+            Rectangle componentBounds = tree.getBounds(null);
+            
             g2.translate(-origin.getX(), -origin.getY());
-            printable.print(g2, pageFormat, 1);
+            g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+            //g2.translate(-componentBounds.x, -componentBounds.y);
+            //g2.scale(scale, scale);
+            boolean wasBuffered = tree.isDoubleBuffered();
+            tree.paint(g2);
+            tree.setDoubleBuffered(wasBuffered);
         } finally {
             g2.dispose();
         }
