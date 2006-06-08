@@ -35,8 +35,6 @@ public class PanelDialog extends BaseDialog {
     public PanelDialog(Frame owner, String title, boolean modal) { 
         super(owner, title, modal); 
         
-        
-        
         init();    
     }
     
@@ -68,6 +66,7 @@ public class PanelDialog extends BaseDialog {
         }
     }
     
+    @Override
     public boolean ask() {
         read();
         
