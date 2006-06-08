@@ -46,16 +46,16 @@ public class HFFormat extends PageFormat implements Printable {
         setPaper(pf.getPaper());
     }
     
-    private final static PageFormat INSTANCE = new HFFormat();
-    public final static PageFormat getInstance() { return INSTANCE; }
+    private final static HFFormat INSTANCE = new HFFormat();
+    public final static HFFormat getInstance() { return INSTANCE; }
     
     private static final Font font = new Font("Serif", Font.ITALIC, 8);
     private static final float height = (float) (0.25 * 72);
     
-    public double getImageableY() { return super.getImageableY() + height; }
+    public double getPrintableY() { return getImageableY() + height; }
     
-    public double getImageableHeight() {
-        double imageableHeight = super.getImageableHeight() - height - height;
+    public double getPrintableHeight() {
+        double imageableHeight = getImageableHeight() - height - height;
         if (imageableHeight < 0) {
             imageableHeight = 0;
         }
@@ -63,27 +63,26 @@ public class HFFormat extends PageFormat implements Printable {
         return imageableHeight;
     }
     
-    private void drawString(Graphics2D g2d, String text, float alignment, boolean header) {
-        LineMetrics metrics = font.getLineMetrics(text, g2d.getFontRenderContext());
+    private void drawString(Graphics2D g2d, String text, float alignment, boolean header) {        
+        double y;
         
-        float y;
         if (header) {
-            y = (float) super.getImageableY() + height;
-            
+            y = getImageableY() + height;            
         } else {
-            y = (float) (super.getImageableY() + super.getImageableHeight()- metrics.getDescent() - metrics.getLeading());
+            LineMetrics metrics = font.getLineMetrics(text, g2d.getFontRenderContext());
+            y = (double) (getImageableY() + getImageableHeight()- metrics.getDescent() - metrics.getLeading());
         }
         
-        float x = 0;
+        double x = 0;
         
         if (alignment == Label.LEFT_ALIGNMENT) {
-            x = (float)super.getImageableX();
+            x = getImageableX();
         } else if (alignment == Label.RIGHT_ALIGNMENT) {
             Rectangle2D r2d = font.getStringBounds(text, g2d.getFontRenderContext());
-            x = (float) (super.getImageableX() + super.getImageableWidth() - r2d.getWidth());
+            x = getImageableX() + getImageableWidth() - r2d.getWidth();
         }
         
-        g2d.drawString(text, x, y);
+        g2d.drawString(text, (float)x, (float)y);
     }
     
     // Interface Printable
@@ -94,25 +93,28 @@ public class HFFormat extends PageFormat implements Printable {
             g2d.setFont(font);
             
             // Draw header
+            LineMetrics metrics = font.getLineMetrics("Xy", g2d.getFontRenderContext());
+            int y = (int)(metrics.getDescent() + metrics.getLeading() + height + getImageableY());
+            
             g2d.setPaint(Color.gray);
             g2d.drawLine(
                     0, 
-                    (int) (height+super.getImageableY()), 
-                    (int) (super.getImageableX() + super.getImageableWidth()), 
-                    (int) (height+super.getImageableY()));
+                    y, 
+                    (int) (getImageableX() + getImageableWidth()), 
+                    y);
             
             g2d.setPaint(Color.black);
             drawString(g2d, Hl7Inspector.APPLICATION_NAME + " " + Hl7Inspector.getVersionString(), Label.LEFT_ALIGNMENT, true);
             drawString(g2d, DateFormat.getDateTimeInstance().format(new Date()), Label.RIGHT_ALIGNMENT, true);
             
             // Draw footer
-            int y = (int) (super.getImageableY() + getImageableHeight());
+            y = (int) (getImageableY() + getImageableHeight() - metrics.getHeight()/* metrics.getDescent() - metrics.getLeading() - height*/);
             
             g2d.setPaint(Color.gray);
             g2d.drawLine(
                     0, 
                     y, 
-                    (int) (super.getImageableX() + super.getImageableWidth()), 
+                    (int) (getImageableX() + getImageableWidth()), 
                     y);
             
             g2d.setPaint(Color.black);

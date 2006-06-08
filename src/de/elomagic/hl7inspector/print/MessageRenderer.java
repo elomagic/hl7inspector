@@ -25,7 +25,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.Pageable;
 import java.awt.print.Printable;
 import javax.swing.JComponent;
-import javax.swing.JTree;
 
 /**
  *
@@ -47,18 +46,18 @@ public class MessageRenderer implements Pageable {
         //setSize(componentBounds.width, componentBounds.height);
         Dimension dim = c.getPreferredSize();       
         setSize(dim.width, dim.height);
-        setScale(0.7);
+        setScale(0.8);
         //scaleToFit();        
     }
     
     private int countPagesX;
     private int countPagesY;
-    private int countPages;    
-    private PageFormat format = HFFormat.getInstance();
+    private int countPages;
+    private HFFormat format = HFFormat.getInstance();
     
     protected void setSize(float width, float height) {
         countPagesX = (int) ((width + format.getImageableWidth() - 1)/ format.getImageableWidth());
-        countPagesY = (int) ((height + format.getImageableHeight() - 1)/ format.getImageableHeight());
+        countPagesY = (int) ((height + format.getPrintableHeight() - 1)/ format.getPrintableHeight());
         countPages = countPagesX * countPagesY;
     }
     
@@ -71,7 +70,7 @@ public class MessageRenderer implements Pageable {
     public void scaleToFit() {
         Rectangle componentBounds = c.getBounds(null);
         double scaleX = format.getImageableWidth() / componentBounds.width;
-        double scaleY = format.getImageableHeight() / componentBounds.height;
+        double scaleY = format.getPrintableHeight() / componentBounds.height;
         
         if (scaleX < 1 || scaleY < 1) {
             if (scaleX < scaleY) {
@@ -93,7 +92,7 @@ public class MessageRenderer implements Pageable {
         }
         
         double originX = (pageIndex % countPagesX) * format.getImageableWidth();
-        double originY = (pageIndex / countPagesX) * format.getImageableHeight();
+        double originY = (pageIndex / countPagesX) * format.getPrintableHeight();
         
         Point2D.Double origin = new Point2D.Double(originX, originY);
         

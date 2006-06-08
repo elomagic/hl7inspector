@@ -45,14 +45,16 @@ public final class TilePrintable implements Printable {
     private JComponent c;
     
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
+        HFFormat format = (HFFormat)pageFormat;
+        
         Graphics2D g2 = (Graphics2D) graphics.create();
         try {
             Rectangle componentBounds = c.getBounds(null);
             
             g2.translate(-origin.getX(), -origin.getY());
-            g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
-            //g2.translate(-componentBounds.x, -componentBounds.y);
-            //g2.scale(scale, scale);
+            g2.translate(pageFormat.getImageableX(), format.getPrintableY());
+            g2.translate(-componentBounds.x, -componentBounds.y);
+            g2.scale(scale, scale);
             boolean wasBuffered = c.isDoubleBuffered();
             c.paint(g2);
             c.setDoubleBuffered(wasBuffered);
