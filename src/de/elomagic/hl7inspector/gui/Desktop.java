@@ -71,7 +71,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     //public FindBar getFindWindow() { return findWindow; }
     public Hl7Tree getTree() { return treePane.getTree(); }
     
-    public JScrollPane getScrollPane() { return treePane; }
+    public Hl7TreePane getScrollPane() { return treePane; }
     
     public TreeModel getModel() { return treePane.getModel(); }
     public void setModel(TreeModel model) { treePane.setModel(model); }
