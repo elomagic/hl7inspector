@@ -24,6 +24,7 @@ import java.awt.geom.Point2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Pageable;
 import java.awt.print.Printable;
+import javax.swing.JComponent;
 import javax.swing.JTree;
 
 /**
@@ -37,14 +38,14 @@ public class MessageRenderer implements Pageable {
     }
     
     /** Creates a new instance of MessageRenderer */
-    public MessageRenderer(JTree tree) { init(tree); }
+    public MessageRenderer(JComponent component) { init(component); }
     
-    private void init(JTree tree) {
-        setComponent(tree);
+    private void init(JComponent component) {
+        setComponent(component);
         
         //Rectangle componentBounds = component.getBounds(null);        
         //setSize(componentBounds.width, componentBounds.height);
-        Dimension dim = this.tree.getPreferredSize();       
+        Dimension dim = c.getPreferredSize();       
         setSize(dim.width, dim.height);
         setScale(0.7);
         //scaleToFit();        
@@ -61,14 +62,14 @@ public class MessageRenderer implements Pageable {
         countPages = countPagesX * countPagesY;
     }
     
-    private JTree tree;
-    protected void setComponent(JTree c) { this.tree = c; }
+    private JComponent c;
+    protected void setComponent(JComponent component) { c = component; }
     
     private double scale;
     protected void setScale(double scale) { this.scale = scale; }
     
     public void scaleToFit() {
-        Rectangle componentBounds = tree.getBounds(null);
+        Rectangle componentBounds = c.getBounds(null);
         double scaleX = format.getImageableWidth() / componentBounds.width;
         double scaleY = format.getImageableHeight() / componentBounds.height;
         
@@ -96,7 +97,7 @@ public class MessageRenderer implements Pageable {
         
         Point2D.Double origin = new Point2D.Double(originX, originY);
         
-        return new TilePrintable(origin, tree, scale);
+        return new TilePrintable(origin, c, scale);
     }
     
     public int getNumberOfPages() { return countPages; }

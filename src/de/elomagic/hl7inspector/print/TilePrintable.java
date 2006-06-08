@@ -24,8 +24,7 @@ import java.awt.geom.Point2D;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import javax.swing.JTree;
-
+import javax.swing.JComponent;
 
 /**
  * This inner class's sole responsibility is to translate
@@ -35,28 +34,28 @@ import javax.swing.JTree;
  * the top of a page.
  */
 public final class TilePrintable implements Printable {
-    public TilePrintable(Point2D origin, JTree tree, double scale) {
+    public TilePrintable(Point2D origin, JComponent component, double scale) {
         this.origin = origin;
-        this.tree = tree;
+        this.c = component;
         this.scale = scale;
     }
     
     private Point2D origin;
     private double scale;
-    private JTree tree;
+    private JComponent c;
     
     public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
         Graphics2D g2 = (Graphics2D) graphics.create();
         try {
-            Rectangle componentBounds = tree.getBounds(null);
+            Rectangle componentBounds = c.getBounds(null);
             
             g2.translate(-origin.getX(), -origin.getY());
             g2.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
             //g2.translate(-componentBounds.x, -componentBounds.y);
             //g2.scale(scale, scale);
-            boolean wasBuffered = tree.isDoubleBuffered();
-            tree.paint(g2);
-            tree.setDoubleBuffered(wasBuffered);
+            boolean wasBuffered = c.isDoubleBuffered();
+            c.paint(g2);
+            c.setDoubleBuffered(wasBuffered);
         } finally {
             g2.dispose();
         }

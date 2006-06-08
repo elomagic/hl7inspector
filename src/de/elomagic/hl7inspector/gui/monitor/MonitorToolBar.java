@@ -17,8 +17,7 @@
 
 package de.elomagic.hl7inspector.gui.monitor;
 
-import de.elomagic.hl7inspector.gui.monitor.actions.ClearAction;
-import de.elomagic.hl7inspector.gui.monitor.actions.FileSaveAction;
+import de.elomagic.hl7inspector.gui.monitor.actions.*;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 
@@ -38,5 +37,6 @@ public class MonitorToolBar extends JToolBar {
         
         add(new JButton(new ClearAction(dlg)));
         add(new JButton(new FileSaveAction(dlg)));  
+        add(new JButton(new PrintAction(dlg)));
     }    
 }
