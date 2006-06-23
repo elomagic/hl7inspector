@@ -17,6 +17,7 @@
 
 package de.elomagic.hl7inspector.gui;
 
+import de.elomagic.hl7inspector.hl7.parser.MessageEncoding;
 import de.elomagic.hl7inspector.io.Frame;
 import java.io.File;
 
@@ -27,8 +28,7 @@ import java.io.File;
 public class MessageWriterBean {
     
     /** Creates a new instance of ImportOptionBean */
-    public MessageWriterBean() {
-    }
+    public MessageWriterBean() { }
     
     private Frame           frame               = new Frame();    
     private File            destinationFolder   = new File(".");
@@ -39,45 +39,39 @@ public class MessageWriterBean {
     private String          semaphoreExtension  = "sem";
     private boolean         generateSempahore   = true;
     private File            singleFileName      = null;
-    private String          encoding            = "ISO-8859-1";
+    private String          charEncoding        = "ISO-8859-1";
+    private MessageEncoding messageEncoding     = MessageEncoding.HL7_FORMAT;
 
     public Frame getFrame() { return frame; }
-
     public void setFrame(Frame frame) { this.frame = frame; }
 
     public File getDestinationFolder() { return destinationFolder; }
-
     public void setDestinationFolder(File destinationFolder) { this.destinationFolder = destinationFolder; }
 
     public boolean isOnlySelectedFiles() { return OnlySelectedFiles; }
-
     public void setOnlySelectedFiles(boolean OnlySelectedFiles) { this.OnlySelectedFiles = OnlySelectedFiles; }
 
     public boolean isManyFiles() { return manyFiles; }
-
     public void setManyFiles(boolean manyFiles) { this.manyFiles = manyFiles; }
 
     public String getDataFilePrefix() { return dataFilePrefix; }
-
     public void setDataFilePrefix(String dataFilePrefix) { this.dataFilePrefix = dataFilePrefix; }
 
     public String getDataFileExtension() { return dataFileExtension; }
-
     public void setDataFileExtension(String dataFileExtension) { this.dataFileExtension = dataFileExtension; }
 
     public String getSemaphoreExtension() { return semaphoreExtension; }
-
     public void setSemaphoreExtension(String semaphoreExtension) { this.semaphoreExtension = semaphoreExtension; }
 
     public boolean isGenerateSempahore() { return generateSempahore; }
-
     public void setGenerateSempahore(boolean generateSempahore) { this.generateSempahore = generateSempahore; }
 
     public File getSingleFileName() { return singleFileName; }
-
     public void setSingleFileName(File singleFileName) { this.singleFileName = singleFileName; }
 
-    public String getEncoding() { return encoding; }
+    public String getCharEncoding() { return charEncoding; }
+    public void setCharEncoding(String encoding) { this.charEncoding = encoding; }
 
-    public void setEncoding(String encoding) { this.encoding = encoding; }
+    public MessageEncoding getMessageEncoding() { return messageEncoding; }
+    public void setMessageEncoding(MessageEncoding messageEncoding) { this.messageEncoding = messageEncoding; }
 }
