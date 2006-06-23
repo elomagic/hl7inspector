@@ -23,8 +23,9 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
 import com.l2fprod.common.swing.JDirectoryChooser;
 import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.file.filters.Hl7FileFilter;
+import de.elomagic.hl7inspector.file.filters.Hl7XmlFileFilter;
 import de.elomagic.hl7inspector.gui.framing.FramingSetupDialog;
+import de.elomagic.hl7inspector.hl7.parser.MessageEncoding;
 import de.elomagic.hl7inspector.io.Frame;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -62,7 +63,8 @@ public class SaveDialog extends BaseDialog {
         options.setOnlySelectedFiles(btSelected.isSelected());
         options.setSemaphoreExtension((editSemaExt.getSelectedItem() != null)?editSemaExt.getSelectedItem().toString():"");
         options.setSingleFileName((editFilename.getText().length()!=0)?new File(editFilename.getText()):null);
-        options.setEncoding((cbEncoding.getSelectedItem()!= null)?cbEncoding.getSelectedItem().toString():"");
+        options.setCharEncoding((cbCharEnc.getSelectedItem()!= null)?cbCharEnc.getSelectedItem().toString():"");
+        options.setMessageEncoding(("XML".equals(cbCharEnc.getSelectedItem()))?MessageEncoding.XML_FORMAT:MessageEncoding.HL7_FORMAT);
         
         return options;
     }
@@ -129,9 +131,11 @@ public class SaveDialog extends BaseDialog {
         btManyFiles     = new JRadioButton("Many files (One file per message)");
         btManyFiles.setSelected(true);
         btOneFile       = new JRadioButton("One file (Framed message stream)");
-        cbEncoding      = new JComboBox(new String[] { "ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16" });
+        cbMessageEnc    = new JComboBox(new String[] { "HL7", "XML" });
+        cbMessageEnc.setSelectedIndex(0);
+        cbCharEnc      = new JComboBox(new String[] { "ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16" });
         editPrefix      = new JTextField();
-        editDataExt     = new JComboBox(new String[] { "hl7", "txt", "dat" });
+        editDataExt     = new JComboBox(new String[] { "hl7", "xml", "txt", "dat" });
         editDataExt.setEditable(true);
         editSemaExt     = new JComboBox(new String[] { "sem", "frg" });
         editSemaExt.setEditable(true);
@@ -174,7 +178,7 @@ public class SaveDialog extends BaseDialog {
         FormLayout layout = new FormLayout(
         "8dlu, 8dlu, p, 4dlu, 50dlu, 4dlu, p, 4dlu, 50dlu, p:grow, 4dlu, 30dlu",
 //            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
-                "p, 3dlu, p, 3dlu, " +
+                "p, 3dlu, p, 3dlu, p, 3dlu, " +
                 "p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 5dlu, p, 3dlu, p, 3dlu, " + 
                 "p, 3dlu, p, 3dlu, p, 3dlu, p");   // rows
         
@@ -184,37 +188,40 @@ public class SaveDialog extends BaseDialog {
         
         builder.add(new GradientLabel("Save options"),   cc.xyw(1,  1, 12));
         
-        builder.addLabel("Char encoding",               cc.xyw(1,  3, 3));      // Ok
-        builder.add(cbEncoding,                         cc.xyw(5,  3, 2));        
+        builder.addLabel("Message encoding",               cc.xyw(1,  3, 3));      // Ok
+        builder.add(cbMessageEnc,                         cc.xyw(5,  3, 2));        
+
+        builder.addLabel("Char encoding",               cc.xyw(1,  5, 3));      // Ok
+        builder.add(cbCharEnc,                         cc.xyw(5,  5, 2));        
         
-        builder.addLabel("Only selected",               cc.xyw(1,  5, 3));      // Ok
-        builder.add(btSelected,                         cc.xyw(5,  5, 6));        
+        builder.addLabel("Only selected",               cc.xyw(1,  7, 3));      // Ok
+        builder.add(btSelected,                         cc.xyw(5,  7, 6));        
 
-        builder.add(btManyFiles,                        cc.xyw(1,  7, 7));        // Ok        
+        builder.add(btManyFiles,                        cc.xyw(1,  9, 7));        // Ok        
 
-        builder.addLabel("Folder:",                     cc.xy(3,    9));      // Ok
-        builder.add(editDestFolder,                     cc.xyw(5,   9, 6));
-        builder.add(btChooseFolder,                     cc.xy(12,   9));
+        builder.addLabel("Folder:",                     cc.xy(3,    11));      // Ok
+        builder.add(editDestFolder,                     cc.xyw(5,   11, 6));
+        builder.add(btChooseFolder,                     cc.xy(12,   11));
 
-        builder.addLabel("Prefix:",                     cc.xy(3,   11));        // Ok
-        builder.add(editPrefix,                         cc.xy(5,   11));        // Ok
-        builder.addLabel("Extension:",                  cc.xy(7,   11));        // Ok
-        builder.add(editDataExt,                        cc.xy(9,   11));        // Ok
-
-        builder.addLabel("Semaphor file",               cc.xy(3,   13));        // Ok        
-        builder.add(btGenSema,                          cc.xy(5,   13));        // Ok        
+        builder.addLabel("Prefix:",                     cc.xy(3,   13));        // Ok
+        builder.add(editPrefix,                         cc.xy(5,   13));        // Ok
         builder.addLabel("Extension:",                  cc.xy(7,   13));        // Ok
-        builder.add(editSemaExt,                        cc.xy(9,   13));        // Ok
+        builder.add(editDataExt,                        cc.xy(9,   13));        // Ok
+
+        builder.addLabel("Semaphor file",               cc.xy(3,   15));        // Ok        
+        builder.add(btGenSema,                          cc.xy(5,   15));        // Ok        
+        builder.addLabel("Extension:",                  cc.xy(7,   15));        // Ok
+        builder.add(editSemaExt,                        cc.xy(9,   15));        // Ok
         
-        builder.add(btOneFile,                          cc.xyw(1,  15, 7));        // Ok
+        builder.add(btOneFile,                          cc.xyw(1,  17, 7));        // Ok
         
-        builder.addLabel("Filename",                    cc.xy(3,   17));        // Ok       
-        builder.add(editFilename,                       cc.xyw(5,  17, 6));
-        builder.add(btFilename,                         cc.xy(12,  17));
+        builder.addLabel("Filename",                    cc.xy(3,   19));        // Ok       
+        builder.add(editFilename,                       cc.xyw(5,  19, 6));
+        builder.add(btFilename,                         cc.xy(12,  19));
         
-        builder.addLabel("Frame:",                      cc.xy(3,   19));
-        builder.add(editFrame,                          cc.xyw(5,  19, 6));
-        builder.add(btFrame,                            cc.xy(12,  19));
+        builder.addLabel("Frame:",                      cc.xy(3,   21));
+        builder.add(editFrame,                          cc.xyw(5,  21, 6));
+        builder.add(btFrame,                            cc.xy(12,  21));
         
         add(builder.getPanel(), BorderLayout.CENTER);
         
@@ -236,7 +243,7 @@ public class SaveDialog extends BaseDialog {
     
     private void selectFilename() {
         JFileChooser fc = new JFileChooser(new File(editFilename.getText()).getParent());
-        fc.addChoosableFileFilter(new Hl7FileFilter());
+        fc.addChoosableFileFilter(new Hl7XmlFileFilter());
 
         if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             editFilename.setText(fc.getSelectedFile().getAbsolutePath());
@@ -267,7 +274,8 @@ public class SaveDialog extends BaseDialog {
     private JCheckBox       btSelected;
     private JRadioButton    btManyFiles;
     private JRadioButton    btOneFile;
-    private JComboBox       cbEncoding;
+    private JComboBox       cbMessageEnc;
+    private JComboBox       cbCharEnc;
     private JTextField      editPrefix;
     private JComboBox       editDataExt;
     private JComboBox       editSemaExt;
