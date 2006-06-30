@@ -22,6 +22,7 @@ import de.elomagic.hl7inspector.gui.ImportOptionBean;
 import de.elomagic.hl7inspector.gui.ImportOptionsDialog;
 import de.elomagic.hl7inspector.gui.ReaderProgessDialog;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.hl7.parser.MessageEncoding;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
@@ -67,6 +68,7 @@ public class FileRecentOpenAction extends AbstractAction {
         ImportOptionBean options = new ImportOptionBean();
         options.setSource(file.getAbsolutePath());
         options.setFileSize(file.length());
+        options.setMessageEncoding((file.toString().toLowerCase().endsWith("xml"))?MessageEncoding.XML_FORMAT:MessageEncoding.HL7_FORMAT);
         
         ImportOptionsDialog dlg = new ImportOptionsDialog();
         if (dlg.execute(options)) {
