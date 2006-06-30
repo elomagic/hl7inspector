@@ -29,6 +29,8 @@ import de.elomagic.hl7inspector.hl7.parser.MessageEncoding;
 import de.elomagic.hl7inspector.io.Frame;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.io.File;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -131,8 +133,20 @@ public class SaveDialog extends BaseDialog {
         btManyFiles     = new JRadioButton("Many files (One file per message)");
         btManyFiles.setSelected(true);
         btOneFile       = new JRadioButton("One file (Framed message stream)");
-        cbMessageEnc    = new JComboBox(new String[] { "HL7", "XML" });
+        cbMessageEnc    = new JComboBox(new String[] { "HL7", "XML", "XML Expanded" });
         cbMessageEnc.setSelectedIndex(0);
+        cbMessageEnc.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent e) { 
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    if (e.getItem().toString().startsWith("XML")) {
+                        editDataExt.setSelectedItem("xml");
+                    } else {
+                        editDataExt.setSelectedItem("hl7");
+                    }
+                }
+            }            
+        });
+        
         cbCharEnc      = new JComboBox(new String[] { "ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16" });
         editPrefix      = new JTextField();
         editDataExt     = new JComboBox(new String[] { "hl7", "xml", "txt", "dat" });
@@ -186,13 +200,13 @@ public class SaveDialog extends BaseDialog {
         builder.setDefaultDialogBorder();
         CellConstraints cc = new CellConstraints();
         
-        builder.add(new GradientLabel("Save options"),   cc.xyw(1,  1, 12));
+        builder.add(new GradientLabel("Save options"),  cc.xyw(1,  1, 12));
         
-        builder.addLabel("Message encoding",               cc.xyw(1,  3, 3));      // Ok
-        builder.add(cbMessageEnc,                         cc.xyw(5,  3, 2));        
+        builder.addLabel("Message encoding",            cc.xyw(1,  3, 3));      // Ok
+        builder.add(cbMessageEnc,                       cc.xyw(5,  3, 4));        
 
         builder.addLabel("Char encoding",               cc.xyw(1,  5, 3));      // Ok
-        builder.add(cbCharEnc,                         cc.xyw(5,  5, 2));        
+        builder.add(cbCharEnc,                          cc.xyw(5,  5, 2));        
         
         builder.addLabel("Only selected",               cc.xyw(1,  7, 3));      // Ok
         builder.add(btSelected,                         cc.xyw(5,  7, 6));        
