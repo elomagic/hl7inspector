@@ -21,4 +21,4 @@ package de.elomagic.hl7inspector.hl7.parser;
  *
  * @author rambow
  */
-public enum MessageEncoding { HL7_FORMAT, XML_FORMAT }
+public enum MessageEncoding { HL7_FORMAT, XML_FORMAT, XML_EXPANDED_FORMAT }
