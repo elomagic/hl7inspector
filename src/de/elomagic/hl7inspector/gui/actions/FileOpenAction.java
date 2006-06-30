@@ -53,8 +53,8 @@ public class FileOpenAction extends AbstractAction {
         
         JFileChooser fc = new JFileChooser(path);
         fc.addChoosableFileFilter(new TextFileFilter());
-        fc.addChoosableFileFilter(new Hl7FileFilter());
         fc.addChoosableFileFilter(new XmlFileFilter());
+        fc.addChoosableFileFilter(new Hl7FileFilter());        
         
         fc.setDialogTitle("Choose file");
         if (fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
