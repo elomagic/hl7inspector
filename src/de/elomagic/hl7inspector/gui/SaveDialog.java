@@ -55,6 +55,14 @@ public class SaveDialog extends BaseDialog {
     }
     
     public MessageWriterBean getOptions() {
+        MessageEncoding msgEnc;
+        
+        switch (cbMessageEnc.getSelectedIndex()) {
+            case 1: msgEnc = MessageEncoding.XML_FORMAT; break;
+            case 2: msgEnc = MessageEncoding.XML_EXPANDED_FORMAT; break;
+            default: msgEnc = MessageEncoding.HL7_FORMAT;            
+        }
+        
         MessageWriterBean options = new MessageWriterBean();
         options.setDataFileExtension((editDataExt.getSelectedItem() != null)?editDataExt.getSelectedItem().toString():"");
         options.setDataFilePrefix(editPrefix.getText());
@@ -66,7 +74,7 @@ public class SaveDialog extends BaseDialog {
         options.setSemaphoreExtension((editSemaExt.getSelectedItem() != null)?editSemaExt.getSelectedItem().toString():"");
         options.setSingleFileName((editFilename.getText().length()!=0)?new File(editFilename.getText()):null);
         options.setCharEncoding((cbCharEnc.getSelectedItem()!= null)?cbCharEnc.getSelectedItem().toString():"");
-        options.setMessageEncoding(("XML".equals(cbCharEnc.getSelectedItem()))?MessageEncoding.XML_FORMAT:MessageEncoding.HL7_FORMAT);
+        options.setMessageEncoding(msgEnc);
         
         return options;
     }

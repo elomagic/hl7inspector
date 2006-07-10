@@ -19,11 +19,9 @@ package de.elomagic.hl7inspector.autoupdate;
 
 import de.elomagic.hl7inspector.StartupProperties;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URL;
@@ -35,13 +33,58 @@ import nanoxml.XMLElement;
  *
  * @author rambow
  */
-public class UpdateChecker {
+public class UpdateChecker extends Thread {
     
     /** Creates a new instance of UpdateChecker */
     public UpdateChecker() {
+        resultAvailable = false;
+        terminated = false;
     }
     
+    public void terminate() {
+        terminated = true;
+        
+    }    
+    
+    private boolean terminated = false;
+    
+    @Override
+    public void run() {
+        resultAvailable = false;
+        terminated = false;
+        try {
+            try {
+                result = checkUpdates();                
+                resultAvailable = false;
+            } catch (Exception ex) {
+                e = ex;
+            }            
+        } finally {
+            terminated = true;
+        }        
+    }
+    
+    private boolean resultAvailable = false;
+    private boolean result = false;
+    private Exception e = null;
+    
     public final static boolean checkForUpdates() throws Exception /*IOException, MalformedURLException */ {
+        UpdateChecker uc = new UpdateChecker();
+        
+        uc.start();
+        
+        while ((!uc.resultAvailable) && (!uc.terminated)) {
+            sleep(100);            
+        }
+        
+        if (uc.e != null) {
+            throw uc.e;
+        }
+        
+        return uc.result;
+    }
+    
+    private boolean checkUpdates() throws Exception /*IOException, MalformedURLException */ {
         UpdateChecker uc = new UpdateChecker();
         
         String f = uc.getVersionFile();
@@ -101,7 +144,7 @@ public class UpdateChecker {
                 break; 
             }
         }
-
+        
         uc.setFollowRedirects(true);       
         uc.setConnectTimeout(10000);
         uc.setReadTimeout(10000);

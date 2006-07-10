@@ -17,7 +17,6 @@
 
 package de.elomagic.hl7inspector.io;
 
-import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.Segment;
 import java.io.IOException;

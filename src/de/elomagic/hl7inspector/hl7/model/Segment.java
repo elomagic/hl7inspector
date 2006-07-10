@@ -29,4 +29,23 @@ public class Segment extends Hl7Object {
     public char getSubDelimiter() { return Delimiters.DEFAULT_FIELD; }
     
     public Class getChildClass() { return RepetitionField.class; }    
+    
+    @Override
+    protected String toXmlString() {
+        StringBuffer sb = new StringBuffer();
+        
+        String element = get(0).toString();
+        
+        sb.append("\t<" + element + ">\n");        
+        
+        for (int i=1; i<size(); i++) {
+            if (!get(i).isNULL()) {
+                sb.append(get(i).toXmlString());                
+            }
+        }
+        
+        sb.append("\t</" + element + ">\n");        
+        
+        return sb.toString();        
+    }      
 }

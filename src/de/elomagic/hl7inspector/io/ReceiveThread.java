@@ -19,7 +19,6 @@ package de.elomagic.hl7inspector.io;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.ImportOptionBean;
-import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.Segment;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
@@ -159,9 +158,9 @@ public class ReceiveThread extends Thread implements IOCharListener {
             // Check buffer overflow
             while (model.getChildCount(model) > options.getBufferSize()) {
                 if (options.isReadBottom())
-                    model.removeChild(model, 0);
+                    model.removeMessage(0);
                 else
-                    model.removeChild(model, model.getChildCount(model)-1);
+                    model.removeMessage(model.getChildCount(model.getRoot())-1);
             }
         } finally {
             model.unlock();
