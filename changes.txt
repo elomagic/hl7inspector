@@ -1,4 +1,13 @@
-Ver. 2.1.0.497 RC1
+================================================================================
+Ver. 2.2.0.x Alpha (???)
+
+(+ Message print support added)
+(+ Receive/send log print support added)
++ Changed options take effect in runtime after saved.
++ Internal: Tree handling changed
+
+================================================================================
+Ver. 2.1.0.497 RC1 (2006-05-26 10:05)
 
 * Message receiver: Required fields in acknowledge message are empty. Fixed.
 * Null pointer exception occur when appending segment in compact view mode. Fixed.
@@ -7,7 +16,8 @@ Ver. 2.1.0.497 RC1
 + Tree node search improved.
 * Some little bug fixes to prevent against application crash.
 
-Ver. 2.1.0.491
+================================================================================
+Ver. 2.1.0.491 Beta4 (2006-05-14 13:13)
 
 * Character encoding ignored when receiving message on IP socket. Fixed
 * Character encoding ignored when writing message to file. Fixed
@@ -19,6 +29,5 @@ Ver. 2.1.0.491
 * Some little UI bugs fixed.
 * Some little internal changes.
 
------
-
-Ver. 2.1.0.488
+================================================================================
+Ver. 2.1.0.488 Beta3 (2006-03-30 01:09)
