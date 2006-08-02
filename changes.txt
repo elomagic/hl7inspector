@@ -7,6 +7,11 @@ Ver. 2.2.0.x Alpha (???)
 + Internal: Tree handling changed
 
 ================================================================================
+Ver. 2.1.0.500 (2006-08-02 17:01)
+
+* Invalid xml profile. Fixed
+
+================================================================================
 Ver. 2.1.0.497 RC1 (2006-05-26 10:05)
 
 * Message receiver: Required fields in acknowledge message are empty. Fixed.
