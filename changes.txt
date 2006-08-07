@@ -5,6 +5,7 @@ Ver. 2.2.0.x Alpha (???)
 (+ Receive/send log print support added)
 + Changed options take effect in runtime after saved.
 + Internal: Tree handling changed
++ Multi zip entry reader support added
 
 ================================================================================
 Ver. 2.1.0.500 (2006-08-02 17:01)
