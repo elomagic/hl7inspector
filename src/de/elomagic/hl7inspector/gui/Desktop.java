@@ -191,7 +191,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
             
     private MainToolBar             mainToolBar;
     
-    private BottomPanel             bottomPanel = new BottomPanel();
+    private StatusPanel             bottomPanel = new StatusPanel();
     
     public void setSelectedTabIndex(int index) { tabPanel.setSelectedIndex(index); }    
     
