@@ -1,11 +1,12 @@
 <launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
   <headerType>0</headerType>
   <jar>C:\projects\java\hl7inspector-trunk\dist\hl7inspector.jar</jar>
   <outfile>C:\projects\java\hl7inspector-trunk\dist\hl7inspector.exe</outfile>
   <errTitle></errTitle>
   <jarArgs></jarArgs>
   <chdir></chdir>
-  <customProcName>false</customProcName>
+  <customProcName>true</customProcName>
   <stayAlive>false</stayAlive>
   <icon>C:\projects\java\hl7inspector-trunk\application.ico</icon>
   <jre>
@@ -13,17 +14,17 @@
     <minVersion>1.5.0</minVersion>
     <maxVersion></maxVersion>
     <initialHeapSize>0</initialHeapSize>
-    <maxHeapSize>0</maxHeapSize>
+    <maxHeapSize>256</maxHeapSize>
     <args>-Djava.net.useSystemProxies=true</args>
   </jre>
   <versionInfo>
-    <fileVersion>2.1.0.0</fileVersion>
-    <txtFileVersion>2.1</txtFileVersion>
+    <fileVersion>2.2.0.0</fileVersion>
+    <txtFileVersion>2.2</txtFileVersion>
     <fileDescription>Hl7 Inspector 2</fileDescription>
     <copyright>elomagic</copyright>
-    <productVersion>2.1.0.0</productVersion>
-    <txtProductVersion>2.1</txtProductVersion>
-    <productName>Hl7 Inspector 2.1</productName>
+    <productVersion>2.2.0.0</productVersion>
+    <txtProductVersion>2.2</txtProductVersion>
+    <productName>Hl7 Inspector 2.2</productName>
     <companyName>elomagic.de</companyName>
     <internalName>hl7inspector</internalName>
     <originalFilename>hl7inspector.exe</originalFilename>
