@@ -114,7 +114,13 @@
         <copy file="${libs.logging-log4j-1.2.12.classpath}" todir="${dist.dir}"/>
         <copy file="${libs.looks-2.0.1.classpath}" todir="${dist.dir}"/>
         <copy file="${libs.l2fprod-common-6.2.classpath}" todir="${dist.dir}"/>
-        <copy file="${libs.nanoxml-lite-2.2.3.classpath}" todir="${dist.dir}"/>
+        <copy file="${libs.nanoxml-lite-2.2.3.classpath}" todir="${dist.dir}"/>        
+        
+        <copy file="${libs.forms-1.0.6.classpath}" todir="${basedir}/setup-dist"/>        
+        <copy file="${libs.logging-log4j-1.2.12.classpath}" todir="${basedir}/setup-dist"/>
+        <copy file="${libs.looks-2.0.1.classpath}" todir="${basedir}/setup-dist"/>
+        <copy file="${libs.l2fprod-common-6.2.classpath}" todir="${basedir}/setup-dist"/>
+        <copy file="${libs.nanoxml-lite-2.2.3.classpath}" todir="${basedir}/setup-dist"/>              
         
         <property name="launch4j.dir" location="C:\Programme\Launch4j" />
         
@@ -128,6 +134,14 @@
             productVersion="${app.version}"
             jar="${basedir}/dist/hl7inspector.jar"
             outfile="${basedir}/dist/hl7inspector.exe"/>
+            
+            
+        <copy file="${libs.forms-1.0.6.classpath}" todir="${basedir}/setup-dist"/>        
+        <copy file="${libs.logging-log4j-1.2.12.classpath}" todir="${basedir}/setup-dist"/>
+        <copy file="${libs.looks-2.0.1.classpath}" todir="${basedir}/setup-dist"/>
+        <copy file="${libs.l2fprod-common-6.2.classpath}" todir="${basedir}/setup-dist"/>
+        <copy file="${libs.nanoxml-lite-2.2.3.classpath}" todir="${basedir}/setup-dist"/>              
+        <copy file="${basedir}/dist/hl7inspector.exe" todir="${basedir}/setup-dist"/>            
                                                                                
         <taskdef name="izpack" classpath="${libs.IzPack-3.8.0.classpath}" classname="com.izforge.izpack.ant.IzPackTask"/>        
         
@@ -137,13 +151,7 @@
             installerType="standard" 
             basedir="${basedir}"
             izPackDir="${basedir}/izpack"
-        />
-        
-        <launch4j configFile="${basedir}/launch4j/hl7inspector-win32-setup.xml" 
-            fileVersion="${app.version}"
-            productVersion="${app.version}"
-            jar="${basedir}/dist/hl7inspector-${app.version}-setup.jar"
-            outfile="${basedir}/dist/hl7inspector-${app.version}-setup.exe"/>        
+        />               
         
         <zip destfile="${basedir}/dist/hl7inspector-${app.version}-src.zip">
             <zipfileset dir="src" prefix="hl7inspector-${app.version}/src"/>

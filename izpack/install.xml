@@ -50,7 +50,7 @@
     The ids must be these ones if you want to use the LicencePanel and/or the InfoPanel.
     -->
     <resources>
-        <res id="LicencePanel.licence" src="license/license-gpl.txt"/>
+        <res id="LicencePanel.licence" src="setup-dist/license/license-gpl.txt"/>
         <res id="InfoPanel.info" src="readme.txt"/>
         <res id="ImgPacksPanel.img.0" src="izpack/core.png"/>
         <res id="ImgPacksPanel.img.1" src="izpack/doc-html.png"/>
@@ -89,15 +89,15 @@
         <pack name="Core" required="yes">
             <description>The base files</description>
             <file src="readme.txt" targetdir="$INSTALL_PATH"/>
-            <file src="changes.txt" targetdir="$INSTALL_PATH"/>
-            <fileset dir="license/" includes="*" targetdir="$INSTALL_PATH/license"/>
+            <file src="setup-dist/changes.txt" targetdir="$INSTALL_PATH"/>
+            <fileset dir="setup-dist/license/" includes="*" targetdir="$INSTALL_PATH/license"/>
             <file src="izpack/application.ico" targetdir="$INSTALL_PATH"/>
             <!--<file src="dist/hl7inspector.jar" targetdir="$INSTALL_PATH"/>-->
             <fileset dir="dist/" includes="*" targetdir="$INSTALL_PATH"/>
         </pack>
         <pack name="Samples" required="No">
             <description>Profile and HL7 message samples</description>
-            <fileset dir="samples/" includes="*" targetdir="$INSTALL_PATH/samples"/>
+            <fileset dir="setup-dist/samples/" includes="*" targetdir="$INSTALL_PATH/samples"/>
         </pack>        
     </packs>
 
