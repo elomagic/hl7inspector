@@ -1,0 +1,40 @@
+================================================================================
+Ver. 2.2.0.x M1 (???)
+
+(+ Message print support added)
+(+ Receive/send log print support added)
++ Changed options take effect in runtime after saved.
++ Internal: Tree handling changed
++ Multi zip entry reader support added
++ Hl7 escaped value viewer added
+
+================================================================================
+Ver. 2.1.0.500 (2006-08-02 17:01)
+
+* Invalid xml profile. Fixed
+
+================================================================================
+Ver. 2.1.0.497 RC1 (2006-05-26 10:05)
+
+* Message receiver: Required fields in acknowledge message are empty. Fixed.
+* Null pointer exception occur when appending segment in compact view mode. Fixed.
+* Profile format use invalid naming rules. Fixed.
++ Message receiver still listening when end of message stream reached.
++ Tree node search improved.
+* Some little bug fixes to prevent against application crash.
+
+================================================================================
+Ver. 2.1.0.491 Beta4 (2006-05-14 13:13)
+
+* Character encoding ignored when receiving message on IP socket. Fixed
+* Character encoding ignored when writing message to file. Fixed
+* Encoding of backslash character in tree nodes failed. Fixed
+* Comboboxes of frames are disabled when open import dialog with parameter "FRAME" format. Fixed
+* NullPointerException occur when using class method JComboBox.getSelectedItem with JDK6. Fixed
++ Libraries dependencies of JGoodies and L2FProd upgraded to latest version
++ About dialog: Tabbed panel with product information properties added.
+* Some little UI bugs fixed.
+* Some little internal changes.
+
+================================================================================
+Ver. 2.1.0.488 Beta3 (2006-03-30 01:09)
