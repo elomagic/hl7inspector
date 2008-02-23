@@ -24,6 +24,7 @@ import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.io.File;
+import java.net.URI;
 import java.util.Vector;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -100,6 +101,8 @@ public class MainMenuBar extends JMenuBar {
         menuItem = new JMenu("Help");
         menuItem.add(new JMenuItem(new CheckUpdateAction()));
         menuItem.addSeparator();
+        menuItem.add(new JMenuItem(new VisitWebSiteAction("Visit HL7-Inspector", "http://www.elomagic.de/index.php?page=hl7")));
+        menuItem.add(new JMenuItem(new VisitWebSiteAction("HL7-Inspector Forum", "http://www.elomagic.de/forum")));
         menuItem.add(new JMenuItem(new AboutAction()));
         add(menuItem);
     }
