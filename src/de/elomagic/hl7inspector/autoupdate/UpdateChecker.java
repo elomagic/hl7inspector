@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.autoupdate;
 
 import de.elomagic.hl7inspector.StartupProperties;
@@ -25,148 +24,132 @@ import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
 import java.net.URL;
-import java.util.Enumeration;
 import java.util.List;
-import nanoxml.XMLElement;
+import org.simpleframework.xml.Serializer;
+import org.simpleframework.xml.load.Persister;
 
 /**
  *
  * @author rambow
  */
 public class UpdateChecker extends Thread {
-    
+
     /** Creates a new instance of UpdateChecker */
     public UpdateChecker() {
         resultAvailable = false;
         terminated = false;
     }
-    
+
     public void terminate() {
         terminated = true;
-        
-    }    
-    
+    }
     private boolean terminated = false;
-    
+
     @Override
     public void run() {
         resultAvailable = false;
         terminated = false;
         try {
             try {
-                result = checkUpdates();                
+                result = checkUpdates();
                 resultAvailable = false;
             } catch (Exception ex) {
                 e = ex;
-            }            
+            }
         } finally {
             terminated = true;
-        }        
+        }
     }
-    
     private boolean resultAvailable = false;
     private boolean result = false;
     private Exception e = null;
-    
+
     public final static boolean checkForUpdates() throws Exception /*IOException, MalformedURLException */ {
         UpdateChecker uc = new UpdateChecker();
-        
+
         uc.start();
-        
+
         while ((!uc.resultAvailable) && (!uc.terminated)) {
-            sleep(100);            
+            sleep(100);
         }
-        
+
         if (uc.e != null) {
             throw uc.e;
         }
-        
+
         return uc.result;
     }
-    
+
     private boolean checkUpdates() throws Exception /*IOException, MalformedURLException */ {
         UpdateChecker uc = new UpdateChecker();
-        
+
         String f = uc.getVersionFile();
-        
-        XMLElement xml = new XMLElement();        
-        xml.parseString(f);
-        
-        String version = "";
-        
-        Enumeration enu = xml.enumerateChildren();
-        while (enu.hasMoreElements()) {
-            XMLElement child = (XMLElement)enu.nextElement();
-            if (child.getName().equalsIgnoreCase("hl7_inspector2")) {
-                Enumeration enu2 = child.enumerateChildren();
-                while (enu2.hasMoreElements()) {
-                    XMLElement child2 = (XMLElement)enu2.nextElement();
-                    if (child2.getName().equalsIgnoreCase("version")) {
-                        version = child2.getContent();
-                    }            
-                }
-            }            
-        }
-        
+
+        Serializer serializer = new Persister();
+
+        VersionBean versionBean = serializer.read(VersionBean.class, f);
+
+        String version = versionBean.getHl7Inspector2().getVersion();
+
         return de.elomagic.hl7inspector.Hl7Inspector.getVersion().compareTo(version) < 0;
     }
-    
+
     public String getVersionFile() throws Exception /* IOException, MalformedURLException */ {
-        String result = "";
-        
+        String versionFile = "";
+
         StartupProperties p = StartupProperties.getInstance();
-        
-        URL url = new URL("http", "www.elomagic.de", "//file_versions.xml");      
-        
+
+        URL url = new URL("http", "www.elomagic.de", "//file_versions.xml");
+
         HttpURLConnection uc = null;
-        
+        HttpURLConnection.setFollowRedirects(true);       
+
         switch (p.getProxyMode()) {
-            case 1: { 
+            case 1: {
                 ProxySelector ps = ProxySelector.getDefault();
-                List<Proxy> l = ps.select(url.toURI());                
-                
+                List<Proxy> l = ps.select(url.toURI());
+
                 if (l.size() != 0) {
                     Proxy proxy = l.get(0);
-                    uc = (HttpURLConnection)url.openConnection(proxy); 
+                    uc = (HttpURLConnection) url.openConnection(proxy);
                 } else {
-                    uc = (HttpURLConnection)url.openConnection(); 
+                    uc = (HttpURLConnection) url.openConnection();
                 }
-                
-                break; 
+
+                break;
             }
-            case 2: { 
+            case 2: {
                 InetSocketAddress isa = new InetSocketAddress(p.getProxyHost(), p.getProxyPort());
-                uc = (HttpURLConnection)url.openConnection(new Proxy(Proxy.Type.HTTP, isa)); 
-                break; 
+                uc = (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP, isa));
+                break;
             }
-            default: { 
-                uc = (HttpURLConnection)url.openConnection(); 
-                break; 
+            default: {
+                uc = (HttpURLConnection) url.openConnection();
+                break;
             }
         }
-        
-        uc.setFollowRedirects(true);       
+
         uc.setConnectTimeout(10000);
         uc.setReadTimeout(10000);
-        
+
         InputStreamReader in = new InputStreamReader(uc.getInputStream());
         try {
             BufferedReader bin = new BufferedReader(in);
-            try{
+            try {
                 String s;
                 do {
                     s = bin.readLine();
                     if (s != null) {
-                        result = result.concat(s);
+                        versionFile = versionFile.concat(s);
                     }
-                } while (s != null);                                
+                } while (s != null);
             } finally {
                 bin.close();
-            } 
+            }
         } finally {
             in.close();
         }
-        
-        return result;        
-    }    
+
+        return versionFile;
+    }
 }
