@@ -21,23 +21,13 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
-import com.sun.media.sound.Toolkit;
 import de.elomagic.hl7inspector.Hl7Inspector;
-import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.autoupdate.UpdateChecker;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JTabbedPane;
 
 /**

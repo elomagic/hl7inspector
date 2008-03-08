@@ -17,7 +17,6 @@
 
 package de.elomagic.hl7inspector.gui;
 
-import de.elomagic.hl7inspector.profile.ProfileFile;
 import java.util.Vector;
 import javax.swing.AbstractListModel;
 

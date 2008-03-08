@@ -23,7 +23,6 @@ import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.options.OptionsDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import javax.swing.AbstractAction;
