@@ -98,7 +98,7 @@ public class HFFormat extends PageFormat implements Printable {
             
             g2d.setPaint(Color.gray);
             g2d.drawLine(
-                    0, 
+                    (int) getImageableX(), 
                     y, 
                     (int) (getImageableX() + getImageableWidth()), 
                     y);
@@ -112,7 +112,7 @@ public class HFFormat extends PageFormat implements Printable {
             
             g2d.setPaint(Color.gray);
             g2d.drawLine(
-                    0, 
+                    (int) getImageableX(), 
                     y, 
                     (int) (getImageableX() + getImageableWidth()), 
                     y);
