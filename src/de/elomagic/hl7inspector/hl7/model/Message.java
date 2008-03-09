@@ -46,7 +46,7 @@ public class Message extends Hl7Object {
     
     public void setFile(File f) {
         try {
-            source = (f==null)?"":f.toURL().toString();
+            source = (f==null)?"":f.toURI().toURL().toString();
         } catch (Exception e) {
             source = "";
             Logger.getLogger(getClass()).error(e.getMessage(), e);
@@ -55,6 +55,7 @@ public class Message extends Hl7Object {
     
     private TreeNode parent;
     
+    @Override
     public TreeNode getParent() { return parent; }
     public void setParent(TreeNode value) { parent = value; }
     
