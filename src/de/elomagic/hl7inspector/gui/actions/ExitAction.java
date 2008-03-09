@@ -40,7 +40,7 @@ public class ExitAction extends AbstractAction {
   }
    
   public void actionPerformed(ActionEvent e) {
-    if (SimpleDialog.confirmYesNo("Really exit the hl7 inspector?") == 0) {
+    if (SimpleDialog.confirmYesNo("Really exit the HL7 Inspector?") == 0) {
       
       StartupProperties prop = StartupProperties.getInstance();
       prop.setProperty(StartupProperties.DESKTOP_X, Integer.toString(Desktop.getInstance().getBounds().x));
