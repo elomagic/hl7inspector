@@ -43,6 +43,7 @@ public class OptionsAction extends AbstractAction {
         putValue(SHORT_DESCRIPTION, "Setup options");
     }
     
+    @SuppressWarnings("unchecked")
     public void actionPerformed(ActionEvent e) {
         Hashtable h = new Hashtable(StartupProperties.getInstance());
         

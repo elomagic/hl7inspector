@@ -27,6 +27,7 @@ import javax.swing.AbstractListModel;
 public class VectorListModel extends AbstractListModel {
   
   /** Creates a new instance of ProfileManagerModel */
+  @SuppressWarnings("unchecked")
   public VectorListModel(Vector v) { 
     super(); 
     vector = v; 
