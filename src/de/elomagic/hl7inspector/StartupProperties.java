@@ -20,7 +20,6 @@ package de.elomagic.hl7inspector;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.print.HFFormat;
 import de.elomagic.hl7inspector.profile.ProfileFile;
-import de.elomagic.hl7inspector.utils.History;
 import de.elomagic.hl7inspector.utils.StringVector;
 import java.awt.Color;
 import java.awt.SystemColor;
