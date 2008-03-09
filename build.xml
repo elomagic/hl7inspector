@@ -76,103 +76,46 @@
         <manifest file="MANIFEST.MF">
             <attribute name="Built-By" value="${user.name}"/>
             <attribute name="Main-Class" value="${main.class}"/>          
-            <attribute name="Class-Path" value="looks-2.0.1.jar forms-1.0.6.jar l2fprod-common-all.jar log4j-1.2.12.jar nanoxml-lite-2.2.3.jar"/>
+            <attribute name="Class-Path" value=".\lib\looks-2.1.4.jar .\lib\forms-1.1.0.jar .\lib\l2fprod-common-all.jar .\lib\log4j-1.2.15.jar .\lib\nanoxml-lite-2.2.3.jar .\lib\simple-xml-1.6.2.jar"/>
         </manifest>        
-        
-        <!--<unzip src="${libs.forms-1.0.5.classpath}" dest="${build.classes.dir}"/>
-        <unzip src="${libs.logging-log4j-1.2.12.classpath}" dest="${build.classes.dir}"/>
-        <unzip src="${libs.looks-1.3.2.classpath}" dest="${build.classes.dir}"/>
-        <unzip src="${libs.l2fprod-common-0.2-dev.classpath}" dest="${build.classes.dir}"/>
-        <unzip src="${libs.nanoxml-lite-2.2.3.classpath}" dest="${build.classes.dir}"/>-->
     </target>   
-
-    <target name="-post-jar">
-        <!--        <taskdef resource="proguard/ant/task.properties" classpath="${javac.classpath}"/>
-        
-        <move file="${dist.jar}" tofile="${dist.dir}/hl7inspector_final.jar"/>
-
-        <proguard>
-        -libraryjars ${java.home}/lib/rt.jar
-        -injars      ${dist.dir}/hl7inspector_final.jar
-        -outjars     ${dist.jar}
-
-        -keepclasseswithmembers public class * {
-        public static void main(java.lang.String[]);
-        }
-            
-        -ignorewarnings
-            
-        -dontoptimize
-        -keep class com.**
-        -keep class org.**
-        -keep class nanoxml.**
-        </proguard>
-        
-        <delete file="${dist.dir}/hl7inspector_final.jar"/>-->
-        
-        <copy file="${libs.forms-1.0.6.classpath}" todir="${dist.dir}"/>        
-        <copy file="${libs.logging-log4j-1.2.12.classpath}" todir="${dist.dir}"/>
-        <copy file="${libs.looks-2.0.1.classpath}" todir="${dist.dir}"/>
-        <copy file="${libs.l2fprod-common-6.2.classpath}" todir="${dist.dir}"/>
-        <copy file="${libs.nanoxml-lite-2.2.3.classpath}" todir="${dist.dir}"/>        
-        
-        <copy file="${libs.forms-1.0.6.classpath}" todir="${basedir}/setup-dist"/>        
-        <copy file="${libs.logging-log4j-1.2.12.classpath}" todir="${basedir}/setup-dist"/>
-        <copy file="${libs.looks-2.0.1.classpath}" todir="${basedir}/setup-dist"/>
-        <copy file="${libs.l2fprod-common-6.2.classpath}" todir="${basedir}/setup-dist"/>
-        <copy file="${libs.nanoxml-lite-2.2.3.classpath}" todir="${basedir}/setup-dist"/>              
+    
+    <target name="-post-jar">        
+        <copy todir="./setup/src/lib">
+            <fileset dir="./dist/lib"/>
+        </copy>
         
         <property name="launch4j.dir" location="C:\Programme\Launch4j" />
         
         <taskdef name="launch4j"
-            classname="net.sf.launch4j.ant.Launch4jTask"
-            classpath="${launch4j.dir}/launch4j.jar
-            :${launch4j.dir}/lib/xstream.jar" />
-                
+                 classname="net.sf.launch4j.ant.Launch4jTask"
+                 classpath="${launch4j.dir}/launch4j.jar
+        :${launch4j.dir}/lib/xstream.jar" />
+        
         <launch4j configFile="${basedir}/launch4j/hl7inspector-win32.xml" 
-            fileVersion="${app.version}"
-            productVersion="${app.version}"
-            jar="${basedir}/dist/hl7inspector.jar"
-            outfile="${basedir}/dist/hl7inspector.exe"/>
-            
-            
-        <copy file="${libs.forms-1.0.6.classpath}" todir="${basedir}/setup-dist"/>        
-        <copy file="${libs.logging-log4j-1.2.12.classpath}" todir="${basedir}/setup-dist"/>
-        <copy file="${libs.looks-2.0.1.classpath}" todir="${basedir}/setup-dist"/>
-        <copy file="${libs.l2fprod-common-6.2.classpath}" todir="${basedir}/setup-dist"/>
-        <copy file="${libs.nanoxml-lite-2.2.3.classpath}" todir="${basedir}/setup-dist"/>              
-        <copy file="${basedir}/dist/hl7inspector.exe" todir="${basedir}/setup-dist"/>            
-                                                                               
-        <taskdef name="izpack" classpath="${libs.IzPack-3.8.0.classpath}" classname="com.izforge.izpack.ant.IzPackTask"/>        
-        
-        <izpack 
-            input="${basedir}/izpack/install.xml"
-            output="${basedir}/dist/hl7inspector-${app.version}-setup.jar"
-            installerType="standard" 
-            basedir="${basedir}"
-            izPackDir="${basedir}/izpack"
-        />               
-        
+                  fileVersion="${app.version}"
+                  productVersion="${app.version}"
+                  jar="${basedir}/dist/hl7inspector.jar"
+                  outfile="${basedir}/setup/src/hl7inspector.exe"/>        
+                
         <zip destfile="${basedir}/dist/hl7inspector-${app.version}-src.zip">
             <zipfileset dir="src" prefix="hl7inspector-${app.version}/src"/>
-            <zipfileset dir="license" prefix="hl7inspector-${app.version}/license"/>
+            <!--<zipfileset dir="license" prefix="hl7inspector-${app.version}/license"/>-->
             <zipfileset dir="." includes="readme.txt, changes.txt, build.xml, build.number" prefix="hl7inspector-${app.version}"/>
-            <zipfileset dir="samples" prefix="hl7inspector-${app.version}/samples"/>
-            <zipfileset dir="izpack" prefix="hl7inspector-${app.version}/izpack"/>
+            <zipfileset dir="setup" excludes="dist/**, src/**" prefix="hl7inspector-${app.version}/setup"/>
             <zipfileset dir="launch4j" prefix="hl7inspector-${app.version}/launch4j"/>
-            <zipfileset dir="nbproject" excludes="private/*" prefix="hl7inspector-${app.version}/nbproject"/>
+            <zipfileset dir="nbproject" excludes="private/**" prefix="hl7inspector-${app.version}/nbproject"/>
         </zip>
-                        
+
         <tar destfile="${basedir}/dist/hl7inspector-${app.version}-src.tar">        
             <tarfileset dir="src" prefix="hl7inspector-${app.version}/src"/>
-            <tarfileset dir="license" prefix="hl7inspector-${app.version}/license"/>
+            <!--<tarfileset dir="license" prefix="hl7inspector-${app.version}/license"/>-->
             <tarfileset dir="." includes="readme.txt, changes.txt, build.xml, build.number" prefix="hl7inspector-${app.version}"/>
-            <tarfileset dir="samples" prefix="hl7inspector-${app.version}/samples"/>
-            <tarfileset dir="izpack" prefix="hl7inspector-${app.version}/izpack"/>
+            <tarfileset dir="setup" excludes="dist/**, src/**" prefix="hl7inspector-${app.version}/setup"/>
             <tarfileset dir="launch4j" prefix="hl7inspector-${app.version}/launch4j"/>
-            <tarfileset dir="nbproject" excludes="private/*" prefix="hl7inspector-${app.version}/nbproject"/>
+            <tarfileset dir="nbproject" excludes="private/**" prefix="hl7inspector-${app.version}/nbproject"/>
         </tar>
-        
+
         <gzip src="${basedir}/dist/hl7inspector-${app.version}-src.tar" zipfile="${basedir}/dist/hl7inspector-${app.version}-src.tar.gz" />         
     </target>  
 </project>

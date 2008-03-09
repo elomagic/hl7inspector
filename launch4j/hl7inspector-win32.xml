@@ -1,17 +1,17 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
   <headerType>0</headerType>
-  <jar>C:\projects\java\hl7inspector-trunk\dist\hl7inspector.jar</jar>
-  <outfile>C:\projects\java\hl7inspector-trunk\dist\hl7inspector.exe</outfile>
+  <jar>C:\projects\java\hl7inspector.trunk\dist\hl7inspector.jar</jar>
+  <outfile>C:\projects\java\hl7inspector.trunk\dist\hl7inspector.exe</outfile>
   <errTitle></errTitle>
   <jarArgs></jarArgs>
   <chdir></chdir>
   <customProcName>true</customProcName>
   <stayAlive>false</stayAlive>
-  <icon>C:\projects\java\hl7inspector-trunk\application.ico</icon>
+  <icon>C:\projects\java\hl7inspector.trunk\application.ico</icon>
   <jre>
     <path></path>
-    <minVersion>1.5.0</minVersion>
+    <minVersion>1.6.0</minVersion>
     <maxVersion></maxVersion>
     <initialHeapSize>0</initialHeapSize>
     <maxHeapSize>256</maxHeapSize>
