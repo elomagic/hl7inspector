@@ -19,6 +19,7 @@ package de.elomagic.hl7inspector.profile;
 
 import java.util.Vector;
 import nanoxml.XMLElement;
+import org.simpleframework.xml.Element;
 
 /**
  *
@@ -119,20 +120,14 @@ public class DataElement {
         return xml;
     }
     
-    private String  name            = "";
-    private String  item            = "";
-    private String  seg             = "";
-    private int     seq             = 0;
-    private String  chapter         = "";
-    private int     len             = 0;
-    private String  dataType        = "";
-    private String  repeat          = "N";
-//    private String  qty             = "";
-    private String  table           = "";
     
+    @Element(name="name", required=false)
+    private String name = "";
     public String getName() { return name; }    
     public void setName(String name) { this.name = name; }
     
+    @Element(name="item", required=false)
+    private String item = "";
     public String getItem() { return item; }    
     public void setItem(String id) { 
         try {
@@ -142,21 +137,32 @@ public class DataElement {
         }
     }
     
+    @Element(name="segment", required=false)
+    private String seg = "";
     public String getSegment() { return seg; }
     public void setSegment(String value) { this.seg = value.trim(); }
     
+    @Element(name="sequence", required=false)
+    private int seq = 0;
     public int getSequence() { return seq; }
     public void setSequence(int s) { this.seq = s; }
-
+    
+    @Element(name="chapter", required=false)
+    private String chapter = "";
     public String getChapter() { return chapter; }
     public void setChapter(String value) { this.chapter = value; }
 
+    @Element(name="length", required=false)
+    private int len = 0;
     public int getLen() { return len; }    
     public void setLen(int len) { this.len = len; }
 
+    @Element(name="data-type", required=false)
+    private String dataType = "";
     public String getDataType() { return dataType; }    
     public void setDataType(String dataType) { this.dataType = dataType.trim(); }
     
+    private String repeat = "N";
     public String getRepeatable() { return repeat; }
     public int getRepeatableCount() { 
         int c;
@@ -184,6 +190,8 @@ public class DataElement {
     
     //public String getQuantity
     
+    @Element(name="table", required=false)
+    private String table = "";
     public String getTable() { return table; }    
     public void setTable(String table) { 
         try {

@@ -20,6 +20,7 @@ package de.elomagic.hl7inspector.profile;
 import java.util.Properties;
 import java.util.Vector;
 import nanoxml.XMLElement;
+import org.simpleframework.xml.Element;
 
 /**
  *
@@ -75,19 +76,19 @@ public class SegmentItem extends Properties {
         return xml;
     }    
     
-    public String getChapter() { return chapter; }
-    
+    @Element(name="chapter", required=false)
+    private String chapter = "";
+    public String getChapter() { return chapter; }    
     public void setChapter(String chapter) { this.chapter = chapter; }
     
-    public String getDescription() { return description; }
-    
+    @Element(name="description", required=false)
+    private String description = "";
+    public String getDescription() { return description; }    
     public void setDescription(String d) { description = d; }        
     
-    public String getId() { return id; }
-    
+    @Element(name="id", required=false)
+    private String id = "";
+    public String getId() { return id; }    
     public void setId(String id) { this.id = id; }
     
-    private String id           = "";
-    private String description  = "";
-    private String chapter      = "";
 }
