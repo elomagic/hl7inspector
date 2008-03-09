@@ -28,6 +28,16 @@ InstallDirRegKey HKLM "${REG_KEY_PATH}" ""
 !define MUI_ICON "application.ico"
 !define MUI_UNICON "application.ico"
 
+; MUI Settings / Header
+!define MUI_HEADERIMAGE
+!define MUI_HEADERIMAGE_RIGHT
+!define MUI_HEADERIMAGE_BITMAP ".\images\header.bmp"
+!define MUI_HEADERIMAGE_UNBITMAP ".\images\header.bmp"
+
+; MUI Settings / Wizard
+!define MUI_WELCOMEFINISHPAGE_BITMAP ".\images\wizard.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP ".\images\wizard.bmp"
+
 RequestExecutionLevel user
   
 # Interface Settings
