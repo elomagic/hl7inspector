@@ -49,7 +49,13 @@ public class PrintAction extends AbstractAction {
         try {
             Desktop desktop = Desktop.getInstance();
             
-            if (((Hl7TreeModel) desktop.getTree().getModel()).getMessages().size() != 0) {
+            int q = ((Hl7TreeModel) desktop.getTree().getModel()).getMessages().size();
+                        
+            if (q < 1) {
+                SimpleDialog.error("No messages found to print.");
+            } else if (q > 20) {
+                SimpleDialog.error("Maximum 20 messages can be print.");
+            } else {
 //                Vector<Message> messages = desktop.getTree().getSelectedMessages();
 //
 //                if (messages.size() == 0) {
@@ -64,11 +70,10 @@ public class PrintAction extends AbstractAction {
                 if (job.printDialog()) {
                     job.setJobName(Hl7Inspector.APPLICATION_NAME);
                     job.setPageable(new MessageRenderer());
+                    
+                    // TODO Print progress dialog missing
                     job.print();
                 }
-//                }
-            } else {
-                SimpleDialog.error("No messages found to print.");
             }
         } catch (Exception ex) {
             SimpleDialog.error(ex);
