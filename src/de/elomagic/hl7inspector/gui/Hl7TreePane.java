@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2010 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
@@ -36,52 +35,62 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class Hl7TreePane extends JScrollPane implements DropTargetListener {
-    
+
     /** Creates a new instance of Hl7Tree */
-    public Hl7TreePane() { init(null); }
-    
-    public Hl7TreePane(Hl7TreeModel model) { init(model); }
-    
-    public void init(Hl7TreeModel model) {
-        tree = (model == null)?new Hl7Tree():new Hl7Tree(model);
+    public Hl7TreePane() {
+        init(null);
+    }
+
+    public Hl7TreePane(Hl7TreeModel model) {
+        init(model);
+    }
+
+    public final void init(Hl7TreeModel model) {
+        tree = (model == null) ? new Hl7Tree() : new Hl7Tree(model);
         tree.setCellRenderer(new TreeCellRenderer());
         tree.setOpaque(false);
         tree.setComponentPopupMenu(new TreePopupMenu());
-        
+
         new DropTarget(tree, this);
-        
+
         setViewport(new ImageBackground());
         setViewportView(tree);
     }
-    
-    public void setModel(TreeModel model) { tree.setModel(model); }
-    
-    public TreeModel getModel() { return tree.getModel(); }
-    
-    public Hl7Tree getTree() { return tree; }
-    
+
+    public void setModel(TreeModel model) {
+        tree.setModel(model);
+    }
+
+    public TreeModel getModel() {
+        return tree.getModel();
+    }
+
+    public Hl7Tree getTree() {
+        return tree;
+    }
+
     private Hl7Tree tree;
-    
     // Interface implementationof drag an drop
+    @Override
     public void drop(java.awt.dnd.DropTargetDropEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
             if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                
+
                 dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-                
+
                 java.util.List fileList = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
                 Iterator iterator = fileList.iterator();
                 while (iterator.hasNext()) {
-                    File file = (File)iterator.next();
-                    
+                    File file = (File) iterator.next();
+
                     Desktop.getInstance().toFront();
-                    
+
                     //SimpleDialog.info(file.getPath());
-                    
+
                     new FileRecentOpenAction(file).actionPerformed(null);
                 }
-                
+
                 //      if (dtde.getCurrentDataFlavorsAsList().size() == 1) {
                 //          SimpleDialog.info(dtde.getCurrentDataFlavors()[0].getHumanPresentableName());
             }
@@ -90,32 +99,29 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
             dtde.rejectDrop();
         }
     }
-    
-    public void dragExit(java.awt.dnd.DropTargetEvent dte) { }
-    
-    public void dropActionChanged(java.awt.dnd.DropTargetDragEvent dtde) { }
-    
+
+    @Override
+    public void dragExit(java.awt.dnd.DropTargetEvent dte) {
+    }
+
+    @Override
+    public void dropActionChanged(java.awt.dnd.DropTargetDragEvent dtde) {
+    }
+
+    @Override
     public void dragOver(java.awt.dnd.DropTargetDragEvent dtde) { /* SimpleDialog.info(dtde.toString()); */ }
-    
+
+    @Override
     public void dragEnter(java.awt.dnd.DropTargetDragEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
-            if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                
-                dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
-                
-                java.util.List fileList = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
-                Iterator iterator = fileList.iterator();
-                while (iterator.hasNext()) {
-                    /*File file = (File)*/iterator.next();
-                }
-//            } else if (tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
-//                dtde.acceptDrag(DnDConstants.ACTION_COPY_OR_MOVE);
-            } else
+            if (!tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 dtde.rejectDrag();
+            }
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             dtde.rejectDrag();
         }
     }
+
 }
