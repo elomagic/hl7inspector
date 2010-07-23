@@ -18,9 +18,6 @@ package de.elomagic.hl7inspector.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowStateListener;
-import java.util.Vector;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -30,30 +27,41 @@ import javax.swing.JScrollPane;
  * @author rambow
  */
 public class ScrollableEditorPane extends JPanel {
-    
+
     /** Creates a new instance of ScrollableEditorPane */
     public ScrollableEditorPane() {
         super(new BorderLayout());
 
-        editorPane = new JEditorPane();        
+        editorPane = new JEditorPane();
         editorPane.setEditable(false);
         editorPane.setContentType("text/html");
-        editorPane.setFont(Font.getFont("Arial"));
+
+        if (Font.getFont("Arial") != null) {
+            editorPane.setFont(Font.getFont("Arial"));
+        }
         
         scrollPane = new JScrollPane();
         scrollPane.setViewportView(editorPane);
-        
+
         captionPane = new WindowCaptionPanel();
-        
+
         add(captionPane, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
     }
-    
-    private JEditorPane         editorPane;
-    private JScrollPane         scrollPane;
-    private WindowCaptionPanel  captionPane;
-                    
-    public WindowCaptionPanel getCaption() { return captionPane; }
-    public JScrollPane getScrollPane() { return scrollPane; }
-    public JEditorPane getEditorPane() { return editorPane; }             
+
+    private WindowCaptionPanel captionPane;
+    public WindowCaptionPanel getCaption() {
+        return captionPane;
+    }
+
+    private JScrollPane scrollPane;
+    public JScrollPane getScrollPane() {
+        return scrollPane;
+    }
+
+    private JEditorPane editorPane;
+    public JEditorPane getEditorPane() {
+        return editorPane;
+    }
+
 }
