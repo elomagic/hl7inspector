@@ -30,22 +30,4 @@ public class RepetitionField extends Hl7Object {
     
     public Class getChildClass() { return Field.class; }
     
-    @Override
-    protected String toXmlString() {
-        StringBuffer sb = new StringBuffer();
-        
-        String element = ((Hl7Object)getParent()).get(0).toString() + "." + Integer.toString(getIndex());
-        
-        sb.append("\t\t<" + element + ">\n");
-        
-        for (int i=0; i<size(); i++) {
-            if (!get(i).isNULL()) {                
-                sb.append(get(i).toXmlString());
-            }
-        }
-        
-        sb.append("\t\t</" + element + ">\n");
-        
-        return sb.toString();
-    }
 }

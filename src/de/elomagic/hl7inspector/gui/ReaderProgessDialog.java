@@ -195,12 +195,12 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
             }
             
             // Check buffer overflow
-            while (model.getChildCount(model.getRoot()) > options.getBufferSize()) {
+            while (model.getChildCount(model) > options.getBufferSize()) {
                 if (options.isReadBottom())
-                    model.removeMessage(0);
+                    model.removeChild(model, 0);
                 else {
                     event.getSource().terminate = true;
-                    model.removeMessage(model.getChildCount(model.getRoot())-1);
+                    model.removeChild(model, model.getChildCount(model)-1);
                 }
             }
         } else {
@@ -233,8 +233,8 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
             lblBytes.setText(Long.toString(bytesRead));
             
             if (model != null) {
-                lblMessages.setText(Integer.toString(model.getChildCount(model.getRoot())));
-                bar.setValue(model.getChildCount(model.getRoot()));
+                lblMessages.setText(Integer.toString(model.getChildCount(model)));
+                bar.setValue(model.getChildCount(model));
             }
         }
     }

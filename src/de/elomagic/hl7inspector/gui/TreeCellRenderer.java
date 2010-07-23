@@ -110,7 +110,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     // Get date/time
                     String d = m.get(0).get(7).toHtmlEscapedString();
                     try {
-                        if (d.length() != 0) {
+                        if (d.length() != 0) {                        
                             String pt = "yyyyMMddHHmmss";
                             
                             if (d.length() > pt.length()) {
@@ -119,7 +119,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                             
                             String p = (pt.length() == d.length())?pt:pt.substring(0, d.length());
                             Date dt = new SimpleDateFormat(p).parse(d);
-                            
+
                             d = DateFormat.getDateTimeInstance().format(dt);
                             sb.append(d);
                         }
@@ -164,8 +164,6 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                         sb.append(nodeText);
                     }
                 }
-            } else {
-                sb.append(value.toString());
             }
         }
         

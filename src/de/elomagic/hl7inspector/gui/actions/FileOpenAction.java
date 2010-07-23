@@ -20,7 +20,6 @@ package de.elomagic.hl7inspector.gui.actions;
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.file.filters.Hl7FileFilter;
 import de.elomagic.hl7inspector.file.filters.TextFileFilter;
-import de.elomagic.hl7inspector.file.filters.XmlFileFilter;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import java.awt.event.ActionEvent;
@@ -53,8 +52,7 @@ public class FileOpenAction extends AbstractAction {
         
         JFileChooser fc = new JFileChooser(path);
         fc.addChoosableFileFilter(new TextFileFilter());
-        fc.addChoosableFileFilter(new XmlFileFilter());
-        fc.addChoosableFileFilter(new Hl7FileFilter());        
+        fc.addChoosableFileFilter(new Hl7FileFilter());
         
         fc.setDialogTitle("Choose file");
         if (fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {

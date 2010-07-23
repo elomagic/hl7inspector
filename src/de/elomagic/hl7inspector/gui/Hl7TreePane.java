@@ -50,11 +50,9 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
         
         new DropTarget(tree, this);
         
-        updateBackgroundImage();
+        setViewport(new ImageBackground());
         setViewportView(tree);
     }
-    
-    public void updateBackgroundImage() { setViewport(new ImageBackground()); }
     
     public void setModel(TreeModel model) { tree.setModel(model); }
     

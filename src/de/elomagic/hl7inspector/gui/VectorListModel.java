@@ -17,6 +17,7 @@
 
 package de.elomagic.hl7inspector.gui;
 
+import de.elomagic.hl7inspector.profile.ProfileFile;
 import java.util.Vector;
 import javax.swing.AbstractListModel;
 
@@ -27,7 +28,6 @@ import javax.swing.AbstractListModel;
 public class VectorListModel extends AbstractListModel {
   
   /** Creates a new instance of ProfileManagerModel */
-  @SuppressWarnings("unchecked")
   public VectorListModel(Vector v) { 
     super(); 
     vector = v; 

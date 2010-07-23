@@ -17,7 +17,6 @@
 
 package de.elomagic.hl7inspector.hl7.model;
 
-import de.elomagic.hl7inspector.hl7.parser.MessageEncoding;
 import de.elomagic.hl7inspector.utils.StringEscapeUtils;
 import de.elomagic.hl7inspector.validate.ValidateStatus;
 import java.util.Enumeration;
@@ -146,16 +145,6 @@ public abstract class Hl7Object implements TreeNode {
         resetTreeData(parent);
     }
     
-    protected Delimiters del = new Delimiters();
-    public Delimiters getDelimiters() { 
-        Hl7Object hl7o = this;
-        while (!(hl7o instanceof Message)) {
-            hl7o = hl7o.getHl7Parent();
-        }
-        
-        return ((Message)hl7o).del;
-    }
-    
     private String validationText = "";
     public String getValidationText() { return validationText; }
     public void setValidationText(String value) { validationText = value; }
@@ -203,20 +192,6 @@ public abstract class Hl7Object implements TreeNode {
         return sb.toString();
     }
     
-    public String toFormatedString(MessageEncoding format) {
-        String r;
-        
-        if (format == MessageEncoding.XML_FORMAT) {
-            r = toXmlString(); 
-        } else {
-            r = toString();
-        }
-        
-        return r;
-    }
-    
-    protected String toXmlString() { return toString(); }
-    
     public boolean isSinglePath() {
         boolean r = (objList.size() == 0);
         if (objList.size() == 1) {
@@ -225,7 +200,27 @@ public abstract class Hl7Object implements TreeNode {
         
         return r;
     }
-
+    
+    /** @deprecated */
+    public TreePath getPath(TreeNode rootNode) {
+        Vector<Object> v = new Vector<Object>();
+        
+        TreeNode o = this;
+        v.add(o);
+        
+        while (o.getParent() != null) {
+            o = o.getParent();
+            
+            v.insertElementAt(o, 0);
+        }
+        
+        v.insertElementAt(rootNode, 0);
+        
+        TreePath path = new TreePath(v.toArray());
+        
+        return path;
+    }
+    
     public TreePath getPath() {
         Vector<Object> v = new Vector<Object>();
         
@@ -313,15 +308,7 @@ public abstract class Hl7Object implements TreeNode {
     private Object    root    = null;
     private Hl7Object parent  = null;
     
-    public final static void setCompactView(boolean compact) {
-        System.setProperty(Hl7Object.COMPRESSED_KEY, (compact)?"t":"f");
-    }
-    
-    private final static String COMPRESSED_KEY = Hl7Object.class.getName().concat(".compressed");
-    public final static boolean isCompactView() { 
-        boolean r = "t".equals(System.getProperty(Hl7Object.COMPRESSED_KEY, "t"));
-        return r;
-    }
+    public final static String COMPRESSED_KEY = Hl7Object.class.getName().concat(".compressed");
     
     // TODO Muste be implemented
     // Interface TreeNode
@@ -346,9 +333,9 @@ public abstract class Hl7Object implements TreeNode {
      * Returns the number of children TreeNodes the receiver contains. 
      */
     public int getChildCount() {
-        boolean compact = Hl7Object.isCompactView();
+        boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
 
-        int result = (compact)?sizeCompressed():size();
+        int result = (compressed)?sizeCompressed():size();
         
         if ((this instanceof Segment) && (result > 0)) {
             result--;
@@ -367,9 +354,9 @@ public abstract class Hl7Object implements TreeNode {
 
         TreeNode result = null;
         
-        boolean compact = Hl7Object.isCompactView();
+        boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
 
-        if (!compact) {
+        if (!compressed) {
             result = get(childIndex);
         } else {
             result = getCompressed(childIndex);
@@ -417,5 +404,5 @@ public abstract class Hl7Object implements TreeNode {
     /**
      * Returns true if the receiver is a leaf.
      */
-    public boolean isLeaf() { return isSinglePath(); }
+    public boolean isLeaf() { return !isSinglePath(); }
 }

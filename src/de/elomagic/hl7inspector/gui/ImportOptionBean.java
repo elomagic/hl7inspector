@@ -17,9 +17,7 @@
 
 package de.elomagic.hl7inspector.gui;
 
-import de.elomagic.hl7inspector.hl7.parser.MessageEncoding;
 import de.elomagic.hl7inspector.io.Frame;
-import de.elomagic.hl7inspector.io.StreamFormat;
 
 /**
  *
@@ -30,6 +28,8 @@ public class ImportOptionBean {
     /** Creates a new instance of ImportOptionBean */
     public ImportOptionBean() {
     }
+    
+    public enum StreamFormat { AUTO_DETECT, FRAMED, TEXT_LINE };     
     
     private boolean         readBottom      = false;
     private boolean         useRegExpr      = false;
@@ -45,25 +45,29 @@ public class ImportOptionBean {
     private long            fileSize        = -1;
     private String          sourceLabel     = "Name:";
     private boolean         caseSensitive   = false;
-    private MessageEncoding messageEncoding = MessageEncoding.HL7_FORMAT;
-    private String          charEncoding    = "ISO-8859-1";
+    private String          encoding        = "ISO-8859-1";
     private boolean         validate        = false;
             
-    public Frame getFrame() { return new Frame(startChar, stopChar1, stopChar2); }
+            public Frame getFrame() { return new Frame(startChar, stopChar1, stopChar2); }
     
-    public boolean isReadBottom() { return readBottom; }    
+    public boolean isReadBottom() { return readBottom; }
+    
     public void setReadBottom(boolean readBottom) { this.readBottom = readBottom; }
     
-    public boolean isUseRegExpr() { return useRegExpr; }    
+    public boolean isUseRegExpr() { return useRegExpr; }
+    
     public void setUseRegExpr(boolean useRegExpr) { this.useRegExpr = useRegExpr; }
     
-    public boolean isNegReg() { return negReg; }    
+    public boolean isNegReg() { return negReg; }
+    
     public void setNegReg(boolean negReg) { this.negReg = negReg; }
     
-    public String getPhrase() { return phrase; }    
+    public String getPhrase() { return phrase; }
+    
     public void setPhrase(String phrase) { this.phrase = phrase; }
     
-    public StreamFormat getImportMode() { return importMode; }    
+    public StreamFormat getImportMode() { return importMode; }
+    
     public void setImportMode(StreamFormat importMode) { this.importMode = importMode; }
     
     public void setFrame(Frame frame) {
@@ -102,16 +106,19 @@ public class ImportOptionBean {
     
     public void setSource(String source) { this.source = source; }
     
-    public String getSourceLabel() { return sourceLabel; }    
+    public String getSourceLabel() { return sourceLabel; }
+    
     public void setSourceLabel(String sourceLabel) { this.sourceLabel = sourceLabel; }
     
-    public boolean isCaseSensitive() { return caseSensitive; }    
+    public boolean isCaseSensitive() { return caseSensitive; }
+    
     public void setCaseSensitive(boolean caseSensitive) { this.caseSensitive = caseSensitive; }
     
-    public long getFileSize() { return fileSize; }    
+    public long getFileSize() { return fileSize; }
+    
     public void setFileSize(long fileSize) { this.fileSize = fileSize; }
     
-    public String getEncoding() { return charEncoding; }
+    public String getEncoding() { return encoding; }
 
     /** 
      * Supported Encoders:
@@ -122,11 +129,9 @@ public class ImportOptionBean {
      *  UTF-16LE    Sixteen-bit UCS Transformation Format, little-endian byte order
      *  UTF-16
      **/    
-    public void setEncoding(String encoding) { this.charEncoding = encoding; }
+    public void setEncoding(String encoding) { this.encoding = encoding; }
 
     public boolean isValidate() {  return validate; }
+
     public void setValidate(boolean validate) { this.validate = validate; }    
-    
-    public MessageEncoding getMessageEncoding() { return messageEncoding; }
-    public void setMessageEncoding(MessageEncoding messageEncoding) { this.messageEncoding = messageEncoding; }    
 }

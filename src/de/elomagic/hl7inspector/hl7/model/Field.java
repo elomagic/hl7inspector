@@ -30,22 +30,4 @@ public class Field extends Hl7Object {
     
     public Class getChildClass() { return Component.class; }
     
-    /*@Override
-    protected String toXmlString() {
-        StringBuffer sb = new StringBuffer();
-        
-        String element = "DT." + Integer.toString(getIndex());
-        
-        sb.append("\t\t\t<" + element + ">\n");
-        
-        for (int i=1; i<size(); i++) {
-            if (!get(i).isNULL()) {                
-                sb.append(get(i).toXmlString());
-            }
-        }
-        
-        sb.append("\t\t\t</" + element + ">\n");
-        
-        return sb.toString();
-    }    */
 }

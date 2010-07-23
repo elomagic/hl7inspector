@@ -19,7 +19,6 @@ package de.elomagic.hl7inspector.io;
 
 import de.elomagic.hl7inspector.gui.MessageWriterBean;
 import de.elomagic.hl7inspector.hl7.model.Message;
-import de.elomagic.hl7inspector.hl7.parser.MessageEncoding;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -52,7 +51,7 @@ public class MessageWriterThread extends Thread {
             
             File messageFile = null;
             if (!bean.isManyFiles()) {
-                wout = new OutputStreamWriter(new FileOutputStream(bean.getSingleFileName(), false), bean.getCharEncoding());
+                wout = new OutputStreamWriter(new FileOutputStream(bean.getSingleFileName(), false), bean.getEncoding());
             }
             
             while ((!terminate) && (i<messages.size())) {
@@ -60,7 +59,7 @@ public class MessageWriterThread extends Thread {
                 try {                
                     if (bean.isManyFiles()) {
                         messageFile = createDataFile(i);
-                        wout = new OutputStreamWriter(new FileOutputStream(messageFile), bean.getCharEncoding());
+                        wout = new OutputStreamWriter(new FileOutputStream(messageFile), bean.getEncoding());
                     }                    
                     writeMessage(message);                    
                 } finally {
@@ -106,8 +105,8 @@ public class MessageWriterThread extends Thread {
     private Vector<Message>             messages    = new Vector<Message>();
     
     private void writeMessage(Message message) throws IOException {
-        String msgText = message.toFormatedString(bean.getMessageEncoding());
-
+        String msgText = message.toString();
+        
         if (!bean.isManyFiles()) {
             wout.write(bean.getFrame().getStartFrame());
         }

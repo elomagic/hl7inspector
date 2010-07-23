@@ -23,14 +23,22 @@ import de.elomagic.hl7inspector.gui.actions.ExitAction;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.gui.receive.ReceivePanel;
 import de.elomagic.hl7inspector.gui.sender.SendPanel;
+import de.elomagic.hl7inspector.hl7.model.Component;
+import de.elomagic.hl7inspector.hl7.model.Field;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
+import de.elomagic.hl7inspector.hl7.model.RepetitionField;
+import de.elomagic.hl7inspector.hl7.model.Segment;
+import de.elomagic.hl7inspector.hl7.model.Subcomponent;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
+import de.elomagic.hl7inspector.profile.DataElement;
+import de.elomagic.hl7inspector.profile.DataTypeItem;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.SegmentItem;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ComponentEvent;
@@ -40,6 +48,7 @@ import java.io.FileInputStream;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
@@ -62,7 +71,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     //public FindBar getFindWindow() { return findWindow; }
     public Hl7Tree getTree() { return treePane.getTree(); }
     
-    public Hl7TreePane getScrollPane() { return treePane; }
+    public JScrollPane getScrollPane() { return treePane; }
     
     public TreeModel getModel() { return treePane.getModel(); }
     public void setModel(TreeModel model) { treePane.setModel(model); }
@@ -191,7 +200,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
             
     private MainToolBar             mainToolBar;
     
-    private StatusPanel             bottomPanel = new StatusPanel();
+    private BottomPanel             bottomPanel = new BottomPanel();
     
     public void setSelectedTabIndex(int index) { tabPanel.setSelectedIndex(index); }    
     

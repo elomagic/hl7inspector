@@ -27,7 +27,6 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.util.Calendar;
 import java.util.Date;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -76,8 +75,7 @@ public class UpdateCheckDialog extends BaseDialog {
 
             dlg.setVisible(true);
             try {              
-                dlg.validate();
-                
+                dlg.repaint();
                 b = UpdateChecker.checkForUpdates();
                 p.setLastUpdateCheck(Calendar.getInstance());
             } finally {
@@ -128,7 +126,7 @@ public class UpdateCheckDialog extends BaseDialog {
         builder.add(pbCheck,            cc.xyw(1,   3,  3));
         
         // 3rd row
-        //builder.add(btCancel,           cc.xy(2,   5));        // Ok
+//        builder.add(btCancel,           cc.xy(2,   5));        // Ok
                 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
         
@@ -143,5 +141,5 @@ public class UpdateCheckDialog extends BaseDialog {
     
     private JLabel          lblText     = new JLabel("Looking for updates...");
     private JProgressBar    pbCheck     = new JProgressBar();
-    private JButton         btCancel    = new JButton("Cancel");    
+//    private JButton         btCancel    = new JButton("Abort");
 }

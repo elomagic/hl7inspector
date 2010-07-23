@@ -53,8 +53,6 @@ public abstract class VectorTableModel extends AbstractTableModel {
             fireTableRowsDeleted(rowIndex, rowIndex);
     }
     
-    public Object getRow(int rowIndex) { return table.get(rowIndex); }
-    
     public void lock() { lockCount++; }
     
     public void unlock() {

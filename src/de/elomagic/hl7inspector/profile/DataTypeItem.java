@@ -19,7 +19,6 @@ package de.elomagic.hl7inspector.profile;
 
 import java.util.Vector;
 import nanoxml.XMLElement;
-import org.simpleframework.xml.Element;
 
 /**
  *
@@ -118,8 +117,17 @@ public class DataTypeItem {
         return xml;
     }
     
-    @Element(name="length", required=false)
-    private int len = 0;
+    
+    private int     index           = 0;
+    private String  dataType        = "";
+    private String  description     = "";
+    private String  parentDataType  = "";
+    private String  parentDataTypeName  = "";
+    private int     len             = 0;
+    private String  opt             = "O";
+    private String  chapter         = "";
+    private String  table           = "";
+    
     public int getLength() { return len; }    
     public void setLength(int l) { this.len = l; }
     public void setLength(String l) { 
@@ -130,8 +138,6 @@ public class DataTypeItem {
         }
     }
     
-    @Element(name="index", required=false)
-    private int index = 0;
     public int getIndex() { return index; }    
     public void setIndex(int index) { this.index = index; }
     public void setIndex(String index) { 
@@ -142,38 +148,24 @@ public class DataTypeItem {
         }
     }
     
-    @Element(name="description", required=false)
-    private String description = "";
     public String getDescription() { return description; }    
     public void setDescription(String description) { this.description = description; }
     
-    @Element(name="datatype", required=false)
-    private String dataType = "";
     public String getDataType() { return dataType; }    
     public void setDataType(String dataType) { this.dataType = dataType.trim(); }
     
-    @Element(name="parent", required=false)
-    private String parentDataType = "";
     public String getParentDataType() { return parentDataType; }    
     public void setParentDataType(String dataType) { this.parentDataType = dataType.trim(); }
     
-    @Element(name="opt", required=false)
-    private String opt = "O";
     public String getOptionality() { return opt; }    
     public void setOptionality(String value) { opt = value.trim(); }    
     
-    @Element(name="chapter", required=false)
-    private String chapter = "";
     public String getChapter() { return chapter; }
     public void setChapter(String chapter) { this.chapter = chapter; }    
 
-    @Element(name="parent-name", required=false)
-    private String  parentDataTypeName  = "";
     public String getParentDataTypeName() { return parentDataTypeName; }
     public void setParentDataTypeName(String parentDataTypeName) { this.parentDataTypeName = parentDataTypeName.trim(); }
     
-    @Element(name="table", required=false)
-    private String table = "";
     public String getTable() { return table; }
     public void setTable(String table) {
         try {

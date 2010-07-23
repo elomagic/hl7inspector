@@ -30,7 +30,6 @@ public class OptionsDialog extends PanelDialog {
     /** Creates a new instance of OptionsDialog */
     public OptionsDialog() { super(Desktop.getInstance(), "Options", true); }
     
-    @Override
     protected void init() {
         getPanelList().add(new GeneralOptionPanel(this));
         getPanelList().add(new TreeViewPanel(this));

@@ -47,7 +47,6 @@ public class MainToolBar extends JToolBar {
         add(new FileNewAction());
         add(new FileOpenAction());
         add(new FileSaveAsAction());
-        add(new PrintAction());
         addSeparator();
         add(new FindWindowAction(""));
         addSeparator();
@@ -59,6 +58,9 @@ public class MainToolBar extends JToolBar {
         addSeparator();
         add(new ViewTextFile());
         add(new ViewHexFile());
+        /* FEATURE Print message support needed        
+        add(new PrintAction());
+         */
         addSeparator();
         add(btParserWindow);
         add(btReceiveWindow);

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -48,14 +47,12 @@ import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 /**
  *
  * @author rambow
  */
-public class HL7ObjectEditor extends BaseDialog implements DocumentListener {
+public class HL7ObjectEditor extends BaseDialog {
     
     /** Creates a new instance of ImportOptionsDialog */
     public HL7ObjectEditor() {
@@ -75,17 +72,13 @@ public class HL7ObjectEditor extends BaseDialog implements DocumentListener {
         
         editValue       = new JTextField();
         editValue.setFont(Font.decode(StartupProperties.getInstance().getTreeFontName()));
-        editValue.getDocument().addDocumentListener(this);
 
-        descPane = new JEditorPane();
-        descPane.setEditable(false);
-        descPane.setContentType("text/html");
-        descPane.setFont(Font.decode("Arial"));
+        editorPane = new JEditorPane();
+        editorPane.setEditable(false);
+        editorPane.setContentType("text/html");
+        editorPane.setFont(Font.decode("Arial"));
         
-        
-        editDecoded = new Hl7DecoderViewPane(new Delimiters());
-        
-        scrollPane = new JScrollPane(descPane);        
+        scrollPane = new JScrollPane(editorPane);        
         
         paneDesc        = new JPanel(new BorderLayout());
         paneDesc.add(scrollPane, BorderLayout.CENTER);
@@ -95,7 +88,7 @@ public class HL7ObjectEditor extends BaseDialog implements DocumentListener {
         FormLayout layout = new FormLayout(
                 "p, 4dlu, p:grow",
 //            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
-                "p, 4dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 4dlu, p, 7dlu, p, 4dlu, top:min(40dlu;p):grow");   // rows
+                "p, 4dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 4dlu, top:min(40dlu;p):grow");   // rows
         
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();
@@ -112,20 +105,15 @@ public class HL7ObjectEditor extends BaseDialog implements DocumentListener {
         builder.addLabel("Encode:",                         cc.xy(1, 7));
         builder.add(cbEncode,                               cc.xy(3, 7));
 
-        builder.add(new GradientLabel("Decoded Value"),     cc.xyw(1, 9, 3));
-
-        builder.add(editDecoded,                            cc.xyw(1, 11, 3));        
+        builder.add(new GradientLabel("Description"),       cc.xyw(1, 9, 3));
         
-                
-        builder.add(new GradientLabel("Description"),       cc.xyw(1, 13, 3));
-        
-        builder.add(paneDesc,                               cc.xyw(1, 15, 3));        
+        builder.add(paneDesc,                               cc.xyw(1, 11, 3));        
         
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
         
         pack();
         
-        setSize(400, 500);
+        setSize(400, 400);
         
         setBounds(ToolKit.centerFrame(this, this.getOwner()));
         editValue.requestFocus();
@@ -137,9 +125,7 @@ public class HL7ObjectEditor extends BaseDialog implements DocumentListener {
     private JPanel                  paneDesc;
     
     private JScrollPane             scrollPane;
-    private JEditorPane             descPane;
-    
-    private Hl7DecoderViewPane           editDecoded;
+    private JEditorPane             editorPane;
     
     private JCheckBox               cbEncode;
     
@@ -173,13 +159,10 @@ public class HL7ObjectEditor extends BaseDialog implements DocumentListener {
         MessageDescriptor md = new MessageDescriptor(Profile.getDefault());
         String desc = md.getDescription(o, true);
         setDescription(desc);
-        
-        editDecoded.setDelimiters(o.getDelimiters());
-        editDecoded.setEncodedText(value);
     }
     
     private void setDescription(String value) {
-        descPane.setText(value);        
+        editorPane.setText(value);        
 //        editDesc.getScrollPane().getVerticalScrollBar().setVisibleAmount(0);        
         //editDesc.getScrollPane().scrollRectToVisible(new Rectangle(0, 0, 1, 1));
         scrollPane.getVerticalScrollBar().setValue(0);
@@ -214,31 +197,4 @@ public class HL7ObjectEditor extends BaseDialog implements DocumentListener {
             SimpleDialog.error("The value includes inhibits encoding characters for type " + editType.getText());
         }
     }
-
-    /**
-     * Gives notification that a portion of the document has been 
-     * removed.  The range is given in terms of what the view last
-     * saw (that is, before updating sticky positions).
-     * 
-     * 
-     * @param e the document event
-     */
-    public void removeUpdate(DocumentEvent e) { editDecoded.setEncodedText(getValue()); }
-
-    /**
-     * Gives notification that there was an insert into the document.  The 
-     * range given by the DocumentEvent bounds the freshly inserted region.
-     * 
-     * 
-     * @param e the document event
-     */
-    public void insertUpdate(DocumentEvent e) { editDecoded.setEncodedText(getValue()); }
-
-    /**
-     * Gives notification that an attribute or set of attributes changed.
-     * 
-     * 
-     * @param e the document event
-     */
-    public void changedUpdate(DocumentEvent e) { editDecoded.setEncodedText(getValue()); }
 }

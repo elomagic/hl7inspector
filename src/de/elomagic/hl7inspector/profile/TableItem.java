@@ -19,7 +19,6 @@ package de.elomagic.hl7inspector.profile;
 
 import java.util.Vector;
 import nanoxml.XMLElement;
-import org.simpleframework.xml.Element;
 
 /**
  *
@@ -82,13 +81,15 @@ public class TableItem {
         return xml;
     }    
     
-    @Element(name="type", required=false)
-    private String type = "HL7";
+    private String    type              = "HL7";
+    private String    id                = "";
+    private String    tableDescription  = "";
+    private String    value             = "";
+    private String    desciption        = "";
+    
     public String getType() { return type; }    
     public void setType(String type) { this.type = type; }
     
-    @Element(name="id", required=false)
-    private String id = "";
     public String getId() { return id; }    
     public void setId(String id) { 
         try {
@@ -98,18 +99,12 @@ public class TableItem {
         }
     }
     
-    @Element(name="table-description", required=false)
-    private String tableDescription = "";
     public String getTableDescription() { return tableDescription; }    
     public void setTableDescription(String tableDescription) { this.tableDescription = tableDescription; }
     
-    @Element(name="value", required=false)
-    private String value = "";
     public String getValue() { return value; }    
     public void setValue(String value) { this.value = value; }
     
-    @Element(name="desciption", required=false)
-    private String desciption = "";
     public String getDescription() { return desciption; }    
     public void setDescription(String desciption) { this.desciption = desciption; }
 }

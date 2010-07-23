@@ -62,7 +62,6 @@ public class SortedTableModel extends AbstractTableModel {
     private static Directive       EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
     
     public static final Comparator<Object> COMPARABLE_COMAPRATOR = new Comparator<Object>() {
-        @SuppressWarnings("unchecked")
         public int compare(Object o1, Object o2) {
             return ((Comparable<Object>)o1).compareTo(o2);
         }
@@ -99,12 +98,10 @@ public class SortedTableModel extends AbstractTableModel {
         setTableModel(tableModel);
     }
     
-    @Override
     public boolean isCellEditable(int row, int column) {
         return tableModel.isCellEditable(modelIndex(row), column);
     }
     
-    @Override
     public Class getColumnClass(int column) {
         return tableModel.getColumnClass(column);
     }
@@ -121,7 +118,6 @@ public class SortedTableModel extends AbstractTableModel {
         return (tableModel == null) ? 0 : tableModel.getColumnCount();
     }
     
-    @Override
     public String getColumnName(int column) {
         return tableModel.getColumnName(column);
     }
@@ -191,7 +187,6 @@ public class SortedTableModel extends AbstractTableModel {
         return tableModel;
     }
     
-    @Override
     public void setValueAt(Object aValue, int row, int column) {
         tableModel.setValueAt(aValue, modelIndex(row), column);
     }
@@ -214,7 +209,6 @@ public class SortedTableModel extends AbstractTableModel {
 //			return i - 1;
     }
     
-    @SuppressWarnings("unchecked")
     protected Comparator<Object> getComparator(int column) {
         Class      columnType = tableModel.getColumnClass(column);
         Comparator<Object> comparator = columnComparators.get(columnType);
@@ -369,7 +363,6 @@ public class SortedTableModel extends AbstractTableModel {
     }
     
     private class MouseHandler extends MouseAdapter {
-        @Override
         public void mouseClicked(MouseEvent e) {
             JTableHeader     h           = (JTableHeader)e.getSource();
             TableColumnModel columnModel = h.getColumnModel();

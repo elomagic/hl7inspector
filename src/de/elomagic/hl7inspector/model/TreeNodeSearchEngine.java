@@ -55,7 +55,7 @@ public class TreeNodeSearchEngine {
             phrase = phrase.toUpperCase();
         }
         
-        if (((t.indexOf(phrase) != -1) || (sNode instanceof RootNode))) {
+        if (((t.indexOf(phrase) != -1) || (sNode instanceof Hl7TreeModel))) {
             for (int i=index; (i<sNode.getChildCount()) && (result == null); i++) {
                 TreeNode node = sNode.getChildAt(i);
                 String tt = node.toString();
@@ -65,13 +65,13 @@ public class TreeNodeSearchEngine {
                 }
                 
                 if (tt.indexOf(phrase) != -1) {
-                    if (node.isLeaf()) {
+                    if (!node.isLeaf()) {
                         result = ((Hl7Object)node).getPath();
                     } else {
                         result = findNode(phrase, caseSensitive, node, 0);
                     }
                     
-                    if ((result == null)) { 
+                    if ((result == null)) { //&& (!startingNode.isLeaf())){
                         result = ((Hl7Object)node).getPath();
                     }
                 }
@@ -98,7 +98,7 @@ public class TreeNodeSearchEngine {
                 phrase = phrase.toUpperCase();
             }
             
-            if ((t.indexOf(phrase) != -1) || (parent instanceof RootNode)) {
+            if ((t.indexOf(phrase) != -1) || (parent instanceof Hl7TreeModel)) {
                 result = findNode(phrase, caseSensitive, parent, idx+1);
             }
             

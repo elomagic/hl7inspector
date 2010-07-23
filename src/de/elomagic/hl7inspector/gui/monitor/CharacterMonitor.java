@@ -57,7 +57,6 @@ public class CharacterMonitor extends JPanel implements IOThreadListener {
     public String getText() { return hp.getText(); }
     
     public MonitorToolBar getToolBar() { return tb; }
-    public HighlighterPane getTextPane() { return hp; }
     
     private MonitorToolBar  tb;
     private JScrollPane	    sp;

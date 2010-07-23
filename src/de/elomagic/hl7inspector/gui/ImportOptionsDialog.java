@@ -21,8 +21,7 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
 import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.hl7.parser.MessageEncoding;
-import de.elomagic.hl7inspector.io.StreamFormat;
+import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.AbstractAction;
@@ -65,8 +64,7 @@ public class ImportOptionsDialog extends BaseDialog {
         cbbStopChar1.setSelectedIndex((defaultOptions.getStopChar1()==null)?16:(int)defaultOptions.getStopChar1().charValue());
         cbbStopChar2.setSelectedIndex((defaultOptions.getStopChar2()==null)?16:(int)defaultOptions.getStopChar2().charValue());
         cbValidate.setSelected(defaultOptions.isValidate());
-        cbMessageEnc.setSelectedIndex((defaultOptions.getMessageEncoding()==MessageEncoding.HL7_FORMAT)?0:1);
-        cbCharEnc.setSelectedItem(defaultOptions.getEncoding());        
+        cbEncoding.setSelectedItem(defaultOptions.getEncoding());        
         cbRegExpr.setSelected(defaultOptions.isUseRegExpr());
         
         updateParseModeButtons(defaultOptions.getImportMode() != StreamFormat.TEXT_LINE);
@@ -111,8 +109,7 @@ public class ImportOptionsDialog extends BaseDialog {
         result.setStopChar1((cbbStopChar1.getSelectedIndex() > 31)?null:new Character((char)cbbStopChar1.getSelectedIndex()));
         result.setStopChar2((cbbStopChar2.getSelectedIndex() > 31)?null:new Character((char)cbbStopChar2.getSelectedIndex()));
         result.setValidate(cbValidate.isSelected());
-        result.setEncoding(cbCharEnc.getSelectedItem().toString());
-        result.setMessageEncoding((cbMessageEnc.getSelectedIndex()==0)?MessageEncoding.HL7_FORMAT:MessageEncoding.XML_FORMAT);
+        result.setEncoding((cbEncoding.getSelectedItem().toString()));
         result.setUseRegExpr(cbRegExpr.isSelected());
         
         return result;
@@ -172,8 +169,6 @@ public class ImportOptionsDialog extends BaseDialog {
         cbbStopChar1.setModel(new DefaultComboBoxModel(model));
         cbbStopChar2.setModel(new DefaultComboBoxModel(model));
         
-        cbMessageEnc = new JComboBox(new String[] { "HL7", "XML" } );
-        
         String[] modelEnc = {
             "ISO-8859-1",
             "US-ASCII",
@@ -182,7 +177,7 @@ public class ImportOptionsDialog extends BaseDialog {
             "UTF-16LE",
             "UTF-16"
         };
-        cbCharEnc.setModel(new DefaultComboBoxModel(modelEnc));
+        cbEncoding.setModel(new DefaultComboBoxModel(modelEnc));
         
         cbbPhrase = new JComboBox(StartupProperties.getInstance().getPhrases());
         cbbPhrase.setSelectedIndex(-1);
@@ -192,7 +187,7 @@ public class ImportOptionsDialog extends BaseDialog {
         FormLayout layout = new FormLayout(
                 "0dlu, p, 4dlu, 50dlu, 4dlu, p, 2dlu, 50dlu, 4dlu, p, 2dlu, 50dlu, p:grow",
 //            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
-                "p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p");   // rows
+                "p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p");   // rows
         
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();
@@ -224,46 +219,42 @@ public class ImportOptionsDialog extends BaseDialog {
         builder.add(spBuffer,                 cc.xyw(4,   13, 2));
         
         builder.addLabel("Char Encoding:",    cc.xy(2,   15));     // Ok
-        builder.add(cbCharEnc,               cc.xyw(4,   15, 2));
+        builder.add(cbEncoding,               cc.xyw(4,   15, 2));
         builder.add(cbValidate,               cc.xyw(8,   15,  3));       
-
-        builder.addLabel("Message Encoding:",    cc.xy(2,   17));     // Ok
-        builder.add(cbMessageEnc,               cc.xyw(4,   17, 2));
-        
         
         // 8th row
-        builder.add(new GradientLabel("Parser Mode:"),         cc.xyw(1, 19, 13));
+        builder.add(new GradientLabel("Parser Mode:"),         cc.xyw(1, 17, 13));
         
         // 9th row
-        builder.add(rbModeAuto,               cc.xyw(2, 21, 12));
+        builder.add(rbModeAuto,               cc.xyw(2, 19, 12));
         
         // 11th row
-        builder.add(rbModeParse,              cc.xyw(2, 23, 12));
+        builder.add(rbModeParse,              cc.xyw(2, 21, 12));
         
         // 10th row
-        builder.add(rbModeStream,             cc.xyw(2, 25, 12));
+        builder.add(rbModeStream,             cc.xyw(2, 23, 12));
         
         // 12th row
-        builder.addLabel("Start char:",       cc.xy(2, 27));       // Ok
-        builder.add(cbbStartChar,             cc.xy(4, 27));
+        builder.addLabel("Start char:",       cc.xy(2, 25));       // Ok
+        builder.add(cbbStartChar,             cc.xy(4, 25));
         
-        builder.addLabel("1. Stop char :",    cc.xy(6, 27));
-        builder.add(cbbStopChar1,             cc.xy(8, 27));
+        builder.addLabel("1. Stop char :",    cc.xy(6, 25));
+        builder.add(cbbStopChar1,             cc.xy(8, 25));
         
-        builder.addLabel("2. Stop char:",     cc.xy(10, 27));
-        builder.add(cbbStopChar2,             cc.xy(12, 27));
+        builder.addLabel("2. Stop char:",     cc.xy(10, 25));
+        builder.add(cbbStopChar2,             cc.xy(12, 25));
                 
         // 13th row
-        builder.add(new GradientLabel("Filter"),        cc.xyw(1, 29, 13));
+        builder.add(new GradientLabel("Filter"),        cc.xyw(1, 27, 13));
         
         // 12th row
-        builder.add(cbCaseSense,              cc.xyw(2, 31, 3));
-        builder.add(cbNegateReg,              cc.xyw(6, 31, 3));
-        builder.add(cbRegExpr,                cc.xyw(10, 31, 3));
+        builder.add(cbCaseSense,              cc.xyw(2, 29, 3));
+        builder.add(cbNegateReg,              cc.xyw(6, 29, 3));
+        builder.add(cbRegExpr,                cc.xyw(10, 29, 3));
         
         // 13th row
-        builder.addLabel("Phrase:",           cc.xy(2, 33));       // Ok
-        builder.add(cbbPhrase,                cc.xyw(4, 33, 10));
+        builder.addLabel("Phrase:",           cc.xy(2, 31));       // Ok
+        builder.add(cbbPhrase,                cc.xyw(4, 31, 10));
         
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
         
@@ -303,8 +294,7 @@ public class ImportOptionsDialog extends BaseDialog {
     private JCheckBox       cbReadBottom    = new JCheckBox("Read from bottom");
     private JSpinner        spBuffer        = new JSpinner(new SpinnerNumberModel(1000, 1, 2000, 50));
     private JCheckBox       cbValidate      = new JCheckBox("Validate message");
-    private JComboBox       cbMessageEnc;
-    private JComboBox       cbCharEnc       = new JComboBox();
+    private JComboBox       cbEncoding      = new JComboBox();
     private JRadioButton    rbModeAuto      = new JRadioButton(new ParseModeAction("Auto detect", "AUTO"));
     private JRadioButton    rbModeParse     = new JRadioButton(new ParseModeAction("Line stream", "PARSE"));
     private JRadioButton    rbModeStream    = new JRadioButton(new ParseModeAction("Message stream (Framed)", "FRAMED"));

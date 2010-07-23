@@ -18,18 +18,15 @@
 package de.elomagic.hl7inspector;
 
 import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.print.HFFormat;
 import de.elomagic.hl7inspector.profile.ProfileFile;
-import de.elomagic.hl7inspector.utils.StringVector;
+import de.elomagic.hl7inspector.utils.History;
 import java.awt.Color;
 import java.awt.SystemColor;
-import java.awt.print.PageFormat;
-import java.awt.print.Paper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-//import java.security.KeyStore;
+import java.security.KeyStore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,14 +52,10 @@ public class StartupProperties extends Properties {
             FileInputStream fin = null;
             
             if (!file.exists()) {
-                File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.1").concat(File.separator).concat(CONFIG_FILE));
-                
-                if (!oldFile.exists()) {
-                    oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));
-                }
+                File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));
                 
                 if (oldFile.exists()) {
-                    if (SimpleDialog.confirmYesNo("Import configruation from an older HL7 Inspector ?") == SimpleDialog.YES_OPTION) {
+                    if (SimpleDialog.confirmYesNo("Import configruation from HL7 Inspector 2.0 ?") == SimpleDialog.YES_OPTION) {
                         fin = new FileInputStream(oldFile);
                     } else {
                         fin = new FileInputStream(wp.concat(CONFIG_FILE));
@@ -83,7 +76,6 @@ public class StartupProperties extends Properties {
             
             createProfiles();
             createKeyStores();
-            readPrinterSetup();
         } catch (Exception e) {
             if (!(e instanceof FileNotFoundException)) {
                 SimpleDialog.error(e) ;
@@ -95,7 +87,6 @@ public class StartupProperties extends Properties {
         try {
             setProfiles();
             setKeyStores();
-            savePrinterSetup();
             
 //            History history = new History(StartupProperties.SENDER_OPTIONS_DEST);
 //            history.write(this);
@@ -118,7 +109,7 @@ public class StartupProperties extends Properties {
     }
     
     public final static String getUserHomePath(boolean create) {
-        String wp = System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.2").concat(File.separator);
+        String wp = System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.1").concat(File.separator);
         
         if ((!(new File(wp).exists())) && (create)) {
             new File(wp).mkdir();
@@ -289,58 +280,6 @@ public class StartupProperties extends Properties {
         }
     }
     
-    public void savePrinterSetup() {
-        PageFormat pf = HFFormat.getInstance();
-        
-        StringVector sv = new StringVector();
-        sv.add(Double.toString(pf.getPaper().getImageableX()));
-        sv.add(Double.toString(pf.getPaper().getImageableY()));
-        sv.add(Double.toString(pf.getPaper().getImageableWidth()));
-        sv.add(Double.toString(pf.getPaper().getImageableHeight()));
-                
-        setProperty(PRINTER_PAGE_BORDER, sv.toString(','));
-        setProperty(PRINTER_PAGE_ORIENTATION, Integer.toString(pf.getOrientation()));
-        setProperty(PRINTER_PAGE_SIZE, Double.toString(pf.getWidth()) + "," + Double.toString(pf.getHeight()));
-    }
-    
-    public void readPrinterSetup() {
-        try {
-            if (containsKey(PRINTER_PAGE_ORIENTATION)) {
-                HFFormat.getInstance().setOrientation(Integer.parseInt(getProperty(PRINTER_PAGE_ORIENTATION)));
-            }                        
-            
-            if (containsKey(PRINTER_PAGE_SIZE)) {
-                StringVector sv = new StringVector(getProperty(PRINTER_PAGE_SIZE), ',');
-
-                PageFormat pf = HFFormat.getInstance();
-
-                Paper paper = pf.getPaper();
-                paper.setSize(
-                        Double.parseDouble(sv.get(0)),
-                        Double.parseDouble(sv.get(1)));
-                
-                pf.setPaper(paper);
-            }            
-
-            if (containsKey(PRINTER_PAGE_BORDER)) {
-                StringVector sv = new StringVector(getProperty(PRINTER_PAGE_BORDER), ',');
-
-                PageFormat pf = HFFormat.getInstance();
-
-                Paper paper = pf.getPaper();
-                paper.setImageableArea(
-                        Double.parseDouble(sv.get(0)),
-                        Double.parseDouble(sv.get(1)),
-                        Double.parseDouble(sv.get(2)),
-                        Double.parseDouble(sv.get(3)));  
-                
-                pf.setPaper(paper);
-            }            
-        } catch (Exception ex) {
-            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
-        }
-    }    
-    
     public Calendar getLastUpdateCheck() throws ParseException {
         Calendar c = Calendar.getInstance();
         c.setTime(new SimpleDateFormat("yyyy.MM.dd").parse(getProperty(AUTOUPDATE_LAST_CHECK, "1980.01.01")));
@@ -449,10 +388,6 @@ public class StartupProperties extends Properties {
     public final static String COLOR_NODE_TEXT          = "tree-node-text-color";
     public final static String COLOR_NODE_DESCRIPTION   = "tree-node-description-color";
     public final static String COLOR_NODE_TRUNCATE      = "tree-node-truncate-color";
-
-    public final static String PRINTER_PAGE_BORDER      = "printer-page-border";
-    public final static String PRINTER_PAGE_ORIENTATION = "printer-page-orientation";
-    public final static String PRINTER_PAGE_SIZE        = "printer-page-size";
     
     public final static String TREE_NODE_LENGTH         = "tree-node-length";
     public final static String TREE_VIEW_MODE           = "tree-view-mode";

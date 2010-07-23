@@ -49,9 +49,9 @@ public class ValidateMessageAction extends AbstractAction {
         
         d.setCursor(new Cursor(Cursor.WAIT_CURSOR));        
         try {
-            if (d.getModel() instanceof Hl7TreeModel) {
-                Hl7TreeModel model = (Hl7TreeModel)d.getModel();
-                Vector<Message> messages = model.getMessages();
+            if (d.getModel().getRoot() != null) {
+                Hl7TreeModel root = (Hl7TreeModel)d.getModel().getRoot();
+                Vector<Message> messages = root.getMessages();
 
                 for (int i = 0; i < messages.size(); i++ ) {
                     try {
@@ -59,13 +59,12 @@ public class ValidateMessageAction extends AbstractAction {
 
                         Validator val = new Validator(Profile.getDefault());
                         val.validate(msg);
-                    } catch (Exception ex) {
-                        Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+                    } catch (Exception ee) {
+                        Logger.getLogger(getClass()).error(ee.getMessage(), ee);
                     }
                 }
-                
-                model.fireTreeStructureChanged();                
-                //d.getTree().updateUI();
+
+                d.getTree().updateUI();
             }
         } finally {
             d.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));

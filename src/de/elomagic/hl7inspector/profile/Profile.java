@@ -32,14 +32,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import nanoxml.XMLElement;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
 
 /**
  *
  * @author rambow
  */
-@Root(name="hl7inspector-profile", strict=false)
 public class Profile {
     
     /** Creates a new instance of Profile */
@@ -240,44 +237,34 @@ public class Profile {
         }      
     }
     
-    @Element(name="description", required=false)
-    private String description = "";
     public String getDescription() { return description; }    
     public void setDescription(String description) { this.description = description; }
     
-    @Element(name="name", required=false)
-    private String name = "";
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }    
     
-    @Element(name="schema-version", required=false)
-    private String schemaVersion = "";    
     public String getSchemaVersion() { return schemaVersion; }
     public void setSchemaVersion(String schemaVersion) { this.schemaVersion = schemaVersion; }    
     
-    private SegmentList         segList = new SegmentList();
-    public SegmentList getSegmentList() { return segList; }
-    public void setSegmentList(SegmentList value) { segList = value; }
+    public SegmentList          getSegmentList() { return segList; }
+    public DataElementList      getDataElementList() { return dataElementList; }
+    public DataTypeItemList     getDataTypeList() { return dataTypeList; }
+    public TableItemList        getTableItemList() { return tableItemList; }
+    public ValidateMapper       getValidateMapper() { return validate; }
     
+    public void   setDataElementList(DataElementList value) { dataElementList = value; }
+    public void   setDataTypeList(DataTypeItemList value)       { dataTypeList = value; }
+    public void   setSegmentList(SegmentList value)         { segList = value; }
+    public void   setTableItemList(TableItemList value)     { tableItemList = value; }  
+    
+    private SegmentList         segList         = new SegmentList();
     private DataElementList     dataElementList = new DataElementList();
-    public DataElementList getDataElementList() { return dataElementList; }
-    public void setDataElementList(DataElementList value) { dataElementList = value; }
-    
-    private DataTypeItemList    dataTypeList = new DataTypeItemList();
-    public DataTypeItemList getDataTypeList() { return dataTypeList; }
-    public void setDataTypeList(DataTypeItemList value) { dataTypeList = value; }
-    
-    private TableItemList       tableItemList = new TableItemList();
-    public TableItemList getTableItemList() { return tableItemList; }
-    public void setTableItemList(TableItemList value) { tableItemList = value; }  
-    
-    private ValidateMapper      validate = new ValidateMapper();
-    public ValidateMapper getValidateMapper() { return validate; }
-    
-    
-    
-    
-    
+    private DataTypeItemList    dataTypeList    = new DataTypeItemList();
+    private TableItemList       tableItemList   = new TableItemList();
+    private ValidateMapper      validate        = new ValidateMapper();
+    private String              description     = "";
+    private String              name            = "";
+    private String              schemaVersion   = "";    
     
     public StringVector validate() {
         StringVector result = new StringVector();

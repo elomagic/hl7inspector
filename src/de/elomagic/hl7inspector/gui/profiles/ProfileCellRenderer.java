@@ -43,10 +43,10 @@ public class ProfileCellRenderer extends DefaultListCellRenderer implements List
             setToolTipText("Profile " + file.toString() + " not found!");
         } else if(file.toString().equals(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, ""))) {
             setIcon(ResourceLoader.loadImageIcon("ok.png"));
-            setToolTipText("Source: ".concat(file.toString()));
+            setToolTipText("");
         } else {
             setIcon(ResourceLoader.loadImageIcon("clear.png"));
-            setToolTipText("Source: ".concat(file.toString()));
+            setToolTipText("");
         }
         
         setText((file.getDescription().length()==0)?file.toString():file.getDescription());
