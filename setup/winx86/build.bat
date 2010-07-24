@@ -14,13 +14,15 @@ IF "%APP_VERSION%"=="" (
 	ECHO Unable to determine version of HL7 Inspector
 	ECHO.
 	PAUSE
-	EXIT /B
+    EXIT /B
 )
 
 TITLE Build HL7 Inspector Setup Version %APP_VERSION%
 ECHO Prepare build process
 ECHO.
+RMDIR /S /Q dist
 MKDIR dist
+RMDIR /S /Q src
 MKDIR src
 XCOPY ..\src\*.* .\src /E /R /Y
 COPY ..\application.ico .\src 
