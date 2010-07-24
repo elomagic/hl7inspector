@@ -1,31 +1,34 @@
 <launch4jConfig>
   <dontWrapJar>false</dontWrapJar>
-  <headerType>0</headerType>
-  <jar>C:\projects\java\hl7inspector-trunk\dist\hl7inspector.jar</jar>
-  <outfile>C:\projects\java\hl7inspector-trunk\dist\hl7inspector-setup.exe</outfile>
+  <headerType>gui</headerType>
+  <jar>C:\projects\java\hl7inspector\trunk\setup\winx86\src\hl7inspector.jar</jar>
+  <outfile>C:\projects\java\hl7inspector\trunk\setup\winx86\src\hl7inspector.exe</outfile>
   <errTitle></errTitle>
-  <jarArgs></jarArgs>
+  <cmdLine></cmdLine>
   <chdir></chdir>
-  <customProcName>false</customProcName>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <customProcName>true</customProcName>
   <stayAlive>false</stayAlive>
-  <icon>C:\projects\java\hl7inspector-trunk\application-setup.ico</icon>
+  <manifest></manifest>
+  <icon>C:\projects\java\hl7inspector\trunk\setup\application.ico</icon>
   <jre>
     <path></path>
-    <minVersion>1.5.0</minVersion>
+    <minVersion>1.6.0</minVersion>
     <maxVersion></maxVersion>
-    <initialHeapSize>0</initialHeapSize>
-    <maxHeapSize>0</maxHeapSize>
-    <args>-Djava.net.useSystemProxies=true</args>
+    <jdkPreference>preferJre</jdkPreference>
+    <opt>-Djava.net.useSystemProxies=true</opt>
   </jre>
   <versionInfo>
-    <fileVersion>2.1.0.0</fileVersion>
+    <fileVersion>2.1.2.0</fileVersion>
     <txtFileVersion>2.1</txtFileVersion>
     <fileDescription>Hl7 Inspector 2 Setup</fileDescription>
     <copyright>elomagic</copyright>
     <productVersion>2.1.0.0</productVersion>
     <txtProductVersion>2.1</txtProductVersion>
     <productName>Hl7 Inspector 2.1 Setup</productName>
-    <companyName>elomagic.de</companyName>
+    <companyName>elomagic</companyName>
     <internalName>hl7inspector setup</internalName>
     <originalFilename>hl7inspector-setup.exe</originalFilename>
   </versionInfo>
