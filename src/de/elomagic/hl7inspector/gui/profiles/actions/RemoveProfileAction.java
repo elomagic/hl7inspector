@@ -30,25 +30,27 @@ import javax.swing.JList;
  * @author rambow
  */
 public class RemoveProfileAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public RemoveProfileAction(JList _list) {
-	super("Remove", ResourceLoader.loadImageIcon("edit_remove.png"));
-	
-	list = _list;
-	
-	putValue(SHORT_DESCRIPTION, "Remove selected profile");
-	putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        super("Remove", ResourceLoader.loadImageIcon("edit_remove.png"));
+
+        list = _list;
+
+        putValue(SHORT_DESCRIPTION, "Remove selected profile");
+        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-	if (list.getSelectedValue() != null) {
-	    if (SimpleDialog.confirmYesNo("Are you sure?") == 0) {
-		((VectorListModel)list.getModel()).remove((ProfileFile)list.getSelectedValue());
-	    }
-	} else {
-	    SimpleDialog.error("No profile selected!");
-	}
+        if (list.getSelectedValue() != null) {
+            if (SimpleDialog.confirmYesNo("Are you sure?") == 0) {
+                ((VectorListModel) list.getModel()).remove((ProfileFile) list.getSelectedValue());
+            }
+        } else {
+            SimpleDialog.error("No profile selected!");
+        }
     }
-    
+
     private JList list;
 }

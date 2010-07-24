@@ -14,44 +14,45 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.framing;
 
 import com.l2fprod.common.swing.BaseDialog;
 import de.elomagic.hl7inspector.gui.Desktop;
-//import de.elomagic.hl7inspector.gui.SimpleOkCancelButtonPanel;
 import de.elomagic.hl7inspector.gui.ToolKit;
 import de.elomagic.hl7inspector.io.Frame;
 import java.awt.BorderLayout;
-//import javax.swing.JDialog;
 
 /**
  *
  * @author rambow
  */
 public class FramingSetupDialog extends BaseDialog {
-    
+
     /** Creates a new instance of FramingSetupDialog */
     public FramingSetupDialog() {
         super(Desktop.getInstance(), "Message Framing Setup Dialog", true);
-    
-        init();        
-    }
-    
-    public Frame getMessageFrame() { return fp.getMessageFrame(); }
-    
-    public void setMessageFrame(Frame value) { fp.setMessageFrame(value); }
 
-    private void init() {        
+        init();
+    }
+
+    public Frame getMessageFrame() {
+        return fp.getMessageFrame();
+    }
+
+    public void setMessageFrame(Frame value) {
+        fp.setMessageFrame(value);
+    }
+
+    private void init() {
         getBanner().setTitle("Setup framing of messages");
 
         getContentPane().add(fp, BorderLayout.CENTER);
-       
-        pack();  
-         
+
+        pack();
+
         setSize(getPreferredSize());
         setBounds(ToolKit.centerFrame(this, this.getOwner()));
     }
-    
+
     private FramingPane fp = new FramingPane();
 }

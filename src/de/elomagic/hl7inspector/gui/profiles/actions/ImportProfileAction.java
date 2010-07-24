@@ -26,7 +26,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.FileReader;
 import java.io.LineNumberReader;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.AbstractAction;
 import javax.swing.JTable;
 import org.apache.log4j.Logger;
@@ -48,13 +48,14 @@ public class ImportProfileAction extends AbstractAction {
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             ProfileModel model = (ProfileModel)((SortedTableModel)table.getModel()).getTableModel();
             
             FileImportDialog dlg = new FileImportDialog(model);
             if (dlg.ask()) {
-                Vector<String> mapList = dlg.getMappingList();                
+                ArrayList<String> mapList = dlg.getMappingList();
                 
                 model.lock();
                 try {

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.file.filters;
 
 /**
@@ -22,36 +21,43 @@ package de.elomagic.hl7inspector.file.filters;
  * @author rambow
  */
 public class KeyStoreFileFilter extends javax.swing.filechooser.FileFilter implements java.io.FileFilter {
-    
+
     /** Creates a new instance of HIPFileFilter */
-    public KeyStoreFileFilter() { super(); }
+    public KeyStoreFileFilter() {
+        super();
+    }
 
     /**
      * Whether the given file is accepted by this filter.
      */
+    @Override
     public boolean accept(java.io.File f) {
         boolean r = f.isDirectory();
-        
+
         try {
-            if (!r) {           
+            if (!r) {
                 String ap = f.getAbsolutePath();
 
-                int i =  ap.lastIndexOf(".");
+                int i = ap.lastIndexOf(".");
 
                 if (i != -1) {
-                    r = r || ap.substring(i+1).equalsIgnoreCase("pem");
+                    r = r || ap.substring(i + 1).equalsIgnoreCase("pem");
                 }
-            }            
+            }
         } catch (Exception e) {
             r = false;
         }
-        
-        return r;        
+
+        return r;
     }
 
     /**
      * The description of this filter. For example: "JPG and GIF Images"
      * @see FileView#getName
      */
-    public String getDescription() { return "Keystore files"; }
+    @Override
+    public String getDescription() {
+        return "Keystore files";
+    }
+
 }

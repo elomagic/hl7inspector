@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.hl7.model;
 
 /**
@@ -22,20 +21,39 @@ package de.elomagic.hl7inspector.hl7.model;
  * @author rambow
  */
 public class EncodingObject extends RepetitionField {
-    
+
     /** Creates a new instance of Subcomponent */
-    public EncodingObject() { }
-    
-    public void parse(String text) { value = text; }
-    
-    public String toString() { return value; }
-        
-    public char getSubDelimiter() { return (char)0; }
-    
-    public Hl7Object getNewClientInstance() { return null; }
-    public Class getChildClass() { return null; }
-    
-    private  String value = "^~\\&";
-    
-    protected boolean isNULL() { return value.length() == 0; }
+    public EncodingObject() {
+    }
+
+    @Override
+    public void parse(String text) {
+        value = text;
+    }
+
+    @Override
+    public String toString() {
+        return value;
+    }
+
+    @Override
+    public char getSubDelimiter() {
+        return (char) 0;
+    }
+
+    public Hl7Object getNewClientInstance() {
+        return null;
+    }
+
+    @Override
+    public Class getChildClass() {
+        return null;
+    }
+
+    private String value = "^~\\&";
+    @Override
+    protected boolean isNULL() {
+        return value.length() == 0;
+    }
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import java.text.DateFormat;
@@ -28,22 +27,22 @@ import java.util.zip.ZipFile;
  * @author rambow
  */
 public class ZipEntryModel extends VectorTableModel {
-    
+
     /** Creates a new instance of ZipEntryModel */
     public ZipEntryModel(ZipFile file) {
         super();
-        
+
         Enumeration enu = file.entries();
         while (enu.hasMoreElements()) {
-            ZipEntry entry = (ZipEntry)(enu.nextElement());            
-            if (entry.getSize() != 0) {            
+            ZipEntry entry = (ZipEntry) (enu.nextElement());
+            if (entry.getSize() != 0) {
                 addRow(entry);
             }
         }
     }
-    
+
     public ZipEntry getEntry(int rowIndex) {
-        return (ZipEntry)(table.get(rowIndex));
+        return (ZipEntry) (table.get(rowIndex));
     }
 
     /**
@@ -55,27 +54,33 @@ public class ZipEntryModel extends VectorTableModel {
      * @param columnIndex 	the column whose value is to be queried
      * @return the value Object at the specified cell
      */
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         ZipEntry entry = getEntry(rowIndex);
-        
+
         Object o;
-        
+
         switch (columnIndex) {
             case 0: {
-                int i = (entry.getName().lastIndexOf("/") != -1)?entry.getName().lastIndexOf("/"):entry.getName().lastIndexOf("\\");                
-                o = (i == -1)?entry.getName():entry.getName().substring(i+1);
+                int i = (entry.getName().lastIndexOf("/") != -1) ? entry.getName().lastIndexOf("/") : entry.getName().lastIndexOf("\\");
+                o = (i == -1) ? entry.getName() : entry.getName().substring(i + 1);
                 break;
             }
-            case 1: o = new Long(entry.getSize()); break;
-            case 2: o = DateFormat.getDateTimeInstance().format(new Date(entry.getTime())); break;
-            case 3: {
-                int i = (entry.getName().lastIndexOf("/") != -1)?entry.getName().lastIndexOf("/"):entry.getName().lastIndexOf("\\");                
-                o = (i == -1)?"":entry.getName().substring(0, i); 
+            case 1:
+                o = new Long(entry.getSize());
                 break;
-            }                
-            default: o = "";
+            case 2:
+                o = DateFormat.getDateTimeInstance().format(new Date(entry.getTime()));
+                break;
+            case 3: {
+                int i = (entry.getName().lastIndexOf("/") != -1) ? entry.getName().lastIndexOf("/") : entry.getName().lastIndexOf("\\");
+                o = (i == -1) ? "" : entry.getName().substring(0, i);
+                break;
+            }
+            default:
+                o = "";
         }
-        
+
         return o;
     }
 
@@ -88,7 +93,10 @@ public class ZipEntryModel extends VectorTableModel {
      * @return the number of columns in the model
      * @see #getRowCount
      */
-    public int getColumnCount() { return 4; }
+    @Override
+    public int getColumnCount() {
+        return 4;
+    }
 
     /**
      *  Returns a default name for the column using spreadsheet conventions:
@@ -99,31 +107,52 @@ public class ZipEntryModel extends VectorTableModel {
      * @param column  the column being queried
      * @return a string containing the default name of <code>column</code>
      */
+    @Override
     public String getColumnName(int column) {
         String o;
-        
+
         switch (column) {
-            case 0: o = "Name"; break;
-            case 1: o = "Size (bytes)"; break;
-            case 2: o = "Date/Time"; break;
-            case 3: o = "Folder"; break;
-            default: o = "";
+            case 0:
+                o = "Name";
+                break;
+            case 1:
+                o = "Size (bytes)";
+                break;
+            case 2:
+                o = "Date/Time";
+                break;
+            case 3:
+                o = "Folder";
+                break;
+            default:
+                o = "";
         }
-        
+
         return o;
     }
-    
+
+    @Override
     public Class<?> getColumnClass(int columnIndex) {
         Class c;
-        
+
         switch (columnIndex) {
-            case 0: c = String.class; break;
-            case 1: c = Long.class; break;
-            case 2: c = String.class; break;
-            case 3: c = String.class; break;
-            default: c = null;
+            case 0:
+                c = String.class;
+                break;
+            case 1:
+                c = Long.class;
+                break;
+            case 2:
+                c = String.class;
+                break;
+            case 3:
+                c = String.class;
+                break;
+            default:
+                c = null;
         }
-        
+
         return c;
     }
+
 }

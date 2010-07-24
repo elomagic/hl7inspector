@@ -14,13 +14,12 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
-import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JTabbedPane;
 import javax.swing.plaf.TabbedPaneUI;
 
@@ -29,35 +28,38 @@ import javax.swing.plaf.TabbedPaneUI;
  * @author rambow
  */
 public class ExtendedTabbedPane extends JTabbedPane {
-    
+
     /** Creates a new instance of ExtendedTabbedPane */
     public ExtendedTabbedPane() {
         super.setUI(ui);
     }
-    
+
     /**
      * Override JTabbedPane method. Does nothing.
      */
+    @Override
     public void setUI(TabbedPaneUI ui) {
         //ui.setUI(ui);
     }
-    
-    
-    Vector<ActionListener> actionListener = new Vector<ActionListener>();
-    
-    public synchronized void addCloseListener(ActionListener listener) { actionListener.add(listener); }
-    
-    public synchronized void removeCloseListener(ActionListener listener) { actionListener.remove(listener); }
-    
+
+    private List<ActionListener> actionListener = new ArrayList<ActionListener>();
+    public synchronized void addCloseListener(ActionListener listener) {
+        actionListener.add(listener);
+    }
+
+    public synchronized void removeCloseListener(ActionListener listener) {
+        actionListener.remove(listener);
+    }
+
     public void fireCloseTabEvent() {
-        ActionEvent event = new ActionEvent(this, 0, "");;
-        
+        ActionEvent event = new ActionEvent(this, 0, "");
+
         for (int i = 0; i < actionListener.size(); i++) {
             actionListener.get(i).actionPerformed(event);
         }
 
-        setVisible(false);        
+        setVisible(false);
     }
-    
-    private ExtendedTabbedPaneUI ui = new ExtendedTabbedPaneUI();
+
+    //private ExtendedTabbedPaneUI ui = new ExtendedTabbedPaneUI();
 }

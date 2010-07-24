@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 import de.elomagic.hl7inspector.hl7.model.Message;
@@ -25,24 +24,27 @@ import java.net.Socket;
  * @author rambow
  */
 public class SendMessageEvent {
-  
-  /** Creates a new instance of MessageImportEvent */
-  public SendMessageEvent(SendThread _source, Socket _socket, Message _message) {
-    source = _source; 
-    socket = _socket;
-    message = _message;
-  }
-  
-  private Message       message;
-  private SendThread    source;  
-  private Socket        socket;
 
-  public Message getMessage() {
-    return message;
-  }
+    /** Creates a new instance of MessageImportEvent */
+    public SendMessageEvent(SendThread _source, Socket _socket, Message _message) {
+        source = _source;
+        socket = _socket;
+        message = _message;
+    }
 
-  public SendThread getSource() { return source; }
-  
-  public Socket getSocket() { return socket; }
+    private Message message;
+    public Message getMessage() {
+        return message;
+    }
+
+    private SendThread source;
+    public SendThread getSource() {
+        return source;
+    }
+
+    private Socket socket;
+    public Socket getSocket() {
+        return socket;
+    }
 
 }

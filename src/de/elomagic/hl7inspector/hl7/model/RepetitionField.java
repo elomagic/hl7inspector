@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.hl7.model;
 
 /**
@@ -22,12 +21,19 @@ package de.elomagic.hl7inspector.hl7.model;
  * @author rambow
  */
 public class RepetitionField extends Hl7Object {
-    
+
     /** Creates a new instance of RepetitionField */
-    public RepetitionField() { }
-    
-    public char getSubDelimiter() { return Delimiters.DEFAULT_REPETITION; }
-    
-    public Class getChildClass() { return Field.class; }
-    
+    public RepetitionField() {
+    }
+
+    @Override
+    public char getSubDelimiter() {
+        return Delimiters.DEFAULT_REPETITION;
+    }
+
+    @Override
+    public Class getChildClass() {
+        return Field.class;
+    }
+
 }

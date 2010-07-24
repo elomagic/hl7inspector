@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.input;
 
 import javax.swing.JComboBox;
@@ -25,13 +24,16 @@ import javax.swing.table.TableCellRenderer;
  * @author rambow
  */
 public class MapFieldCellRenderer extends JComboBox implements TableCellRenderer {
-    
+
     /** Creates a new instance of ImportTableCellRenderer */
-    public MapFieldCellRenderer() { }
-    
+    public MapFieldCellRenderer() {
+    }
+
+    @Override
     public java.awt.Component getTableCellRendererComponent(javax.swing.JTable jTable, Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
         getModel().setSelectedItem(obj.toString());
-        
+
         return this;
-    }    
+    }
+
 }

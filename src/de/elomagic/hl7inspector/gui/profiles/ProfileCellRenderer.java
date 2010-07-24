@@ -30,29 +30,32 @@ import javax.swing.ListCellRenderer;
  * @author rambow
  */
 public class ProfileCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
-    
+
     /** Creates a new instance of ProfileCellRenderer */
-    public ProfileCellRenderer() { }
-    
+    public ProfileCellRenderer() {
+    }
+
+    @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        ProfileFile file = (ProfileFile)value;
-        
+        ProfileFile file = (ProfileFile) value;
+
         setToolTipText("File: " + file.toString());
         if (!file.exists()) {
             setIcon(ResourceLoader.loadImageIcon("warning.png"));
             setToolTipText("Profile " + file.toString() + " not found!");
-        } else if(file.toString().equals(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, ""))) {
+        } else if (file.toString().equals(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, ""))) {
             setIcon(ResourceLoader.loadImageIcon("ok.png"));
             setToolTipText("");
         } else {
             setIcon(ResourceLoader.loadImageIcon("clear.png"));
             setToolTipText("");
         }
-        
-        setText((file.getDescription().length()==0)?file.toString():file.getDescription());
+
+        setText((file.getDescription().length() == 0) ? file.toString() : file.getDescription());
         setBackground(isSelected ? SystemColor.textHighlight : SystemColor.text);
         setForeground(isSelected ? SystemColor.textHighlightText : SystemColor.textText);
-        
+
         return this;
     }
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.receive;
 
 import de.elomagic.hl7inspector.gui.monitor.TraceMonitorDialog;
@@ -25,16 +24,20 @@ import java.awt.BorderLayout;
  * @author rambow
  */
 public class ReceiveMessageWindow extends TraceMonitorDialog {
-    
+
     /** Creates a new instance of ToolBar */
     private ReceiveMessageWindow() {
-        super("Receive Message Dialog");        
+        super("Receive Message Dialog");
     }
-    
+
+    @Override
     protected void init() {
-        add(new ReceivePanel(), BorderLayout.CENTER);        
+        add(new ReceivePanel(), BorderLayout.CENTER);
     }
-    
-    public final static ReceiveMessageWindow getInstance() { return instance; }     
-    protected final static ReceiveMessageWindow instance = new ReceiveMessageWindow();  
+
+    public static ReceiveMessageWindow getInstance() {
+        return instance;
+    }
+
+    protected final static ReceiveMessageWindow instance = new ReceiveMessageWindow();
 }

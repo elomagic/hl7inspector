@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import java.awt.Cursor;
@@ -39,9 +38,9 @@ public class LinkLabel extends JLabel implements MouseListener {
         if (text.indexOf("<html>") == -1) {
             text = "<html><u><font color=blue>" + text + "</font></u></html>";
         }
-        
-        setText(text);       
-        
+
+        setText(text);
+
         this.uri = new URI(uri);
 
         setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -50,8 +49,8 @@ public class LinkLabel extends JLabel implements MouseListener {
         addMouseListener(this);
 
     }
-    private URI uri;
 
+    private URI uri;
     public void mouseClicked(MouseEvent e) {
         try {
             if (uri.toString().indexOf('@') == -1) {
@@ -64,15 +63,20 @@ public class LinkLabel extends JLabel implements MouseListener {
         }
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
     }
+
 }

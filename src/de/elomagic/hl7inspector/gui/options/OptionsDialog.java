@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.options;
 
 import de.elomagic.hl7inspector.gui.Desktop;
@@ -26,20 +25,24 @@ import de.elomagic.hl7inspector.gui.ToolKit;
  * @author rambow
  */
 public class OptionsDialog extends PanelDialog {
-    
+
     /** Creates a new instance of OptionsDialog */
-    public OptionsDialog() { super(Desktop.getInstance(), "Options", true); }
-    
+    public OptionsDialog() {
+        super(Desktop.getInstance(), "Options", true);
+    }
+
+    @Override
     protected void init() {
         getPanelList().add(new GeneralOptionPanel(this));
         getPanelList().add(new TreeViewPanel(this));
         getPanelList().add(new ExternalToolsPanel(this));
         // FEATURE Font setup panel missing
         //getPanelList().add(new FontsColorOptionPanel(this));
-        
+
         super.init();
-        
-        setSize(600, 500);        
-        setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));       
+
+        setSize(600, 500);
+        setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));
     }
+
 }

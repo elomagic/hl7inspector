@@ -14,29 +14,22 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.security;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import javax.security.cert.CertificateException;
 
 /**
  *
  * @author rambow
  */
 public class KeyStoreUtil {
-    
+
     /** Creates a new instance of KeyStoreUtil */
 //    public KeyStoreUtil() {
 //    }
-  
-    public final static KeyStore loadPublicKeyStore(File file) throws Exception {
+    public static KeyStore loadPublicKeyStore(File file) throws Exception {
         String publicPath = file.getPath() + "/trusted/publicstore";
         KeyStore result = KeyStore.getInstance("JKS");
         FileInputStream fin = new FileInputStream(publicPath);
@@ -45,11 +38,11 @@ public class KeyStoreUtil {
         } finally {
             fin.close();
         }
-        
+
         return result;
     }
-    
-    public final static KeyStore loadPrivateKeyStore(File file, String password) throws Exception {       
+
+    public static KeyStore loadPrivateKeyStore(File file, String password) throws Exception {
         String publicPath = file.getPath();
         KeyStore result = KeyStore.getInstance("JKS");
         FileInputStream fin = new FileInputStream(file);
@@ -58,7 +51,8 @@ public class KeyStoreUtil {
         } finally {
             fin.close();
         }
-        
+
         return result;
-    }    
+    }
+
 }

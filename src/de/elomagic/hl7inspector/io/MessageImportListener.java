@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 /**
@@ -22,7 +21,11 @@ package de.elomagic.hl7inspector.io;
  * @author rambow
  */
 public interface MessageImportListener {
-  public void messageRead(MessageImportEvent event);
-  public void importDone(MessageImportEvent event);  
-  public void charRead(char c);
+
+    public void messageRead(MessageImportEvent event);
+
+    public void importDone(MessageImportEvent event);
+
+    public void charRead(char c);
+
 }

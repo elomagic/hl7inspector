@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2010 Carsten Rambow
  * 
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.hl7.model;
 
 /**
@@ -22,27 +21,42 @@ package de.elomagic.hl7inspector.hl7.model;
  * @author rambow
  */
 public class Delimiters {
-    
+
     /** Creates a new instance of Delimiters */
     public Delimiters(String value) {
-        fieldDelimiter        = value.charAt(0);
-        componentDelimiter    = value.charAt(1);
-        repetitionDelimiter   = value.charAt(2);
-        escapeCharacter       = value.charAt(3);
+        fieldDelimiter = value.charAt(0);
+        componentDelimiter = value.charAt(1);
+        repetitionDelimiter = value.charAt(2);
+        escapeCharacter = value.charAt(3);
         subcomponentDelimiter = value.charAt(4);
     }
-    
-    public Delimiters() { }
-    
-    public final static char DEFAULT_REPETITION      = '~';
-    public final static char DEFAULT_FIELD           = '|';
-    public final static char DEFAULT_COMPONENT       = '^';
-    public final static char DEFAULT_ESCAPE_CHAR     = '\\';
-    public final static char DEFAULT_SUPCOMPONENT    = '&';    
-    
-    public char repetitionDelimiter   = '~';
-    public char fieldDelimiter        = '|';
-    public char componentDelimiter    = '^';
-    public char escapeCharacter       = '\\';
+
+    public Delimiters() {
+    }
+
+    public final static char DEFAULT_REPETITION = '~';
+
+    public final static char DEFAULT_FIELD = '|';
+
+    public final static char DEFAULT_COMPONENT = '^';
+
+    public final static char DEFAULT_ESCAPE_CHAR = '\\';
+
+    public final static char DEFAULT_SUPCOMPONENT = '&';
+
+    public char repetitionDelimiter = '~';
+
+    public char fieldDelimiter = '|';
+
+    public char componentDelimiter = '^';
+
+    public char escapeCharacter = '\\';
+
     public char subcomponentDelimiter = '&';
+    @Override
+    public String toString() {
+        return "" + fieldDelimiter + componentDelimiter + repetitionDelimiter + escapeCharacter + subcomponentDelimiter;
+    }
+
+
 }

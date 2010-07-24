@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 import de.elomagic.hl7inspector.hl7.model.Message;
@@ -24,23 +23,27 @@ import de.elomagic.hl7inspector.hl7.model.Message;
  * @author rambow
  */
 public class MessageImportEvent {
-  
-  /** Creates a new instance of MessageImportEvent */
-  public MessageImportEvent(MessageImportThread _source, Message _message, long _bytesRead) {
-    source = _source; 
-    message = _message;
-    bytesRead = _bytesRead;
-  }
-  
-  private Message             message;
-  private MessageImportThread source;  
-  private long                bytesRead;
 
-  public Message getMessage() {
-    return message;
-  }
+    /** Creates a new instance of MessageImportEvent */
+    public MessageImportEvent(MessageImportThread _source, Message _message, long _bytesRead) {
+        source = _source;
+        message = _message;
+        bytesRead = _bytesRead;
+    }
 
-  public MessageImportThread getSource() { return source; }
-  
-  public long getBytesRead() { return bytesRead; }
+    private Message message;
+    public Message getMessage() {
+        return message;
+    }
+
+    private MessageImportThread source;
+    public MessageImportThread getSource() {
+        return source;
+    }
+
+    private long bytesRead;
+    public long getBytesRead() {
+        return bytesRead;
+    }
+
 }

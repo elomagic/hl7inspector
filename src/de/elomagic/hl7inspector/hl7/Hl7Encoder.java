@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.hl7;
 
 import de.elomagic.hl7inspector.hl7.model.Delimiters;
@@ -24,16 +23,17 @@ import de.elomagic.hl7inspector.hl7.model.Delimiters;
  * @author rambow
  */
 public class Hl7Encoder {
-    
+
     /** Creates a new instance of Hl7Encoder */
-    public Hl7Encoder(Delimiters delimiters) { d = delimiters; }
-    
+    public Hl7Encoder(Delimiters delimiters) {
+        d = delimiters;
+    }
+
     private Delimiters d;
-    
     public String encodeString(String value) {
-        StringBuffer sb = new StringBuffer();
-        
-        for (int i=0; i<value.length(); i++) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
             if (c == d.componentDelimiter) {
                 sb.append(d.escapeCharacter);
@@ -46,7 +46,7 @@ public class Hl7Encoder {
             } else if (c == d.fieldDelimiter) {
                 sb.append(d.escapeCharacter);
                 sb.append('F');
-                sb.append(d.escapeCharacter);                
+                sb.append(d.escapeCharacter);
             } else if (c == d.repetitionDelimiter) {
                 sb.append(d.escapeCharacter);
                 sb.append('R');
@@ -54,26 +54,27 @@ public class Hl7Encoder {
             } else if (c == d.subcomponentDelimiter) {
                 sb.append(d.escapeCharacter);
                 sb.append('T');
-                sb.append(d.escapeCharacter);                
+                sb.append(d.escapeCharacter);
             } else if (c == 13) {
                 sb.append(".br");
             } else if (c < 32) {
                 String v = Integer.toHexString(c);
-                if ((v.length()| 2) != 0) {
+                if ((v.length() | 2) != 0) {
                     v = "0".concat(v);
                 }
-                
+
                 sb.append(d.escapeCharacter);
                 sb.append('X');
                 sb.append(v);
-                sb.append(d.escapeCharacter);                                                
+                sb.append(d.escapeCharacter);
 //            } else if (c > 63) {
 //            } else if (c > 255) {                
             } else {
                 sb.append(c);
-            }            
+            }
         }
-        
+
         return sb.toString();
     }
+
 }

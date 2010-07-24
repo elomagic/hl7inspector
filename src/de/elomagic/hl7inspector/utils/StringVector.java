@@ -14,86 +14,93 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.utils;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Vector;
 
 /**
  *
  * @author rambow
  */
-public class StringVector extends Vector<String> {
-    
+public class StringVector extends ArrayList<String> {
+
     /** Creates a new instance of StringVector */
-    public StringVector() { }
-    
-    public StringVector(Enumeration enu) { 
+    public StringVector() {
+    }
+
+    public StringVector(Enumeration enu) {
         while (enu.hasMoreElements()) {
-            add(enu.nextElement().toString());            
-        }    
-    }    
-    
-    public StringVector(String text) { parse(text); }
-    
+            add(enu.nextElement().toString());
+        }
+    }
+
+    public StringVector(String text) {
+        parse(text);
+    }
+
     public StringVector(String text, char seperatorChar) {
         sep = seperatorChar;
         parse(text);
     }
-    
+
     public StringVector(String text, char seperatorChar, char stringEncodingChar) {
         sep = seperatorChar;
         enc = stringEncodingChar;
         parse(text);
     }
-    
-    public void parse(String text) {
+
+    public final void parse(String text) {
         clear();
-        
+
         String item = "";
-        
+
         boolean ignore = false;
-        
+
         int i = 0;
         while (i < text.length()) {
             char c = text.charAt(i);
-            
+
             if (c == sep && !ignore) {
                 add(item);
                 item = "";
             } else {
                 if (c == '"') {
                     ignore = !ignore;
-                } else
+                } else {
                     item = item + c;
+                }
             }
             i++;
         }
-        
+
         if (item.length() != 0) {
             add(item);
         }
     }
-    
-    public String toString() { return toString(sep); }
-    
+
+    @Override
+    public String toString() {
+        return toString(sep);
+    }
+
     public String toString(char seperatorChar) {
-        StringBuffer sb = new StringBuffer();
-        
-        for (int i=0; i<size(); i++) {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < size(); i++) {
             sb.append(get(i));
             sb.append(seperatorChar);
         }
-        
-        
+
+
         if (sb.length() != 0) {
-            sb.deleteCharAt(sb.length()-1);            
-        }        
-        
+            sb.deleteCharAt(sb.length() - 1);
+        }
+
         return sb.toString().trim();
     }
-    
+
     private char sep = ',';
+
     private char enc = '"';
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 /**
@@ -22,6 +21,9 @@ package de.elomagic.hl7inspector.io;
  * @author rambow
  */
 public interface IOCharListener {
+
     public void charReceived(Object source, char c);
-    public void charSend(Object source, char c);        
+
+    public void charSend(Object source, char c);
+
 }

@@ -26,7 +26,7 @@ import de.elomagic.hl7inspector.validate.Validator;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.Vector;
+import java.util.List;
 import javax.swing.AbstractAction;
 import org.apache.log4j.Logger;
 
@@ -44,6 +44,7 @@ public class ValidateMessageAction extends AbstractAction {
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {    
         Desktop d = Desktop.getInstance();
         
@@ -51,7 +52,7 @@ public class ValidateMessageAction extends AbstractAction {
         try {
             if (d.getModel().getRoot() != null) {
                 Hl7TreeModel root = (Hl7TreeModel)d.getModel().getRoot();
-                Vector<Message> messages = root.getMessages();
+                List<Message> messages = root.getMessages();
 
                 for (int i = 0; i < messages.size(); i++ ) {
                     try {

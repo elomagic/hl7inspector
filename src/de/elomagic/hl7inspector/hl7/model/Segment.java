@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.hl7.model;
 
 /**
@@ -22,11 +21,19 @@ package de.elomagic.hl7inspector.hl7.model;
  * @author rambow
  */
 public class Segment extends Hl7Object {
-    
+
     /** Creates a new instance of Segment */
-    public Segment() { }
-    
-    public char getSubDelimiter() { return Delimiters.DEFAULT_FIELD; }
-    
-    public Class getChildClass() { return RepetitionField.class; }    
+    public Segment() {
+    }
+
+    @Override
+    public char getSubDelimiter() {
+        return Delimiters.DEFAULT_FIELD;
+    }
+
+    @Override
+    public Class getChildClass() {
+        return RepetitionField.class;
+    }
+
 }

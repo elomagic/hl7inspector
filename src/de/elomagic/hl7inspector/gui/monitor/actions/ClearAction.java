@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.monitor.actions;
 
 import de.elomagic.hl7inspector.gui.SimpleDialog;
@@ -29,22 +28,23 @@ import javax.swing.AbstractAction;
  * @author rambow
  */
 public class ClearAction extends AbstractAction {
-    
+
     /** Creates a new instance of FileNewAction */
     public ClearAction(CharacterMonitor d) {
         super("", ResourceLoader.loadImageIcon("edit-clear.png"));//icon);
-        
+
         dlg = d;
-        
+
         putValue(SHORT_DESCRIPTION, "Clear trace log");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (SimpleDialog.confirmYesNo("Clear trace log?") == 0) {
             dlg.clear();
         }
     }
-    
-    private CharacterMonitor dlg;    
+
+    private CharacterMonitor dlg;
 }

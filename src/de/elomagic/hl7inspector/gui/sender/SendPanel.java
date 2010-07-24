@@ -22,7 +22,6 @@ import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.io.SendOptionsBean;
 import de.elomagic.hl7inspector.io.SendThread;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -90,9 +89,10 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
         thread = t;
     }    
   
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("START")) {
-            if (Desktop.getInstance().getTree().getSelectedMessages().size() == 0) {
+            if (Desktop.getInstance().getTree().getSelectedMessages().isEmpty()) {
                 SimpleDialog.error("No message(s) selected. Please select the message(s) you want to send.");                
             } else {
                 thread.setMessages(Desktop.getInstance().getTree().getSelectedMessages());
@@ -140,6 +140,7 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
     }    
 
     // Interface IOThreadListener
+    @Override
     public void threadStarted(Thread source) { 
         btStart.setEnabled(false);
         btStop.setEnabled(true);
@@ -148,6 +149,7 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
         btOptions.setEnabled(false);
     }
 
+    @Override
     public void threadStopped(Thread source) { 
         btStart.setEnabled(true);
         btStop.setEnabled(false);
@@ -159,7 +161,9 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
         initThread();        
     }        
     
+    @Override
     public String getTitle() { return  "Message Sender"; }
 
+    @Override
     public ImageIcon getIcon() { return  ResourceLoader.loadImageIcon("send.png"); }    
 }

@@ -32,7 +32,6 @@ import java.awt.BorderLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 /**
  *
@@ -57,7 +56,7 @@ public class SendOptionsDialog extends BaseDialog {
         History h = new History(StartupProperties.SENDER_OPTIONS_DEST);
         //h.read(StartupProperties.getInstance());
         if (h.size() == 0) h.set("localhost:2100");
-        cbDest          = new JComboBox(h.getVector());
+        cbDest          = new JComboBox(h.getVector().toArray());
         cbDest.setEditable(true);
         
         cbStartChar     = new JComboBox();
@@ -176,6 +175,7 @@ public class SendOptionsDialog extends BaseDialog {
         cbReuse.setSelected(bean.isReuseSocket());
     }
     
+    @Override
     public void ok() {
         try {
             String hp = cbDest.getSelectedItem().toString();

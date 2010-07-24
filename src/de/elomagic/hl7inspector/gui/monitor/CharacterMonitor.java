@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.monitor;
 
 import de.elomagic.hl7inspector.images.ResourceLoader;
@@ -30,42 +29,76 @@ import javax.swing.JScrollPane;
  * @author rambow
  */
 public class CharacterMonitor extends JPanel implements IOThreadListener {
-    
+
     /** Creates a new instance of CharacterMonitor */
     public CharacterMonitor() {
         setLayout(new BorderLayout());
-        
-        tb = new MonitorToolBar(this);        
+
+        tb = new MonitorToolBar(this);
         hp = new HighlighterPane();
-        sp = new JScrollPane(hp);        
-        
+        sp = new JScrollPane(hp);
+
         add(tb, BorderLayout.NORTH);
         add(sp, BorderLayout.CENTER);
-        
-        setPreferredSize(new Dimension(400, 200));        
+
+        setPreferredSize(new Dimension(400, 200));
     }
-    
-    public  String getTitle() { return "Input Trace"; }
-    public  ImageIcon getIcon() { return ResourceLoader.loadImageIcon("trace.png"); }
-    
-    public void addChar(char c) { hp.addChar(c); }
-    
-    public void addLine(String value) { hp.addLine(value); }
-    
-    public void clear() { hp.clear(); }
-    
-    public String getText() { return hp.getText(); }
-    
-    public MonitorToolBar getToolBar() { return tb; }
-    
-    private MonitorToolBar  tb;
-    private JScrollPane	    sp;
+
+    public String getTitle() {
+        return "Input Trace";
+    }
+
+    public ImageIcon getIcon() {
+        return ResourceLoader.loadImageIcon("trace.png");
+    }
+
+    public void addChar(char c) {
+        hp.addChar(c);
+    }
+
+    public void addLine(String value) {
+        hp.addLine(value);
+    }
+
+    public void clear() {
+        hp.clear();
+    }
+
+    public String getText() {
+        return hp.getText();
+    }
+
+    public MonitorToolBar getToolBar() {
+        return tb;
+    }
+
+    private MonitorToolBar tb;
+
+    private JScrollPane sp;
+
     private HighlighterPane hp;
-    
     // Interface IOThreadListener
-    public void threadStopped(Thread source) { }
-    public void threadStarted(Thread source) { }
-    public void charSend(Object source, char c) { addChar(c); }
-    public void charReceived(Object source, char c) { addChar(c); }
-    public void status(Thread source, String status) { addLine(status); }
+    @Override
+    public void threadStopped(Thread source) {
+    }
+
+    @Override
+    public void threadStarted(Thread source) {
+    }
+
+    @Override
+    public void charSend(Object source, char c) {
+        addChar(c);
+    }
+
+    @Override
+    public void charReceived(Object source, char c) {
+        addChar(c);
+    }
+
+    @Override
+    public void status(Thread source, String status) {
+        addLine(status);
+    }
+
 }

@@ -34,13 +34,13 @@ public class Hl7DecoderViewPane extends ScrollableEditorPane {
         
         getCaption().setVisible(false);        
         defBackColor = getEditorPane().getBackground();        
-        setDelimiters(delimiters);
+        this.delimiters = delimiters;
     }
     
     public void setEncodedText(String value) {
         Hl7Decoder de = new Hl7Decoder(delimiters);
         
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("<HTML>");
         sb.append(de.decodeString(value));
         sb.append("</HTML>");
@@ -51,6 +51,7 @@ public class Hl7DecoderViewPane extends ScrollableEditorPane {
     }
     
     public void setDelimiters(Delimiters d) { delimiters = d; }    
+    @Override
     public Dimension getPreferredSize() { return new Dimension(100, 50); }
 
     private Delimiters delimiters;

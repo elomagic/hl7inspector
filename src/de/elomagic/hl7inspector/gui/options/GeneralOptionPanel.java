@@ -26,11 +26,11 @@ import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.PanelDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import java.awt.BorderLayout;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
-//import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JRadioButton;
@@ -46,15 +46,16 @@ public class GeneralOptionPanel extends AbstractPanel {
     /** Creates a new instance of GeneralOptionPane */
     public GeneralOptionPanel(PanelDialog d) { super(d); }
     
+    @Override
     public void init() { 
         cbOneInstance       = new JCheckBox();
         cbDesktopImage      = new JCheckBox();
         
-        Vector<String> lf = new Vector<String>();
+        List<String> lf = new ArrayList<String>();
         for (int i=0;i<UIManager.getInstalledLookAndFeels().length;i++) {
             lf.add(UIManager.getInstalledLookAndFeels()[i].getName());
         }
-        cbLookFeel = new JComboBox(lf) ;
+        cbLookFeel = new JComboBox(lf.toArray()) ;
         cbLookFeel.setEditable(false);
         cbLookFeel.setSelectedItem(UIManager.getLookAndFeel().getName());
         
@@ -122,12 +123,16 @@ public class GeneralOptionPanel extends AbstractPanel {
         add(builder.getPanel(), BorderLayout.CENTER);
     }
     
+    @Override
     public Icon getIcon() { return ResourceLoader.loadImageIcon("preferences-desktop.png", ResourceLoader.LARGE_IMAGE); }    
     
+    @Override
     public String getTitle() { return "General"; }
     
+    @Override
     public String getDescription() { return "General Options"; }        
     
+    @Override
     public void read() {
         StartupProperties p = StartupProperties.getInstance();
 
@@ -161,6 +166,7 @@ public class GeneralOptionPanel extends AbstractPanel {
         cbAskBeforeCheck.setSelected(p.isAutoUpdateAsk());
     }
     
+    @Override
     public void write() {
         StartupProperties p = StartupProperties.getInstance();
         
@@ -203,6 +209,7 @@ public class GeneralOptionPanel extends AbstractPanel {
             putValue(AbstractAction.ACTION_COMMAND_KEY, cmd);
         }
         
+        @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
             boolean b = e.getActionCommand().equals("USE_PROXY");
             updateProxyModeButtons(b);

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.model;
 
 import de.elomagic.hl7inspector.gui.VectorTableModel;
@@ -24,10 +23,12 @@ import de.elomagic.hl7inspector.gui.VectorTableModel;
  * @author rambow
  */
 public abstract class ProfileModel extends VectorTableModel {
-    
+
     /** Creates a new instance of DataTypeModel */
-    public ProfileModel() { super(); }
-    
+    public ProfileModel() {
+        super();
+    }
+
     /**
      * Creates a default class object an add it to the model
      */
@@ -35,15 +36,17 @@ public abstract class ProfileModel extends VectorTableModel {
         Object o = getDefaultRowClass().newInstance();
         return addRow(o);
     }
-    
+
+    @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
 //        boolean retValue;
-        
+
 //        retValue = (rowIndex > 0);
-        
+
         //retValue = super.isCellEditable(rowIndex, columnIndex);
         return true;
     }
 
-    public abstract Class getDefaultRowClass();    
+    public abstract Class getDefaultRowClass();
+
 }

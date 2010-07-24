@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.hl7.model;
 
 /**
@@ -22,12 +21,19 @@ package de.elomagic.hl7inspector.hl7.model;
  * @author rambow
  */
 public class Field extends Hl7Object {
-    
+
     /** Creates a new instance of Field */
-    public Field() { }
-    
-    public char getSubDelimiter() { return '^'; }
-    
-    public Class getChildClass() { return Component.class; }
-    
+    public Field() {
+    }
+
+    @Override
+    public char getSubDelimiter() {
+        return '^';
+    }
+
+    @Override
+    public Class getChildClass() {
+        return Component.class;
+    }
+
 }

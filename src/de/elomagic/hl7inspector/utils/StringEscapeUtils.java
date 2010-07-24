@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2010 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.utils;
 
 /**
@@ -22,17 +21,18 @@ package de.elomagic.hl7inspector.utils;
  * @author rambow
  */
 public class StringEscapeUtils {
-    
+
     /** Creates a new instance of StringEscapeUtils */
-    private StringEscapeUtils() { }
-    
-    public final static String escapeHtml(String str) {
-        StringBuffer sb = new StringBuffer(str.length());
+    private StringEscapeUtils() {
+    }
+
+    public static String escapeHtml(String str) {
+        StringBuilder sb = new StringBuilder(str.length());
         // true if last char was blank
         boolean lastWasBlankChar = false;
         int len = str.length();
         char c;
-        
+
         for (int i = 0; i < len; i++) {
             c = str.charAt(i);
             if (c == ' ') {
@@ -64,10 +64,10 @@ public class StringEscapeUtils {
                     sb.append("&lt;br/&gt;");
                 } else {
                     int ci = 0xffff & c;
-                    if (ci < 160 )
-                        // nothing special only 7 Bit
+                    if (ci < 160) // nothing special only 7 Bit
+                    {
                         sb.append(c);
-                    else {
+                    } else {
                         // Not 7 Bit use the unicode system
                         sb.append("&#");
                         sb.append(new Integer(ci).toString());
@@ -78,110 +78,112 @@ public class StringEscapeUtils {
         }
         return sb.toString();
     }
-    
-    public final static String unescapeHtml(String str) {
-        StringBuffer sb = new StringBuffer(str.length());
-        
-        for (int i=0; i<str.length(); i++) {
+
+    public static String unescapeHtml(String str) {
+        StringBuilder sb = new StringBuilder(str.length());
+
+        for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            
+
             if (c != '&') {
                 sb.append(c);
-                
+
             } else {
                 int q = str.indexOf(';', i);
-                String token = str.substring(i, q-i);
-                
-                if (token.equals("&gt"))
+                String token = str.substring(i, q - i);
+
+                if (token.equals("&gt")) {
                     sb.append('>');
-                else if (token.equals("&amp;"))
+                } else if (token.equals("&amp;")) {
                     sb.append('&');
-                else if (token.equals("&quot;"))
+                } else if (token.equals("&quot;")) {
                     sb.append('"');
-                else if (token.equals("&agrave"))
+                } else if (token.equals("&agrave")) {
                     sb.append('à');
-                else if (token.equals("&auml"))
+                } else if (token.equals("&auml")) {
                     sb.append('ä');
-                else if (token.equals("&Auml"))
+                } else if (token.equals("&Auml")) {
                     sb.append('Ä');
-                else if (token.equals("&ouml"))
+                } else if (token.equals("&ouml")) {
                     sb.append('ö');
-                else if (token.equals("&Ouml"))
+                } else if (token.equals("&Ouml")) {
                     sb.append('Ö');
-                else if (token.equals("&szlig"))
+                } else if (token.equals("&szlig")) {
                     sb.append('ß');
-                else if (token.equals("&uuml"))
+                } else if (token.equals("&uuml")) {
                     sb.append('ü');
-                else if (token.equals("&Uuml"))
+                } else if (token.equals("&Uuml")) {
                     sb.append('Ü');
-                else if (token.equals("&copy"))
+                } else if (token.equals("&copy")) {
                     sb.append('©');
-                else if (token.equals("&euro"))
+                } else if (token.equals("&euro")) {
                     sb.append('€');
-                else if (token.equals("&acirc"))
+                } else if (token.equals("&acirc")) {
                     sb.append('â');
-                else if (token.equals("&Acirc"))
+                } else if (token.equals("&Acirc")) {
                     sb.append('Â');
-                else if (token.equals("&aring"))
+                } else if (token.equals("&aring")) {
                     sb.append('å');
-                else if (token.equals("&Aring"))
+                } else if (token.equals("&Aring")) {
                     sb.append('Å');
-                else if (token.equals("&Agrave"))
+                } else if (token.equals("&Agrave")) {
                     sb.append('À');
-                else if (token.equals("&aelig"))
+                } else if (token.equals("&aelig")) {
                     sb.append('æ');
-                else if (token.equals("&AElig"))
+                } else if (token.equals("&AElig")) {
                     sb.append('Æ');
-                else if (token.equals("&ccedil"))
+                } else if (token.equals("&ccedil")) {
                     sb.append('ç');
-                else if (token.equals("&Ccedil"))
+                } else if (token.equals("&Ccedil")) {
                     sb.append('Ç');
-                else if (token.equals("&eacute"))
+                } else if (token.equals("&eacute")) {
                     sb.append('é');
-                else if (token.equals("&Eacute"))
+                } else if (token.equals("&Eacute")) {
                     sb.append('É');
-                else if (token.equals("&egrave"))
+                } else if (token.equals("&egrave")) {
                     sb.append('è');
-                else if (token.equals("&Egrave"))
+                } else if (token.equals("&Egrave")) {
                     sb.append('È');
-                else if (token.equals("&ecirc"))
+                } else if (token.equals("&ecirc")) {
                     sb.append('ê');
-                else if (token.equals("&Ecirc"))
+                } else if (token.equals("&Ecirc")) {
                     sb.append('Ê');
-                else if (token.equals("&euml"))
+                } else if (token.equals("&euml")) {
                     sb.append('ë');
-                else if (token.equals("&Euml"))
+                } else if (token.equals("&Euml")) {
                     sb.append('Ë');
-                else if (token.equals("&iuml"))
+                } else if (token.equals("&iuml")) {
                     sb.append('ï');
-                else if (token.equals("&Iuml"))
+                } else if (token.equals("&Iuml")) {
                     sb.append('Ï');
-                else if (token.equals("&ocirc"))
+                } else if (token.equals("&ocirc")) {
                     sb.append('ô');
-                else if (token.equals("&Ocirc"))
+                } else if (token.equals("&Ocirc")) {
                     sb.append('Ô');
-                else if (token.equals("&oslash"))
+                } else if (token.equals("&oslash")) {
                     sb.append('ø');
-                else if (token.equals("&Oslash"))
+                } else if (token.equals("&Oslash")) {
                     sb.append('Ø');
-                else if (token.equals("&ugrave"))
+                } else if (token.equals("&ugrave")) {
                     sb.append('ù');
-                else if (token.equals("&Ugrave"))
+                } else if (token.equals("&Ugrave")) {
                     sb.append('Ù');
-                else if (token.equals("&ucirc"))
+                } else if (token.equals("&ucirc")) {
                     sb.append('û');
-                else if (token.equals("&Ucirc"))
+                } else if (token.equals("&Ucirc")) {
                     sb.append('Û');
-                else if (token.equals("&reg"))
+                } else if (token.equals("&reg")) {
                     sb.append('®');
-                else if (token.startsWith("&#")) {
+                } else if (token.startsWith("&#")) {
                     int uc = Integer.parseInt(token.substring(2));
-                    sb.append((char)uc);
-                } else
+                    sb.append((char) uc);
+                } else {
                     sb.append('?');
+                }
             }
         }
-        
+
         return sb.toString();
     }
+
 }

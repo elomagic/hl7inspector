@@ -17,18 +17,18 @@
 
 package de.elomagic.hl7inspector.profile;
 
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.List;
 import nanoxml.XMLElement;
 
 /**
  *
  * @author rambow
  */
-public class ElementTable extends Hashtable<String, XMLElement> {
+public class ElementTable extends HashMap<String, XMLElement> {
     
     /** Creates a new instance of ElementVector */
-    public ElementTable(Vector v) {
+    public ElementTable(List v) {
         super();
         
         for (int i=0; i<v.size(); i++) {

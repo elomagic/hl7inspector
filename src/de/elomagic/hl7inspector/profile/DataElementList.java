@@ -14,21 +14,26 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 /**
  *
  * @author rambow
  */
-public class DataElementList extends Hashtable<String, DataElement> {
-  
-  /** Creates a new instance of FieldIdList */
-  public DataElementList() { }
-  
-  public DataElement getDataElement(String segmentType, int fieldIndex) { return get(segmentType + '-' + fieldIndex); }
-  
-  public void addDataElement(DataElement value) { put(value.getSegment() + '-' + value.getSequence(), value); }
+public class DataElementList extends HashMap<String, DataElement> {
+
+    /** Creates a new instance of FieldIdList */
+    public DataElementList() {
+    }
+
+    public DataElement getDataElement(String segmentType, int fieldIndex) {
+        return get(segmentType + '-' + fieldIndex);
+    }
+
+    public void addDataElement(DataElement value) {
+        put(value.getSegment() + '-' + value.getSequence(), value);
+    }
+
 }

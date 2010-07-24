@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.hl7.model;
 
 /**
@@ -22,21 +21,35 @@ package de.elomagic.hl7inspector.hl7.model;
  * @author rambow
  */
 public class Subcomponent extends Hl7Object {
-    
+
     /** Creates a new instance of Subcomponent */
-    public Subcomponent() { }
-    
-    public void parse(String text) { value = text; }
-    
-    public String toString() { return value; }
-    
-    
-    public char getSubDelimiter() { return (char)0; }
-    
-    public Class getChildClass() { return null; }
-    
-    
-    private  String value = "";
-    
-    protected boolean isNULL() { return value.length() == 0; }
+    public Subcomponent() {
+    }
+
+    @Override
+    public void parse(String text) {
+        value = text;
+    }
+
+    @Override
+    public String toString() {
+        return value;
+    }
+
+    @Override
+    public char getSubDelimiter() {
+        return (char) 0;
+    }
+
+    @Override
+    public Class getChildClass() {
+        return null;
+    }
+
+    private String value = "";
+    @Override
+    protected boolean isNULL() {
+        return value.length() == 0;
+    }
+
 }

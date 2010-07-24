@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.input;
 
 import java.awt.SystemColor;
@@ -26,16 +25,19 @@ import javax.swing.table.TableCellRenderer;
  * @author rambow
  */
 public class PreviewCellRenderer extends JLabel implements TableCellRenderer {
-    
+
     /** Creates a new instance of ImportTableCellRenderer */
-    public PreviewCellRenderer() { }
-    
+    public PreviewCellRenderer() {
+    }
+
+    @Override
     public java.awt.Component getTableCellRendererComponent(javax.swing.JTable jTable, Object obj, boolean isSelected, boolean hasFocus, int row, int column) {
         setText(obj.toString());
         setOpaque(true);
-        setBackground((column==0)?SystemColor.control:SystemColor.window);
-        setForeground((column==0)?SystemColor.controlText:SystemColor.windowText);
-        
+        setBackground((column == 0) ? SystemColor.control : SystemColor.window);
+        setForeground((column == 0) ? SystemColor.controlText : SystemColor.windowText);
+
         return this;
-    }    
+    }
+
 }

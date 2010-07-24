@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
 import de.elomagic.hl7inspector.file.filters.ProfileFileFilter;
@@ -39,46 +38,48 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class NewProfileAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public NewProfileAction(JList _list) {
         super("New", ResourceLoader.loadImageIcon("document-new.png"));
-        
+
         list = _list;
-        
+
         putValue(SHORT_DESCRIPTION, "Create and edit new profile");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             File path = new File(System.getProperty("user.dir"));
-            
+
             JFileChooser fc = new JFileChooser(path);
             fc.addChoosableFileFilter(new ProfileFileFilter());
-            
+
             fc.setDialogTitle("Create new profile");
             try {
                 if (fc.showSaveDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
                     ProfileFile file = new ProfileFile(fc.getSelectedFile().getPath());
-                    
+
                     if (file.exists()) {
                         if (SimpleDialog.confirmYesNo("File already exists. Overwrite?") == 0) {
                             file.delete();
                         }
                     }
-                    
+
                     FileOutputStream fout = new FileOutputStream(file);
                     try {
                         new Profile().saveToStream(fout);
                     } finally {
                         fout.close();
                     }
-		    
-		    VectorListModel model = ((VectorListModel)list.getModel());
-		    if (model.indexOf(file) == -1) {
-			model.add(file);
+
+                    VectorListModel<ProfileFile> model = ((VectorListModel<ProfileFile>) list.getModel());
+                    if (model.indexOf(file) == -1) {
+                        model.add(file);
                     }
-                    
+
                     ProfileDefinitionDialog dialog = new ProfileDefinitionDialog(file);
                     dialog.ask();
                 }
@@ -90,6 +91,6 @@ public class NewProfileAction extends AbstractAction {
             SimpleDialog.error(ee);
         }
     }
-    
+
     private JList list;
 }

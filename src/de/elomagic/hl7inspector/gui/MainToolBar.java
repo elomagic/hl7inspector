@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.gui.actions.*;
@@ -26,24 +25,24 @@ import javax.swing.JToolBar;
  * @author rambow
  */
 public class MainToolBar extends JToolBar {
-    
+
     /** Creates a new instance of ToolBar */
     public MainToolBar() {
         super();
-        
+
         setRollover(true);
         setFloatable(true);
-        
-        btNodeDesc      = new JToggleButton(new ViewNodeDescriptionAction(""));
-        btCompactView   = new JToggleButton(new ViewCompressedAction(""));
+
+        btNodeDesc = new JToggleButton(new ViewNodeDescriptionAction(""));
+        btCompactView = new JToggleButton(new ViewCompressedAction(""));
         btCompactView.setSelected(true);
-        btShowDetails   = new JToggleButton(new ViewNodeDetailsAction(""));
-        btParserWindow  = new JToggleButton(new ShowParserWindowAction(""));
+        btShowDetails = new JToggleButton(new ViewNodeDetailsAction(""));
+        btParserWindow = new JToggleButton(new ShowParserWindowAction(""));
         btReceiveWindow = new JToggleButton(new ReceiveMessageAction(""));
-        btSendWindow    = new JToggleButton(new SendMessageAction(""));
-        
+        btSendWindow = new JToggleButton(new SendMessageAction(""));
+
         // FEATURE Button for rereading file.           
-        
+
         add(new FileNewAction());
         add(new FileOpenAction());
         add(new FileSaveAsAction());
@@ -64,23 +63,44 @@ public class MainToolBar extends JToolBar {
         addSeparator();
         add(btParserWindow);
         add(btReceiveWindow);
-        add(btSendWindow);        
+        add(btSendWindow);
         addSeparator();
         add(new ExitAction());
     }
-    
-    public JToggleButton getNodeDescriptionButton() { return btNodeDesc; }
-    public JToggleButton getCompactViewButton() { return btCompactView; }
-    public JToggleButton getDetailsButton() { return btShowDetails; }
-    public JToggleButton getParserWindowButton() { return btParserWindow; }
-    public JToggleButton getReceiveWindowButton() { return btReceiveWindow; }
-    public JToggleButton getSendWindowButton() { return btSendWindow; }
-    
-    private JToggleButton   btNodeDesc;
-    private JToggleButton   btCompactView;
-    private JToggleButton   btShowDetails;
-    private JToggleButton   btParserWindow;
-    private JToggleButton   btReceiveWindow;
-    private JToggleButton   btSendWindow;
-    
+
+    public JToggleButton getNodeDescriptionButton() {
+        return btNodeDesc;
+    }
+
+    public JToggleButton getCompactViewButton() {
+        return btCompactView;
+    }
+
+    public JToggleButton getDetailsButton() {
+        return btShowDetails;
+    }
+
+    public JToggleButton getParserWindowButton() {
+        return btParserWindow;
+    }
+
+    public JToggleButton getReceiveWindowButton() {
+        return btReceiveWindow;
+    }
+
+    public JToggleButton getSendWindowButton() {
+        return btSendWindow;
+    }
+
+    private JToggleButton btNodeDesc;
+
+    private JToggleButton btCompactView;
+
+    private JToggleButton btShowDetails;
+
+    private JToggleButton btParserWindow;
+
+    private JToggleButton btReceiveWindow;
+
+    private JToggleButton btSendWindow;
 }

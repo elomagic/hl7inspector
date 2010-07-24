@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import com.l2fprod.common.swing.BannerPanel;
@@ -27,64 +26,80 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JRootPane;
+
 /**
  *
  * @author rambow
  */
 public abstract class AbstractPanel extends JPanel implements ActionListener {
-    
+
     /** Creates a new instance of AbstractOptionsPane */
-    public AbstractPanel(PanelDialog d) { super(new BorderLayout()); dialog = d; _init(); }
-    
-    public JButton getBarButton() { 
+    public AbstractPanel(PanelDialog d) {
+        super(new BorderLayout());
+        dialog = d;
+        _init();
+    }
+
+    public JButton getBarButton() {
         if (button == null) {
-            button = new JButton(new AbstractAction() {               
-                public void actionPerformed(ActionEvent e) { select(); }                
+            button = new JButton(new AbstractAction() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    select();
+                }
+
             });
-                        
+
             button.setText(getTitle());
             button.setIcon(getIcon());
             button.setToolTipText(getDescription());
         }
-                              
-        return button; 
-    }    
-    
+
+        return button;
+    }
+
     public abstract Icon getIcon();
-    
+
     public abstract String getTitle();
-    
+
     public abstract String getDescription();
-    
+
     public abstract void read();
 
     public abstract void write();
-    
-    
-    public void select() { dialog.setSelected(this); }
-    
-    public void actionPerformed(ActionEvent e) { select(); }        
 
-    protected abstract void init();    
-    
-    protected void _init() {        
+    public void select() {
+        dialog.setSelected(this);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        select();
+    }
+
+    protected abstract void init();
+
+    protected final void _init() {
         add(banner, BorderLayout.NORTH);
-        banner.setBackground(SystemColor.textHighlight);                
+        banner.setBackground(SystemColor.textHighlight);
         banner.setTitle(getTitle());
         banner.setTitleColor(SystemColor.textHighlightText);
         banner.setIcon(getIcon());
-        banner.setVisible(true);             
-        
+        banner.setVisible(true);
+
         add(new JRootPane(), BorderLayout.CENTER);
-        
+
         init();
     }
-        
-    protected PanelDialog getDialog() { return dialog; }
-    
+
+    protected PanelDialog getDialog() {
+        return dialog;
+    }
+
     private PanelDialog dialog;
 
-    private BannerPanel banner = new BannerPanel();    
-    
+    private BannerPanel banner = new BannerPanel();
+
     private JButton button;
 }

@@ -40,7 +40,7 @@ public class WindowCaptionPanel extends JPanel {
         setTitle(title);
     }        
     
-    public void init() {
+    public final void init() {
         setLayout(new BorderLayout());
         
         lbCaption = new JLabel();
@@ -55,6 +55,6 @@ public class WindowCaptionPanel extends JPanel {
     private JLabel  lbCaption;
     private JButton btClose;
     
-    public void setTitle(String title) { lbCaption.setText(title); }
+    public final void setTitle(String title) { lbCaption.setText(title); }
     public void setCloseButton(boolean visible) { btClose.setVisible(visible); }
 }

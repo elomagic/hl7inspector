@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.io.Frame;
@@ -25,59 +24,108 @@ import java.io.File;
  * @author rambow
  */
 public class MessageWriterBean {
-    
+
     /** Creates a new instance of ImportOptionBean */
     public MessageWriterBean() {
     }
-    
-    private Frame           frame               = new Frame();    
-    private File            destinationFolder   = new File(".");
-    private boolean         OnlySelectedFiles   = false;
-    private boolean         manyFiles           = true;
-    private String          dataFilePrefix      = "";
-    private String          dataFileExtension   = "hl7";
-    private String          semaphoreExtension  = "sem";
-    private boolean         generateSempahore   = true;
-    private File            singleFileName      = null;
-    private String          encoding            = "ISO-8859-1";
 
-    public Frame getFrame() { return frame; }
+    private Frame frame = new Frame();
 
-    public void setFrame(Frame frame) { this.frame = frame; }
+    private File destinationFolder = new File(".");
 
-    public File getDestinationFolder() { return destinationFolder; }
+    private boolean OnlySelectedFiles = false;
 
-    public void setDestinationFolder(File destinationFolder) { this.destinationFolder = destinationFolder; }
+    private boolean manyFiles = true;
 
-    public boolean isOnlySelectedFiles() { return OnlySelectedFiles; }
+    private String dataFilePrefix = "";
 
-    public void setOnlySelectedFiles(boolean OnlySelectedFiles) { this.OnlySelectedFiles = OnlySelectedFiles; }
+    private String dataFileExtension = "hl7";
 
-    public boolean isManyFiles() { return manyFiles; }
+    private String semaphoreExtension = "sem";
 
-    public void setManyFiles(boolean manyFiles) { this.manyFiles = manyFiles; }
+    private boolean generateSempahore = true;
 
-    public String getDataFilePrefix() { return dataFilePrefix; }
+    private File singleFileName = null;
 
-    public void setDataFilePrefix(String dataFilePrefix) { this.dataFilePrefix = dataFilePrefix; }
+    private String encoding = "ISO-8859-1";
+    public Frame getFrame() {
+        return frame;
+    }
 
-    public String getDataFileExtension() { return dataFileExtension; }
+    public void setFrame(Frame frame) {
+        this.frame = frame;
+    }
 
-    public void setDataFileExtension(String dataFileExtension) { this.dataFileExtension = dataFileExtension; }
+    public File getDestinationFolder() {
+        return destinationFolder;
+    }
 
-    public String getSemaphoreExtension() { return semaphoreExtension; }
+    public void setDestinationFolder(File destinationFolder) {
+        this.destinationFolder = destinationFolder;
+    }
 
-    public void setSemaphoreExtension(String semaphoreExtension) { this.semaphoreExtension = semaphoreExtension; }
+    public boolean isOnlySelectedFiles() {
+        return OnlySelectedFiles;
+    }
 
-    public boolean isGenerateSempahore() { return generateSempahore; }
+    public void setOnlySelectedFiles(boolean OnlySelectedFiles) {
+        this.OnlySelectedFiles = OnlySelectedFiles;
+    }
 
-    public void setGenerateSempahore(boolean generateSempahore) { this.generateSempahore = generateSempahore; }
+    public boolean isManyFiles() {
+        return manyFiles;
+    }
 
-    public File getSingleFileName() { return singleFileName; }
+    public void setManyFiles(boolean manyFiles) {
+        this.manyFiles = manyFiles;
+    }
 
-    public void setSingleFileName(File singleFileName) { this.singleFileName = singleFileName; }
+    public String getDataFilePrefix() {
+        return dataFilePrefix;
+    }
 
-    public String getEncoding() { return encoding; }
+    public void setDataFilePrefix(String dataFilePrefix) {
+        this.dataFilePrefix = dataFilePrefix;
+    }
 
-    public void setEncoding(String encoding) { this.encoding = encoding; }
+    public String getDataFileExtension() {
+        return dataFileExtension;
+    }
+
+    public void setDataFileExtension(String dataFileExtension) {
+        this.dataFileExtension = dataFileExtension;
+    }
+
+    public String getSemaphoreExtension() {
+        return semaphoreExtension;
+    }
+
+    public void setSemaphoreExtension(String semaphoreExtension) {
+        this.semaphoreExtension = semaphoreExtension;
+    }
+
+    public boolean isGenerateSempahore() {
+        return generateSempahore;
+    }
+
+    public void setGenerateSempahore(boolean generateSempahore) {
+        this.generateSempahore = generateSempahore;
+    }
+
+    public File getSingleFileName() {
+        return singleFileName;
+    }
+
+    public void setSingleFileName(File singleFileName) {
+        this.singleFileName = singleFileName;
+    }
+
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
 }

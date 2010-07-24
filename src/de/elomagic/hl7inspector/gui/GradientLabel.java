@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import java.awt.Color;
@@ -32,32 +31,37 @@ import javax.swing.UIManager;
  * @author rambow
  */
 public class GradientLabel extends JLabel {
-    
+
     /** Creates a new instance of GradientLabel */
-    public GradientLabel(String text) { super(text); init(); }
-    
+    public GradientLabel(String text) {
+        super(text);
+        init();
+    }
+
     private void init() {
         color1 = UIManager.getColor("inactiveCaptionBorder");
         color2 = UIManager.getColor("activeCaptionBorder");
         setForeground(UIManager.getColor("activeCaptionText"));
-        
+
         setFont(getFont().deriveFont(Font.BOLD));
-        
+
         setOpaque(false);
-        
+
         setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
     }
-    
+
     private Color color1;
+
     private Color color2;
+
     private GradientPaint paint;
-    
+    @Override
     protected void paintComponent(Graphics g) {
-        Graphics2D g2 = (Graphics2D)g;
-        
+        Graphics2D g2 = (Graphics2D) g;
+
         if ((color1 != null && color2 != null)) {
-            
-            if(paint == null) {
+
+            if (paint == null) {
                 int h = getHeight();
 
                 paint = new GradientPaint(new Point(0, h / 2), color2, new Point(getWidth(), h / 2), color1, false);
@@ -66,7 +70,8 @@ public class GradientLabel extends JLabel {
             g2.setPaint(paint);
             g2.fillRect(0, 0, getWidth(), getHeight());
         }
-        
+
         super.paintComponent(g);
     }
+
 }

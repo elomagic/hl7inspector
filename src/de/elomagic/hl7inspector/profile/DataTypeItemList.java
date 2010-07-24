@@ -14,35 +14,40 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *
  * @author rambow
  */
-public class DataTypeItemList extends Hashtable<String, DataTypeItem> {
-  
-  /** Creates a new instance of DataTypeList */
-  public DataTypeItemList() { }
-  
-  public DataTypeItem getDataType(String dataType, int index) { return get(dataType + '-' + index); }
-  
-  public void addDataType(DataTypeItem value) { put(value.getParentDataType() + '-' + value.getIndex(), value); }
-  
+public class DataTypeItemList extends HashMap<String, DataTypeItem> {
+
+    /** Creates a new instance of DataTypeList */
+    public DataTypeItemList() {
+    }
+
+    public DataTypeItem getDataType(String dataType, int index) {
+        return get(dataType + '-' + index);
+    }
+
+    public void addDataType(DataTypeItem value) {
+        put(value.getParentDataType() + '-' + value.getIndex(), value);
+    }
+
     public boolean containsDataType(String dataType) {
         boolean result = false;
-        
-        Enumeration enu = elements();
-        while ((enu.hasMoreElements()) && (!result)) {
-            DataTypeItem dt = (DataTypeItem)enu.nextElement();
-        
+
+        Iterator<DataTypeItem> it = values().iterator();
+        while (it.hasNext() && !result) {
+            DataTypeItem dt = it.next();
+
             result = dt.getParentDataType().equals(dataType);
         }
-        
+
         return result;
-    }  
+    }
+
 }

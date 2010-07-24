@@ -29,25 +29,27 @@ import javax.swing.JList;
  * @author rambow
  */
 public class RemoveKeyStoreAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public RemoveKeyStoreAction(JList _list) {
-	super("Remove", ResourceLoader.loadImageIcon("edit_remove.png"));
-	
-	list = _list;
-	
-	putValue(SHORT_DESCRIPTION, "Remove selected keystore");
-	putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        super("Remove", ResourceLoader.loadImageIcon("edit_remove.png"));
+
+        list = _list;
+
+        putValue(SHORT_DESCRIPTION, "Remove selected keystore");
+        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-	if (list.getSelectedValue() != null) {
-	    if (SimpleDialog.confirmYesNo("Are you sure?") == 0) {
-		((VectorListModel)list.getModel()).remove(list.getSelectedValue());
-	    }
-	} else {
-	    SimpleDialog.error("No keystore selected!");
-	}
+        if (list.getSelectedValue() != null) {
+            if (SimpleDialog.confirmYesNo("Are you sure?") == 0) {
+                ((VectorListModel) list.getModel()).remove(list.getSelectedValue());
+            }
+        } else {
+            SimpleDialog.error("No keystore selected!");
+        }
     }
-    
+
     private JList list;
 }

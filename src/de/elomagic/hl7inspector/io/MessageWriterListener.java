@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 import java.io.File;
@@ -24,6 +23,9 @@ import java.io.File;
  * @author rambow
  */
 public interface MessageWriterListener {
-  public void messageSaved(MessageWriterThread source, File file, int count);
-  public void writerDone(MessageWriterThread source, int count) ;
+
+    public void messageSaved(MessageWriterThread source, File file, int count);
+
+    public void writerDone(MessageWriterThread source, int count);
+
 }

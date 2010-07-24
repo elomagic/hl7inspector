@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2010 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 import de.elomagic.hl7inspector.gui.Desktop;
@@ -27,47 +26,78 @@ import de.elomagic.hl7inspector.utils.StringVector;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import org.apache.log4j.Logger;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Vector;
 
 /**
  *
  * @author rambow
  */
 public class ReceiveThread extends Thread implements IOCharListener {
-    
+
     /** Creates a new instance of ReceiveThread */
     public ReceiveThread() {
         options.setSource("IP Socket");
         options.setImportMode(StreamFormat.FRAMED);
     }
-    
-    public Frame getFrame() { return options.getFrame(); }
-    public void setFrame(Frame f) { options.setFrame(f); }
-    
-    public ImportOptionBean getOptions() { return options; }
-    public void setOptions(ImportOptionBean o) { options = o; }
-    
-    public int getPort() { return port; }
-    public void setPort(int p) { port = p; }
-    
-    public boolean isReuseSocket() { return reuse; }
-    public void setReUseSocket(boolean value) { reuse = value; }
-    
-    public boolean isAuthentication() { return authentication; }
-    public void setAuthentication(boolean authentication) { this.authentication = authentication; }
-    
-    public boolean isEncryption() { return encryption; }
-    public void setEncryption(boolean encryption) { this.encryption = encryption; }
-    
+
+    public Frame getFrame() {
+        return options.getFrame();
+    }
+
+    public void setFrame(Frame f) {
+        options.setFrame(f);
+    }
+
+    public ImportOptionBean getOptions() {
+        return options;
+    }
+
+    public void setOptions(ImportOptionBean o) {
+        options = o;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int p) {
+        port = p;
+    }
+
+    public boolean isReuseSocket() {
+        return reuse;
+    }
+
+    public void setReUseSocket(boolean value) {
+        reuse = value;
+    }
+
+    public boolean isAuthentication() {
+        return authentication;
+    }
+
+    public void setAuthentication(boolean authentication) {
+        this.authentication = authentication;
+    }
+
+    public boolean isEncryption() {
+        return encryption;
+    }
+
+    public void setEncryption(boolean encryption) {
+        this.encryption = encryption;
+    }
+
     public void terminateRequest() {
         if (!terminate) {
             fireStatusEvent("Shutting down receive server...");
         }
-        
+
         terminate = true;
         try {
             if (socket != null) {
@@ -77,12 +107,13 @@ public class ReceiveThread extends Thread implements IOCharListener {
             } else {
                 new Socket("localhost", port).close();
             }
-        } catch(Exception e) {
+        } catch (Exception e) {
             Logger.getLogger(getClass()).warn(e, e);
-            fireStatusEvent((e.getMessage()!=null)?e.getMessage():e.toString());
+            fireStatusEvent((e.getMessage() != null) ? e.getMessage() : e.toString());
         }
     }
-    
+
+    @Override
     public void run() {
         fireThreadStartedEvent();
         try {
@@ -100,14 +131,14 @@ public class ReceiveThread extends Thread implements IOCharListener {
                             if (!terminate) {
                                 fireStatusEvent("Connecting from " + socket.getInetAddress().getHostName() + "(" + socket.getInetAddress().getHostAddress() + ").");
                             }
-                            
-                            writer  = new OutputStreamWriter(socket.getOutputStream(), options.getEncoding());
-                            reader  = new InputStreamReader(socket.getInputStream(), options.getEncoding());
-                            
+
+                            writer = new OutputStreamWriter(socket.getOutputStream(), options.getEncoding());
+                            reader = new InputStreamReader(socket.getInputStream(), options.getEncoding());
+
                             MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, StreamFormat.FRAMED, options.getFrame());
                             try {
                                 messageReader.addListener(this);
-                                
+
                                 while ((!terminate) && (reuse)) {
                                     fireStatusEvent("Waiting for data...");
                                     Message message = messageReader.readMessage();
@@ -128,54 +159,60 @@ public class ReceiveThread extends Thread implements IOCharListener {
             }
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e, e);
-            fireStatusEvent((e.getMessage()!=null)?e.getMessage():e.toString());
+            fireStatusEvent((e.getMessage() != null) ? e.getMessage() : e.toString());
         }
         fireStatusEvent("Receive server stopped.");
         fireThreadStoppedEvent();
     }
-    
-    public void addListener(IOThreadListener value) { listener.add(value); }
-    public void removeListener(IOThreadListener value) { listener.remove(value); }
-    
+
+    public void addListener(IOThreadListener value) {
+        listener.add(value);
+    }
+
+    public void removeListener(IOThreadListener value) {
+        listener.remove(value);
+    }
+
     private void handleMessage(Message message) {
         boolean ignore = false;
         // Now filtering
         if (options.getPhrase().length() != 0) {
-            String m = (options.isCaseSensitive()?message.toString():message.toString().toUpperCase());
-            String phrase = (options.isCaseSensitive()?options.getPhrase():options.getPhrase().toUpperCase());
-            
+            String m = (options.isCaseSensitive() ? message.toString() : message.toString().toUpperCase());
+            String phrase = (options.isCaseSensitive() ? options.getPhrase() : options.getPhrase().toUpperCase());
+
             if (!options.isUseRegExpr()) {
                 boolean found = (m.indexOf(phrase) != -1);
-                ignore =((( !found && !options.isNegReg()) ||
-                        found && options.isNegReg()));
+                ignore = (((!found && !options.isNegReg())
+                        || found && options.isNegReg()));
             }
         }
-        
-        Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getModel();
+
+        Hl7TreeModel model = (Hl7TreeModel) Desktop.getInstance().getModel();
         model.locked();
         try {
             model.addMessage(message);
-            
+
             // Check buffer overflow
             while (model.getChildCount(model) > options.getBufferSize()) {
-                if (options.isReadBottom())
+                if (options.isReadBottom()) {
                     model.removeChild(model, 0);
-                else
-                    model.removeChild(model, model.getChildCount(model)-1);
+                } else {
+                    model.removeChild(model, model.getChildCount(model) - 1);
+                }
             }
         } finally {
             model.unlock();
         }
-        
+
         fireStatusEvent("Sending acknowledge...");
-        
+
         try {
             OutputStreamWriter out = new OutputStreamWriter(socket.getOutputStream());
             try {
                 Segment msh = message.getSegment("MSH");
-                
+
                 out.write(options.getFrame().getStartFrame());
-                
+
                 StringVector seg = new StringVector();
                 seg.add("MSH");
                 seg.add("^~\\&");
@@ -197,15 +234,15 @@ public class ReceiveThread extends Thread implements IOCharListener {
                 seg.add(getField(msh, 18)); // Field 18
                 out.write(seg.toString('|'));
                 out.write("\r");
-                
+
                 seg = new StringVector();
                 seg.add("MSA");
                 seg.add("AA");
                 seg.add(getField(msh, 10));
-                
+
                 out.write(seg.toString('|'));
                 out.write("\r");
-                
+
                 out.write(options.getFrame().getStopFrame());
             } finally {
                 out.flush();
@@ -215,68 +252,78 @@ public class ReceiveThread extends Thread implements IOCharListener {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
         }
     }
-    
+
     private String getField(Segment seg, int index) {
         String result = "";
-        
+
         if (seg.size() >= index) {
-            result = seg.get(index).toString(); 
-        }         
+            result = seg.get(index).toString();
+        }
         return result;
     }
-    
+
     // protected methods
-    
     protected void fireThreadStartedEvent() {
-        for (int i=0; i<listener.size();i++) {
+        for (int i = 0; i < listener.size(); i++) {
             listener.get(i).threadStarted(this);
         }
     }
-    
+
     protected void fireThreadStoppedEvent() {
-        for (int i=0; i<listener.size();i++) {
+        for (int i = 0; i < listener.size(); i++) {
             listener.get(i).threadStopped(this);
         }
     }
-    
+
     protected void fireCharReceivedEvent(char c) {
-        for (int i=0; i<listener.size();i++) {
+        for (int i = 0; i < listener.size(); i++) {
             listener.get(i).charReceived(this, c);
         }
     }
-    
+
     protected void fireCharSendEvent(char c) {
-        for (int i=0; i<listener.size();i++) {
+        for (int i = 0; i < listener.size(); i++) {
             listener.get(i).charSend(this, c);
         }
     }
-    
+
     protected void fireStatusEvent(String text) {
-        for (int i=0; i<listener.size();i++) {
+        for (int i = 0; i < listener.size(); i++) {
             listener.get(i).status(this, text);
         }
     }
-    
+
     // private
-    
     private MessageImportThread importThread = null;
-    
-    private int                 port            = 2100;
-    private boolean             reuse           = true;
-    private ImportOptionBean    options         = new ImportOptionBean();
-    private boolean             authentication  = false;
-    private boolean             encryption      = false;
-    
-    private Socket              socket;
-    private OutputStreamWriter  writer;
-    private InputStreamReader   reader;
-    
-    private boolean      terminate   = false;
-    
-    private Vector<IOThreadListener> listener = new Vector<IOThreadListener>();
-    
+
+    private int port = 2100;
+
+    private boolean reuse = true;
+
+    private ImportOptionBean options = new ImportOptionBean();
+
+    private boolean authentication = false;
+
+    private boolean encryption = false;
+
+    private Socket socket;
+
+    private OutputStreamWriter writer;
+
+    private InputStreamReader reader;
+
+    private boolean terminate = false;
+
+    private List<IOThreadListener> listener = new ArrayList<IOThreadListener>();
     // Interface IOCharListener
-    public void charSend(Object source, char c) { fireCharSendEvent(c); }
-    
-    public void charReceived(Object source, char c) { fireCharReceivedEvent(c); }
+    @Override
+    public void charSend(Object source, char c) {
+        fireCharSendEvent(c);
+    }
+
+    @Override
+    public void charReceived(Object source, char c) {
+        fireCharReceivedEvent(c);
+    }
+
 }

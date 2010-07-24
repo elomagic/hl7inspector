@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
 import de.elomagic.hl7inspector.validate.ValidateStatus;
@@ -25,46 +24,47 @@ import nanoxml.XMLElement;
  * @author rambow
  */
 public class ValidateMapper {
-    
+
     /** Creates a new instance of ValidateMapper */
-    public ValidateMapper() { }
-    
+    public ValidateMapper() {
+    }
+
     public void read(XMLElement element) {
         ElementTable elements = new ElementTable(element.getChildren());
-        
+
         if (elements.containsKey("length")) {
-            mapLength = Integer.parseInt(elements.get("length").getContent());        
+            mapLength = Integer.parseInt(elements.get("length").getContent());
         }
-        
+
         if (elements.containsKey("deprecated")) {
-            mapDeprecated = Integer.parseInt(elements.get("deprecated").getContent());        
+            mapDeprecated = Integer.parseInt(elements.get("deprecated").getContent());
         }
 
         if (elements.containsKey("conditional")) {
-            mapConditional = Integer.parseInt(elements.get("conditional").getContent());        
+            mapConditional = Integer.parseInt(elements.get("conditional").getContent());
         }
 
         if (elements.containsKey("required")) {
-            mapRequired = Integer.parseInt(elements.get("required").getContent());        
+            mapRequired = Integer.parseInt(elements.get("required").getContent());
         }
 
         if (elements.containsKey("item-missing")) {
-            mapItemMissing = Integer.parseInt(elements.get("item-missing").getContent());        
+            mapItemMissing = Integer.parseInt(elements.get("item-missing").getContent());
         }
-        
+
         if (elements.containsKey("definition-not-found")) {
-            mapDefNotFound = Integer.parseInt(elements.get("definition-not-found").getContent());        
+            mapDefNotFound = Integer.parseInt(elements.get("definition-not-found").getContent());
         }
-        
+
         if (elements.containsKey("repetition")) {
-            mapRepetition = Integer.parseInt(elements.get("repetition").getContent());        
+            mapRepetition = Integer.parseInt(elements.get("repetition").getContent());
         }
     }
-    
+
     public XMLElement write() {
         XMLElement xmlElement = new XMLElement();
         xmlElement.setName("validate");
-        
+
         XMLElement xmlMap = new XMLElement();
         xmlMap.setName("length");
         xmlMap.setContent(Integer.toString(mapLength));
@@ -74,7 +74,7 @@ public class ValidateMapper {
         xmlMap.setName("deprecated");
         xmlMap.setContent(Integer.toString(mapDeprecated));
         xmlElement.addChild(xmlMap);
-        
+
         xmlMap = new XMLElement();
         xmlMap.setName("conditional");
         xmlMap.setContent(Integer.toString(mapConditional));
@@ -94,41 +94,82 @@ public class ValidateMapper {
         xmlMap.setName("definition-not-found");
         xmlMap.setContent(Integer.toString(mapDefNotFound));
         xmlElement.addChild(xmlMap);
-        
+
         xmlMap = new XMLElement();
         xmlMap.setName("repetition");
         xmlMap.setContent(Integer.toString(mapRepetition));
         xmlElement.addChild(xmlMap);
-    
+
         return xmlElement;
     }
-    
-    public int getMapLength() { return mapLength; }
-    public void setMapLength(int map) { mapLength = map; }
 
-    public int getMapDeprecated() { return mapDeprecated; }
-    public void setMapDeprecated(int map) { mapDeprecated = map; }
+    public int getMapLength() {
+        return mapLength;
+    }
 
-    public int getMapConditional() { return mapConditional; }
-    public void setMapConditional(int map) { mapConditional = map; }
+    public void setMapLength(int map) {
+        mapLength = map;
+    }
 
-    public int getMapRequired() { return mapRequired; }
-    public void setMapRequired(int map) { mapRequired = map; }
+    public int getMapDeprecated() {
+        return mapDeprecated;
+    }
 
-    public int getMapItemMiss() { return mapItemMissing; }
-    public void setMapItemMiss(int map) { mapItemMissing = map; }
+    public void setMapDeprecated(int map) {
+        mapDeprecated = map;
+    }
 
-    public int getMapDefNotFound() { return mapDefNotFound; }
-    public void setMapDefNotFound(int map) { mapDefNotFound= map; }    
-    
-    public int getMapRepetition() { return mapRepetition; }
-    public void setMapRepetition(int map) { mapRepetition = map; }     
-    
-    private int mapLength       = ValidateStatus.WARN;
-    private int mapDeprecated   = ValidateStatus.INFO;
-    private int mapConditional  = ValidateStatus.INFO;
-    private int mapRequired     = ValidateStatus.ERROR;
-    private int mapItemMissing  = ValidateStatus.ERROR;    
-    private int mapDefNotFound  = ValidateStatus.WARN;    
-    private int mapRepetition   = ValidateStatus.ERROR;    
+    public int getMapConditional() {
+        return mapConditional;
+    }
+
+    public void setMapConditional(int map) {
+        mapConditional = map;
+    }
+
+    public int getMapRequired() {
+        return mapRequired;
+    }
+
+    public void setMapRequired(int map) {
+        mapRequired = map;
+    }
+
+    public int getMapItemMiss() {
+        return mapItemMissing;
+    }
+
+    public void setMapItemMiss(int map) {
+        mapItemMissing = map;
+    }
+
+    public int getMapDefNotFound() {
+        return mapDefNotFound;
+    }
+
+    public void setMapDefNotFound(int map) {
+        mapDefNotFound = map;
+    }
+
+    public int getMapRepetition() {
+        return mapRepetition;
+    }
+
+    public void setMapRepetition(int map) {
+        mapRepetition = map;
+    }
+
+    private int mapLength = ValidateStatus.WARN;
+
+    private int mapDeprecated = ValidateStatus.INFO;
+
+    private int mapConditional = ValidateStatus.INFO;
+
+    private int mapRequired = ValidateStatus.ERROR;
+
+    private int mapItemMissing = ValidateStatus.ERROR;
+
+    private int mapDefNotFound = ValidateStatus.WARN;
+
+    private int mapRepetition = ValidateStatus.ERROR;
 }

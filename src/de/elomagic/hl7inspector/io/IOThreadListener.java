@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 /**
@@ -22,7 +21,11 @@ package de.elomagic.hl7inspector.io;
  * @author rambow
  */
 public interface IOThreadListener extends IOCharListener {
+
     public void threadStarted(Thread source);
+
     public void threadStopped(Thread source);
+
     public void status(Thread source, String status);
+
 }

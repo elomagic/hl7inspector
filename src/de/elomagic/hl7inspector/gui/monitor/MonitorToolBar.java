@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.monitor;
 
 import de.elomagic.hl7inspector.gui.monitor.actions.ClearAction;
@@ -27,7 +26,7 @@ import javax.swing.JToolBar;
  * @author rambow
  */
 public class MonitorToolBar extends JToolBar {
-    
+
     /** Creates a new instance of ToolBar */
     public MonitorToolBar(CharacterMonitor dlg) {
         super();
@@ -35,8 +34,9 @@ public class MonitorToolBar extends JToolBar {
         setOrientation(JToolBar.HORIZONTAL);
         setFloatable(false);
         setRollover(true);
-        
+
         add(new JButton(new ClearAction(dlg)));
-        add(new JButton(new FileSaveAction(dlg)));  
-    }    
+        add(new JButton(new FileSaveAction(dlg)));
+    }
+
 }

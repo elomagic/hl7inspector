@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
 import de.elomagic.hl7inspector.file.filters.ProfileFileFilter;
@@ -38,39 +37,40 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class AddProfileAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public AddProfileAction(JList _list) {
         super("Add", ResourceLoader.loadImageIcon("edit_add.png"));
-        
+
         list = _list;
-        
+
         putValue(SHORT_DESCRIPTION, "Add profile");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         //StartupProperties prop = StartupProperties.getInstance();
         File path = new File(System.getProperty("user.dir"));
-        
+
         JFileChooser fc = new JFileChooser(path);
         fc.addChoosableFileFilter(new ProfileFileFilter());
-        
+
         fc.setDialogTitle("Choose hl7 profile");
         if (fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
             fc.setVisible(false);
-            
+
             ProfileFile file = new ProfileFile(fc.getSelectedFile());
-            
+
             try {
                 FileInputStream fin = new FileInputStream(file);
                 try {
-                    Profile p = new Profile();
-                    p.loadFromStream(fin);
+                    Profile p = Profile.loadFromStream(fin);
                     file.setDescription(p.getDescription());
-                    
-		    VectorListModel model = ((VectorListModel)list.getModel());
-		    if (model.indexOf(file) == -1) {
-			model.add(file);
+
+                    VectorListModel<ProfileFile> model = ((VectorListModel<ProfileFile>) list.getModel());
+                    if (model.indexOf(file) == -1) {
+                        model.add(file);
                     }
                 } finally {
                     fin.close();
@@ -81,6 +81,6 @@ public class AddProfileAction extends AbstractAction {
             }
         }
     }
-    
+
     private JList list;
 }

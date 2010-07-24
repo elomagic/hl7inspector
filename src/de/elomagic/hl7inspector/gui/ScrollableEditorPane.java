@@ -39,7 +39,7 @@ public class ScrollableEditorPane extends JPanel {
         if (Font.getFont("Arial") != null) {
             editorPane.setFont(Font.getFont("Arial"));
         }
-        
+
         scrollPane = new JScrollPane();
         scrollPane.setViewportView(editorPane);
 

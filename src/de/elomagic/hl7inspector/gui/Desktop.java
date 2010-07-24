@@ -23,22 +23,14 @@ import de.elomagic.hl7inspector.gui.actions.ExitAction;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.gui.receive.ReceivePanel;
 import de.elomagic.hl7inspector.gui.sender.SendPanel;
-import de.elomagic.hl7inspector.hl7.model.Component;
-import de.elomagic.hl7inspector.hl7.model.Field;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
-import de.elomagic.hl7inspector.hl7.model.RepetitionField;
-import de.elomagic.hl7inspector.hl7.model.Segment;
-import de.elomagic.hl7inspector.hl7.model.Subcomponent;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
-import de.elomagic.hl7inspector.profile.DataElement;
-import de.elomagic.hl7inspector.profile.DataTypeItem;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
-import de.elomagic.hl7inspector.profile.SegmentItem;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ComponentEvent;
@@ -66,7 +58,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     
     private Desktop() { init(null); }
     
-    public final static Desktop getInstance() { return desk; }
+    public static Desktop getInstance() { return desk; }
     
     //public FindBar getFindWindow() { return findWindow; }
     public Hl7Tree getTree() { return treePane.getTree(); }
@@ -92,8 +84,11 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(
                 new java.awt.event.WindowAdapter() {
+            @Override
             public void windowActivated(WindowEvent e) { }
+            @Override
             public void windowClosing(WindowEvent e)   { new ExitAction().actionPerformed(null);     }
+            @Override
             public void windowIconified(WindowEvent e) { }
         }
         );
@@ -140,10 +135,10 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         
         pack();                
                         
-        int x = Integer.parseInt(prop.getProperty(prop.DESKTOP_X, "0"));
-        int y = Integer.parseInt(prop.getProperty(prop.DESKTOP_Y, "0"));
-        int w = Integer.parseInt(prop.getProperty(prop.DESKTOP_W, "800"));
-        int h = Integer.parseInt(prop.getProperty(prop.DESKTOP_H, "600"));
+        int x = Integer.parseInt(prop.getProperty(StartupProperties.DESKTOP_X, "0"));
+        int y = Integer.parseInt(prop.getProperty(StartupProperties.DESKTOP_Y, "0"));
+        int w = Integer.parseInt(prop.getProperty(StartupProperties.DESKTOP_W, "800"));
+        int h = Integer.parseInt(prop.getProperty(StartupProperties.DESKTOP_H, "600"));
         
         setBounds(x,y, w, h);
         
@@ -170,7 +165,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
                 
                 FileInputStream fin = new FileInputStream(file);
                 try {
-                    profile.loadFromStream(fin);
+                    profile = Profile.loadFromStream(fin);
                 } finally {
                     fin.close();
                 }
@@ -228,6 +223,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
      * Called whenever the value of the selection changes.
      * @param e the event that characterizes the change.
      */
+    @Override
     public void valueChanged(javax.swing.event.TreeSelectionEvent e) {
         if (e.getNewLeadSelectionPath() != null) {
             if (e.getNewLeadSelectionPath().getPathCount() > 1) {
@@ -284,6 +280,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     }
 
     // Interface ComponentListener
+    @Override
     public void componentShown(ComponentEvent e) {
         if (e.getSource().equals(getDetailsWindow())) {
             StartupProperties.getInstance().setDetailsWindowVisible(getDetailsWindow().isVisible());
@@ -301,10 +298,13 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         }        
     }
 
+    @Override
     public void componentResized(ComponentEvent e) { }
 
+    @Override
     public void componentMoved(ComponentEvent e) { }
 
+    @Override
     public void componentHidden(ComponentEvent e) {
         if (e.getSource().equals(getDetailsWindow())) {
             StartupProperties.getInstance().setDetailsWindowVisible(getDetailsWindow().isVisible());

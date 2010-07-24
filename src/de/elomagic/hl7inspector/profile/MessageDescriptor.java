@@ -97,7 +97,7 @@ public class MessageDescriptor {
         return dt;
     }
     
-    public final static Hl7Object getObjectOfType(Hl7Object child, Class hl7ObjectClass) {
+    public static Hl7Object getObjectOfType(Hl7Object child, Class hl7ObjectClass) {
         Hl7Object result = null;
         
         while ((child.getHl7Parent() != null) && (result == null)) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2010 Carsten Rambow
  * 
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,9 @@ import java.awt.SystemColor;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 import javax.swing.SwingUtilities;
@@ -40,6 +41,7 @@ public class ExtendedToolTipUI extends MetalToolTipUI {
     private String[] strs;
     private int maxWidth = 0;
     
+    @Override
     public void paint(Graphics g, JComponent c) {                
         FontMetrics metrics = g.getFontMetrics(); //Toolkit.getDefaultToolkit().getFontMetrics(g.getFont());
         Dimension size = c.getSize();
@@ -53,6 +55,7 @@ public class ExtendedToolTipUI extends MetalToolTipUI {
         }
     }
     
+    @Override
     public Dimension getPreferredSize(JComponent c) {
         FontMetrics metrics = c.getFontMetrics(c.getFont());// Toolkit.getDefaultToolkit().getFontMetrics(c.getFont());
         String tipText = ((JToolTip)c).getTipText();
@@ -61,12 +64,12 @@ public class ExtendedToolTipUI extends MetalToolTipUI {
         }
         BufferedReader br = new BufferedReader(new StringReader(tipText));
         String line;
-        int maxWidth = 0;
-        Vector<String> v = new Vector<String>();
+        int _maxWidth = 0;
+        List<String> v = new ArrayList<String>();
         try {
             while ((line = br.readLine()) != null) {
                 int width = SwingUtilities.computeStringWidth(metrics, line);
-                maxWidth = (maxWidth < width) ? width : maxWidth;
+                _maxWidth = (_maxWidth < width) ? width : _maxWidth;
                 v.add(line);
             }
         } catch (IOException ex) {
@@ -81,12 +84,12 @@ public class ExtendedToolTipUI extends MetalToolTipUI {
             strs = new String[lines];
             int i=0;
             
-            for (Enumeration e = v.elements(); e.hasMoreElements() ;i++) {
-                strs[i] = (String)e.nextElement();
+            for (Iterator<String> it = v.iterator(); it.hasNext() ;i++) {
+                strs[i] = it.next();
             }
         }
         int height = metrics.getHeight() * lines;
-        this.maxWidth = maxWidth;
-        return new Dimension(maxWidth + 6, height + 4);
+        this.maxWidth = _maxWidth;
+        return new Dimension(_maxWidth + 6, height + 4);
     }
 }

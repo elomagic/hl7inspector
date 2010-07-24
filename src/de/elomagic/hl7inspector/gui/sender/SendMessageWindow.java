@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.sender;
 
 import de.elomagic.hl7inspector.gui.monitor.TraceMonitorDialog;
@@ -25,17 +24,20 @@ import java.awt.BorderLayout;
  * @author rambow
  */
 public class SendMessageWindow extends TraceMonitorDialog {
-    
+
     /** Creates a new instance of ToolBar */
     private SendMessageWindow() {
         super("Send Message Dialog");
     }
-    
-    protected void init() {        
+
+    @Override
+    protected void init() {
         add(new SendPanel(), BorderLayout.CENTER);
     }
-    
-    public final static SendMessageWindow getInstance() { return instance; } 
-    private final static SendMessageWindow instance = new SendMessageWindow();  
 
+    public static SendMessageWindow getInstance() {
+        return instance;
+    }
+
+    private final static SendMessageWindow instance = new SendMessageWindow();
 }

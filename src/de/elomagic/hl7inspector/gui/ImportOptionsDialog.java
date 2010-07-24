@@ -81,6 +81,7 @@ public class ImportOptionsDialog extends BaseDialog {
         return ask();
     }
     
+    @Override
     public void ok() {
         if (cbbPhrase.getSelectedItem().toString().length() != 0) {
             StartupProperties.getInstance().putPhrase(cbbPhrase.getSelectedItem().toString());
@@ -179,7 +180,7 @@ public class ImportOptionsDialog extends BaseDialog {
         };
         cbEncoding.setModel(new DefaultComboBoxModel(modelEnc));
         
-        cbbPhrase = new JComboBox(StartupProperties.getInstance().getPhrases());
+        cbbPhrase = new JComboBox(StartupProperties.getInstance().getPhrases().toArray());
         cbbPhrase.setSelectedIndex(-1);
         cbbPhrase.setEditable(true);
         
@@ -272,6 +273,7 @@ public class ImportOptionsDialog extends BaseDialog {
             putValue(AbstractAction.ACTION_COMMAND_KEY, cmd);
         }
         
+        @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
             boolean b = !e.getActionCommand().equals("PARSE");
             updateParseModeButtons(b);

@@ -17,6 +17,7 @@
 
 package de.elomagic.hl7inspector.profile;
 
+import java.util.List;
 import java.util.Vector;
 import nanoxml.XMLElement;
 
@@ -36,7 +37,7 @@ public class DataTypeItem {
     }
     
     public DataTypeItem(XMLElement xml) {
-        Vector v = xml.getChildren();
+        List v = xml.getChildren();
         for (int i=0;i<v.size();i++) {
             XMLElement el = (XMLElement)v.get(i);
             

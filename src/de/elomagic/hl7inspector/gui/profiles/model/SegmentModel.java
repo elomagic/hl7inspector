@@ -14,12 +14,11 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.model;
 
 import de.elomagic.hl7inspector.profile.SegmentItem;
 import de.elomagic.hl7inspector.profile.SegmentList;
-import java.util.Enumeration;
+import java.util.Iterator;
 import org.apache.log4j.Logger;
 
 /**
@@ -27,40 +26,47 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class SegmentModel extends ProfileModel {
-    
+
     /** Creates a new instance of SegmentModel */
-    public SegmentModel() { super(); }
+    public SegmentModel() {
+        super();
+    }
 
     /** Creates a new instance of SegmentModel */
     public SegmentModel(SegmentList segmentList) {
         super();
-        
+
         setModel(segmentList);
     }
-    
+
     public void setModel(SegmentList segmentList) {
         clear();
-        
-        Enumeration keys = segmentList.keys();
-        
-        while (keys.hasMoreElements()) {
-            String key = keys.nextElement().toString();
+
+        Iterator<String> it = segmentList.keySet().iterator();
+
+        while (it.hasNext()) {
+            String key = it.next();
             SegmentItem seg = segmentList.getSegment(key);
             table.add(seg);
-        }        
-    }
-    
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        SegmentItem seg = (SegmentItem)table.get(rowIndex);
-        
-        switch (columnIndex) {
-            case 0: return seg.getId();
-            case 1: return seg.getDescription();
-            case 2: return seg.getChapter();
-            default: return "";
         }
     }
-    
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        SegmentItem seg = (SegmentItem) table.get(rowIndex);
+
+        switch (columnIndex) {
+            case 0:
+                return seg.getId();
+            case 1:
+                return seg.getDescription();
+            case 2:
+                return seg.getChapter();
+            default:
+                return "";
+        }
+    }
+
     /**
      *  This empty implementation is provided so users don't have to implement
      *  this method if their data model is not editable.
@@ -70,42 +76,62 @@ public class SegmentModel extends ProfileModel {
      * @param rowIndex   row of cell
      * @param columnIndex  column of cell
      */
+    @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         try {
-            SegmentItem seg = (SegmentItem)table.get(rowIndex);
+            SegmentItem seg = (SegmentItem) table.get(rowIndex);
 
             switch (columnIndex) {
-                case 0: seg.setId(aValue.toString()); break;
-                case 1: seg.setDescription(aValue.toString()); break;
-                case 2: seg.setChapter(aValue.toString()); break;
-                default: ;
-            }        
-            
+                case 0:
+                    seg.setId(aValue.toString());
+                    break;
+                case 1:
+                    seg.setDescription(aValue.toString());
+                    break;
+                case 2:
+                    seg.setChapter(aValue.toString());
+                    break;
+                default:
+                    ;
+            }
+
             fireTableCellUpdated(rowIndex, columnIndex);
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
         }
-    }       
-    
-    public int getColumnCount() { return 3; }
-    
+    }
+
+    @Override
+    public int getColumnCount() {
+        return 3;
+    }
+
     public SegmentItem getSegment(int rowIndex) {
         SegmentItem seg = new SegmentItem(
                 getValueAt(rowIndex, 0).toString(),
                 getValueAt(rowIndex, 1).toString(),
                 getValueAt(rowIndex, 2).toString());
-        
+
         return seg;
     }
-    
+
+    @Override
     public String getColumnName(int col) {
         switch (col) {
-            case 0: return "Id";
-            case 1: return "Description";
-            case 2: return "Chapter";
-            default: return "";
+            case 0:
+                return "Id";
+            case 1:
+                return "Description";
+            case 2:
+                return "Chapter";
+            default:
+                return "";
         }
     }
-    
-    public Class getDefaultRowClass() { return SegmentItem.class; }
+
+    @Override
+    public Class getDefaultRowClass() {
+        return SegmentItem.class;
+    }
+
 }

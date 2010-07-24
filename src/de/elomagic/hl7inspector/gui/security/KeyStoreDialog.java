@@ -14,34 +14,30 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.security;
 
-import de.elomagic.hl7inspector.Hl7Inspector;
 import de.elomagic.hl7inspector.gui.*;
-import java.io.File;
-import java.io.FileInputStream;
 import java.security.KeyStore;
-import java.util.Vector;
+import java.util.List;
 import org.apache.log4j.Logger;
-
 
 /**
  *
  * @author rambow
  */
 public class KeyStoreDialog extends PanelDialog {
-    
+
     /** Creates a new instance of ProfileDefinitionDialog */
     public KeyStoreDialog(KeyStore keyStore) throws Exception {
         super(Desktop.getInstance(), "Keystore Dialog", true);
-        
+
         this.keyStore = keyStore;
     }
-    
+
+    @Override
     public boolean ask() {
-        boolean result = false;        
-        
+        boolean result = false;
+
 //        profile = new Profile();
 //
 //        try {
@@ -61,24 +57,24 @@ public class KeyStoreDialog extends PanelDialog {
 //            Logger.getLogger(getClass()).error(e.getMessage(), e);
 //            SimpleDialog.error(e, "Unable to read profile");
 //        }
-        
+
         return super.ask();
     }
-    
+
+    @Override
     protected void read() {
-        Vector list = getPanelList();
-        for (int i=0; i<list.size(); i++)
-            ((KeyStorePanel)list.get(i)).read(keyStore);
-//
-//        pnlCom.setValidateStatus(profile.validate().size() == 0);
+        List list = getPanelList();
+        for (int i = 0; i < list.size(); i++) {
+            ((KeyStorePanel) list.get(i)).read(keyStore);
+        }
     }
-    
+
     private KeyStore keyStore;
 //    private Profile     profile;
-    
-    private CommonPanel     pnlCom;
+
+    private CommonPanel pnlCom;
 //    public CommonPanel getCommonPanel() { return pnlCom; }
-    
+    @Override
     protected void init() {
         try {
             pnlCom = new CommonPanel(this);
@@ -91,15 +87,18 @@ public class KeyStoreDialog extends PanelDialog {
 //            getPanelList().add(new TablePanel(this));
 
             super.init();
-            
+
             setSize(750, 500);
-            
-            setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));                                            
+
+            setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             SimpleDialog.error(e, e.getMessage());
         }
     }
-    
-    public KeyStore getKeyStore() { return keyStore; }    
+
+    public KeyStore getKeyStore() {
+        return keyStore;
+    }
+
 }

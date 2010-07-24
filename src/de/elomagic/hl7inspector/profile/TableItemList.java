@@ -14,35 +14,40 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  *
  * @author rambow
  */
-public class TableItemList extends Hashtable<String, TableItem> {
-    
+public class TableItemList extends HashMap<String, TableItem> {
+
     /** Creates a new instance of DataTypeList */
-    public TableItemList() { }
-    
-    public TableItem getTableItem(String tableId, String value) { return get(tableId + '-' + value); }
-    
-    public void addTableItem(TableItem value) { put(value.getId() + '-' + value.getValue(), value); }
-    
+    public TableItemList() {
+    }
+
+    public TableItem getTableItem(String tableId, String value) {
+        return get(tableId + '-' + value);
+    }
+
+    public void addTableItem(TableItem value) {
+        put(value.getId() + '-' + value.getValue(), value);
+    }
+
     public boolean containsTable(String tableId) {
         boolean result = false;
-        
-        Enumeration enu = elements();
-        while ((enu.hasMoreElements()) && (!result)) {
-            TableItem ti = (TableItem)enu.nextElement();
-        
+
+        Iterator<TableItem> it = values().iterator();
+        while ((it.hasNext()) && (!result)) {
+            TableItem ti = it.next();
+
             result = ti.getId().equals(tableId);
         }
-        
+
         return result;
     }
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
 import java.io.File;
@@ -24,14 +23,23 @@ import java.io.File;
  * @author rambow
  */
 public class ProfileFile extends File {
-    
+
     /** Creates a new instance of ProfileFile */
-    public ProfileFile(String pathname) { super(pathname); }
-    public ProfileFile(File file) { super(file.getAbsolutePath()); }
-    
-    public String getDescription() { return desc; }
-    
-    public void setDescription(String value) { desc = value; }
-    
+    public ProfileFile(String pathname) {
+        super(pathname);
+    }
+
+    public ProfileFile(File file) {
+        super(file.getAbsolutePath());
+    }
+
+    public String getDescription() {
+        return desc;
+    }
+
+    public void setDescription(String value) {
+        desc = value;
+    }
+
     private String desc = "";
 }

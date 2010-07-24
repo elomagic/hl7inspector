@@ -14,80 +14,97 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
+import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
 import nanoxml.XMLElement;
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
 /**
  *
  * @author rambow
  */
+@Root
 public class SegmentItem extends Properties {
-    
-    /** Creates a new instance of SegmentDefinitions */    
-    public SegmentItem()  { }
-    
-    public SegmentItem(String _id, String desc, String _chapter)  {
-        
-        setId(_id);
-        description = desc;
-        chapter     = _chapter;
+
+    /** Creates a new instance of SegmentDefinitions */
+    public SegmentItem() {
     }
-    
+
+    public SegmentItem(String _id, String desc, String _chapter) {
+        this.id = _id;
+        this.description = desc;
+        this.chapter = _chapter;
+    }
+
     public SegmentItem(XMLElement xml) {
-        Vector v = xml.getChildren();
-        for (int i=0;i<v.size();i++) {
-            XMLElement el = (XMLElement)v.get(i);
-            
+        List v = xml.getChildren();
+        for (int i = 0; i < v.size(); i++) {
+            XMLElement el = (XMLElement) v.get(i);
+
             if (el.getName().equals("id")) {
-                setId(el.getContent());
+                this.id = el.getContent();
             } else if (el.getName().equals("description")) {
-                setDescription(el.getContent());
+                this.description = el.getContent();
             } else if (el.getName().equals("chapter")) {
-                setChapter(el.getContent());
+                this.description = el.getContent();
             }
         }
     }
-    
+
     public XMLElement getXMLElement() {
         XMLElement xml = new XMLElement();
         xml.setName("segment");
         xml.setAttribute("id", getId());
-        
+
         XMLElement el = new XMLElement();
         el.setName("id");
         el.setContent(getId());
         xml.addChild(el);
-        
+
         el = new XMLElement();
         el.setName("description");
         el.setContent(getDescription());
         xml.addChild(el);
-        
+
         el = new XMLElement();
         el.setName("chapter");
         el.setContent(getChapter());
         xml.addChild(el);
-        
+
         return xml;
-    }    
-    
-    public String getChapter() { return chapter; }
-    
-    public void setChapter(String chapter) { this.chapter = chapter; }
-    
-    public String getDescription() { return description; }
-    
-    public void setDescription(String d) { description = d; }        
-    
-    public String getId() { return id; }
-    
-    public void setId(String id) { this.id = id; }
-    
-    private String id           = "";
-    private String description  = "";
-    private String chapter      = "";
+    }
+
+    @Element(name = "chapter", required = false)
+    private String chapter = "";
+    public String getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(String chapter) {
+        this.chapter = chapter;
+    }
+
+    @Element(name = "description", required = false)
+    private String description = "";
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String d) {
+        description = d;
+    }
+
+    @Element(name = "id", required = false)
+    private String id = "";
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 }

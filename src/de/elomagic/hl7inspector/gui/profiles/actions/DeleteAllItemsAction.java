@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
 import de.elomagic.hl7inspector.gui.SimpleDialog;
@@ -32,27 +31,29 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class DeleteAllItemsAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public DeleteAllItemsAction(JTable t) {
-	super("Delete All", ResourceLoader.loadImageIcon("edit_remove.png"));
-	
-	table = t;
-	
-	putValue(SHORT_DESCRIPTION, "Delete all items");
-	putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        super("Delete All", ResourceLoader.loadImageIcon("edit_remove.png"));
+
+        table = t;
+
+        putValue(SHORT_DESCRIPTION, "Delete all items");
+        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             if (SimpleDialog.confirmYesNo("Are you sure?") == 0) {
-                ((ProfileModel)((SortedTableModel) table.getModel()).getTableModel()).clear();
+                ((ProfileModel) ((SortedTableModel) table.getModel()).getTableModel()).clear();
             }
         } catch (Exception ee) {
             Logger.getLogger(getClass()).error(ee.getMessage(), ee);
             SimpleDialog.error(ee, ee.getMessage());
         }
-        
+
     }
-    
+
     private JTable table;
 }

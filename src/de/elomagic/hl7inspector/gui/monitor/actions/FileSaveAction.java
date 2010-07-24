@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.monitor.actions;
 
 import de.elomagic.hl7inspector.StartupProperties;
@@ -38,28 +37,29 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class FileSaveAction extends AbstractAction {
-    
+
     /** Creates a new instance of FileSaveAsAction */
     public FileSaveAction(CharacterMonitor d) {
         super("", ResourceLoader.loadImageIcon("document-save.png"));
-        
+
         dlg = d;
-        
+
         putValue(SHORT_DESCRIPTION, "Save trace log...");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
-        /** TODODialog must be top mosted. Actual it will be toped by receive/send window. */       
+        /** TODODialog must be top mosted. Actual it will be toped by receive/send window. */
         JFileChooser fc = new JFileChooser(StartupProperties.getInstance().getLastSaveFolder());
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setDialogTitle("Save trace log dialog");
         fc.setSelectedFile(new File(StartupProperties.getInstance().getLastSaveFolder().getAbsolutePath().concat("\\hl7_receive_trace_log.txt")));
         fc.addChoosableFileFilter(new TextFileFilter());
-        
-        if(fc.showSaveDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+
+        if (fc.showSaveDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
-            
+
             if (file.exists()) {
                 if (SimpleDialog.confirmYesNo("File already exists. Overwrite?") == JOptionPane.YES_OPTION) {
                     try {
@@ -69,7 +69,7 @@ public class FileSaveAction extends AbstractAction {
                             try {
                                 bout.write(dlg.getText().getBytes());
 
-                                bout.flush();                            
+                                bout.flush();
                             } finally {
                                 bout.close();
                             }
@@ -82,8 +82,8 @@ public class FileSaveAction extends AbstractAction {
                 }
             }
         }
-        
+
     }
-    
+
     private CharacterMonitor dlg;
 }

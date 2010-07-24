@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
 import de.elomagic.hl7inspector.gui.SimpleDialog;
@@ -32,23 +31,25 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class DeleteItemAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public DeleteItemAction(JTable t) {
-	super("Delete", ResourceLoader.loadImageIcon("edit_remove.png"));
-	
-	table = t;
-	
-	putValue(SHORT_DESCRIPTION, "Remove selected item");
-	putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        super("Delete", ResourceLoader.loadImageIcon("edit_remove.png"));
+
+        table = t;
+
+        putValue(SHORT_DESCRIPTION, "Remove selected item");
+        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             if (table.getSelectedRow() != -1) {
                 if (SimpleDialog.confirmYesNo("Are you sure?") == 0) {
                     int relativeRow = table.getSelectedRow();
-                    int absoluteRow = ((SortedTableModel)table.getModel()).modelIndex(relativeRow);                    
-                    ((ProfileModel)((SortedTableModel) table.getModel()).getTableModel()).deleteRow(absoluteRow);
+                    int absoluteRow = ((SortedTableModel) table.getModel()).modelIndex(relativeRow);
+                    ((ProfileModel) ((SortedTableModel) table.getModel()).getTableModel()).deleteRow(absoluteRow);
                 }
             } else {
                 SimpleDialog.error("No profile selected!");
@@ -57,8 +58,8 @@ public class DeleteItemAction extends AbstractAction {
             Logger.getLogger(getClass()).error(ee.getMessage(), ee);
             SimpleDialog.error(ee, ee.getMessage());
         }
-        
+
     }
-    
+
     private JTable table;
 }

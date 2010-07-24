@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -48,131 +47,139 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class ReaderProgessDialog extends JDialog implements MessageImportListener, ActionListener {
-    
+
     /** Creates a new instance of ReaderProgessDialog */
     public ReaderProgessDialog() {
         super(Desktop.getInstance());
-        
+
         init();
     }
-    
+
     private void init() {
         setTitle("File Reading Progress");
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        
+
         setLayout(new BorderLayout());
-        
+
         lblSource.getFont().deriveFont(Font.BOLD);
         bar.setIndeterminate(true);
-        
+
         btAbort.addActionListener(this);
-        
+
         buttonPanel.add(btAbort);
-        
-        
+
+
         FormLayout layout = new FormLayout(
                 "8dlu, p, 4dlu, p:grow, p, 2dlu, p, p, p, p:grow",
-//            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
+                //            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
                 "p, 3dlu, p, 3dlu, p, 3dlu, p, 7dlu, p, 3dlu, p, 7dlu, p");   // rows
-        
+
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();
         CellConstraints cc = new CellConstraints();
-        
+
         // 1st row
-        builder.add(new GradientLabel("Source"),        cc.xyw(1,   1,  10));
-        
+        builder.add(new GradientLabel("Source"), cc.xyw(1, 1, 10));
+
         // 2nd row
-        builder.addLabel("Name:",             cc.xy(2,   3));      // Ok
-        builder.add(lblSource,                cc.xyw(4,   3,  7));
-        
+        builder.addLabel("Name:", cc.xy(2, 3));      // Ok
+        builder.add(lblSource, cc.xyw(4, 3, 7));
+
         // 3rd row
-        builder.addLabel("Size:",             cc.xy(2,   5));        // Ok
-        builder.add(lblSize,                  cc.xyw(4,   5,  7));        // Ok
-        
+        builder.addLabel("Size:", cc.xy(2, 5));        // Ok
+        builder.add(lblSize, cc.xyw(4, 5, 7));        // Ok
+
         // 4th row
-        builder.add(new GradientLabel("Progress"),      cc.xyw(1,   7,  10));
-        
+        builder.add(new GradientLabel("Progress"), cc.xyw(1, 7, 10));
+
         // 5th row
-        builder.addLabel("Message:",          cc.xy(2,   9));
-        builder.add(lblMessages,              cc.xyw(4,   9,  2));
-        builder.addLabel("Size:",             cc.xy(7,   9));
-        builder.add(lblBytes,                 cc.xyw(9,   9,  2));
-        
+        builder.addLabel("Message:", cc.xy(2, 9));
+        builder.add(lblMessages, cc.xyw(4, 9, 2));
+        builder.addLabel("Size:", cc.xy(7, 9));
+        builder.add(lblBytes, cc.xyw(9, 9, 2));
+
         // 6th row
-        builder.add(bar,                      cc.xyw(1,   11, 10));
-        
+        builder.add(bar, cc.xyw(1, 11, 10));
+
         // 7th row
-        builder.add(buttonPanel,              cc.xyw(1,   13, 10));
-        
+        builder.add(buttonPanel, cc.xyw(1, 13, 10));
+
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
-        
+
         // Button pan
-        
+
         pack();
-        
-        setSize(300, getPreferredSize()!=null?getPreferredSize().height:230);
-        
+
+        setSize(300, getPreferredSize() != null ? getPreferredSize().height : 230);
+
         setBounds(ToolKit.centerFrame(this, this.getOwner()));
     }
-    
+
     public void read(InputStream fin, ImportOptionBean readOptions) throws IOException {
         setModal(true);
         options = readOptions;
-        
+
         Desktop.getInstance().getScrollPane().getVerticalScrollBar().setValue(Desktop.getInstance().getScrollPane().getVerticalScrollBar().getMaximum());
-                         
-        model = (readOptions.isClearBuffer())?new Hl7TreeModel():(Hl7TreeModel)Desktop.getInstance().getModel();
+
+        model = (readOptions.isClearBuffer()) ? new Hl7TreeModel() : (Hl7TreeModel) Desktop.getInstance().getModel();
         model.locked();
         thread = new MessageImportThread(fin, readOptions);
         thread.addListener(this);
         thread.start();
-        
+
         setVisible(true);
 //    } finally {
 //      setVisible(false);
 //    }
     }
-    
-    private JLabel  lblSource   = new JLabel();
-    private JLabel  lblSize     = new JLabel("?");
-    private JLabel  lblMessages = new JLabel("0");
-    private JLabel  lblBytes    = new JLabel("0");
-    private JPanel  buttonPanel = new JPanel(new FlowLayout());
-    
-    private Hl7TreeModel model  = null;
+
+    private JLabel lblSource = new JLabel();
+
+    private JLabel lblSize = new JLabel("?");
+
+    private JLabel lblMessages = new JLabel("0");
+
+    private JLabel lblBytes = new JLabel("0");
+
+    private JPanel buttonPanel = new JPanel(new FlowLayout());
+
+    private Hl7TreeModel model = null;
+
     private ImportOptionBean options = null;
-    private MessageImportThread   thread  = null;
-    
-    private boolean userAbort       = false;
-    
-    private JProgressBar bar    = new JProgressBar(JProgressBar.HORIZONTAL);
-    private JButton btAbort     = new JButton("Abort");
-    private DoRun doRun         = new DoRun();
-    
+
+    private MessageImportThread thread = null;
+
+    private boolean userAbort = false;
+
+    private JProgressBar bar = new JProgressBar(JProgressBar.HORIZONTAL);
+
+    private JButton btAbort = new JButton("Abort");
+
+    private DoRun doRun = new DoRun();
+    @Override
     public void messageRead(MessageImportEvent event) {
         Desktop.getInstance().getInputTraceWindow().addLine("Catch message.");
         boolean ignore = false;
         bytesRead = event.getBytesRead();
         // Now filtering
         if (options.getPhrase().length() != 0) {
-            String m = (options.isCaseSensitive()?event.getMessage().toString():event.getMessage().toString().toUpperCase());
-            String phrase = (options.isCaseSensitive()?options.getPhrase():options.getPhrase().toUpperCase());
-            
+            String m = (options.isCaseSensitive() ? event.getMessage().toString() : event.getMessage().toString().toUpperCase());
+            String phrase = (options.isCaseSensitive() ? options.getPhrase() : options.getPhrase().toUpperCase());
+
             if (!options.isUseRegExpr()) {
                 boolean found = (m.indexOf(phrase) != -1);
-                ignore =((( !found && !options.isNegReg()) ||
-                        found && options.isNegReg()));
+                ignore = (((!found && !options.isNegReg())
+                        || found && options.isNegReg()));
             } else {
                 boolean found = (m.matches(phrase));
-                
-                ignore =((( !found && !options.isNegReg()) ||
-                        found && options.isNegReg()));
+
+                ignore = (((!found && !options.isNegReg())
+                        || found && options.isNegReg()));
             }
         }
-        
+
         Message msg = event.getMessage();
-        
+
         if (!ignore) {
             try {
                 File file = new File(options.getSource());
@@ -182,7 +189,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
             } catch (Exception e) {
                 Logger.getLogger(getClass()).error(e.getMessage(), e);
             }
-            
+
             model.addMessage(msg);
 
             if (options.isValidate()) {
@@ -193,29 +200,30 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
                     Logger.getLogger(getClass()).error(ee.getMessage(), ee);
                 }
             }
-            
+
             // Check buffer overflow
             while (model.getChildCount(model) > options.getBufferSize()) {
-                if (options.isReadBottom())
+                if (options.isReadBottom()) {
                     model.removeChild(model, 0);
-                else {
+                } else {
                     event.getSource().terminate = true;
-                    model.removeChild(model, model.getChildCount(model)-1);
+                    model.removeChild(model, model.getChildCount(model) - 1);
                 }
             }
         } else {
             Desktop.getInstance().getInputTraceWindow().addLine("Ignore message. (Filter is active)");
         }
-        
+
         SwingUtilities.invokeLater(doRun);
     }
-    
+
+    @Override
     public void charRead(char c) {
         Desktop.getInstance().getInputTraceWindow().addChar(c);
     }
-    
+
     private long bytesRead;
-    
+    @Override
     public void importDone(MessageImportEvent event) {
         Desktop.getInstance().getInputTraceWindow().addLine("Import done.");
         Desktop.getInstance().setModel(model);
@@ -225,24 +233,28 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
             SimpleDialog.info("Import abort by user.");
         }
     }
-    
+
     class DoRun implements Runnable {
+
+        @Override
         public void run() {
             lblSource.setText(options.getSource());
             lblSize.setText(Long.toString(options.getFileSize()));
             lblBytes.setText(Long.toString(bytesRead));
-            
+
             if (model != null) {
                 lblMessages.setText(Integer.toString(model.getChildCount(model)));
                 bar.setValue(model.getChildCount(model));
             }
         }
+
     }
-    
+    @Override
     public void actionPerformed(ActionEvent ee) {
         if (thread != null) {
             userAbort = true;
             thread.terminate = true;
         }
     }
+
 }

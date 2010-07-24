@@ -14,22 +14,23 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.input;
 
 import de.elomagic.hl7inspector.gui.VectorTableModel;
 import de.elomagic.hl7inspector.utils.StringVector;
-import java.util.Vector;
+import java.util.ArrayList;
 
 /**
  *
  * @author rambow
  */
 public class ImportFileModel extends VectorTableModel {
-    
+
     /** Creates a new instance of ImportFileModel */
-    public ImportFileModel(Vector<Object> sampleLines) { table = (sampleLines==null)?new Vector<Object>():sampleLines; }
-    
+    public ImportFileModel(ArrayList<Object> sampleLines) {
+        table = (sampleLines == null) ? new ArrayList<Object>() : sampleLines;
+    }
+
     /**
      * Returns the value for the cell at <code>columnIndex</code> and
      * <code>rowIndex</code>.
@@ -38,19 +39,22 @@ public class ImportFileModel extends VectorTableModel {
      * @param	columnIndex 	the column whose value is to be queried
      * @return	the value Object at the specified cell
      */
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (table.size() <= rowIndex) {
             return "";
         }
-        
-        StringVector stack = (StringVector)table.get(rowIndex);
-        
+
+        StringVector stack = (StringVector) table.get(rowIndex);
+
         switch (columnIndex) {
-            case 0: return (getRowCount()<=rowIndex)?"":Integer.toString(rowIndex+1);
-            default: return (columnIndex<=stack.size())?stack.get(columnIndex-1):"";
+            case 0:
+                return (getRowCount() <= rowIndex) ? "" : Integer.toString(rowIndex + 1);
+            default:
+                return (columnIndex <= stack.size()) ? stack.get(columnIndex - 1) : "";
         }
     }
-    
+
     /**
      * Returns the number of columns in the model. A
      * <code>JTable</code> uses this method to determine how many columns it
@@ -59,11 +63,12 @@ public class ImportFileModel extends VectorTableModel {
      * @return the number of columns in the model
      * @see #getRowCount
      */
+    @Override
     public int getColumnCount() {
         int r = getRowCount();
-        return (r==0)?1:((StringVector)table.get(1)).size()+1;
+        return (r == 0) ? 1 : ((StringVector) table.get(1)).size() + 1;
     }
-    
+
     /**
      * Returns the number of rows in the model. A
      * <code>JTable</code> uses this method to determine how many rows it
@@ -73,5 +78,9 @@ public class ImportFileModel extends VectorTableModel {
      * @return the number of rows in the model
      * @see #getColumnCount
      */
-    public int getRowCount() { return (table.size()<10)?10:table.size(); }    
+    @Override
+    public int getRowCount() {
+        return (table.size() < 10) ? 10 : table.size();
+    }
+
 }

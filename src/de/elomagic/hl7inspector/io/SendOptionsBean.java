@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 /**
@@ -22,36 +21,72 @@ package de.elomagic.hl7inspector.io;
  * @author rambow
  */
 public class SendOptionsBean {
-    
+
     /** Creates a new instance of SendOptionsBean */
-    public SendOptionsBean() { }
-    
-    private Frame       frame           = new Frame();
-    private String      host            = "localhost";
-    private int         port            = 2100;
-    private String      encoding        = "ISO-8859-1";
-    private boolean     reuseSocket     = true;
-    private boolean     encryption      = false;
-    private boolean     authentication  = false;
+    public SendOptionsBean() {
+    }
 
-    public Frame getFrame() { return frame; }
-    public void setFrame(Frame frame) { this.frame = frame; }
+    private Frame frame = new Frame();
+    public Frame getFrame() {
+        return frame;
+    }
 
-    public String getHost() { return host; }
-    public void setHost(String host) { this.host = host; }
+    public void setFrame(Frame frame) {
+        this.frame = frame;
+    }
 
-    public int getPort() { return port; }
-    public void setPort(int port) { this.port = port; }
+    private String host = "localhost";
+    public String getHost() {
+        return host;
+    }
 
-    public String getEncoding() { return encoding; }
-    public void setEncoding(String encoding) { this.encoding = encoding; }
+    public void setHost(String host) {
+        this.host = host;
+    }
 
-    public boolean isReuseSocket() { return reuseSocket; }
-    public void setReuseSocket(boolean reuseSocket) { this.reuseSocket = reuseSocket; }        
+    private int port = 2100;
+    public int getPort() {
+        return port;
+    }
 
-    public boolean isEncryption() { return encryption; }
-    public void setEncryption(boolean encryption) { this.encryption = encryption; }
+    public void setPort(int port) {
+        this.port = port;
+    }
 
-    public boolean isAuthentication() { return authentication; }
-    public void setAuthentication(boolean authentication) { this.authentication = authentication; }
+    private String encoding = "ISO-8859-1";
+    public String getEncoding() {
+        return encoding;
+    }
+
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    private boolean reuseSocket = true;
+    public boolean isReuseSocket() {
+        return reuseSocket;
+    }
+
+    public void setReuseSocket(boolean reuseSocket) {
+        this.reuseSocket = reuseSocket;
+    }
+
+    private boolean encryption = false;
+    public boolean isEncryption() {
+        return encryption;
+    }
+
+    public void setEncryption(boolean encryption) {
+        this.encryption = encryption;
+    }
+
+    private boolean authentication = false;
+    public boolean isAuthentication() {
+        return authentication;
+    }
+
+    public void setAuthentication(boolean authentication) {
+        this.authentication = authentication;
+    }
+
 }

@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
 import de.elomagic.hl7inspector.StartupProperties;
@@ -35,24 +34,26 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class EditProfileAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public EditProfileAction(JList _list) {
         super("Edit", ResourceLoader.loadImageIcon("edit.png"));
-        
+
         list = _list;
-        
+
         putValue(SHORT_DESCRIPTION, "Edit selected profile");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             if (list.getSelectedValue() != null) {
-                ProfileFile file = (ProfileFile)list.getSelectedValue();
-                
+                ProfileFile file = (ProfileFile) list.getSelectedValue();
+
                 if (!file.exists()) {
                     SimpleDialog.error("Profile not found!");
-                } else {                
+                } else {
                     ProfileDefinitionDialog dialog = new ProfileDefinitionDialog(file);
                     if (dialog.ask()) {
                         try {
@@ -62,7 +63,7 @@ public class EditProfileAction extends AbstractAction {
                                 dialog.getProfileFile().setDescription(dialog.getProfile().getName());
                             } finally {
                                 fout.close();
-                            }                        
+                            }
 
                             StartupProperties.getInstance().setProperty(StartupProperties.DEFAULT_PROFILE, (file).toString());
 
@@ -72,7 +73,7 @@ public class EditProfileAction extends AbstractAction {
                         } catch (Exception ee) {
                             Logger.getLogger(getClass()).error(ee.getMessage(), ee);
                             SimpleDialog.error(ee);
-                        }                    
+                        }
                     }
                 }
             } else {
@@ -83,6 +84,6 @@ public class EditProfileAction extends AbstractAction {
             SimpleDialog.error(ee);
         }
     }
-    
+
     private JList list;
 }

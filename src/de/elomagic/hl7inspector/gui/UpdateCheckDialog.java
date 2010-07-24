@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -36,45 +35,45 @@ import javax.swing.JProgressBar;
  * @author rambow
  */
 public class UpdateCheckDialog extends BaseDialog {
-    
+
     /** Creates a new instance of UpdateCheckDialog */
     public UpdateCheckDialog() {
         super(Desktop.getInstance());
-        
-        init();        
+
+        init();
     }
-    
-    public final static void check(boolean confirmCheck) throws Exception /* IOException, ParseException */ {
+
+    public static void check(boolean confirmCheck) throws Exception /* IOException, ParseException */ {
         StartupProperties p = StartupProperties.getInstance();
 
         Calendar lc = p.getLastUpdateCheck();
-        
+
         boolean doCheck = !(p.getAutoUpdatePeriod() < 0);
-        
+
         if (doCheck) {
             lc.add(Calendar.DAY_OF_MONTH, p.getAutoUpdatePeriod());
         }
-        
+
         Calendar n = Calendar.getInstance();
         n.setTime(new Date());
         n.set(Calendar.HOUR_OF_DAY, lc.get(Calendar.HOUR_OF_DAY));
         n.set(Calendar.MINUTE, lc.get(Calendar.MINUTE));
         n.set(Calendar.SECOND, lc.get(Calendar.SECOND));
         n.set(Calendar.MILLISECOND, lc.get(Calendar.MILLISECOND));
-        
+
         doCheck = (lc.before(n) || lc.equals(n)) && (doCheck);
-        
+
         if ((doCheck) && (confirmCheck) && (p.isAutoUpdateAsk())) {
             doCheck = SimpleDialog.confirmYesNo("Check for updates of Hl7Inspector ?") == 0;
         }
-        
+
         boolean b = false;
-        
+
         if (!confirmCheck || doCheck) {
-            UpdateCheckDialog dlg = new UpdateCheckDialog(); 
+            UpdateCheckDialog dlg = new UpdateCheckDialog();
 
             dlg.setVisible(true);
-            try {              
+            try {
                 dlg.repaint();
                 b = UpdateChecker.checkForUpdates();
                 p.setLastUpdateCheck(Calendar.getInstance());
@@ -86,60 +85,61 @@ public class UpdateCheckDialog extends BaseDialog {
                 SimpleDialog.info("No update of Hl7Inspector available");
             }
         }
-        
+
         if (b) {
             // FEATURE Open side with default web browser
             SimpleDialog.info("A new version of Hl7Inspector available on www.elomagic.de");
         }
     }
-        
+
     private void init() {
         getBanner().setVisible(false);
         getButtonPane().setVisible(false);
-        
+
         setTitle("Update check");
         setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        
+
         setLayout(new BorderLayout(4, 4));
-        
+
         lblText.getFont().deriveFont(Font.BOLD);
         lblText.setHorizontalAlignment(JLabel.CENTER);
         pbCheck.setIndeterminate(true);
-        
+
 //        btCancel.addActionListener(this);
         //        buttonPanel.add(btAbort);
-        
-        
+
+
         FormLayout layout = new FormLayout(
                 "p:grow, p, p:grow",
-//            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
+                //            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
                 "p, 8dlu, p, 8dlu, p, p:grow");   // rows
-        
+
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();
         CellConstraints cc = new CellConstraints();
-        
+
         // 1st row
-        builder.add(lblText,            cc.xy(1,   1));
-        
+        builder.add(lblText, cc.xy(1, 1));
+
         // 2nd row
-        builder.add(pbCheck,            cc.xyw(1,   3,  3));
-        
+        builder.add(pbCheck, cc.xyw(1, 3, 3));
+
         // 3rd row
 //        builder.add(btCancel,           cc.xy(2,   5));        // Ok
-                
+
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
-        
+
         // Button pan
-        
+
         pack();
-        
-        setSize(300, getPreferredSize()!=null?getPreferredSize().height:230);
-        
+
+        setSize(300, getPreferredSize() != null ? getPreferredSize().height : 230);
+
         setBounds(ToolKit.centerFrame(this, this.getOwner()));
     }
-    
-    private JLabel          lblText     = new JLabel("Looking for updates...");
-    private JProgressBar    pbCheck     = new JProgressBar();
+
+    private JLabel lblText = new JLabel("Looking for updates...");
+
+    private JProgressBar pbCheck = new JProgressBar();
 //    private JButton         btCancel    = new JButton("Abort");
 }

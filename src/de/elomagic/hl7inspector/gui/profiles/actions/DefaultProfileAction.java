@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
 import de.elomagic.hl7inspector.StartupProperties;
@@ -32,24 +31,26 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class DefaultProfileAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public DefaultProfileAction(JList _list) {
         super("Set default", null);//ResourceLoader.loadImageIcon("edit_add.png"));
-        
+
         list = _list;
-        
+
         putValue(SHORT_DESCRIPTION, "Set selected profile as default");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             if (list.getSelectedValue() != null) {
-                ProfileFile file =  (ProfileFile)list.getSelectedValue();            
+                ProfileFile file = (ProfileFile) list.getSelectedValue();
 
                 StartupProperties.getInstance().setProperty(StartupProperties.DEFAULT_PROFILE, (file).toString());
                 list.repaint();
-                
+
                 Desktop.getInstance().setProfileFile(file);
             } else {
                 SimpleDialog.error("No profile selected!");
@@ -58,6 +59,6 @@ public class DefaultProfileAction extends AbstractAction {
             Logger.getLogger(getClass()).error(ee.getMessage(), ee);
         }
     }
-    
+
     private JList list;
 }

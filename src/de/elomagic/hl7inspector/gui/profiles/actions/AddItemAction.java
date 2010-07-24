@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
 import de.elomagic.hl7inspector.gui.SimpleDialog;
@@ -33,25 +32,27 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class AddItemAction extends AbstractAction {
+
     /** Creates a new instance of FileOpenAction */
     public AddItemAction(JTable t) {
         super("Add", ResourceLoader.loadImageIcon("edit_add.png"));
-        
+
         table = t;
-        
+
         putValue(SHORT_DESCRIPTION, "Add new item at the bottom");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
-    
+
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             if (table.getModel() instanceof SortedTableModel) {
-                SortedTableModel sm = (SortedTableModel)table.getModel();
+                SortedTableModel sm = (SortedTableModel) table.getModel();
                 if (sm.getTableModel() instanceof ProfileModel) {
-                    int i = ((ProfileModel)sm.getTableModel()).addRowObject();
-                    
-                    Rectangle r = new Rectangle(0, i, 0, i);                    
-                    table.scrollRectToVisible(r);                                        
+                    int i = ((ProfileModel) sm.getTableModel()).addRowObject();
+
+                    Rectangle r = new Rectangle(0, i, 0, i);
+                    table.scrollRectToVisible(r);
                 }
             }
         } catch (Exception ee) {
@@ -59,6 +60,6 @@ public class AddItemAction extends AbstractAction {
             SimpleDialog.error(ee, ee.getMessage());
         }
     }
-    
+
     private JTable table;
 }

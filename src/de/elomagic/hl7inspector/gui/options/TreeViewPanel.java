@@ -27,7 +27,6 @@ import de.elomagic.hl7inspector.gui.PanelDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -47,10 +46,12 @@ public class TreeViewPanel extends AbstractPanel {
     /** Creates a new instance of GeneralOptionPane */
     public TreeViewPanel(PanelDialog d) { super(d); }
     
+    @Override
     public void init() {
         editViewMode        = new JComboBox(new String[] { "Plain HL7 message in root message node", "Compact HL7 message information in root message node"} );
         //editNodeLength      = new JTextField();
         btNodeLength        = new JCheckBox(new AbstractAction() {
+            @Override
             public void actionPerformed(ActionEvent e) { btSpinNodeLength.setEnabled(btNodeLength.isSelected()); }            
         });
         btSpinNodeLength        = new JSpinner();
@@ -62,6 +63,7 @@ public class TreeViewPanel extends AbstractPanel {
                 
         cbFont                  = new JComboBox(ge.getAvailableFontFamilyNames());
         cbFont.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 editFontSample.setFont(Font.decode((cbFont.getSelectedItem()!=null)?cbFont.getSelectedItem().toString():""));
             }
@@ -102,12 +104,16 @@ public class TreeViewPanel extends AbstractPanel {
         add(builder.getPanel(), BorderLayout.CENTER);
     }
     
+    @Override
     public Icon getIcon() { return ResourceLoader.loadImageIcon("view_tree.png", ResourceLoader.LARGE_IMAGE); }
     
+    @Override
     public String getTitle() { return "Tree"; }
     
+    @Override
     public String getDescription() { return "Tree view selections"; }
     
+    @Override
     public void read() {
         StartupProperties p = StartupProperties.getInstance();
         
@@ -118,6 +124,7 @@ public class TreeViewPanel extends AbstractPanel {
         cbFont.setSelectedItem(p.getTreeFontName());
     }
     
+    @Override
     public void write() {
         StartupProperties p = StartupProperties.getInstance();
         

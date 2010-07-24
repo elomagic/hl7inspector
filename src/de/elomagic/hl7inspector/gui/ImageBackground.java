@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.StartupProperties;
@@ -29,40 +28,41 @@ import javax.swing.JViewport;
  * @author rambow
  */
 public class ImageBackground extends JViewport {
-    
+
     /** Creates a new instance of ImageBackground */
     public ImageBackground() {
         setBackground(SystemColor.window);
-        
+
         if (StartupProperties.getInstance().isDesktopImage()) {
             image = ResourceLoader.loadBufferedImage("desktop.bmp");
         }
-    }    
-    
+    }
+
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        
+
         if (image != null) {
             int yl = (getHeight() / image.getHeight()) + 1;
             int xl = (getWidth() / image.getWidth()) + 2;
 
-            for (int i=0; i<yl; i++) {
+            for (int i = 0; i < yl; i++) {
                 int y = i * image.getHeight();
 
                 int o = 0;
 
                 if ((i % 2) == 0) {
-                    o = -image.getWidth()/2;
+                    o = -image.getWidth() / 2;
                 }
 
-                for (int q=0; q<xl; q++) {
+                for (int q = 0; q < xl; q++) {
                     int x = q * image.getWidth() + o;
 
-                    g.drawImage(image, x, y, null);                
+                    g.drawImage(image, x, y, null);
                 }
             }
         }
     }
-    
+
     private BufferedImage image = null;
 }

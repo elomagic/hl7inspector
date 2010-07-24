@@ -29,7 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import javax.swing.AbstractAction;
@@ -50,8 +50,9 @@ public class FileRecentOpenAction extends AbstractAction {
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
-        Vector<File> files = StartupProperties.getInstance().getRecentFiles();
+        List<File> files = StartupProperties.getInstance().getRecentFiles();
         
         if (files.indexOf(file) != -1) {
             files.remove(file);
@@ -60,7 +61,7 @@ public class FileRecentOpenAction extends AbstractAction {
         while (files.size() > 8)
             files.remove(files.size()-1);
         
-        files.insertElementAt(file, 0);
+        files.add(0, file);
         
         StartupProperties.getInstance().setRecentFiles(files);
                 

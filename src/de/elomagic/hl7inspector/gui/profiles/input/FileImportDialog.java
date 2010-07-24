@@ -27,8 +27,6 @@ import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.ToolKit;
-import de.elomagic.hl7inspector.gui.profiles.*;
-import de.elomagic.hl7inspector.gui.profiles.model.*;
 import de.elomagic.hl7inspector.utils.StringVector;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -37,7 +35,7 @@ import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.LineNumberReader;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -70,12 +68,13 @@ public class FileImportDialog extends BaseDialog {
         init();
     }
     
+    @Override
     public void ok() {
         super.ok();
     }
     
-    public Vector<String> getMappingList() {
-        Vector<String>v = new Vector<String>();
+    public ArrayList<String> getMappingList() {
+        ArrayList<String>v = new ArrayList<String>();
         
         TableModel m = tblMap.getModel();
         
@@ -102,16 +101,19 @@ public class FileImportDialog extends BaseDialog {
         
         btChooseFile    = new JButton("...");
         btChooseFile.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent e) { selectFilename(); }
         } );
         
         btBeginFrom     = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
         btBeginFrom.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) { if (selectedFile != null) { loadFile(selectedFile); } }
         } );
         
         cbSepChar       = new JComboBox(new String[] { ",", ";", "TAB", "SPACE" } );
         cbSepChar.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) { if (selectedFile != null) { loadFile(selectedFile); } }
         } );
         //cbSepChar.setEditable(true);
@@ -202,7 +204,7 @@ public class FileImportDialog extends BaseDialog {
     public int getBeginFromLine() { return Integer.parseInt(btBeginFrom.getValue().toString()); }
     
     private void loadFile(File file) {
-        Vector<Object> lines = new Vector<Object>();
+        ArrayList<Object> lines = new ArrayList<Object>();
 
         char sep = getSeparatorChar();        
         
@@ -239,8 +241,8 @@ public class FileImportDialog extends BaseDialog {
         updatePreview(lines);
     }
     
-    private void updatePreview(Vector<Object> lines) {
-        Vector<String> mapItems = new Vector<String>();
+    private void updatePreview(ArrayList<Object> lines) {
+        ArrayList<String> mapItems = new ArrayList<String>();
         mapItems.add("-");
         
         for (int i=0; i<model.getColumnCount(); i++) 
@@ -248,7 +250,7 @@ public class FileImportDialog extends BaseDialog {
 
         ImportFileModel importModel = new ImportFileModel(lines);
         
-        cbMapper = new JComboBox(mapItems);
+        cbMapper = new JComboBox(mapItems.toArray());
         
         tblMap.setModel(new MapFieldModel(importModel));
         tblMap.getColumnModel().getColumn(0).setMaxWidth(40);
@@ -266,6 +268,7 @@ public class FileImportDialog extends BaseDialog {
     
     
     class MappingChangeAction implements TableModelListener {
+        @Override
         public void tableChanged(javax.swing.event.TableModelEvent e) {
             if (e.getType() == TableModelEvent.UPDATE) {
                 int col = e.getColumn();

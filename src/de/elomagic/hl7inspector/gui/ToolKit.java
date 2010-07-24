@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import java.awt.Rectangle;
@@ -26,27 +25,28 @@ import java.awt.Window;
  * @author rambow
  */
 public class ToolKit {
-    
+
     /** Creates a new instance of ToolKit */
     public ToolKit() {
     }
-    
-    public final static Rectangle centerFrame(Window window, Window parentWindow) {
+
+    public static Rectangle centerFrame(Window window, Window parentWindow) {
         parentWindow = Desktop.getInstance();
-        
+
         Rectangle r = new Rectangle(window.getBounds().width, window.getBounds().height);
-        
+
         r.x = ((parentWindow.getBounds().width - window.getBounds().width) / 2) + parentWindow.getBounds().x;
         r.y = ((parentWindow.getBounds().height - window.getBounds().height) / 2) + parentWindow.getBounds().y;
-        
+
         if (r.x > Toolkit.getDefaultToolkit().getScreenSize().width) {
             r.x = Toolkit.getDefaultToolkit().getScreenSize().width - r.width;
         }
-            
+
         if (r.y > Toolkit.getDefaultToolkit().getScreenSize().height) {
             r.y = Toolkit.getDefaultToolkit().getScreenSize().height - r.height;
         }
-                
+
         return r;
     }
+
 }

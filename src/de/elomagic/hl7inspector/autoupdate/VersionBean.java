@@ -1,12 +1,12 @@
 /*
- * Copyright 2006 Carsten Rambow
- * 
+ * Copyright 2008 Carsten Rambow
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -14,28 +14,26 @@
  * limitations under the License.
  *
  */
-package de.elomagic.hl7inspector.profile;
+package de.elomagic.hl7inspector.autoupdate;
 
-import java.util.HashMap;
+import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 /**
  *
- * @author rambow
+ * @author carsten.rambow
  */
-@Root
-public class SegmentList extends HashMap<String, SegmentItem> {
+@Root(name = "elomagic", strict = false)
+public class VersionBean {
 
-    /** Creates a new instance of SegmentList */
-    public SegmentList() {
+    @Element(name = "hl7_inspector2", required = false)
+    private VersionItemBean hl7Inspector = new VersionItemBean();
+    public VersionItemBean getHl7Inspector2() {
+        return hl7Inspector;
     }
 
-    public SegmentItem getSegment(String segmentType) {
-        return get(segmentType);
-    }
-
-    public void addSegment(SegmentItem value) {
-        put(value.getId(), value);
+    public void setHl7Inspector2(VersionItemBean hl7Inspector) {
+        this.hl7Inspector = hl7Inspector;
     }
 
 }

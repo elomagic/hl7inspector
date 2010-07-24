@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import java.awt.BorderLayout;
@@ -28,26 +27,38 @@ import javax.swing.border.SoftBevelBorder;
  * @author rambow
  */
 public class BottomPanel extends JPanel {
-    
+
     /** Creates a new instance of BottomPanel */
-    public BottomPanel() { 
-        super(new BorderLayout()); 
-        
+    public BottomPanel() {
+        super(new BorderLayout());
+
         statusPanel.setBorder(new SoftBevelBorder(SoftBevelBorder.RAISED));
         statusPanel.add(statusLabel, BorderLayout.WEST);
         statusPanel.add(profileLabel, BorderLayout.EAST);
-        
+
         add(FindBar.getInstance(), BorderLayout.NORTH);
         add(statusPanel, BorderLayout.SOUTH);
     }
-    
-    public void setProfileText(String text) { profileLabel.setText("Profile: ".concat(text).concat(" ")); }
-    public void setProfileTooltTip(String text) { profileLabel.setToolTipText(text); }
-    
-    public void setStatusText(String text) { statusLabel.setText(text); }
-    public void setStatusIcon(Icon icon) { statusLabel.setIcon(icon); }        
-    
-    private JPanel statusPanel  = new JPanel(new BorderLayout());
-    private JLabel statusLabel  = new JLabel("");
+
+    public void setProfileText(String text) {
+        profileLabel.setText("Profile: ".concat(text).concat(" "));
+    }
+
+    public void setProfileTooltTip(String text) {
+        profileLabel.setToolTipText(text);
+    }
+
+    public void setStatusText(String text) {
+        statusLabel.setText(text);
+    }
+
+    public void setStatusIcon(Icon icon) {
+        statusLabel.setIcon(icon);
+    }
+
+    private JPanel statusPanel = new JPanel(new BorderLayout());
+
+    private JLabel statusLabel = new JLabel("");
+
     private JLabel profileLabel = new JLabel("Profile: No profile selected");
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2010 Carsten Rambow
  * 
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 import de.elomagic.hl7inspector.gui.ImportOptionBean;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
@@ -29,46 +29,51 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class MessageImportThread extends Thread implements IOCharListener {
-    
-    
+
     /** Creates a new instance of MessageImportThread */
     public MessageImportThread(InputStream in, ImportOptionBean readOptions) {
         fin = in;
         options = readOptions;
-        
+
         setPriority(MIN_PRIORITY);
     }
-    
-    public void addListener(MessageImportListener value) { listener.add(value); }
-    
-    public void removeListener(MessageImportListener value) { listener.remove(value); }
-    
+
+    public void addListener(MessageImportListener value) {
+        listener.add(value);
+    }
+
+    public void removeListener(MessageImportListener value) {
+        listener.remove(value);
+    }
+
     public boolean terminate = false;
-    
-    private InputStream   fin;
-    private ImportOptionBean  options;
+
+    private InputStream fin;
+
+    private ImportOptionBean options;
+
     private MessageParserStreamReader fileparser;
-    
-    private Vector<MessageImportListener> listener = new Vector<MessageImportListener>();
-    
+
+    private List<MessageImportListener> listener = new ArrayList<MessageImportListener>();
+    @Override
     public void run() {
         try {
             InputStreamReader reader = new InputStreamReader(fin, options.getEncoding());
             fileparser = new MessageParserStreamReader(reader, options.getImportMode(), options.getFrame());
             fileparser.addListener(this);
-            
+
             Message message = null;
-            
+
             do {
                 message = fileparser.readMessage();
-                
+
                 if (message != null) {
                     try {
                         message.setSource(options.getSource());
                     } catch (Exception e) {
                         message.setSource("Unknown data stream");
                     }
-                    
+
                     fireMessageReadEvent(message);
                 }
             } while ((!terminate) && (message != null));
@@ -78,23 +83,33 @@ public class MessageImportThread extends Thread implements IOCharListener {
         }
         fireImportDoneEvent();
     }
-    
+
     protected void fireImportDoneEvent() {
-        for (int i=0; i<listener.size();i++)
+        for (int i = 0; i < listener.size(); i++) {
             listener.get(i).importDone(new MessageImportEvent(this, null, fileparser.getBytesRead()));
+        }
     }
-    
+
     protected void fireMessageReadEvent(Message message) {
-        for (int i=0; i<listener.size();i++)
+        for (int i = 0; i < listener.size(); i++) {
             listener.get(i).messageRead(new MessageImportEvent(this, message, fileparser.getBytesRead()));
+        }
     }
-    
+
     protected void fireCharRead(char c) {
-        for (int i=0; i<listener.size();i++)
+        for (int i = 0; i < listener.size(); i++) {
             listener.get(i).charRead(c);
+        }
     }
 
     // Interface IOCharListener
-    public void charReceived(Object source, char c) { fireCharRead(c); }
-    public void charSend(Object source, char c) { }
+    @Override
+    public void charReceived(Object source, char c) {
+        fireCharRead(c);
+    }
+
+    @Override
+    public void charSend(Object source, char c) {
+    }
+
 }

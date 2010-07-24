@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import com.jgoodies.forms.builder.PanelBuilder;
@@ -32,36 +31,37 @@ import javax.swing.JPanel;
  * @author rambow
  */
 public class SimpleOkCancelButtonPanel extends JPanel {
-  
-  /** Creates a new instance of SimpleOkCancelButtonPanel */
-  public SimpleOkCancelButtonPanel(Component parent) {
-    init(new DefaultCloseWindowAction(null), new DefaultCloseWindowAction(parent));
-  }
-  
-  public SimpleOkCancelButtonPanel(Action okAction, Action closeAction) {
-      init(okAction, closeAction);
-  }
-  
-  protected void init(Action okAction, Action closeAction) {
-      btOk      = new JButton(okAction);
-      btClose   = new JButton(closeAction);
-      setLayout(new BorderLayout());
-    
-      FormLayout layout = new FormLayout(
-            "p",
-            "p, 4dlu, p");   // rows
-    
-      PanelBuilder builder = new PanelBuilder(layout);
-      builder.setDefaultDialogBorder();
-      CellConstraints cc = new CellConstraints();    
 
-      builder.add(btOk,                     cc.xy (1,   1));
-      builder.add(btClose,                  cc.xy (1,   3));
-    
-      //getContentPane().add(builder.getPanel());    
-      add(builder.getPanel(), BorderLayout.CENTER);            
-  } 
-    
-  private JButton btOk;
-  private JButton btClose;           
+    /** Creates a new instance of SimpleOkCancelButtonPanel */
+    public SimpleOkCancelButtonPanel(Component parent) {
+        init(new DefaultCloseWindowAction(null), new DefaultCloseWindowAction(parent));
+    }
+
+    public SimpleOkCancelButtonPanel(Action okAction, Action closeAction) {
+        init(okAction, closeAction);
+    }
+
+    protected final void init(Action okAction, Action closeAction) {
+        btOk = new JButton(okAction);
+        btClose = new JButton(closeAction);
+        setLayout(new BorderLayout());
+
+        FormLayout layout = new FormLayout(
+                "p",
+                "p, 4dlu, p");   // rows
+
+        PanelBuilder builder = new PanelBuilder(layout);
+        builder.setDefaultDialogBorder();
+        CellConstraints cc = new CellConstraints();
+
+        builder.add(btOk, cc.xy(1, 1));
+        builder.add(btClose, cc.xy(1, 3));
+
+        //getContentPane().add(builder.getPanel());
+        add(builder.getPanel(), BorderLayout.CENTER);
+    }
+
+    private JButton btOk;
+
+    private JButton btClose;
 }
