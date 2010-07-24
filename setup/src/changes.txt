@@ -1,12 +1,9 @@
 ================================================================================
-Ver. 2.2.0.x M1 (???)
+Ver. 2.1.2.x M1 (???)
 
-(+ Message print support added)
-(+ Receive/send log print support added)
-+ Changed options take effect in runtime after saved.
-+ Internal: Tree handling changed
-+ Multi zip entry reader support added
-+ Hl7 escaped value viewer added
+* Unable to use Nimbus L&F. Fixed
+* Unable to drop files into HL7 Inspector on MacOS X. Fixed
++ Delimiters support improved.
 
 ================================================================================
 Ver. 2.1.0.500 (2006-08-02 17:01)
