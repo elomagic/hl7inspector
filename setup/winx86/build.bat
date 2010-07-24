@@ -1,7 +1,13 @@
 @ECHO OFF 
-TITLE Build elomagic HL7 Inspector Setup
+TITLE Build HL7 Inspector Setup
 SET /p APP_VERSION=<version.txt
-TITLE Build elomagic HL7 Inspector Setup Version %APP_VERSION%
+TITLE Build HL7 Inspector Setup Version %APP_VERSION%
+ECHO Create Java Lauancher
+ECHO.
+ECHO ===========================================================
+ECHO.
+ECHO Build Setup
+ECHO.
 "%NSIS_FOLDER%\makensis.exe" /DAPP_VERSION=%APP_VERSION% "hl7inspector.nsi"
 ECHO ===========================================================
 REM ECHO.
