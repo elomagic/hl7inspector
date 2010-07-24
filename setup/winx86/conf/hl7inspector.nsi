@@ -13,7 +13,7 @@
 !define APP_MANUFACTOR "elomagic"
 !define APP_REGKEY "Software\${APP_MANUFACTOR}\${APP_NAME}" 
 !define APP_UNINSTALL "Uninstall ${APP_MANUFACTOR} ${APP_NAME}.exe"
-!define APP_MAIN "hl7inspector.exe"
+!define APP_MAIN "hl7inspector.jar"
 
 !include "elomagicLF.nsh"
 
@@ -34,12 +34,13 @@ RequestExecutionLevel admin
 # Interface Settings
 
 !define MUI_ABORTWARNING
-!define MUI_FINISHPAGE_RUN "${APP_MAIN}"
+!define MUI_FINISHPAGE_RUN "$SYSDIR\javaw.exe" 
+!define MUI_FINISHPAGE_RUN_PARAMETERS "-jar $\"$INSTDIR\${APP_MAIN}$\""
 
 ;--------------------------------
 ;Pages
 	!insertmacro MUI_PAGE_WELCOME
-	# !insertmacro MUI_PAGE_LICENSE ".\src\license\license-gpl.txt"
+	!insertmacro MUI_PAGE_LICENSE "..\src\license\license-gpl.txt"
 	!insertmacro MUI_PAGE_COMPONENTS
 	!insertmacro MUI_PAGE_DIRECTORY
 	!insertmacro MUI_PAGE_INSTFILES
@@ -60,7 +61,7 @@ RequestExecutionLevel admin
 ;Installer Sections
 
 Section "${APP_NAME} ${APP_VERSION}" SecDummy
-
+	SectionIn RO
   SetOutPath "$INSTDIR"
   
   ;ADD YOUR OWN FILES HERE...
@@ -80,9 +81,9 @@ Section "${APP_NAME} ${APP_VERSION}" SecDummy
 	# Create shortcuts
 	CreateDirectory "$SMPROGRAMS\${APP_NAME}"
 	CreateShortCut "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\${APP_UNINSTALL}" "" "$INSTDIR\${APP_UNINSTALL}" 0
-	CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "javaw.exe" "$INSTDIR\bin\${APP_MAIN}" "$INSTDIR\application.ico" 0
-	CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME} Console.lnk" "java.exe" $INSTDIR\bin\${APP_MAIN}" "$INSTDIR\${APP_MAIN}" 0  	
-	CreateShortCut "$SMPROGRAMS\${APP_NAME}\Samples.lnk" "$INSTDIR\bin\samples"  
+	CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "javaw.exe" "-jar $\"$INSTDIR\${APP_MAIN}$\"" "$INSTDIR\application.ico" 0
+	CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME} [Console].lnk" "java.exe" "-jar $\"$INSTDIR\${APP_MAIN}$\"" "java.exe" 0  	
+	CreateShortCut "$SMPROGRAMS\${APP_NAME}\Samples.lnk" "$INSTDIR\samples" "" "$INSTDIR\samples"
 SectionEnd
 
 # --------------------------------
