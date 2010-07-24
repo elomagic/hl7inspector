@@ -8,7 +8,7 @@ IF "%NSIS_FOLDER%"=="" (
 	EXIT /B
 )
 
-SET /p APP_VERSION=<version.txt
+SET /p APP_VERSION=<..\..\version.number
 
 IF "%APP_VERSION%"=="" (
 	ECHO Unable to determine version of HL7 Inspector
