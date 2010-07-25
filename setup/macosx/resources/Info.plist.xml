@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+    <dict>
+        <key>CFBundleName</key>
+        <string>HL7 Inspector</string>
+        <key>CFBundleIdentifier</key>
+        <string>de.elomagic.hl7inspector</string>
+        <key>CFBundleVersion</key>
+        <string>#APP_VERSION#</string>
+        <key>CFBundleAllowMixedLocalizations</key>
+        <string>true</string>
+        <key>CFBundleExecutable</key>
+        <string>JavaApplicationStub</string>
+        <key>CFBundleDevelopmentRegion</key>
+        <string>English</string>
+        <key>CFBundlePackageType</key>
+        <string>APPL</string>
+        <key>CFBundleShortVersionString</key>
+        <string>#APP_VERSION#</string>
+        <key>CFBundleSignature</key>
+        <string>elom</string>
+        <key>CFBundleGetInfoString</key>
+        <string>HL7 Inspector #APP_VERSION#, Website: http://www.certifay.com</string>
+        <key>CFBundleInfoDictionaryVersion</key>
+        <string>6.0</string>
+        <key>CFBundleIconFile</key>
+        <string>AppIcon.icns</string>
+        <key>Java</key>
+        <dict>
+            <key>VMOptions</key>
+            <string></string>
+            <key>MainClass</key>
+            <string>de.elomagic.hl7inspector.Hl7Inspector</string>
+            <key>JVMVersion</key>
+            <string>1.6+</string>
+            <key>ClassPath</key>
+            <array>
+                <string>$JAVAROOT/hl7inspector.jar</string>
+                <string>$JAVAROOT/looks-2.3.1.jar</string>
+                <string>$JAVAROOT/forms-1.3.0.jar</string>
+                <string>$JAVAROOT/l2fprod-common-all.jar</string>
+                <string>$JAVAROOT/log4j-1.2.16.jar</string>
+                <string>$JAVAROOT/simple-xml-2.3.5.jar</string>
+                <string>$JAVAROOT/nanoxml-lite-2.2.3.jar</string>
+            </array>
+        </dict>
+    </dict>
+</plist>
