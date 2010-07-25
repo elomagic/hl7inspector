@@ -67,23 +67,25 @@ Section "${APP_NAME} ${APP_VERSION}" SecDummy
   ;ADD YOUR OWN FILES HERE...
   File /r /x ".svn" "..\src\*.*"
   
-  ;Store installation folder
-  WriteRegStr HKLM "${APP_REGKEY}" "" $INSTDIR 
+    ; Store installation folder
+    WriteRegStr HKLM "${APP_REGKEY}" "" $INSTDIR
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "DisplayName" "${APP_MANUFACTOR} ${APP_NAME}"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "UninstallString" '"$INSTDIR\${APP_UNINSTALL}"'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "NoRepair" 1
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "DisplayName" "${APP_MANUFACTOR} ${APP_NAME}"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "UninstallString" '"$INSTDIR\${APP_UNINSTALL}"'
+    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "NoModify" 1
+    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "NoRepair" 1
   
-	# Create uninstaller
-	WriteUninstaller "$INSTDIR\${APP_UNINSTALL}"
+    # Create uninstaller
+    WriteUninstaller "$INSTDIR\${APP_UNINSTALL}"
   
-	# Create shortcuts
-	CreateDirectory "$SMPROGRAMS\${APP_NAME}"
-	CreateShortCut "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\${APP_UNINSTALL}" "" "$INSTDIR\${APP_UNINSTALL}" 0
-	CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "javaw.exe" "-jar $\"$INSTDIR\${APP_MAIN}$\"" "$INSTDIR\application.ico" 0
-	CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME} [Console].lnk" "java.exe" "-jar $\"$INSTDIR\${APP_MAIN}$\"" "java.exe" 0  	
-	CreateShortCut "$SMPROGRAMS\${APP_NAME}\Samples.lnk" "$INSTDIR\samples" "" "$INSTDIR\samples"
+    # Create shortcuts
+    CreateDirectory "$SMPROGRAMS\${APP_NAME}"
+    CreateShortCut "$SMPROGRAMS\${APP_NAME}\Uninstall.lnk" "$INSTDIR\${APP_UNINSTALL}" "" "$INSTDIR\${APP_UNINSTALL}" 0
+    CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME}.lnk" "javaw.exe" "-jar $\"$INSTDIR\${APP_MAIN}$\"" "$INSTDIR\application.ico" 0
+    CreateShortCut "$SMPROGRAMS\${APP_NAME}\${APP_NAME} [Console].lnk" "java.exe" "-jar $\"$INSTDIR\${APP_MAIN}$\"" "java.exe" 0
+    CreateShortCut "$SMPROGRAMS\${APP_NAME}\Samples.lnk" "$INSTDIR\samples" "" "$INSTDIR\samples"
+
+    CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "javaw.exe" "-jar $\"$INSTDIR\${APP_MAIN}$\"" "$INSTDIR\application.ico" 0
 SectionEnd
 
 # --------------------------------
@@ -117,3 +119,10 @@ Section "Uninstall"
   DeleteRegKey /ifempty HKLM "${APP_REGKEY}"
 
 SectionEnd
+
+Function .onInit
+    # TODO Check installed jre/jdk
+    # MessageBox MB_YESNO "Java Runtime not found. Continue?" IDYES NoAbort
+    # Abort;
+    # NoAbort:
+FunctionEnd
