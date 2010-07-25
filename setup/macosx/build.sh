@@ -38,7 +38,8 @@ echo ==================================
 echo
 echo Building Mac OS setup file
 echo
-/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -d 'HL7Inspector Setup.pmdoc' -v -o 'dist/HL7Inspector Setup.pkg'
+mkdir -p "dist"
+/Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -d 'hl7inspector.pmdoc' -v -o 'dist/HL7 Inspector 2.1.2 Setup.pkg'
 echo
 echo ==================================
 echo
