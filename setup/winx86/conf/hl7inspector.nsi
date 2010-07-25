@@ -11,9 +11,10 @@
 #!define APP_VERSION "1.0.0.9"
 !define APP_NAME "HL7 Inspector"
 !define APP_MANUFACTOR "elomagic"
+!define APP_MAIN "hl7inspector.jar"
+
 !define APP_REGKEY "Software\${APP_MANUFACTOR}\${APP_NAME}" 
 !define APP_UNINSTALL "Uninstall ${APP_MANUFACTOR} ${APP_NAME}.exe"
-!define APP_MAIN "hl7inspector.jar"
 
 !include "elomagicLF.nsh"
 
