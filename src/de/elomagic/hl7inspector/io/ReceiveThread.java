@@ -149,6 +149,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
                             }
                         } finally {
                             socket.close();
+                            socket = null;
                         }
                     } catch (EndOfStreamException ex) {
                         fireStatusEvent("End of stream detected. Still listening on port " + port);
