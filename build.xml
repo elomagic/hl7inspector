@@ -83,10 +83,10 @@
     </target>
     
     <target name="-post-jar">
-        <copy todir="./setup/src">
-            <fileset dir="./dist" excludes="README.TXT *.tar.* *.zip"/>
-        </copy>
-              
+        <zip destfile="${basedir}/dist/hl7inspector-${version.number}-bin.zip">
+            <zipfileset dir="dist"/> <!--prefix="hl7inspector-${version.number}/dist"/>-->
+        </zip>
+        
         <zip destfile="${basedir}/dist/hl7inspector-${version.number}-src.zip">
             <zipfileset dir="src" prefix="hl7inspector-${version.number}/src"/>
             <zipfileset dir="." includes="readme.txt, version.prefix.number, build.xml, build.number" prefix="hl7inspector-${version.number}"/>
