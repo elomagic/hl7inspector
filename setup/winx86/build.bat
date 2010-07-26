@@ -25,7 +25,7 @@ MKDIR dist
 RMDIR /S /Q src
 MKDIR src
 XCOPY ..\src\*.* .\src /E /R /Y
-COPY ..\application.ico .\src 
+COPY ..\resources\application.ico .\src
 ECHO.
 REM ECHO ===========================================================
 REM ECHO.
