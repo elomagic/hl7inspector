@@ -1,5 +1,10 @@
 ================================================================================
-Ver. 2.1.2.x M1 (???)
+Ver. 2.1.3.? (2010-?)
+
+* Unable tostop/start receiver after receiving message. Fixed
+
+================================================================================
+Ver. 2.1.2.510 (2010-07-25)
 
 * Unable to use Nimbus L&F. Fixed
 * Unable to drop files into HL7 Inspector on MacOS X. Fixed
