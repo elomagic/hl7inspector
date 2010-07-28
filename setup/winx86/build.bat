@@ -25,14 +25,8 @@ MKDIR dist
 RMDIR /S /Q src
 MKDIR src
 XCOPY ..\src\*.* .\src /E /R /Y
-COPY ..\resources\application.ico .\src
+COPY .\resources\application.ico .\src
 ECHO.
-REM ECHO ===========================================================
-REM ECHO.
-REM ECHO Create Java Launcher
-REM ECHO.
-REM "%LAUNCH4J_FOLDER%\launch4jc.exe" "conf\launch4j-setup.xml"
-REM ECHO.
 ECHO ===========================================================
 ECHO.
 ECHO Build Setup
