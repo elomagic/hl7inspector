@@ -39,7 +39,7 @@ public class SegmentModel extends ProfileModel {
         setModel(segmentList);
     }
 
-    public void setModel(SegmentList segmentList) {
+    public final void setModel(SegmentList segmentList) {
         clear();
 
         Iterator<String> it = segmentList.keySet().iterator();
@@ -82,17 +82,20 @@ public class SegmentModel extends ProfileModel {
             SegmentItem seg = (SegmentItem) table.get(rowIndex);
 
             switch (columnIndex) {
-                case 0:
+                case 0: {
                     seg.setId(aValue.toString());
                     break;
-                case 1:
+                }
+                case 1: {
                     seg.setDescription(aValue.toString());
                     break;
-                case 2:
+                }
+                case 2: {
                     seg.setChapter(aValue.toString());
                     break;
+                }
                 default:
-                    ;
+                    break;
             }
 
             fireTableCellUpdated(rowIndex, columnIndex);

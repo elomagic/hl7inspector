@@ -49,7 +49,7 @@ public class SegmentItem extends Properties {
             } else if (el.getName().equals("description")) {
                 this.description = el.getContent();
             } else if (el.getName().equals("chapter")) {
-                this.description = el.getContent();
+                this.chapter = el.getContent();
             }
         }
     }
