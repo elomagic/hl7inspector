@@ -1,3 +1,4 @@
+
 <jnlp spec="1.0+" codebase="${jnlp.codebase}" href="launch.jnlp">
     <information>
         <title>${APPLICATION.TITLE}</title>
@@ -8,7 +9,9 @@
 <!--${JNLP.ICONS}-->
     </information>
 <!--${JNLP.UPDATE}-->
-<!--${JNLP.SECURITY}-->
+    <security>
+        <all-permissions/>
+    </security>
     <resources>
 <!--${JNLP.RESOURCES.RUNTIME}-->
 <!--${JNLP.RESOURCES.MAIN.JAR}-->
