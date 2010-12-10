@@ -35,6 +35,7 @@ public class AboutAction extends AbstractAction {
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         new AboutDialog().setVisible(true);
     }

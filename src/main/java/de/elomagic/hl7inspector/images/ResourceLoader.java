@@ -32,7 +32,7 @@ public class ResourceLoader {
     private ResourceLoader() {
     }
     
-    public final static ImageIcon loadImageIcon(String imageName) {
+    public static ImageIcon loadImageIcon(String imageName) {
         ImageIcon icon = null;
         
         ClassLoader loader = ClassLoader.getSystemClassLoader();
@@ -46,7 +46,7 @@ public class ResourceLoader {
         return icon;
     }
     
-    public final static ImageIcon loadImageIcon(String imageName, String imageSize) {
+    public static ImageIcon loadImageIcon(String imageName, String imageSize) {
         ImageIcon icon = null;
         
         ClassLoader loader = ClassLoader.getSystemClassLoader();
@@ -60,7 +60,7 @@ public class ResourceLoader {
         return icon;
     }    
     
-    public final static BufferedImage loadBufferedImage(String imageName) {
+    public static BufferedImage loadBufferedImage(String imageName) {
         BufferedImage image = null;
         
         ClassLoader loader = ClassLoader.getSystemClassLoader();
@@ -74,7 +74,7 @@ public class ResourceLoader {
         return image;
     }
     
-    public final static String IMAGE_SOURCE_PATH = "de/elomagic/hl7inspector/images/";
+    public final static String IMAGE_SOURCE_PATH = "de/elomagic/hl7inspector/resources/";
     
     public final static String SMALL_IMAGE = "";
     public final static String LARGE_IMAGE = "32x32/";

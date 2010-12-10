@@ -55,14 +55,14 @@ public abstract class Hl7Object implements TreeNode {
                 char c = text.charAt(p);
 
                 if (!((text.startsWith("MSH" + delimiters.toString())) && (p == 6)) && (c == Delimiters.DEFAULT_ESCAPE_CHAR)) {
-                    // Wenn Escapezeichen kommt dann nächstes Zeichen nicht interpretieren
+                    // Wenn Escapezeichen kommt dann n√§chstes Zeichen nicht interpretieren
 //                    subText = subText.append(c);
 //                    p++;
 //                    if (text.length() > p) {
 //                        subText = subText.append(c);
 //                    }
 
-                    // Wenn Escapezeichen kommt dann n‰chstes Zeichen nicht interpretieren
+                    // Wenn Escapezeichen kommt dann n√§chstes Zeichen nicht interpretieren
 
                     do {
                         subText = subText.append(c);
