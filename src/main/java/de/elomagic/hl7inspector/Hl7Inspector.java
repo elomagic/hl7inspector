@@ -27,6 +27,7 @@ import de.elomagic.hl7inspector.model.*;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import org.apache.log4j.ConsoleAppender;
@@ -113,11 +114,11 @@ public class Hl7Inspector {
 
         try {
             ClassLoader loader = ClassLoader.getSystemClassLoader();
-            InputStream in = loader.getResourceAsStream("de/elomagic/hl7inspector/version.number");
+            InputStream in = loader.getResourceAsStream("application.properties");
             try {
                 Properties props = new Properties();
                 props.load(in);
-                version = props.getProperty("version.number", "?.?.?.?");
+                version = props.getProperty("application.version", "?.?.?.?");
             } finally {
                 in.close();
             }
