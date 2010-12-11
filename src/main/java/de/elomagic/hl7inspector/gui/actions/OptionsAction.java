@@ -37,6 +37,7 @@ public class OptionsAction extends AbstractAction {
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         OptionsDialog dlg = new OptionsDialog();       
         dlg.ask();

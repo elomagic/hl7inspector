@@ -22,6 +22,7 @@ import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.UpdateCheckDialog;
 import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
 import de.elomagic.hl7inspector.instance.InstanceManager;
+import de.elomagic.hl7inspector.mac.MacApplication;
 import de.elomagic.hl7inspector.model.*;
 import java.io.File;
 import java.io.InputStream;
@@ -47,6 +48,12 @@ public class Hl7Inspector {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        new Hl7Inspector().start(args);
+    }
+
+    private void start(String[] args) {
+
+        MacApplication.setScreenMenuBar(Hl7Inspector.APPLICATION_NAME, true);
         Logger.getRootLogger().addAppender(new ConsoleAppender(new SimpleLayout(), ConsoleAppender.SYSTEM_OUT));
 
         if (StartupProperties.getInstance().isDebugFileOutput()) {
@@ -125,7 +132,6 @@ public class Hl7Inspector {
         return getVersion().concat(" ").concat(VERSION_LABEL);
     }
 
-    public static final String APPLICATION_NAME = "Hl7 Inspector";
-
+    public static final String APPLICATION_NAME = "HL7 Inspector";
     public static final String VERSION_LABEL = "";
 }

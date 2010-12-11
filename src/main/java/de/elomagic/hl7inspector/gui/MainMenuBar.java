@@ -18,9 +18,13 @@ package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.actions.*;
+import de.elomagic.hl7inspector.gui.options.OptionsDialog;
 import de.elomagic.hl7inspector.hl7.model.EncodingObject;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
+import de.elomagic.hl7inspector.mac.MacApplication;
+import de.elomagic.hl7inspector.mac.MacApplicationAdapter;
+import de.elomagic.hl7inspector.mac.MacApplicationEvent;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.io.File;
 import java.util.List;
@@ -38,11 +42,40 @@ public class MainMenuBar extends JMenuBar {
     /** Creates a new instance of MainMenu */
     public MainMenuBar() {
         super();
-        
+
         init();
     }
 
     private void init() {
+        //buildRecentUsedKeystoresMenu();
+
+        MacApplication.getApplication().addApplicationListener(new MacApplicationAdapter() {
+
+            @Override
+            public void handleAbout(MacApplicationEvent ae) {
+                new AboutDialog().setVisible(true);
+                
+                ae.setHandled(true);
+            }
+
+            @Override
+            public void handleQuit(MacApplicationEvent ae) {
+                ae.setHandled(true);
+                System.exit(0);
+            }
+
+            @Override
+            public void handlePreferences(MacApplicationEvent ae) {
+                OptionsDialog dlg = new OptionsDialog();
+                dlg.ask();
+
+                ae.setHandled(true);
+            }
+
+        });
+        MacApplication.getApplication().setEnabledAboutMenu(true);
+        MacApplication.getApplication().setEnabledPreferencesMenu(true);
+
         JMenu miFile = new JMenu("File");
         miFile.add(new JMenuItem(new FileNewAction()));
         miFile.add(new JMenuItem(new FileOpenAction()));
@@ -91,8 +124,11 @@ public class MainMenuBar extends JMenuBar {
             menuItem.add(new JMenuItem(new KeyStoreManagerAction()));
         }
 
-        menuItem.addSeparator();
-        menuItem.add(new JMenuItem(new OptionsAction()));
+        if (!MacApplication.isMacOS()) {
+            menuItem.addSeparator();
+            menuItem.add(new JMenuItem(new OptionsAction()));
+        }
+
         add(menuItem);
 
         /*menuItem = new JMenu("Window");
@@ -101,8 +137,12 @@ public class MainMenuBar extends JMenuBar {
 
         menuItem = new JMenu("Help");
         menuItem.add(new JMenuItem(new CheckUpdateAction()));
-        menuItem.addSeparator();
-        menuItem.add(new JMenuItem(new AboutAction()));
+
+        if (!MacApplication.isMacOS()) {
+            menuItem.addSeparator();
+            menuItem.add(new JMenuItem(new AboutAction()));
+        }
+
         add(menuItem);
     }
 
@@ -119,27 +159,16 @@ public class MainMenuBar extends JMenuBar {
     }
 
     private JMenu miOpenRecentFiles = new JMenu("Open recent files");
-
     private JMenu miEdit;
-
     private JMenuItem miEditItem = new JMenuItem(new EditMessageItemAction());
-
     private JMenuItem miEditAppendItem = new JMenuItem(new AddMessageItemAction());
-
     private JMenuItem miEditClearItem = new JMenuItem(new ClearMessageItemAction());
-
     private JMenu viewMenu = new JMenu("View");
-
     private JCheckBoxMenuItem miCompactView = new JCheckBoxMenuItem(new ViewCompressedAction());
-
     private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
-
     private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
-
     private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
-
     private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ReceiveMessageAction());
-
     private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new SendMessageAction());
 
     class RecentFileMenuListener implements ChangeListener {

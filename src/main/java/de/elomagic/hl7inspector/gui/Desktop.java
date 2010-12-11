@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.Hl7Inspector;
@@ -26,6 +25,9 @@ import de.elomagic.hl7inspector.gui.sender.SendPanel;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.mac.MacApplication;
+import de.elomagic.hl7inspector.mac.MacApplicationAdapter;
+import de.elomagic.hl7inspector.mac.MacApplicationEvent;
 import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
@@ -53,170 +55,202 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class Desktop extends JFrame implements TreeSelectionListener, ComponentListener {
-    
+
     /** Creates a new instance of Desktop */
-    
-    private Desktop() { init(null); }
-    
-    public static Desktop getInstance() { return desk; }
-    
+    private Desktop() {
+        init(null);
+    }
+
+    public static Desktop getInstance() {
+        return desk;
+    }
+
     //public FindBar getFindWindow() { return findWindow; }
-    public Hl7Tree getTree() { return treePane.getTree(); }
-    
-    public JScrollPane getScrollPane() { return treePane; }
-    
-    public TreeModel getModel() { return treePane.getModel(); }
-    public void setModel(TreeModel model) { treePane.setModel(model); }
-    
+    public Hl7Tree getTree() {
+        return treePane.getTree();
+    }
+
+    public JScrollPane getScrollPane() {
+        return treePane;
+    }
+
+    public TreeModel getModel() {
+        return treePane.getModel();
+    }
+
+    public void setModel(TreeModel model) {
+        treePane.setModel(model);
+    }
+
     private void init(Hl7TreeModel model) {
-//    setDefaultCloseOperation(EXIT_ON_CLOSE);
-        String s = Hl7Inspector.APPLICATION_NAME +
-                " " +                 
-                Hl7Inspector.getVersionString() +
-                " (" + System.getProperty("os.arch")+"; "+System.getProperty("os.name") + ") - An Open Source project from Carsten Rambow";
+//    setDefaultCloseOperation(EXIT_ON_CLOSE);        
+
+        String s = Hl7Inspector.APPLICATION_NAME
+                + " "
+                + Hl7Inspector.getVersionString()
+                + " (" + System.getProperty("os.arch") + "; " + System.getProperty("os.name") + ") - An Open Source project from Carsten Rambow";
 
         setTitle(s);
-        
+
         StartupProperties prop = StartupProperties.getInstance();
-        
+
         mainToolBar = new MainToolBar();
-        
+
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(
                 new java.awt.event.WindowAdapter() {
-            @Override
-            public void windowActivated(WindowEvent e) { }
-            @Override
-            public void windowClosing(WindowEvent e)   { new ExitAction().actionPerformed(null);     }
-            @Override
-            public void windowIconified(WindowEvent e) { }
-        }
-        );
-        
+
+                    @Override
+                    public void windowActivated(WindowEvent e) {
+                    }
+
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        new ExitAction().actionPerformed(null);
+                    }
+
+                    @Override
+                    public void windowIconified(WindowEvent e) {
+                    }
+
+                });
+
         setJMenuBar(new MainMenuBar());
-        
+
         getContentPane().setLayout(new BorderLayout());
-        
+
         JPanel deskToolbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 0));
         deskToolbar.add(mainToolBar);//, FlowLayout.LEADING);
-        
-        getContentPane().add(deskToolbar, BorderLayout.NORTH);        
-        getContentPane().add(bottomPanel, BorderLayout.SOUTH);               
-        
-        if (model != null)
-            treePane = new Hl7TreePane(model);
-        else
-            treePane = new Hl7TreePane();
-        
+
+        getContentPane().add(deskToolbar, BorderLayout.NORTH);
+        getContentPane().add(bottomPanel, BorderLayout.SOUTH);
+
+        treePane = (model == null) ? new Hl7TreePane() : new Hl7TreePane(model);
         treePane.getTree().getSelectionModel().addTreeSelectionListener(this);
-        
+
         detailsPanel = new ScrollableEditorPane();
         detailsPanel.getCaption().setTitle("Node details");
         detailsPanel.addComponentListener(this);
-        
+
         middlePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane, detailsPanel);
         middlePanel.setResizeWeight(1);
-                      
-        inputTrace.addComponentListener(this);        
-        rp.addComponentListener(this);                
-        sp.addComponentListener(this);                
-        
+
+        inputTrace.addComponentListener(this);
+        rp.addComponentListener(this);
+        sp.addComponentListener(this);
+
         tabPanel = new JTabbedPane();
 //        tabPanel.addTab(inputTrace.getTitle(), inputTrace.getIcon(), inputTrace);                
 //        tabPanel.addTab(rp.getTitle(), rp.getIcon(), rp);
 //        tabPanel.addTab(sp.getTitle(), sp.getIcon(), sp);
         tabPanel.addComponentListener(this);
-        
+
         mainPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, middlePanel, tabPanel);
-        mainPanel.setResizeWeight(1);        
-        getContentPane().add(mainPanel, BorderLayout.CENTER);        
-                
+        mainPanel.setResizeWeight(1);
+        getContentPane().add(mainPanel, BorderLayout.CENTER);
+
         setIconImage(ResourceLoader.loadImageIcon("hl7-icon.png").getImage());
-        
-        pack();                
-                        
+
+        pack();
+
         int x = Integer.parseInt(prop.getProperty(StartupProperties.DESKTOP_X, "0"));
         int y = Integer.parseInt(prop.getProperty(StartupProperties.DESKTOP_Y, "0"));
         int w = Integer.parseInt(prop.getProperty(StartupProperties.DESKTOP_W, "800"));
         int h = Integer.parseInt(prop.getProperty(StartupProperties.DESKTOP_H, "600"));
-        
-        setBounds(x,y, w, h);
-        
+
+        setBounds(x, y, w, h);
+
         validate();
-        
-        middlePanel.setDividerLocation(w-200);
-               
-        mainPanel.setResizeWeight(0.5);        
-        mainPanel.setDividerLocation(0.75);        
-        
-        tabPanel.setVisible(false);       
-        
+
+        middlePanel.setDividerLocation(w - 200);
+
+        mainPanel.setResizeWeight(0.5);
+        mainPanel.setDividerLocation(0.75);
+
+        tabPanel.setVisible(false);
+
         ProfileFile file = new ProfileFile(prop.getProperty(StartupProperties.DEFAULT_PROFILE, ""));
         setProfileFile(file);
-        
+
         getDetailsWindow().setVisible(prop.isDetailsWindowVisible());
         getToolBar().getDetailsButton().setSelected(prop.isDetailsWindowVisible());
     }
-    
+
     public void setProfileFile(ProfileFile file) {
         if (file.exists()) {
             try {
                 Profile profile = Profile.getDefault();
-                
+
                 FileInputStream fin = new FileInputStream(file);
                 try {
                     profile = Profile.loadFromStream(fin);
                 } finally {
                     fin.close();
                 }
-                
+
                 bottomPanel.setProfileText(profile.getName());
-                bottomPanel.setProfileTooltTip(profile.getDescription());                
-                
-                if (getModel()instanceof Hl7TreeModel) {
-                    if (((Hl7TreeModel)getModel()).isViewDescription()) {
+                bottomPanel.setProfileTooltTip(profile.getDescription());
+
+                if (getModel() instanceof Hl7TreeModel) {
+                    if (((Hl7TreeModel) getModel()).isViewDescription()) {
                         getTree().updateUI();
                     }
                 }
             } catch (Exception e) {
                 bottomPanel.setProfileText("Unable to load default profile.");
-                bottomPanel.setProfileTooltTip(e.getMessage());                
+                bottomPanel.setProfileTooltTip(e.getMessage());
 
                 Logger.getLogger(getClass()).error(e.getMessage(), e);
                 SimpleDialog.error(e, "Unable to load default profile.");
             }
         } else {
-            bottomPanel.setProfileText("Profile not found!");            
+            bottomPanel.setProfileText("Profile not found!");
             bottomPanel.setProfileTooltTip("");
         }
-    }        
-    
-    public MainToolBar getToolBar() { return mainToolBar; }
-            
-    private MainToolBar             mainToolBar;
-    
-    private BottomPanel             bottomPanel = new BottomPanel();
-    
-    public void setSelectedTabIndex(int index) { tabPanel.setSelectedIndex(index); }    
-    
-    public CharacterMonitor getInputTraceWindow() { return inputTrace; }
-    private CharacterMonitor        inputTrace = new CharacterMonitor();
+    }
 
-    public ReceivePanel getReceiveWindow() { return rp; }
+    public MainToolBar getToolBar() {
+        return mainToolBar;
+    }
+
+    private MainToolBar mainToolBar;
+    private BottomPanel bottomPanel = new BottomPanel();
+
+    public void setSelectedTabIndex(int index) {
+        tabPanel.setSelectedIndex(index);
+    }
+
+    public CharacterMonitor getInputTraceWindow() {
+        return inputTrace;
+    }
+
+    private CharacterMonitor inputTrace = new CharacterMonitor();
+
+    public ReceivePanel getReceiveWindow() {
+        return rp;
+    }
+
     private ReceivePanel rp = new ReceivePanel();
-    public SendPanel getSendWindow() { return sp; }
-    private SendPanel sp = new SendPanel();    
-    
-    private final static Desktop    desk = new Desktop();
-    
-    private JSplitPane              middlePanel;
-    private JSplitPane              mainPanel;
-    private Hl7TreePane             treePane;
-    private ScrollableEditorPane    detailsPanel;
-    private JTabbedPane             tabPanel;
-    
-    public ScrollableEditorPane getDetailsWindow() { return detailsPanel; }
-    public JTabbedPane getTabbedBottomPanel() { return tabPanel; }
+
+    public SendPanel getSendWindow() {
+        return sp;
+    }
+
+    private SendPanel sp = new SendPanel();
+    private final static Desktop desk = new Desktop();
+    private JSplitPane middlePanel;
+    private JSplitPane mainPanel;
+    private Hl7TreePane treePane;
+    private ScrollableEditorPane detailsPanel;
+    private JTabbedPane tabPanel;
+
+    public ScrollableEditorPane getDetailsWindow() {
+        return detailsPanel;
+    }
+
+    public JTabbedPane getTabbedBottomPanel() {
+        return tabPanel;
+    }
 
     /**
      * 
@@ -228,54 +262,54 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         if (e.getNewLeadSelectionPath() != null) {
             if (e.getNewLeadSelectionPath().getPathCount() > 1) {
                 if (e.getNewLeadSelectionPath().getPathComponent(1) instanceof Hl7Object) {
-                    Hl7Object o = (Hl7Object)e.getNewLeadSelectionPath().getPathComponent(1);
+                    Hl7Object o = (Hl7Object) e.getNewLeadSelectionPath().getPathComponent(1);
                     if (o instanceof Message) {
-                        Message m = (Message)o;
+                        Message m = (Message) o;
 
-                        bottomPanel.setStatusText("Source: ".concat(m.getSource().length()==0?"Unknown":m.getSource()));
+                        bottomPanel.setStatusText("Source: ".concat(m.getSource().length() == 0 ? "Unknown" : m.getSource()));
                     }
                 }
-                
+
                 if (e.getNewLeadSelectionPath().getLastPathComponent() instanceof Hl7Object) {
-                    showHl7ObjectDetails((Hl7Object)e.getNewLeadSelectionPath().getLastPathComponent());
-                }                
+                    showHl7ObjectDetails((Hl7Object) e.getNewLeadSelectionPath().getLastPathComponent());
+                }
             }
         }
     }
-    
+
     private void showHl7ObjectDetails(Hl7Object o) {
         String s = "";
-        
-        
-        if (detailsPanel.isVisible()) {            
-            String NO_DESCRIPTION_FOUND = "No description in profile found.";                
-    
+
+
+        if (detailsPanel.isVisible()) {
+            String NO_DESCRIPTION_FOUND = "No description in profile found.";
+
             MessageDescriptor md = new MessageDescriptor(Profile.getDefault());
-            
+
             s = md.getDescription(o, true);
-            
+
             if (s.length() == 0) {
                 s = NO_DESCRIPTION_FOUND;
             }
         }
-        
-        detailsPanel.getEditorPane().setText(s);        
+
+        detailsPanel.getEditorPane().setText(s);
     }
-    
+
     public void setTabVisible(JComponent o) {
         int i = getTabbedBottomPanel().indexOfComponent(o);
-        
+
         if (i == -1) {
             if (o instanceof CharacterMonitor) {
-                CharacterMonitor cm = (CharacterMonitor)o;
+                CharacterMonitor cm = (CharacterMonitor) o;
                 getTabbedBottomPanel().addTab(cm.getTitle(), cm.getIcon(), cm);
-                
+
                 getTabbedBottomPanel().setSelectedComponent(o);
             }
         } else {
             getTabbedBottomPanel().remove(o);
-        }        
-        
+        }
+
         getTabbedBottomPanel().setVisible(getTabbedBottomPanel().getTabCount() != 0);
     }
 
@@ -284,31 +318,33 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     public void componentShown(ComponentEvent e) {
         if (e.getSource().equals(getDetailsWindow())) {
             StartupProperties.getInstance().setDetailsWindowVisible(getDetailsWindow().isVisible());
-            middlePanel.setDividerLocation(getSize().width-200);
+            middlePanel.setDividerLocation(getSize().width - 200);
             middlePanel.setDividerSize(4);
             getToolBar().getDetailsButton().setSelected(true);
-                                                
+
             if (getTree().getSelectionCount() == 1) {
-                showHl7ObjectDetails((Hl7Object)getTree().getSelectionPath().getLastPathComponent());                
+                showHl7ObjectDetails((Hl7Object) getTree().getSelectionPath().getLastPathComponent());
             }
         } else if (e.getSource().equals(getTabbedBottomPanel())) {
             mainPanel.setDividerSize(4);
-            mainPanel.setDividerLocation(0.75);        
+            mainPanel.setDividerLocation(0.75);
 //            getToolBar().getDetailsButton().setSelected(true);
-        }        
+        }
     }
 
     @Override
-    public void componentResized(ComponentEvent e) { }
+    public void componentResized(ComponentEvent e) {
+    }
 
     @Override
-    public void componentMoved(ComponentEvent e) { }
+    public void componentMoved(ComponentEvent e) {
+    }
 
     @Override
     public void componentHidden(ComponentEvent e) {
         if (e.getSource().equals(getDetailsWindow())) {
             StartupProperties.getInstance().setDetailsWindowVisible(getDetailsWindow().isVisible());
-            getToolBar().getDetailsButton().setSelected(false);            
+            getToolBar().getDetailsButton().setSelected(false);
             if (middlePanel.isVisible()) {
                 middlePanel.setDividerSize(0);
             }
@@ -317,5 +353,6 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
                 mainPanel.setDividerSize(0);
             }
         }
-    }  
+    }
+
 }

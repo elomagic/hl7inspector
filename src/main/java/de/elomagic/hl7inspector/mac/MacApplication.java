@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.UIManager;
 import org.apache.log4j.Logger;
 
 /**
@@ -184,14 +185,24 @@ public class MacApplication {
         }
     }
 
-    public void setTitle(String title) {
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", title);
-    }
-
     public static boolean isMacOS() {
         String os = System.getProperty("os.name").toLowerCase();
 
         return os.toLowerCase().startsWith("mac");
+    }
+
+    public static boolean isMacLF() {
+        return UIManager.getLookAndFeel().getName().equalsIgnoreCase("Mac OS X");
+    }
+
+    /**
+     * Must be called before setting Look and Feel
+     * @param title
+     * @param value
+     */
+    public static void setScreenMenuBar(String title, boolean value) {
+        System.setProperty("apple.laf.useScreenMenuBar", value?"true":"false");
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", title);
     }
 
     private Logger log = Logger.getLogger(this.getClass());
