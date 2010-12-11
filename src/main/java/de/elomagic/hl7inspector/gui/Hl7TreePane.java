@@ -17,6 +17,7 @@
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
+import de.elomagic.hl7inspector.gui.actions.PasteTextAction;
 import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.awt.datatransfer.DataFlavor;
@@ -71,12 +72,12 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
 
     private Hl7Tree tree;
     // Interface implementationof drag an drop
+
     @Override
     public void drop(java.awt.dnd.DropTargetDropEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
             if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-
                 dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 
                 java.util.List fileList = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
@@ -93,6 +94,11 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
 
                 //      if (dtde.getCurrentDataFlavorsAsList().size() == 1) {
                 //          SimpleDialog.info(dtde.getCurrentDataFlavors()[0].getHumanPresentableName());
+            } else if (tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+
+                String text = tr.getTransferData(DataFlavor.stringFlavor).toString();
+                PasteTextAction.importText(text);
             }
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
@@ -115,7 +121,8 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
     public void dragEnter(java.awt.dnd.DropTargetDragEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
-            if (!tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+            if (!tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
+                    && !tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
                 dtde.rejectDrag();
             }
         } catch (Exception e) {

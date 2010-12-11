@@ -67,6 +67,7 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
         }
 
         add(new JMenuItem(new FileSaveAsAction()));
+        add(new JMenuItem(new PasteTextAction()));
 
 //        JMenu miFile = new JMenu("File");
 //        miFile.add(new JMenuItem(new FileNewAction()));
