@@ -39,6 +39,7 @@ public class FileNewAction extends AbstractAction {
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (SimpleDialog.confirmYesNo("Clear buffer?") == 0) {
             Desktop.getInstance().setModel(new Hl7TreeModel());

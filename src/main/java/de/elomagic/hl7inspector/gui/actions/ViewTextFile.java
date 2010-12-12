@@ -46,6 +46,7 @@ public class ViewTextFile extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (StartupProperties.getInstance().getExternalFileViewer() == null) 
             SimpleDialog.info("No external file viewer/editor set. Please check your configuration.");

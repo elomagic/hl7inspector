@@ -38,6 +38,7 @@ public class CheckUpdateAction extends AbstractAction {
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             UpdateCheckDialog.check(false);

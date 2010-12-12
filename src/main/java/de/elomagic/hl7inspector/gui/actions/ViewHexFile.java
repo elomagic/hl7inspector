@@ -48,6 +48,7 @@ public class ViewHexFile extends AbstractAction {
 
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (StartupProperties.getInstance().getExternalHexViewer() == null)
             SimpleDialog.info("No external hex viewer/editor set. Please check your configuration.");

@@ -38,6 +38,7 @@ public class VisitWebSiteAction extends AbstractAction {
     }
     private String uri;
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             Desktop.getDesktop().browse(new URI(uri));

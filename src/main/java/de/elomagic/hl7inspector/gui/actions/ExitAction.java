@@ -39,14 +39,15 @@ public class ExitAction extends AbstractAction {
     putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
   }
    
+    @Override
   public void actionPerformed(ActionEvent e) {
     if (SimpleDialog.confirmYesNo("Really exit the hl7 inspector?") == 0) {
       
       StartupProperties prop = StartupProperties.getInstance();
-      prop.setProperty(prop.DESKTOP_X, Integer.toString(Desktop.getInstance().getBounds().x));
-      prop.setProperty(prop.DESKTOP_Y, Integer.toString(Desktop.getInstance().getBounds().y));
-      prop.setProperty(prop.DESKTOP_W, Integer.toString(Desktop.getInstance().getBounds().width));
-      prop.setProperty(prop.DESKTOP_H, Integer.toString(Desktop.getInstance().getBounds().height));      
+      prop.setProperty(StartupProperties.DESKTOP_X, Integer.toString(Desktop.getInstance().getBounds().x));
+      prop.setProperty(StartupProperties.DESKTOP_Y, Integer.toString(Desktop.getInstance().getBounds().y));
+      prop.setProperty(StartupProperties.DESKTOP_W, Integer.toString(Desktop.getInstance().getBounds().width));
+      prop.setProperty(StartupProperties.DESKTOP_H, Integer.toString(Desktop.getInstance().getBounds().height));
       prop.save();
 
       System.exit(0);          

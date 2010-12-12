@@ -18,9 +18,7 @@
 package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.HL7ObjectEditor;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.hl7.model.Delimiters;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
@@ -59,7 +57,7 @@ public class AddMessageItemAction extends AbstractAction {
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
     }
     
-    private final static String getObjectDescription(Class c) {
+    private static String getObjectDescription(Class c) {
         String s = c.getName();
         s = s.substring(s.lastIndexOf(".")+1);
         return s.toLowerCase();
@@ -67,6 +65,7 @@ public class AddMessageItemAction extends AbstractAction {
     
     private Class c;
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         try {
             TreePath path = Desktop.getInstance().getTree().getSelectionPath();

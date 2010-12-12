@@ -36,6 +36,7 @@ public class DeleteMessageAction extends AbstractAction {
     putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
   }
    
+    @Override
   public void actionPerformed(ActionEvent e) {
     
 //    displayResult("Action for first button/menu item", e);

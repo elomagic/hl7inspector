@@ -19,17 +19,12 @@ package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.HL7ObjectEditor;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.hl7.Hl7Encoder;
 import de.elomagic.hl7inspector.hl7.model.Delimiters;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
-import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
-import javax.swing.KeyStroke;
 import javax.swing.tree.TreePath;
 
 /**
@@ -57,12 +52,13 @@ public class EditMessageItemAction extends AbstractAction {
 //        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
     }
     
-    private final static String getObjectDescription(Hl7Object o) {
+    private static String getObjectDescription(Hl7Object o) {
         String s = o.getClass().getName();
         s = s.substring(s.lastIndexOf(".")+1);
         return s.toLowerCase();
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         TreePath path = Desktop.getInstance().getTree().getSelectionPath();            
         Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();        

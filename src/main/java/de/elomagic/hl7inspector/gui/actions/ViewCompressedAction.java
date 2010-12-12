@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
@@ -30,28 +29,29 @@ import javax.swing.AbstractButton;
  * @author rambow
  */
 public class ViewCompressedAction extends AbstractAction {
-  
-  /** Creates a new instance of FileNewAction */
-  public ViewCompressedAction(String value) {
-    super(value, ResourceLoader.loadImageIcon("compressed.png"));//icon);
-       
-    putValue(SHORT_DESCRIPTION, "Suppress empty nodes in the tree.");
-    putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));    
-  }
-  
-  
-  public ViewCompressedAction() {
-    super("View compressed", ResourceLoader.loadImageIcon("compressed.png"));//icon);
-       
-    putValue(SHORT_DESCRIPTION, "Suppress empty nodes in the tree.");
-    putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
-  }
-   
-  public void actionPerformed(ActionEvent e) {
-    boolean c = ((AbstractButton)e.getSource()).isSelected();
-        
-    Desktop.getInstance().getToolBar().getCompactViewButton().setSelected(c);
-    
-    ((Hl7TreeModel)Desktop.getInstance().getModel()).setCompressedView(c);
-  }    
+
+    /** Creates a new instance of FileNewAction */
+    public ViewCompressedAction(String value) {
+        super(value, ResourceLoader.loadImageIcon("compressed.png"));//icon);
+
+        putValue(SHORT_DESCRIPTION, "Suppress empty nodes in the tree.");
+        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+    }
+
+    public ViewCompressedAction() {
+        super("View compressed", ResourceLoader.loadImageIcon("compressed.png"));//icon);
+
+        putValue(SHORT_DESCRIPTION, "Suppress empty nodes in the tree.");
+        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        boolean c = ((AbstractButton) e.getSource()).isSelected();
+
+        Desktop.getInstance().getToolBar().getCompactViewButton().setSelected(c);
+
+        ((Hl7TreeModel) Desktop.getInstance().getModel()).setCompressedView(c);
+    }
+
 }

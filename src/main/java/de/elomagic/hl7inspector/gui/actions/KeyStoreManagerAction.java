@@ -37,6 +37,7 @@ public class KeyStoreManagerAction extends AbstractAction {
     putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
   }
    
+    @Override
   public void actionPerformed(ActionEvent e) {
     KeyStoreManagerDialog dialog = new KeyStoreManagerDialog();
     dialog.ask();

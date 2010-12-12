@@ -19,6 +19,7 @@ package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.FindBar;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.mac.MacApplication;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -36,16 +37,17 @@ public class FindWindowAction extends AbstractAction {
         super(text, ResourceLoader.loadImageIcon("find.png"));
         
         putValue(SHORT_DESCRIPTION, "Search");
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, MacApplication.isMacOS() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK));
     }
     
     public FindWindowAction() {
         super("Search...", ResourceLoader.loadImageIcon("find.png"));
         
         putValue(SHORT_DESCRIPTION, "Search");
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, InputEvent.CTRL_DOWN_MASK));
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, MacApplication.isMacOS() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         FindBar.getInstance().setVisible(true);
         FindBar.getInstance().requestFocus();

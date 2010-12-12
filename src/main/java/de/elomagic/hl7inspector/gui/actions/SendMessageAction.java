@@ -19,11 +19,11 @@ package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.mac.MacApplication;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.KeyStroke;
 
 /**
@@ -45,12 +45,13 @@ public class SendMessageAction extends AbstractAction {
         init();
     }
     
-    public void init() {
+    public final void init() {
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("send.png"));
         putValue(SHORT_DESCRIPTION, "Send selected messages");
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK ));       
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, (MacApplication.isMacOS() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK) | InputEvent.SHIFT_DOWN_MASK ));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         Desktop.getInstance().setTabVisible(Desktop.getInstance().getSendWindow());
     }

@@ -19,11 +19,11 @@ package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.mac.MacApplication;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
-import javax.swing.AbstractButton;
 import javax.swing.KeyStroke;
 
 /**
@@ -48,9 +48,10 @@ public class ReceiveMessageAction extends AbstractAction {
     private void init() {
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("receive.png"));
         putValue(SHORT_DESCRIPTION, "Receive messages");
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK ));        
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_R, (MacApplication.isMacOS() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK) | InputEvent.SHIFT_DOWN_MASK ));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         //boolean c = (Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getReceiveWindow()) == -1);
         

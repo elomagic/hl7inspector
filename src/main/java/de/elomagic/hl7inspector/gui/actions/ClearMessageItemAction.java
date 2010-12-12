@@ -54,6 +54,7 @@ public class ClearMessageItemAction extends AbstractAction {
 //        return s;
 //    }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         int selCount = Desktop.getInstance().getTree().getSelectionCount();
         

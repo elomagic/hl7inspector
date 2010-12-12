@@ -22,6 +22,7 @@ import de.elomagic.hl7inspector.file.filters.Hl7FileFilter;
 import de.elomagic.hl7inspector.file.filters.TextFileFilter;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.mac.MacApplication;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -40,9 +41,10 @@ public class FileOpenAction extends AbstractAction {
         super("File Open...", ResourceLoader.loadImageIcon("document-open.png"));
         
         putValue(SHORT_DESCRIPTION, "Open and imports hl7 message(s)");
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, InputEvent.CTRL_DOWN_MASK));
+        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, MacApplication.isMacOS() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK));
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         StartupProperties prop = StartupProperties.getInstance();
         File path = new File(prop.getProperty("de.elomagic.hl7inspector.import.path", System.getProperty("user.dir")));

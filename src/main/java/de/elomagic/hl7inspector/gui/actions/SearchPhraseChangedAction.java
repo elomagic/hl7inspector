@@ -30,10 +30,13 @@ public class SearchPhraseChangedAction implements DocumentListener {
     /** Creates a new instance of SearchPhraseChangedAction */
     public SearchPhraseChangedAction() { }
     
+    @Override
     public void removeUpdate(javax.swing.event.DocumentEvent e) { doActionPerforme(); }
     
+    @Override
     public void insertUpdate(javax.swing.event.DocumentEvent e) { doActionPerforme(); }
     
+    @Override
     public void changedUpdate(javax.swing.event.DocumentEvent e) { doActionPerforme(); }
     
     private void doActionPerforme() {

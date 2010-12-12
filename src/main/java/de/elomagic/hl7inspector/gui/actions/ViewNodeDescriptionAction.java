@@ -44,12 +44,13 @@ public class ViewNodeDescriptionAction extends AbstractAction {
         init();        
     }
     
-    public void init() {         
+    public final void init() {
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("view_text.png"));        
         putValue(SHORT_DESCRIPTION, "View node description from the selected profile.");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));        
     }
     
+    @Override
     public void actionPerformed(ActionEvent e) {
         boolean c = ((AbstractButton)e.getSource()).isSelected();
         
