@@ -33,10 +33,10 @@ more resources/Info.plist.xml | sed "s/#APP_VERSION#/$AppVersion/g" > "src/HL7 I
 cp resources/PkgInfo "src/HL7 Inspector.app/Contents/PkgInfo"
 
 # Copy main application
-cp ../../dist/hl7inspector.jar "src/HL7 Inspector.app/Contents/Resources/Java/hl7inspector.jar"
+cp ../src/hl7inspector.jar "src/HL7 Inspector.app/Contents/Resources/Java/hl7inspector.jar"
 
 # Copy libs
-cp ../../dist/lib/*.* "src/HL7 Inspector.app/Contents/Resources/Java"
+cp ../src/lib/*.* "src/HL7 Inspector.app/Contents/Resources/Java"
 echo
 echo ==================================
 echo
