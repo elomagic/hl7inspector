@@ -73,6 +73,7 @@
                     <finalName>hl7inspector</finalName>
                     <descriptorRefs>
                         <descriptorRef>jar-with-dependencies</descriptorRef>
+                        <descriptorRef>src</descriptorRef>
                     </descriptorRefs>
                 </configuration>
                 
@@ -84,8 +85,7 @@
                             <goal>single</goal>
                         </goals>
                     </execution>
-                </executions>
-                
+                </executions>               
             </plugin>
         </plugins>
         <resources>
