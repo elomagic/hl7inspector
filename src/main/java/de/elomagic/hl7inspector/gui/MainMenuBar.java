@@ -54,7 +54,7 @@ public class MainMenuBar extends JMenuBar {
             @Override
             public void handleAbout(MacApplicationEvent ae) {
                 new AboutDialog().setVisible(true);
-                
+
                 ae.setHandled(true);
             }
 
@@ -149,9 +149,9 @@ public class MainMenuBar extends JMenuBar {
     private void createRecentFilesMenu() {
         miOpenRecentFiles.removeAll();
 
-        List list = StartupProperties.getInstance().getRecentFiles();
-        for (int i = 0; i < list.size(); i++) {
-            JMenuItem mi = new JMenuItem(new FileRecentOpenAction(((File) list.get(i))));
+        List<File> list = StartupProperties.getInstance().getRecentFiles();
+        for (File file: list) {
+            JMenuItem mi = new JMenuItem(new FileRecentOpenAction(file));
             miOpenRecentFiles.add(mi);
         }
 

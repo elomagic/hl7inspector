@@ -27,7 +27,6 @@ import de.elomagic.hl7inspector.model.*;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 import org.apache.log4j.ConsoleAppender;

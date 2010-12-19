@@ -45,7 +45,7 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
-                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath de.elomagic.hl7inspector.Hl7Inspector</exec.args>
+                <exec.args>-Xdebug -Xrunjdwp:transport=dt_socket,server=n,address=${jpda.address} -classpath %classpath ${packageClassName}</exec.args>
                 <jpda.listen>true</jpda.listen>
                 <exec.executable>java</exec.executable>
             </properties>
@@ -80,5 +80,65 @@
             <goals>
                 <goal>assembly:single</goal>
             </goals>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
+                <exec.args>-classpath %classpath de.elomagic.hl7inspector.Hl7Inspector</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
+                <exec.args>-classpath %classpath de.elomagic.hl7inspector.Hl7Inspector</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
+                <exec.args>-classpath %classpath de.elomagic.hl7inspector.Hl7Inspector</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
+                <exec.args>-classpath %classpath de.elomagic.hl7inspector.Hl7Inspector</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
+                <exec.args>-classpath %classpath ${packageClassName}</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
         </action>
     </actions>
