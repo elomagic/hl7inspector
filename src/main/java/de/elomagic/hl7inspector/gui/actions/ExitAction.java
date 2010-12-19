@@ -14,44 +14,52 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.mac.MacApplication;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
+import javax.swing.KeyStroke;
 
 /**
  *
  * @author rambow
  */
 public class ExitAction extends AbstractAction {
-  
-  /** Creates a new instance of ExitAction */
-  public ExitAction() {
-    super("Exit", ResourceLoader.loadImageIcon("exit.png"));
-  
-    putValue(SHORT_DESCRIPTION, "Exit Hl7 Inspector");
-    putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
-  }
-   
-    @Override
-  public void actionPerformed(ActionEvent e) {
-    if (SimpleDialog.confirmYesNo("Really exit the hl7 inspector?") == 0) {
-      
-      StartupProperties prop = StartupProperties.getInstance();
-      prop.setProperty(StartupProperties.DESKTOP_X, Integer.toString(Desktop.getInstance().getBounds().x));
-      prop.setProperty(StartupProperties.DESKTOP_Y, Integer.toString(Desktop.getInstance().getBounds().y));
-      prop.setProperty(StartupProperties.DESKTOP_W, Integer.toString(Desktop.getInstance().getBounds().width));
-      prop.setProperty(StartupProperties.DESKTOP_H, Integer.toString(Desktop.getInstance().getBounds().height));
-      prop.save();
 
-      System.exit(0);          
+    /** Creates a new instance of ExitAction */
+    public ExitAction() {
+        super("Exit", ResourceLoader.loadImageIcon("exit.png"));
+
+        putValue(SHORT_DESCRIPTION, "Exit Hl7 Inspector");
+
+        if (MacApplication.isMacOS()) {
+            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.META_DOWN_MASK));
+        } else {
+            putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
+        }
     }
 
-  }    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (SimpleDialog.confirmYesNo("Really exit the hl7 inspector?") == 0) {
+
+            StartupProperties prop = StartupProperties.getInstance();
+            prop.setProperty(StartupProperties.DESKTOP_X, Integer.toString(Desktop.getInstance().getBounds().x));
+            prop.setProperty(StartupProperties.DESKTOP_Y, Integer.toString(Desktop.getInstance().getBounds().y));
+            prop.setProperty(StartupProperties.DESKTOP_W, Integer.toString(Desktop.getInstance().getBounds().width));
+            prop.setProperty(StartupProperties.DESKTOP_H, Integer.toString(Desktop.getInstance().getBounds().height));
+            prop.save();
+
+            System.exit(0);
+        }
+
+    }
+
 }
