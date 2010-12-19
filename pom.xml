@@ -37,6 +37,7 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
             </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -47,10 +48,13 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>de.elomagic.hl7inspector.Hl7Inspector</mainClass>
                         </manifest>
+                        <!--
                         <manifestEntries>
-                            <Main-Class>de.elomagic.hl7inspector.Hl7Inspector</Main-Class>                            
+                            <Main-Class>de.elomagic.hl7inspector.Hl7Inspector</Main-Class>
                         </manifestEntries>
+                        -->
                     </archive>
                 </configuration>
             </plugin>
@@ -60,11 +64,28 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.2</version>
                 <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>de.elomagic.hl7inspector.Hl7Inspector</mainClass>
+                        </manifest>
+                    </archive>
+
+                    <finalName>hl7inspector</finalName>
                     <descriptorRefs>
-                        <descriptorRef>src</descriptorRef>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
                     </descriptorRefs>
                 </configuration>
-
+                
+                <executions>
+                    <execution>
+                        <id>make-my-jar-with-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                
             </plugin>
         </plugins>
         <resources>
@@ -127,5 +148,5 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <description>HL7 tool to ease debbuging of HL7 messages </description>
+    <description>HL7 tool to ease debbuging of HL7 messages</description>
 </project>
