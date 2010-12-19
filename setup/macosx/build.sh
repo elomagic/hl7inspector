@@ -1,5 +1,5 @@
 #!/bin/bash
-AppVersion=`cat ../../version.number`
+AppVersion=`cat ../../target/classes/version.number`
 echo Build HL7 Inspector $AppVersion Setup
 echo
 echo Preparing build process
