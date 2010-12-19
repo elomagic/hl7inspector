@@ -16,6 +16,7 @@
 !define APP_REGKEY "Software\${APP_MANUFACTOR}\${APP_NAME}" 
 !define APP_UNINSTALL "Uninstall ${APP_MANUFACTOR} ${APP_NAME}.exe"
 
+!include "nsDialogs.nsh"
 !include "elomagicLF.nsh"
 
 # Name and file
@@ -31,6 +32,11 @@ InstallDirRegKey HKLM "${APP_REGKEY}" ""
 # Request application privileges for Windows Vista
 RequestExecutionLevel admin
 
+# Custom page
+# Var DonateDialog
+Var hwnd
+#Var Hwd_RunApp
+
 # --------------------------------
 # Interface Settings
 
@@ -38,25 +44,25 @@ RequestExecutionLevel admin
 !define MUI_FINISHPAGE_RUN "$SYSDIR\javaw.exe" 
 !define MUI_FINISHPAGE_RUN_PARAMETERS "-jar $\"$INSTDIR\${APP_MAIN}$\""
 
-;--------------------------------
-;Pages
-	!insertmacro MUI_PAGE_WELCOME
-	!insertmacro MUI_PAGE_LICENSE "..\src\license\license-gpl.txt"
-	!insertmacro MUI_PAGE_COMPONENTS
-	!insertmacro MUI_PAGE_DIRECTORY
-	!insertmacro MUI_PAGE_INSTFILES
+# --------------------------------
+# Pages
+!insertmacro MUI_PAGE_WELCOME
+!insertmacro MUI_PAGE_LICENSE "..\src\license\license-gpl.txt"
+!insertmacro MUI_PAGE_COMPONENTS
+!insertmacro MUI_PAGE_DIRECTORY
+!insertmacro MUI_PAGE_INSTFILES
+Page Custom DonatePage DonatePageLeave  
+!insertmacro MUI_PAGE_FINISH
   
-	!insertmacro MUI_PAGE_FINISH
-  
-	!insertmacro MUI_UNPAGE_CONFIRM
-	!insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_UNPAGE_CONFIRM
+!insertmacro MUI_UNPAGE_INSTFILES
   
   
-;--------------------------------
-;Languages
+# --------------------------------
+# Languages
  
-  !insertmacro MUI_LANGUAGE "English"
-  !insertmacro MUI_LANGUAGE "German"
+!insertmacro MUI_LANGUAGE "English"
+!insertmacro MUI_LANGUAGE "German"
 
 ;--------------------------------
 ;Installer Sections
@@ -120,6 +126,44 @@ Section "Uninstall"
   DeleteRegKey /ifempty HKLM "${APP_REGKEY}"
 
 SectionEnd
+
+Function DonatePage
+	!insertmacro MUI_HEADER_TEXT "Installation finshed" "The installation is successfull finished."
+
+	nsDialogs::Create 1018
+	Pop $hwnd
+	SetCtlColors $hwnd 0xFFFFFF 0x6D6D6D
+	
+	${If} $hwnd == error
+		Abort
+	${EndIf}
+	
+	${NSD_CreateLabel} 0 0 100% 40 "Please support this project by a donation. Any donations to this project will help support continued maintenance and development of HL7 Inspector"
+	Pop $R0
+	SetCtlColors $R0 0xFFFFFF 0x6D6D6D
+	
+	${NSD_CreateButton} 0 60 40 12u "Donate"
+	Pop $hwnd
+	${NSD_OnClick} $hwnd CallDonateURL
+	
+	#${NSD_CreateCheckbox} 0 160 95% 12u "Run HL7 Inspector"
+	#Pop $Hwd_RunApp
+	#SetCtlColors $Hwd_RunApp 0xFFFFFF 0x6D6D6D
+ 
+	nsDialogs::Show
+FunctionEnd
+
+Function DonatePageLeave
+#	${NSD_GetState} $Hwd_RunApp $0
+#	${If} $0 == 1
+#		ExecShell "open" "${MUI_FINISHPAGE_RUN} ${MUI_FINISHPAGE_RUN_PARAMETERS}"
+#	${EndIf}
+FunctionEnd
+
+Function CallDonateURL
+	ExecShell "open" "http://sourceforge.net/donate/index.php?group_id=158007"
+FunctionEnd
+
 
 Function .onInit
     # TODO Check installed jre/jdk

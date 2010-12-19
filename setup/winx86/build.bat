@@ -8,7 +8,9 @@ IF "%NSIS_FOLDER%"=="" (
 	EXIT /B
 )
 
-SET /p APP_VERSION=<..\..\target\classes\version.number
+REM SET /p APP_VERSION=<..\..\target\classes\version.number
+ECHO Enter version (x.y.z.b):
+SET /p APP_VERSION=
 
 IF "%APP_VERSION%"=="" (
 	ECHO Unable to determine version of HL7 Inspector
