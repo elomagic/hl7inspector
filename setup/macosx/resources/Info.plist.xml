@@ -21,7 +21,7 @@
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleGetInfoString</key>
-        <string>HL7 Inspector #APP_VERSION#, Website: http://www.certifay.com</string>
+        <string>HL7 Inspector #APP_VERSION#, Website: http://www.elomagic.com</string>
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundleIconFile</key>
@@ -34,6 +34,10 @@
             <string>de.elomagic.hl7inspector.Hl7Inspector</string>
             <key>JVMVersion</key>
             <string>1.6+</string>
+            <key>ClassPath</key>
+            <array>
+                <string>$JAVAROOT/hl7inspector.jar</string>
+            </array>
         </dict>
     </dict>
 </plist>

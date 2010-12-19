@@ -35,8 +35,6 @@ cp resources/PkgInfo "src/HL7 Inspector.app/Contents/PkgInfo"
 # Copy main application
 cp ../src/hl7inspector.jar "src/HL7 Inspector.app/Contents/Resources/Java/hl7inspector.jar"
 
-# Copy libs
-cp ../src/lib/*.* "src/HL7 Inspector.app/Contents/Resources/Java"
 echo
 echo ==================================
 echo
@@ -45,6 +43,10 @@ echo
 SetupDist="dist/HL7 Inspector $AppVersion Setup.pkg"
 mkdir -p "dist"
 /Developer/Applications/Utilities/PackageMaker.app/Contents/MacOS/PackageMaker -d 'hl7inspector.pmdoc' -v -o "$SetupDist"
+
+rm -R src/*
+rmdir src
+
 echo
 echo ==================================
 echo
