@@ -5,7 +5,7 @@
     <groupId>de.elomagic</groupId>
     <artifactId>hl7inspector</artifactId>
     <packaging>jar</packaging>
-    <version>2.2.0-SNAPSHOT</version>
+    <version>2.2.0.554</version>
     <name>HL7 Inspector</name>
     <build>
         <pluginManagement>
