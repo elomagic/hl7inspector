@@ -71,9 +71,9 @@ public class KeyStoreDialog extends PanelDialog {
 
     private KeyStore keyStore;
 //    private Profile     profile;
-
     private CommonPanel pnlCom;
 //    public CommonPanel getCommonPanel() { return pnlCom; }
+
     @Override
     protected void init() {
         try {
@@ -90,7 +90,7 @@ public class KeyStoreDialog extends PanelDialog {
 
             setSize(750, 500);
 
-            setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));
+            setLocationRelativeTo(Desktop.getInstance());
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             SimpleDialog.error(e, e.getMessage());

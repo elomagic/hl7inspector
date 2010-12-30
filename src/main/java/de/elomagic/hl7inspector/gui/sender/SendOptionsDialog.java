@@ -24,7 +24,6 @@ import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.gui.ToolKit;
 import de.elomagic.hl7inspector.io.Frame;
 import de.elomagic.hl7inspector.io.SendOptionsBean;
 import de.elomagic.hl7inspector.utils.History;
@@ -163,7 +162,7 @@ public class SendOptionsDialog extends BaseDialog {
         
         setSize(530, getPreferredSize().height);
         
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
     
     public void setOptions(SendOptionsBean bean) {

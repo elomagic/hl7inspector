@@ -235,7 +235,7 @@ public class SaveDialog extends BaseDialog {
 
         setSize(getPreferredSize().width, getPreferredSize().height);
 
-        setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));
+        setLocationRelativeTo(Desktop.getInstance());
     }
 
     private void selectFolder() {

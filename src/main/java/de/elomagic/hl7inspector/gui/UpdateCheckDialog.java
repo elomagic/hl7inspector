@@ -135,7 +135,7 @@ public class UpdateCheckDialog extends BaseDialog {
 
         setSize(300, getPreferredSize() != null ? getPreferredSize().height : 230);
 
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
 
     private JLabel lblText = new JLabel("Looking for updates...");

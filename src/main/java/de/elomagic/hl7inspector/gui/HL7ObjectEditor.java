@@ -105,7 +105,7 @@ public class HL7ObjectEditor extends BaseDialog {
 
         setSize(400, 400);
 
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
         editValue.requestFocus();
     }
 

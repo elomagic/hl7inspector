@@ -81,7 +81,7 @@ public class ReceiveNetworkSetupDialog extends BaseDialog {
 
         setSize(530, getPreferredSize().height);
 
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
 
     public void setOptions(SendOptionsBean bean) {

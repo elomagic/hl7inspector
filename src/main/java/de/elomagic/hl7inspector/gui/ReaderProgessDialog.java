@@ -112,7 +112,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
 
         setSize(300, getPreferredSize() != null ? getPreferredSize().height : 230);
 
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
 
     public void read(InputStream fin, ImportOptionBean readOptions) throws IOException {

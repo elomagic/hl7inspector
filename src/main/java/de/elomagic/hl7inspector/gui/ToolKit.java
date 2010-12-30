@@ -30,6 +30,14 @@ public class ToolKit {
     public ToolKit() {
     }
 
+    /**
+     * Use {@link window.setLocationRelativeTo(parentWindow);} instead
+     * @param window
+     * @param parentWindow
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public static Rectangle centerFrame(Window window, Window parentWindow) {
         parentWindow = Desktop.getInstance();
 

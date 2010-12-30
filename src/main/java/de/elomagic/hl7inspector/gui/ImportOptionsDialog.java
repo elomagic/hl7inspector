@@ -262,8 +262,8 @@ public class ImportOptionsDialog extends BaseDialog {
         pack();
         
         setSize(530, getPreferredSize().height);
-        
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+
+        setLocationRelativeTo(getOwner());
     }
     
     class ParseModeAction extends AbstractAction {
@@ -276,8 +276,7 @@ public class ImportOptionsDialog extends BaseDialog {
         @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
             boolean b = !e.getActionCommand().equals("PARSE");
-            updateParseModeButtons(b);
-            
+            updateParseModeButtons(b);            
         }
     }
     

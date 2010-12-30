@@ -105,7 +105,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
 //                    ((ProfilePanel)getPanelList().get(0)).getTable().dsizeColumnsToFit(0);
 //            }
 
-            setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));
+            setLocationRelativeTo(Desktop.getInstance());
         } catch (Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             SimpleDialog.error(e, e.getMessage());

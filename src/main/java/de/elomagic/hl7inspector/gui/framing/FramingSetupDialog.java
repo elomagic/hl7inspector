@@ -18,7 +18,6 @@ package de.elomagic.hl7inspector.gui.framing;
 
 import com.l2fprod.common.swing.BaseDialog;
 import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.ToolKit;
 import de.elomagic.hl7inspector.io.Frame;
 import java.awt.BorderLayout;
 
@@ -51,7 +50,7 @@ public class FramingSetupDialog extends BaseDialog {
         pack();
 
         setSize(getPreferredSize());
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
 
     private FramingPane fp = new FramingPane();

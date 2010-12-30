@@ -140,7 +140,7 @@ public class AboutDialog extends BaseDialog {
         //setSize(300, getPreferredSize()!=null?getPreferredSize().height:230);
         setSize(getPreferredSize().width, 300);
 
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
 
     private String getProperty(String key) {

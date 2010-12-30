@@ -26,7 +26,6 @@ import de.elomagic.hl7inspector.file.filters.TextFileFilter;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.gui.ToolKit;
 import de.elomagic.hl7inspector.utils.StringVector;
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
@@ -151,7 +150,7 @@ public class FileImportDialog extends BaseDialog {
         add(builder.getPanel(), BorderLayout.CENTER);
         pack();
         setSize((getPreferredSize().width<640)?640:getPreferredSize().width, (getPreferredSize().height<480)?480:getPreferredSize().height);
-        setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));
+        setLocationRelativeTo(Desktop.getInstance());
     }
     
     private void initTables() {

@@ -58,7 +58,7 @@ public class ArchiveFileSelectDialog extends BaseDialog implements MouseListener
        
         setSize(600, 400);
         
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
     
     public Object getSelectedObject() {

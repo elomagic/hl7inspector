@@ -18,7 +18,6 @@ package de.elomagic.hl7inspector.gui.options;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.PanelDialog;
-import de.elomagic.hl7inspector.gui.ToolKit;
 
 /**
  *
@@ -42,7 +41,7 @@ public class OptionsDialog extends PanelDialog {
         super.init();
 
         setSize(600, 500);
-        setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));
+        setLocationRelativeTo(Desktop.getInstance());
     }
 
 }

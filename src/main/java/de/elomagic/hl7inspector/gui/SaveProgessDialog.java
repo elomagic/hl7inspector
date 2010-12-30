@@ -121,7 +121,7 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
 
         setSize(300, getPreferredSize() != null ? getPreferredSize().height : 230);
 
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
 
     @Override

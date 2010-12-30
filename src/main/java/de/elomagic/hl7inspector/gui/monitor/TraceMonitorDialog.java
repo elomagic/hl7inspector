@@ -17,7 +17,6 @@
 package de.elomagic.hl7inspector.gui.monitor;
 
 import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.ToolKit;
 import java.awt.BorderLayout;
 import javax.swing.JDialog;
 
@@ -46,7 +45,7 @@ public abstract class TraceMonitorDialog extends JDialog {
     @Override
     public void setVisible(boolean v) {
         if ((v) && (!isVisible())) {
-            setBounds(ToolKit.centerFrame(this, Desktop.getInstance()));
+            setLocationRelativeTo(Desktop.getInstance());
         }
 
         super.setVisible(v);

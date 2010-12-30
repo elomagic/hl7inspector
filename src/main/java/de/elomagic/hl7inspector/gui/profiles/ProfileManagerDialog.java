@@ -22,7 +22,6 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.ToolKit;
 import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.gui.actions.DefaultCloseWindowAction;
 import de.elomagic.hl7inspector.gui.profiles.actions.*;
@@ -79,7 +78,7 @@ public class ProfileManagerDialog extends BaseDialog {
         lstProfiles.addMouseListener(new ProfileMouseClickListener());
         setSize(400, 300);
 
-        setBounds(ToolKit.centerFrame(this, this.getOwner()));
+        setLocationRelativeTo(getOwner());
     }
 
     private JList lstProfiles = new JList();
