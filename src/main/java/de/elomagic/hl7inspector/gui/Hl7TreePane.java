@@ -74,7 +74,7 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
                         }
                     }
                 }
-
+                
             }
 
             @Override

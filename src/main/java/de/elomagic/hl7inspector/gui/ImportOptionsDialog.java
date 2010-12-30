@@ -261,7 +261,7 @@ public class ImportOptionsDialog extends BaseDialog {
         
         pack();
         
-        setSize(530, getPreferredSize().height);
+        setSize(600, getPreferredSize().height);
 
         setLocationRelativeTo(getOwner());
     }

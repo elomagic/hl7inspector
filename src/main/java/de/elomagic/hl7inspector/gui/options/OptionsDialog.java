@@ -40,7 +40,7 @@ public class OptionsDialog extends PanelDialog {
 
         super.init();
 
-        setSize(600, 500);
+        setSize(600, 600);
         setLocationRelativeTo(Desktop.getInstance());
     }
 
