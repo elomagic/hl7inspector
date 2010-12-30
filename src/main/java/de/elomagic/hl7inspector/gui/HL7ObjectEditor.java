@@ -54,7 +54,7 @@ public class HL7ObjectEditor extends BaseDialog {
     private void init() {
         getBanner().setVisible(false);
 
-        setTitle("Hl7 Editor");
+        setTitle("HL7 Editor");
         setModal(true);
 
         editType = new JTextField();

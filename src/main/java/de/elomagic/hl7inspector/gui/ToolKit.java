@@ -31,7 +31,7 @@ public class ToolKit {
     }
 
     /**
-     * Use {@link window.setLocationRelativeTo(parentWindow);} instead
+     * Use {@link window.setLocationRelativeTo(Component)} instead
      * @param window
      * @param parentWindow
      * @return
