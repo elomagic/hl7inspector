@@ -16,8 +16,12 @@
  */
 package de.elomagic.hl7inspector.gui;
 
+import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.gui.actions.EditMessageItemAction;
 import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
 import de.elomagic.hl7inspector.gui.actions.PasteTextAction;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.awt.datatransfer.DataFlavor;
@@ -25,6 +29,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Iterator;
 import javax.swing.*;
@@ -51,11 +58,48 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
         tree.setCellRenderer(new TreeCellRenderer());
         tree.setOpaque(false);
         tree.setComponentPopupMenu(new TreePopupMenu());
+        tree.addMouseListener(new MouseListener() {
+
+            @Override
+            public void mouseClicked(MouseEvent event) {
+
+                if (event.getClickCount() == 2) {
+                    TreePath path = tree.getPathForLocation(event.getX(), event.getY());
+                    if (path != null) {
+                        Hl7Object o = (Hl7Object) path.getLastPathComponent();
+
+                        if (!(o instanceof Message) && ((o.getChildCount() == 0) || (StartupProperties.isTreeNodeDoubleClick()))) {
+                            EditMessageItemAction action = new EditMessageItemAction();
+                            action.actionPerformed(new ActionEvent(event.getSource(), event.getID(), ""));
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+            }
+
+        });
 
         new DropTarget(tree, this);
 
         setViewport(new ImageBackground());
         setViewportView(tree);
+
     }
 
     public void setModel(TreeModel model) {

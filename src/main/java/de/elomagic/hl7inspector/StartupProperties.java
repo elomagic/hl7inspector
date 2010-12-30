@@ -459,86 +459,55 @@ public class StartupProperties extends Properties {
         setProperty(COLOR_LABEL, (c == null) ? null : Integer.toHexString(c.getRGB()));
     }
 
+    public static boolean isTreeNodeDoubleClick() {
+        return "t".equalsIgnoreCase(prop.getProperty(TREE_NODE_DOUBLE_CLICK, "f"));
+    }
+
+    public static void setTreeNodeDoubleClick(boolean value) {
+        prop.setProperty(TREE_NODE_DOUBLE_CLICK, value?"t":"f");
+    }
+
     private List<ProfileFile> profiles = new ArrayList<ProfileFile>();
-
     private List<File> keyStoreFiles = new ArrayList<File>();
-
     public final static String APP_ONE_INSTANCE = "application-one-instance";
-
     public final static String APP_LOOK_AND_FEEL = "application-look-and-feel";
-
     public final static String APP_DEBUG_FILE = "application-debug-file";
-
     public final static String DEFAULT_PROFILE = "profile-default";
-
     public final static String DEFAULT_PRIVATE_KEYSTORE = "security-default-private-keystore";
-
     public final static String DEFAULT_PUBLIC_KEYSTORE = "security-default-public-keystore";
-
     public final static String DESKTOP_X = "desktop.x";
-
     public final static String DESKTOP_Y = "desktop.y";
-
     public final static String DESKTOP_W = "desktop.w";
-
     public final static String DESKTOP_H = "desktop.h";
-
     public final static String DESKTOP_IMAGE = "desktop-image";
-
     public final static String DESKTOP_DETAILS_VISIBLE = "desktop-details-visible";
-
     public final static String COLOR_NODE_PREFIX = "tree-node-prefix-color";
-
     public final static String COLOR_NODE_TEXT = "tree-node-text-color";
-
     public final static String COLOR_NODE_DESCRIPTION = "tree-node-description-color";
-
     public final static String COLOR_NODE_TRUNCATE = "tree-node-truncate-color";
-
     public final static String TREE_NODE_LENGTH = "tree-node-length";
-
     public final static String TREE_VIEW_MODE = "tree-view-mode";
-
     public final static String TREE_FONT_NAME = "tree-font-name";
-
+    private final static String TREE_NODE_DOUBLE_CLICK = "tree.node.double.click";
     public final static String EXTERNAL_FILE_VIEWER = "external-file-viewer";
-
     public final static String EXTERNAL_HEX_VIEWER = "external-hex-viewer";
-
     public final static String SENDER_OPTIONS_DEST = "sender.options.destination";
-
     public final static String RECENT_FILE = "recent-file";
-
     public final static String PHRASE_HISTORY = "phrase-history";
-
     public final static String PROFILE_FILE = "profile-file";
-
     public final static String PROFILE_DESCRIPTION = "profile-description";
-
     public final static String KEYSTORE_FILE = "keystore-file";
 //    public final static String PROFILE_DESCRIPTION      = "profile-description";
-
     public final static String DEFAULT_FRAME_START = "default-frame-start";
-
     public final static String DEFAULT_FRAME_STOP1 = "default-frame-stop1";
-
     public final static String DEFAULT_FRAME_STOP2 = "default-frame-stop2";
-
     public final static String LAST_SAVE_FOLDER = "last-save-folder";
-
     public final static String AUTOUPDATE_PERIOD = "autoupdate-period";
-
     public final static String AUTOUPDATE_ASK = "autoupdate-ask";
-
     public final static String AUTOUPDATE_LAST_CHECK = "autoupdate-last-check";
-
     public final static String NETWORK_PROXY_MODE = "network-proxy-mode";
-
     public final static String NETWORK_PROXY_HOST = "network-proxy-host";
-
     public final static String NETWORK_PROXY_PORT = "network-proxy-port";
-
     private final static StartupProperties prop = new StartupProperties();
-
     private String CONFIG_FILE = "hl7inspector.properties";
 }
