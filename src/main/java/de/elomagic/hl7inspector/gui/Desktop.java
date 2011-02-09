@@ -167,20 +167,25 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         tabPanel.setVisible(false);
 
         ProfileFile file = new ProfileFile(prop.getProperty(StartupProperties.DEFAULT_PROFILE, ""));
-        setProfileFile(file);
+        Profile profile = setProfileFile(file);
+        if (profile != null) {
+            Profile.setDefault(profile);
+        }
 
         getDetailsWindow().setVisible(prop.isDetailsWindowVisible());
         getToolBar().getDetailsButton().setSelected(prop.isDetailsWindowVisible());
     }
 
-    public void setProfileFile(ProfileFile file) {
+    public Profile setProfileFile(ProfileFile file) {
+        Profile profile = null;
+
         if (file.exists()) {
             try {
-                Profile profile = Profile.getDefault();
-
                 FileInputStream fin = new FileInputStream(file);
                 try {
                     profile = Profile.loadFromStream(fin);
+                } catch (Exception e) {
+                    profile = Profile.getDefault();
                 } finally {
                     fin.close();
                 }
@@ -204,6 +209,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
             bottomPanel.setProfileText("Profile not found!");
             bottomPanel.setProfileTooltTip("");
         }
+        return profile;
     }
 
     public MainToolBar getToolBar() {

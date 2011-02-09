@@ -19,6 +19,7 @@ package de.elomagic.hl7inspector.gui.profiles.actions;
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -51,7 +52,10 @@ public class DefaultProfileAction extends AbstractAction {
                 StartupProperties.getInstance().setProperty(StartupProperties.DEFAULT_PROFILE, (file).toString());
                 list.repaint();
 
-                Desktop.getInstance().setProfileFile(file);
+                Profile profile = Desktop.getInstance().setProfileFile(file);
+                if (profile != null) {
+                    Profile.setDefault(profile);
+                }
             } else {
                 SimpleDialog.error("No profile selected!");
             }

@@ -46,10 +46,15 @@ public class Profile {
     }
 
     public static Profile getDefault() {
-        return profile;
+        return defaultProfile;
     }
 
-    private final static Profile profile = new Profile();
+    public static void setDefault(Profile profile) {
+        defaultProfile = profile;
+    }
+
+    private static Profile defaultProfile = new Profile();
+    
     public static Profile loadFromStream(InputStream in) throws Exception {
         Profile p = new Profile();
         p.loadFromStreamImpl(in);
