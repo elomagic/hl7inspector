@@ -51,6 +51,7 @@ public class LinkLabel extends JLabel implements MouseListener {
     }
 
     private URI uri;
+    @Override
     public void mouseClicked(MouseEvent e) {
         try {
             if (uri.toString().indexOf('@') == -1) {
