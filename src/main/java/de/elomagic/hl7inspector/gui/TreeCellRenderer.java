@@ -24,6 +24,7 @@ import de.elomagic.hl7inspector.profile.DataElement;
 import de.elomagic.hl7inspector.profile.DataTypeItem;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import de.elomagic.hl7inspector.profile.SegmentItem;
 import de.elomagic.hl7inspector.utils.StringEscapeUtils;
 import de.elomagic.hl7inspector.utils.StringVector;
@@ -42,6 +43,8 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ implements javax.swing.tree.TreeCellRenderer {
+
+    private static final long serialVersionUID = 7002466630618664033L;
 
     /** Creates a new instance of TreeCellRenderer */
     public TreeCellRenderer() {
@@ -214,7 +217,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 //            setToolTipText(obj.getValidationText());
 
             if (((Hl7TreeModel) model).isViewDescription()) {
-                Profile profile = Profile.getDefault();
+                Profile profile = ProfileIO.getDefault();
 
                 String desc = obj.getText();
                 StringVector tt = new StringVector();
@@ -255,22 +258,22 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                             if (segDef != null) {
                                 desc = segDef.getDescription();
                                 tt.add("Segment Name: ".concat(segDef.getDescription()));
-                                if (segDef.getChapter().length() != 0) {
+                                if (!segDef.getChapter().isEmpty()) {
                                     tt.add("Chapter: ".concat(segDef.getChapter()));
                                 }
                             }
-                        } catch (Exception e) {
-                            Logger.getLogger(this.getClass()).error(e, e);
+                        } catch (Exception ex) {
+                            Logger.getLogger(this.getClass()).error(ex.getMessage(), ex);
                         }
                     } else if (value instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) {
                         DataElement de = profile.getDataElementList().getDataElement(segType, index);
                         if (de != null) {
                             desc = de.getName();
                             tt.add("Field Name: ".concat(de.getName()));
-                            if (de.getChapter().length() != 0) {
+                            if (!de.getChapter().isEmpty()) {
                                 tt.add("Chapter: ".concat(de.getChapter()));
                             }
-                            if (de.getTable().length() != 0) {
+                            if (!de.getTable().isEmpty()) {
                                 tt.add("Table: ".concat(de.getTable()));
                             }
                         }
@@ -280,10 +283,10 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                         if (de != null) {
                             desc = "[".concat(de.getDataType()).concat("] ").concat(de.getName());
                             tt.add("Field Name: ".concat(de.getName()));
-                            if (de.getChapter().length() != 0) {
+                            if (!de.getChapter().isEmpty()) {
                                 tt.add("Chapter: ".concat(de.getChapter()));
                             }
-                            if (de.getTable().length() != 0) {
+                            if (!de.getTable().isEmpty()) {
                                 tt.add("Table: ".concat(de.getTable()));
                             }
                         }
@@ -294,10 +297,10 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                             if (dt != null) {
                                 desc = "[".concat(dt.getDataType()).concat("] ").concat(dt.getDescription());
                                 tt.add("Component Type: ".concat(dt.getDescription()));
-                                if (dt.getChapter().length() != 0) {
+                                if (!dt.getChapter().isEmpty()) {
                                     tt.add("Chapter: ".concat(dt.getChapter()));
                                 }
-                                if (dt.getTable().length() != 0) {
+                                if (!dt.getTable().isEmpty()) {
                                     tt.add("Table: ".concat(dt.getTable()));
                                 }
                             }
@@ -315,7 +318,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                                     if (dt.getChapter().length() != 0) {
                                         tt.add("Chapter: ".concat(dt.getChapter()));
                                     }
-                                    if (dt.getTable().length() != 0) {
+                                    if (!dt.getTable().isEmpty()) {
                                         tt.add("Table: ".concat(dt.getTable()));
                                     }
                                 }
@@ -331,7 +334,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 //                    setToolTipText(tt.toString());
                 }
 
-                if (desc.length() != 0) {
+                if (!desc.isEmpty()) {
                     if (!sel) {
                         sb.append("<font color=\"#");
                         sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB() & 0xffffff));

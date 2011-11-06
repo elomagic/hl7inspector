@@ -24,7 +24,7 @@ import de.elomagic.hl7inspector.io.MessageImportEvent;
 import de.elomagic.hl7inspector.io.MessageImportListener;
 import de.elomagic.hl7inspector.io.MessageImportThread;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
-import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import de.elomagic.hl7inspector.validate.Validator;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -47,6 +47,8 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class ReaderProgessDialog extends JDialog implements MessageImportListener, ActionListener {
+
+    private static final long serialVersionUID = 4229125522794967128L;
 
     /** Creates a new instance of ReaderProgessDialog */
     public ReaderProgessDialog() {
@@ -134,28 +136,18 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
     }
 
     private JLabel lblSource = new JLabel();
-
     private JLabel lblSize = new JLabel("?");
-
     private JLabel lblMessages = new JLabel("0");
-
     private JLabel lblBytes = new JLabel("0");
-
     private JPanel buttonPanel = new JPanel(new FlowLayout());
-
     private Hl7TreeModel model = null;
-
     private ImportOptionBean options = null;
-
     private MessageImportThread thread = null;
-
     private boolean userAbort = false;
-
     private JProgressBar bar = new JProgressBar(JProgressBar.HORIZONTAL);
-
     private JButton btAbort = new JButton("Abort");
-
     private DoRun doRun = new DoRun();
+
     @Override
     public void messageRead(MessageImportEvent event) {
         Desktop.getInstance().getInputTraceWindow().addLine("Catch message.");
@@ -194,7 +186,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
 
             if (options.isValidate()) {
                 try {
-                    Validator val = new Validator(Profile.getDefault());
+                    Validator val = new Validator(ProfileIO.getDefault());
                     val.validate(msg);
                 } catch (Exception ee) {
                     Logger.getLogger(getClass()).error(ee.getMessage(), ee);
@@ -223,6 +215,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
     }
 
     private long bytesRead;
+
     @Override
     public void importDone(MessageImportEvent event) {
         Desktop.getInstance().getInputTraceWindow().addLine("Import done.");
@@ -249,6 +242,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
         }
 
     }
+
     @Override
     public void actionPerformed(ActionEvent ee) {
         if (thread != null) {

@@ -21,6 +21,7 @@ import de.elomagic.hl7inspector.gui.*;
 import de.elomagic.hl7inspector.gui.profiles.panels.*;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import java.io.FileInputStream;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -30,6 +31,8 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class ProfileDefinitionDialog extends PanelDialog {
+
+    private static final long serialVersionUID = -6813753748983568133L;
 
     /** Creates a new instance of ProfileDefinitionDialog */
     public ProfileDefinitionDialog(ProfileFile _file) throws Exception {
@@ -47,7 +50,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
         try {
             FileInputStream fin = new FileInputStream(file);
             try {
-                profile = Profile.loadFromStream(fin);
+                profile = ProfileIO.loadFromStream(fin);
             } finally {
                 fin.close();
             }
@@ -57,9 +60,9 @@ public class ProfileDefinitionDialog extends PanelDialog {
             } else {
                 result = super.ask();
             }
-        } catch (Exception e) {
-            Logger.getLogger(getClass()).error(e.getMessage(), e);
-            SimpleDialog.error(e, "Unable to read profile");
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+            SimpleDialog.error(ex, "Unable to read profile");
         }
 
         return result;
@@ -76,10 +79,9 @@ public class ProfileDefinitionDialog extends PanelDialog {
     }
 
     private ProfileFile file;
-
     private Profile profile;
-
     private CommonPanel pnlCom;
+
     public CommonPanel getCommonPanel() {
         return pnlCom;
     }

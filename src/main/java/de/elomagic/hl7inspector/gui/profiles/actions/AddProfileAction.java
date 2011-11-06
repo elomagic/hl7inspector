@@ -23,6 +23,7 @@ import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -38,11 +39,13 @@ import org.apache.log4j.Logger;
  */
 public class AddProfileAction extends AbstractAction {
 
+    private static final long serialVersionUID = -8404198610253830669L;
+
     /** Creates a new instance of FileOpenAction */
-    public AddProfileAction(JList _list) {
+    public AddProfileAction(JList list) {
         super("Add", ResourceLoader.loadImageIcon("edit_add.png"));
 
-        list = _list;
+        this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Add profile");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
@@ -65,7 +68,7 @@ public class AddProfileAction extends AbstractAction {
             try {
                 FileInputStream fin = new FileInputStream(file);
                 try {
-                    Profile p = Profile.loadFromStream(fin);
+                    Profile p = ProfileIO.loadFromStream(fin);
                     file.setDescription(p.getDescription());
 
                     VectorListModel<ProfileFile> model = ((VectorListModel<ProfileFile>) list.getModel());
@@ -75,8 +78,8 @@ public class AddProfileAction extends AbstractAction {
                 } finally {
                     fin.close();
                 }
-            } catch (Exception ee) {
-                Logger.getLogger(getClass()).error(ee.getMessage(), ee);
+            } catch (Exception ex) {
+                Logger.getLogger(getClass()).error(ex.getMessage(), ex);
                 SimpleDialog.error("Invalid file format!");
             }
         }

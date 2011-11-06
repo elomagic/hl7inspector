@@ -17,15 +17,18 @@
 package de.elomagic.hl7inspector.profile;
 
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import nanoxml.XMLElement;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
 
 /**
  *
  * @author rambow
  */
-@Root(name = "data-element", strict = false)
+@XmlRootElement(name = "data-element")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class DataElement {
 
     /** Creates a new instance of FieldId */
@@ -59,11 +62,11 @@ public class DataElement {
     }
 
     //Name	Item#	Seg	Seq#	Chp	Len	DT	Rep	Qty	Table
-    public DataElement(String _id, String _dataType, String _desc, int _len, String _table) {
-        setItem(_id);
-        setDataType(_dataType);
-        setName(_desc);
-        setLen(_len);
+    public DataElement(String id, String dataType, String desc, int len, String _table) {
+        this.item = id;
+        this.dataType = dataType;
+        this.name = desc;
+        this.len = len;
         setTable(_table);
     }
 
@@ -120,8 +123,9 @@ public class DataElement {
         return xml;
     }
 
-    @Element(name = "name", required = false)
     private String name = "";
+
+    @XmlElement(name = "name", required = false)
     public String getName() {
         return name;
     }
@@ -130,8 +134,9 @@ public class DataElement {
         this.name = name;
     }
 
-    @Element(name = "item", required = false)
     private String item = "";
+
+    @XmlElement(name = "item", required = false)
     public String getItem() {
         return item;
     }
@@ -144,8 +149,9 @@ public class DataElement {
         }
     }
 
-    @Element(name = "segment", required = false)
     private String segment = "";
+
+    @XmlElement(name = "segment", required = false)
     public String getSegment() {
         return segment;
     }
@@ -154,8 +160,9 @@ public class DataElement {
         this.segment = value.trim();
     }
 
-    @Element(name = "sequence", required = false)
     private int seq = 0;
+
+    @XmlElement(name = "sequence", required = false)
     public int getSequence() {
         return seq;
     }
@@ -164,8 +171,9 @@ public class DataElement {
         this.seq = s;
     }
 
-    @Element(name = "chapter", required = false)
     private String chapter = "";
+
+    @XmlElement(name = "chapter", required = false)
     public String getChapter() {
         return chapter;
     }
@@ -174,8 +182,9 @@ public class DataElement {
         this.chapter = value;
     }
 
-    @Element(name = "length", required = false)
     private int len = 0;
+
+    @XmlElement(name = "length", required = false)
     public int getLen() {
         return len;
     }
@@ -184,8 +193,9 @@ public class DataElement {
         this.len = len;
     }
 
-    @Element(name = "data-type", required = false)
     private String dataType = "";
+
+    @XmlElement(name = "data-type", required = false)
     public String getDataType() {
         return dataType;
     }
@@ -194,8 +204,9 @@ public class DataElement {
         this.dataType = dataType.trim();
     }
 
-    @Element(name = "repeatable", required = false)
     private String repeat = "N";
+
+    @XmlElement(name = "repeatable", required = false)
     public String getRepeatable() {
         return repeat;
     }
@@ -205,9 +216,7 @@ public class DataElement {
 
         if (repeat.startsWith("Y")) {
             repeat = "Y";
-        }
-
-        if (repeat.startsWith("N")) {
+        } else if (repeat.startsWith("N")) {
             repeat = "N";
         }
     }
@@ -224,8 +233,9 @@ public class DataElement {
         return c;
     }
 
-    @Element(name = "table", required = false)
     private String table = "";
+
+    @XmlElement(name = "table")
     public String getTable() {
         return table;
     }

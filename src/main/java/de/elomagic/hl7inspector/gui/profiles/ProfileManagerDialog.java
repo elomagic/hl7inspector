@@ -37,6 +37,8 @@ import javax.swing.JScrollPane;
  */
 public class ProfileManagerDialog extends BaseDialog {
 
+    private static final long serialVersionUID = -1202538406494514391L;
+
     /** Creates a new instance of ProfileRegistrationDialog */
     public ProfileManagerDialog() {
         super(Desktop.getInstance(), "Profile Manager", true);
@@ -82,17 +84,11 @@ public class ProfileManagerDialog extends BaseDialog {
     }
 
     private JList lstProfiles = new JList();
-
     private JButton btAdd = new JButton(new AddProfileAction(lstProfiles));
-
     private JButton btEdit = new JButton(new EditProfileAction(lstProfiles));
-
     private JButton btNew = new JButton(new NewProfileAction(lstProfiles));
-
     private JButton btRemove = new JButton(new RemoveProfileAction(lstProfiles));
-
     private JButton btDefault = new JButton(new DefaultProfileAction(lstProfiles));
-
     private JButton btClose = new JButton(new DefaultCloseWindowAction(this));
 
     class ProfileMouseClickListener implements MouseListener {
@@ -121,4 +117,5 @@ public class ProfileManagerDialog extends BaseDialog {
         }
 
     }
+
 }

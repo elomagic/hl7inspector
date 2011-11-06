@@ -29,7 +29,7 @@ import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.RepetitionField;
 import de.elomagic.hl7inspector.hl7.model.Subcomponent;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
-import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.JCheckBox;
@@ -43,6 +43,8 @@ import javax.swing.JTextField;
  * @author rambow
  */
 public class HL7ObjectEditor extends BaseDialog {
+
+    private static final long serialVersionUID = 5840340196322853677L;
 
     /** Creates a new instance of ImportOptionsDialog */
     public HL7ObjectEditor() {
@@ -110,16 +112,12 @@ public class HL7ObjectEditor extends BaseDialog {
     }
 
     private JTextField editType;
-
     private JTextField editValue;
-
     private JPanel paneDesc;
-
     private JScrollPane scrollPane;
-
     private JEditorPane editorPane;
-
     private JCheckBox cbEncode;
+
     private boolean isEncode() {
         return cbEncode.isSelected();
     }
@@ -139,6 +137,7 @@ public class HL7ObjectEditor extends BaseDialog {
     }
 
     private Hl7Object o = null;
+
     public void setValue(Hl7Object hl7Object) {
         o = hl7Object;
 
@@ -151,7 +150,7 @@ public class HL7ObjectEditor extends BaseDialog {
         boolean b = (value.indexOf('|') != -1) || (value.indexOf('&') != -1) || (value.indexOf('~') != -1) || (value.indexOf('\\') != -1);
         cbEncode.setSelected(!b);
 
-        MessageDescriptor md = new MessageDescriptor(Profile.getDefault());
+        MessageDescriptor md = new MessageDescriptor(ProfileIO.getDefault());
         String desc = md.getDescription(o, true);
         setDescription(desc);
     }

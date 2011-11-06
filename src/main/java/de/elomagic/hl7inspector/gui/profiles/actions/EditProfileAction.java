@@ -22,6 +22,7 @@ import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.profiles.ProfileDefinitionDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.FileOutputStream;
@@ -35,11 +36,13 @@ import org.apache.log4j.Logger;
  */
 public class EditProfileAction extends AbstractAction {
 
+    private static final long serialVersionUID = -6049725574076007265L;
+
     /** Creates a new instance of FileOpenAction */
-    public EditProfileAction(JList _list) {
+    public EditProfileAction(JList list) {
         super("Edit", ResourceLoader.loadImageIcon("edit.png"));
 
-        list = _list;
+        this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Edit selected profile");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
@@ -59,7 +62,7 @@ public class EditProfileAction extends AbstractAction {
                         try {
                             FileOutputStream fout = new FileOutputStream(dialog.getProfileFile());
                             try {
-                                dialog.getProfile().saveToStream(fout);
+                                ProfileIO.saveToStream(dialog.getProfile(), fout);
                                 dialog.getProfileFile().setDescription(dialog.getProfile().getName());
                             } finally {
                                 fout.close();

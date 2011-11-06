@@ -21,6 +21,7 @@ import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
@@ -33,11 +34,13 @@ import org.apache.log4j.Logger;
  */
 public class DefaultProfileAction extends AbstractAction {
 
+    private static final long serialVersionUID = -4333787361797188249L;
+
     /** Creates a new instance of FileOpenAction */
-    public DefaultProfileAction(JList _list) {
+    public DefaultProfileAction(JList list) {
         super("Set default", null);//ResourceLoader.loadImageIcon("edit_add.png"));
 
-        list = _list;
+        this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Set selected profile as default");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
@@ -54,13 +57,13 @@ public class DefaultProfileAction extends AbstractAction {
 
                 Profile profile = Desktop.getInstance().setProfileFile(file);
                 if (profile != null) {
-                    Profile.setDefault(profile);
+                    ProfileIO.setDefault(profile);
                 }
             } else {
                 SimpleDialog.error("No profile selected!");
             }
-        } catch (Exception ee) {
-            Logger.getLogger(getClass()).error(ee.getMessage(), ee);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
     }
 

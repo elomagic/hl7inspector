@@ -24,6 +24,7 @@ import de.elomagic.hl7inspector.gui.profiles.ProfileDefinitionDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -38,6 +39,8 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class NewProfileAction extends AbstractAction {
+
+    private static final long serialVersionUID = 4409576078805566452L;
 
     /** Creates a new instance of FileOpenAction */
     public NewProfileAction(JList _list) {
@@ -70,7 +73,7 @@ public class NewProfileAction extends AbstractAction {
 
                     FileOutputStream fout = new FileOutputStream(file);
                     try {
-                        new Profile().saveToStream(fout);
+                        ProfileIO.saveToStream(new Profile(), fout);
                     } finally {
                         fout.close();
                     }
@@ -86,9 +89,9 @@ public class NewProfileAction extends AbstractAction {
             } finally {
                 fc.setVisible(false);
             }
-        } catch (Exception ee) {
-            Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-            SimpleDialog.error(ee);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+            SimpleDialog.error(ex);
         }
     }
 

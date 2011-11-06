@@ -24,6 +24,8 @@ import java.io.File;
  */
 public class ProfileFile extends File {
 
+    private static final long serialVersionUID = -8484823376425619787L;
+
     /** Creates a new instance of ProfileFile */
     public ProfileFile(String pathname) {
         super(pathname);

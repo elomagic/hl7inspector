@@ -30,6 +30,7 @@ import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ComponentEvent;
@@ -52,6 +53,8 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class Desktop extends JFrame implements TreeSelectionListener, ComponentListener {
+
+    private static final long serialVersionUID = -7355763607097590182L;
 
     /** Creates a new instance of Desktop */
     private Desktop() {
@@ -169,7 +172,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         ProfileFile file = new ProfileFile(prop.getProperty(StartupProperties.DEFAULT_PROFILE, ""));
         Profile profile = setProfileFile(file);
         if (profile != null) {
-            Profile.setDefault(profile);
+            ProfileIO.setDefault(profile);
         }
 
         getDetailsWindow().setVisible(prop.isDetailsWindowVisible());
@@ -183,9 +186,9 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
             try {
                 FileInputStream fin = new FileInputStream(file);
                 try {
-                    profile = Profile.loadFromStream(fin);
+                    profile = ProfileIO.loadFromStream(fin);
                 } catch (Exception e) {
-                    profile = Profile.getDefault();
+                    profile = ProfileIO.getDefault();
                 } finally {
                     fin.close();
                 }
@@ -287,7 +290,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         if (detailsPanel.isVisible()) {
             String NO_DESCRIPTION_FOUND = "No description in profile found.";
 
-            MessageDescriptor md = new MessageDescriptor(Profile.getDefault());
+            MessageDescriptor md = new MessageDescriptor(ProfileIO.getDefault());
 
             s = md.getDescription(o, true);
 

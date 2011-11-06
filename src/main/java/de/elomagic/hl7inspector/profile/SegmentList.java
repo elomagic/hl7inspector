@@ -17,14 +17,19 @@
 package de.elomagic.hl7inspector.profile;
 
 import java.util.HashMap;
-import org.simpleframework.xml.Root;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author rambow
  */
-@Root
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class SegmentList extends HashMap<String, SegmentItem> {
+
+    private static final long serialVersionUID = -6731464746091700126L;
 
     /** Creates a new instance of SegmentList */
     public SegmentList() {

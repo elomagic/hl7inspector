@@ -18,16 +18,21 @@ package de.elomagic.hl7inspector.profile;
 
 import java.util.List;
 import java.util.Properties;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import nanoxml.XMLElement;
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
 
 /**
  *
  * @author rambow
  */
-@Root
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class SegmentItem extends Properties {
+
+    private static final long serialVersionUID = -4257952051912790214L;
 
     /** Creates a new instance of SegmentDefinitions */
     public SegmentItem() {
@@ -77,8 +82,9 @@ public class SegmentItem extends Properties {
         return xml;
     }
 
-    @Element(name = "chapter", required = false)
     private String chapter = "";
+
+    @XmlElement(name = "chapter", required = false)
     public String getChapter() {
         return chapter;
     }
@@ -87,8 +93,9 @@ public class SegmentItem extends Properties {
         this.chapter = chapter;
     }
 
-    @Element(name = "description", required = false)
     private String description = "";
+
+    @XmlElement(name = "description", required = false)
     public String getDescription() {
         return description;
     }
@@ -97,8 +104,9 @@ public class SegmentItem extends Properties {
         description = d;
     }
 
-    @Element(name = "id", required = false)
     private String id = "";
+
+    @XmlElement(name = "id", required = false)
     public String getId() {
         return id;
     }
