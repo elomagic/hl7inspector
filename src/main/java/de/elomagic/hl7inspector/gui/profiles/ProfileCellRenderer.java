@@ -31,6 +31,8 @@ import javax.swing.ListCellRenderer;
  */
 public class ProfileCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
 
+    private static final long serialVersionUID = 3772768483753533378L;
+
     /** Creates a new instance of ProfileCellRenderer */
     public ProfileCellRenderer() {
     }
@@ -51,7 +53,7 @@ public class ProfileCellRenderer extends DefaultListCellRenderer implements List
             setToolTipText("");
         }
 
-        setText((file.getDescription().length() == 0) ? file.toString() : file.getDescription());
+        setText((file.getDescription().isEmpty()) ? file.toString() : file.getDescription());
         setBackground(isSelected ? SystemColor.textHighlight : SystemColor.text);
         setForeground(isSelected ? SystemColor.textHighlightText : SystemColor.textText);
 
