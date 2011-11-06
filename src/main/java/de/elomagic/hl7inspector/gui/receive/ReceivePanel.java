@@ -37,6 +37,8 @@ import org.apache.log4j.Logger;
  */
 public class ReceivePanel extends CharacterMonitor implements ActionListener {
 
+    private static final long serialVersionUID = 6221303181530455773L;
+
     /** Creates a new instance of ReceivePanel */
     public ReceivePanel() {
         super();
@@ -64,18 +66,13 @@ public class ReceivePanel extends CharacterMonitor implements ActionListener {
     }
 
     private ReceiveThread thread = null;
-
     private AbstractButton btStart = createButton(JToggleButton.class, "start_service.png", "Start receiving message service.", "START");
-
     private AbstractButton btStop = createButton(JToggleButton.class, "stop_service.png", "Stop receiving message service.", "STOP");
-
     private AbstractButton btPort = createButton(JButton.class, "server.png", "Setup network", "SETUP");
-
     private AbstractButton btOptions = createButton(JButton.class, "preferences-desktop.png", "Setup import options", "OPTIONS");
-
     private AbstractButton btSeqAuth = createButton(JToggleButton.class, "kgpg_sign.png", "Client authentication", "AUTH");
-
     private AbstractButton btSeqCrypt = createButton(JToggleButton.class, "encrypt.png", "Encrypt communication", "CRYPT");
+
     private void initThread() {
         ReceiveThread t = new ReceiveThread();
 
@@ -103,18 +100,15 @@ public class ReceivePanel extends CharacterMonitor implements ActionListener {
             }
         } else if (e.getActionCommand().equals("SETUP")) {
 //            setAlwaysOnTop(false);
-            try {
-                ReceiveNetworkSetupDialog dialog = new ReceiveNetworkSetupDialog();
 
-                SendOptionsBean bean = new SendOptionsBean();
-                bean.setPort(thread.getPort());
-                bean.setReuseSocket(thread.isReuseSocket());
-                if (dialog.ask()) {
-                    thread.setPort(dialog.getOptions().getPort());
-                    thread.setReUseSocket(dialog.getOptions().isReuseSocket());
-                }
-            } finally {
-//                setAlwaysOnTop(true);
+            ReceiveNetworkSetupDialog dialog = new ReceiveNetworkSetupDialog();
+
+            SendOptionsBean bean = new SendOptionsBean();
+            bean.setPort(thread.getPort());
+            bean.setReuseSocket(thread.isReuseSocket());
+            if (dialog.ask()) {
+                thread.setPort(dialog.getOptions().getPort());
+                thread.setReUseSocket(dialog.getOptions().isReuseSocket());
             }
         } else if (e.getActionCommand().equals("OPTIONS")) {
             ImportOptionsDialog dlg = new ImportOptionsDialog();
