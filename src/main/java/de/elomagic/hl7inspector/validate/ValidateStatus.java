@@ -36,12 +36,10 @@ public class ValidateStatus {
     }
 
     public final static int OK = 0;
-
     public final static int INFO = 1;
-
     public final static int WARN = 2;
-
     public final static int ERROR = 3;
+
     public ImageIcon getIcon() {
         ImageIcon icon;
 
@@ -100,6 +98,5 @@ public class ValidateStatus {
     }
 
     private int status = 1;
-
     private String text = "";
 }
