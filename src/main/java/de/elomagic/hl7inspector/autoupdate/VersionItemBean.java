@@ -16,29 +16,35 @@
  */
 package de.elomagic.hl7inspector.autoupdate;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import de.elomagic.hl7inspector.utils.XmlDateAdapter;
 import java.util.Date;
-import org.simpleframework.xml.Element;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  *
  * @author carsten.rambow
  */
+@XmlAccessorType(XmlAccessType.NONE)
 public class VersionItemBean {
 
-    @Element(name = "date", required = false)
-    private String date = "";
-    public Date getDate() throws ParseException {
-        return ("".equals(date)) ? null : new SimpleDateFormat("yyyy.MM.dd").parse(date);
+    private Date date;
+
+    @XmlElement(name = "date")
+    @XmlJavaTypeAdapter(XmlDateAdapter.class)
+    public Date getDate() {
+        return date;
     }
 
     public void setDate(Date date) {
-        this.date = (date == null) ? "" : new SimpleDateFormat("yyyy.MM.dd").format(date);
+        this.date = date;
     }
 
-    @Element(name = "version", required = false)
     private String version = "";
+
+    @XmlElement(name = "version")
     public String getVersion() {
         return version;
     }
@@ -47,8 +53,9 @@ public class VersionItemBean {
         this.version = version;
     }
 
-    @Element(name = "homepage", required = false)
     private String homepage = "";
+
+    @XmlElement(name = "homepage")
     public String getHomepage() {
         return homepage;
     }

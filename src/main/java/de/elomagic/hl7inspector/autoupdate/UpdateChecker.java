@@ -16,17 +16,20 @@
  */
 package de.elomagic.hl7inspector.autoupdate;
 
+import de.elomagic.hl7inspector.Hl7Inspector;
 import de.elomagic.hl7inspector.StartupProperties;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.ProxySelector;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
-import org.simpleframework.xml.Serializer;
-import org.simpleframework.xml.core.Persister;
+import javax.xml.bind.JAXB;
 
 /**
  *
@@ -43,6 +46,7 @@ public class UpdateChecker extends Thread {
     public void terminate() {
         terminated = true;
     }
+
     private boolean terminated = false;
 
     @Override
@@ -51,25 +55,28 @@ public class UpdateChecker extends Thread {
         terminated = false;
         try {
             try {
-                result = checkUpdates();
+                String versionFile = readVersionFile();
+                String currentVersion = Hl7Inspector.getVersion();
+                result = checkUpdates(versionFile, currentVersion);
                 resultAvailable = false;
             } catch (Exception ex) {
-                e = ex;
+                e = new UpdateCheckException(ex);
             }
         } finally {
             terminated = true;
         }
     }
+
     private boolean resultAvailable = false;
     private boolean result = false;
-    private Exception e = null;
+    private UpdateCheckException e = null;
 
-    public static boolean checkForUpdates() throws Exception /*IOException, MalformedURLException */ {
+    public static boolean checkForUpdates() throws InterruptedException, UpdateCheckException {
         UpdateChecker uc = new UpdateChecker();
 
         uc.start();
 
-        while ((!uc.resultAvailable) && (!uc.terminated)) {
+        while (!uc.resultAvailable && !uc.terminated) {
             sleep(100);
         }
 
@@ -80,21 +87,20 @@ public class UpdateChecker extends Thread {
         return uc.result;
     }
 
-    private boolean checkUpdates() throws Exception /*IOException, MalformedURLException */ {
-        UpdateChecker uc = new UpdateChecker();
-
-        String f = uc.getVersionFile();
-
-        Serializer serializer = new Persister();
-
-        VersionBean versionBean = serializer.read(VersionBean.class, f);
+    /**
+     * 
+     * @param xml
+     * @param currentVersion
+     * @return true when currentVersion higher then version inside xml
+     */
+    public boolean checkUpdates(String xml, String currentVersion) {
+        VersionBean versionBean = JAXB.unmarshal(new StringReader(xml), VersionBean.class);
 
         String version = versionBean.getHl7Inspector2().getVersion();
-
-        return de.elomagic.hl7inspector.Hl7Inspector.getVersion().compareTo(version) < 0;
+        return currentVersion.compareTo(version) < 0;
     }
 
-    public String getVersionFile() throws Exception /* IOException, MalformedURLException */ {
+    private String readVersionFile() throws IOException, URISyntaxException {
         String versionFile = "";
 
         StartupProperties p = StartupProperties.getInstance();
@@ -152,4 +158,5 @@ public class UpdateChecker extends Thread {
 
         return versionFile;
     }
+
 }

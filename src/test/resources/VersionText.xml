@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<elomagic>	
+    <isdn_monitor>		
+        <date>2001.01.01</date>		
+        <version>87</version>	
+    </isdn_monitor>	
+    <hl7_inspector>		
+        <version>0.9.2.112</version>		
+        <date>2003.01.29</date>	
+    </hl7_inspector>	
+    <hl7_inspector2>		
+        <version>2.2.0.554</version>		
+        <date>2010.12.19</date>		
+        <homepage>hl7inspector.elomagic.de</homepage>	
+    </hl7_inspector2>
+</elomagic>

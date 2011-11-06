@@ -16,18 +16,22 @@
  */
 package de.elomagic.hl7inspector.autoupdate;
 
-import org.simpleframework.xml.Element;
-import org.simpleframework.xml.Root;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author carsten.rambow
  */
-@Root(name = "elomagic", strict = false)
+@XmlRootElement(name = "elomagic")
+@XmlAccessorType(XmlAccessType.NONE)
 public class VersionBean {
 
-    @Element(name = "hl7_inspector2", required = false)
     private VersionItemBean hl7Inspector = new VersionItemBean();
+
+    @XmlElement(name = "hl7_inspector2", required = false)
     public VersionItemBean getHl7Inspector2() {
         return hl7Inspector;
     }
