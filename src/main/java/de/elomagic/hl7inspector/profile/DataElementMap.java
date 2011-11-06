@@ -17,15 +17,22 @@
 package de.elomagic.hl7inspector.profile;
 
 import java.util.HashMap;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author rambow
  */
-public class DataElementList extends HashMap<String, DataElement> {
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.NONE)
+public class DataElementMap extends HashMap<String, DataElement> {
+
+    private static final long serialVersionUID = -1651120760663268778L;
 
     /** Creates a new instance of FieldIdList */
-    public DataElementList() {
+    public DataElementMap() {
     }
 
     public DataElement getDataElement(String segmentType, int fieldIndex) {

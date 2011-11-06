@@ -26,13 +26,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author rambow
  */
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class SegmentList extends HashMap<String, SegmentItem> {
+@XmlAccessorType(XmlAccessType.NONE)
+public class SegmentMap extends HashMap<String, SegmentItem> {
 
     private static final long serialVersionUID = -6731464746091700126L;
 
     /** Creates a new instance of SegmentList */
-    public SegmentList() {
+    public SegmentMap() {
     }
 
     public SegmentItem getSegment(String segmentType) {

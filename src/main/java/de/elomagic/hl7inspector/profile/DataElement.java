@@ -28,7 +28,7 @@ import nanoxml.XMLElement;
  * @author rambow
  */
 @XmlRootElement(name = "data-element")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class DataElement {
 
     /** Creates a new instance of FieldId */

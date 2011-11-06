@@ -23,10 +23,12 @@ import java.util.Iterator;
  *
  * @author rambow
  */
-public class TableItemList extends HashMap<String, TableItem> {
+public class TableItemMap extends HashMap<String, TableItem> {
+
+    private static final long serialVersionUID = 1196640695073997802L;
 
     /** Creates a new instance of DataTypeList */
-    public TableItemList() {
+    public TableItemMap() {
     }
 
     public TableItem getTableItem(String tableId, String value) {

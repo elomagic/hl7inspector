@@ -29,7 +29,7 @@ import nanoxml.XMLElement;
  * @author rambow
  */
 @XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class SegmentItem extends Properties {
 
     private static final long serialVersionUID = -4257952051912790214L;

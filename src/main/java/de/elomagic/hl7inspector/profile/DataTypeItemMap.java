@@ -23,10 +23,10 @@ import java.util.Iterator;
  *
  * @author rambow
  */
-public class DataTypeItemList extends HashMap<String, DataTypeItem> {
+public class DataTypeItemMap extends HashMap<String, DataTypeItem> {
 
     /** Creates a new instance of DataTypeList */
-    public DataTypeItemList() {
+    public DataTypeItemMap() {
     }
 
     public DataTypeItem getDataType(String dataType, int index) {

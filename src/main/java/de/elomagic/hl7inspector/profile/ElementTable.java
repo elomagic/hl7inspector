@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
 import java.util.HashMap;
@@ -26,13 +25,16 @@ import nanoxml.XMLElement;
  * @author rambow
  */
 public class ElementTable extends HashMap<String, XMLElement> {
-    
+
+    private static final long serialVersionUID = 3384690642054363458L;
+
     /** Creates a new instance of ElementVector */
     public ElementTable(List v) {
         super();
-        
-        for (int i=0; i<v.size(); i++) {
-            put(((XMLElement)v.get(i)).getName(), (XMLElement)v.get(i));
+
+        for (int i = 0; i < v.size(); i++) {
+            put(((XMLElement) v.get(i)).getName(), (XMLElement) v.get(i));
         }
     }
+
 }

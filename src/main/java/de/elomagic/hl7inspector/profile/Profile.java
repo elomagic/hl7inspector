@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author rambow
  */
 @XmlRootElement(name = "hl7inspector-profile")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.NONE)
 public class Profile {
 
     /** Creates a new instance of Profile */
@@ -68,23 +68,23 @@ public class Profile {
         this.schemaVersion = schemaVersion;
     }
 
-    private DataElementList dataElementList = new DataElementList();
+    private DataElementMap dataElementList = new DataElementMap();
 
-    public DataElementList getDataElementList() {
+    public DataElementMap getDataElementList() {
         return dataElementList;
     }
 
-    public void setDataElementList(DataElementList value) {
+    public void setDataElementList(DataElementMap value) {
         dataElementList = value;
     }
 
-    private DataTypeItemList dataTypeList = new DataTypeItemList();
+    private DataTypeItemMap dataTypeList = new DataTypeItemMap();
 
-    public DataTypeItemList getDataTypeList() {
+    public DataTypeItemMap getDataTypeList() {
         return dataTypeList;
     }
 
-    public void setDataTypeList(DataTypeItemList value) {
+    public void setDataTypeList(DataTypeItemMap value) {
         dataTypeList = value;
     }
 
@@ -94,23 +94,23 @@ public class Profile {
 //    valueType = de.elomagic.hl7inspector.profile.SegmentItem.class,
 //    attribute = true,
 //    required = false)
-    private SegmentList segmentList = new SegmentList();
+    private SegmentMap segmentList = new SegmentMap();
 
-    public SegmentList getSegmentList() {
+    public SegmentMap getSegmentList() {
         return segmentList;
     }
 
-    public void setSegmentList(SegmentList value) {
+    public void setSegmentList(SegmentMap value) {
         segmentList = value;
     }
 
-    private TableItemList tableItemList = new TableItemList();
+    private TableItemMap tableItemList = new TableItemMap();
 
-    public TableItemList getTableItemList() {
+    public TableItemMap getTableItemList() {
         return tableItemList;
     }
 
-    public void setTableItemList(TableItemList value) {
+    public void setTableItemList(TableItemMap value) {
         tableItemList = value;
     }
 
@@ -128,22 +128,22 @@ public class Profile {
         while (it.hasNext()) {
             DataTypeItem dt = it.next();
 
-            if ((dt.getIndex() == 0) && (dt.getParentDataType().trim().length() != 0)) {
+            if ((dt.getIndex() == 0) && !dt.getParentDataType().trim().isEmpty()) {
                 result.add("Error in data type definition " + dt.getParentDataType() + ": Index invalid. Must be greater then 0.");
             }
             // todo Validation of order missing
 
-            if ((dt.getParentDataType().trim().length() == 0) && (dt.getIndex() != 0)) {
+            if (dt.getParentDataType().trim().isEmpty() && (dt.getIndex() != 0)) {
                 result.add("Error in data type definition " + dt.getParentDataTypeName() + ": Parent data type not set.");
             }
 
-            if (dt.getTable().trim().length() != 0) {
+            if (!dt.getTable().trim().isEmpty()) {
                 if (!getTableItemList().containsTable(dt.getTable())) {
                     result.add("Error in data type definition " + dt.getParentDataType() + "." + dt.getIndex() + ": Table definition " + dt.getTable() + " not found.");
                 }
             }
 
-            if (dt.getDataType().trim().length() != 0) {
+            if (!dt.getDataType().trim().isEmpty()) {
                 if (!getDataTypeList().containsDataType(dt.getDataType())) {
                     result.add("Error in data type definition " + dt.getParentDataType() + "." + dt.getIndex() + ": Data type definition " + dt.getDataType() + " not found.");
                 }
@@ -155,7 +155,7 @@ public class Profile {
         while (dataElements.hasNext()) {
             DataElement de = dataElements.next();
 
-            if (de.getSegment().trim().length() == 0) {
+            if (de.getSegment().trim().isEmpty()) {
                 result.add("Error in data element definition " + de.getName() + ": Segment not set.");
             } else {
                 if (getSegmentList().getSegment(de.getSegment().trim()) == null) {
@@ -168,11 +168,11 @@ public class Profile {
             }
             // todo Validation of order missing
 
-            if (de.getItem().length() == 0) {
+            if (de.getItem().isEmpty()) {
                 result.add("Error in data element definition " + de.getSegment() + ": Item id not set.");
             }
 
-            if (de.getDataType().trim().length() != 0) {
+            if (!de.getDataType().trim().isEmpty()) {
                 if (!getDataTypeList().containsDataType(de.getDataType())) {
                     result.add("Error in data element definition " + de.getSegment() + "." + de.getSequence() + ": Data type definition " + de.getDataType() + " not found.");
                 }
@@ -180,7 +180,7 @@ public class Profile {
                 result.add("Error in data element definition " + de.getSegment() + "." + de.getSequence() + ": Data type not set.");
             }
 
-            if (de.getTable().trim().length() != 0) {
+            if (!de.getTable().trim().isEmpty()) {
                 if (!getTableItemList().containsTable(de.getTable())) {
                     result.add("Error in data element definition " + de.getSegment() + "." + de.getSequence() + ": Table definition " + de.getTable() + " not found.");
                 }

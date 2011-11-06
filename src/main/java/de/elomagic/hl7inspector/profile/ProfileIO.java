@@ -19,15 +19,18 @@ package de.elomagic.hl7inspector.profile;
 import de.elomagic.hl7inspector.Hl7Inspector;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import javax.xml.bind.JAXB;
 import nanoxml.XMLElement;
 
 /**
@@ -47,7 +50,7 @@ public class ProfileIO {
     private static Profile defaultProfile = new Profile();
 
     public static Profile loadFromStream(InputStream in) throws Exception {
-        Profile profile = new Profile();
+
 
         InputStream fin = new BufferedInputStream(in);
         byte[] prefixBuffer = new byte[2];
@@ -63,14 +66,24 @@ public class ProfileIO {
             fin = zin;
         }
 
-        XMLElement xml = new XMLElement();
-
-        InputStreamReader sin = new InputStreamReader(fin);
+        InputStreamReader reader = new InputStreamReader(fin);
         try {
-            xml.parseFromReader(sin);
+            return loadFromOld(reader);
+            //return load(reader);
         } finally {
-            sin.close();
+            reader.close();
         }
+    }
+
+    public static Profile load(Reader reader) throws Exception {
+        return JAXB.unmarshal(reader, Profile.class);
+    }
+
+    private static Profile loadFromOld(Reader reader) throws IOException {
+        Profile profile = new Profile();
+
+        XMLElement xml = new XMLElement();
+        xml.parseFromReader(reader);
 
         ElementTable rootElements = new ElementTable(xml.getChildren());
 
