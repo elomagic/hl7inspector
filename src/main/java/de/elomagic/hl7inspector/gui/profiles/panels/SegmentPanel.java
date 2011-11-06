@@ -23,7 +23,7 @@ import de.elomagic.hl7inspector.gui.profiles.model.SegmentModel;
 import de.elomagic.hl7inspector.gui.profiles.model.SortedTableModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.profile.SegmentList;
+import de.elomagic.hl7inspector.profile.SegmentMap;
 
 /**
  *
@@ -43,7 +43,7 @@ public class SegmentPanel extends ProfileTablePanel {
     public void write(Profile profile) {
         SegmentModel model = (SegmentModel)getModel();
         
-        SegmentList list = new SegmentList();
+        SegmentMap list = new SegmentMap();
         
         for (int i=0; i<model.getRowCount(); i++) {
             list.addSegment(model.getSegment(i));

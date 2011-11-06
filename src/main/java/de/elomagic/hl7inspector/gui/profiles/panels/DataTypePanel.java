@@ -22,7 +22,7 @@ import de.elomagic.hl7inspector.gui.profiles.*;
 import de.elomagic.hl7inspector.gui.profiles.model.DataTypeModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.DataTypeItem;
-import de.elomagic.hl7inspector.profile.DataTypeItemList;
+import de.elomagic.hl7inspector.profile.DataTypeItemMap;
 import de.elomagic.hl7inspector.profile.Profile;
 
 /**
@@ -43,7 +43,7 @@ public class DataTypePanel extends ProfileTablePanel {
     public void write(Profile profile) {
         DataTypeModel model = (DataTypeModel)getModel();
         
-        DataTypeItemList list = new DataTypeItemList();
+        DataTypeItemMap list = new DataTypeItemMap();
         
         for (int i=0; i<model.getRowCount(); i++) {
             DataTypeItem item = model.getDataTypeItem(i);

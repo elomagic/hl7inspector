@@ -22,7 +22,7 @@ import de.elomagic.hl7inspector.gui.profiles.*;
 import de.elomagic.hl7inspector.gui.profiles.model.TableModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.profile.TableItemList;
+import de.elomagic.hl7inspector.profile.TableItemMap;
 
 /**
  *
@@ -42,7 +42,7 @@ public class TablePanel extends ProfileTablePanel {
     public void write(Profile profile) {
         TableModel model = (TableModel)getModel();
         
-        TableItemList list = new TableItemList();
+        TableItemMap list = new TableItemMap();
         
         for (int i=0; i<model.getRowCount(); i++) {
             list.addTableItem(model.getTableItem(i));

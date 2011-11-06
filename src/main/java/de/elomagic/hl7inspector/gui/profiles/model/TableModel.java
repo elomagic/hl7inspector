@@ -17,7 +17,7 @@
 package de.elomagic.hl7inspector.gui.profiles.model;
 
 import de.elomagic.hl7inspector.profile.TableItem;
-import de.elomagic.hl7inspector.profile.TableItemList;
+import de.elomagic.hl7inspector.profile.TableItemMap;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 
@@ -32,13 +32,13 @@ public class TableModel extends ProfileModel {
     }
 
     /** Creates a new instance of DataTypeModel */
-    public TableModel(TableItemList tableList) {
+    public TableModel(TableItemMap tableList) {
         super();
 
         setModel(tableList);
     }
 
-    public void setModel(TableItemList tableList) {
+    public void setModel(TableItemMap tableList) {
         clear();
 
         Iterator<String> it = tableList.keySet().iterator();

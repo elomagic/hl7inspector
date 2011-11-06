@@ -21,7 +21,7 @@ import de.elomagic.hl7inspector.gui.PanelDialog;
 import de.elomagic.hl7inspector.gui.profiles.*;
 import de.elomagic.hl7inspector.gui.profiles.model.DataElementModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.profile.DataElementList;
+import de.elomagic.hl7inspector.profile.DataElementMap;
 import de.elomagic.hl7inspector.profile.Profile;
 
 /**
@@ -42,7 +42,7 @@ public class DataElementPanel extends ProfileTablePanel {
     public void write(Profile profile) {
         DataElementModel model = (DataElementModel)getModel();
         
-        DataElementList list = new DataElementList();
+        DataElementMap list = new DataElementMap();
         
         for (int i=0; i<model.getRowCount(); i++) {
             list.addDataElement(model.getDataElement(i));

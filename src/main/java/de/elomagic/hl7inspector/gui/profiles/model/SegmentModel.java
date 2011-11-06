@@ -17,7 +17,7 @@
 package de.elomagic.hl7inspector.gui.profiles.model;
 
 import de.elomagic.hl7inspector.profile.SegmentItem;
-import de.elomagic.hl7inspector.profile.SegmentList;
+import de.elomagic.hl7inspector.profile.SegmentMap;
 import java.util.Iterator;
 import org.apache.log4j.Logger;
 
@@ -33,13 +33,13 @@ public class SegmentModel extends ProfileModel {
     }
 
     /** Creates a new instance of SegmentModel */
-    public SegmentModel(SegmentList segmentList) {
+    public SegmentModel(SegmentMap segmentList) {
         super();
 
         setModel(segmentList);
     }
 
-    public final void setModel(SegmentList segmentList) {
+    public final void setModel(SegmentMap segmentList) {
         clear();
 
         Iterator<String> it = segmentList.keySet().iterator();
