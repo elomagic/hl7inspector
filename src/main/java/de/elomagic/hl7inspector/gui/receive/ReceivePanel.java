@@ -113,13 +113,8 @@ public class ReceivePanel extends CharacterMonitor implements ActionListener {
         } else if (e.getActionCommand().equals("OPTIONS")) {
             ImportOptionsDialog dlg = new ImportOptionsDialog();
 
-//            setAlwaysOnTop(false);
-            try {
-                if (dlg.execute(thread.getOptions())) {
-                    thread.setOptions(dlg.getImportOptions());
-                }
-            } finally {
-//                setAlwaysOnTop(true);
+            if (dlg.execute(thread.getOptions())) {
+                thread.setOptions(dlg.getImportOptions());
             }
         } else if (e.getActionCommand().equals("AUTH")) {
             thread.setAuthentication(btSeqAuth.isSelected());
