@@ -64,12 +64,12 @@ public class ExtendedToolTipUI extends MetalToolTipUI {
         }
         BufferedReader br = new BufferedReader(new StringReader(tipText));
         String line;
-        int _maxWidth = 0;
+        int maxW = 0;
         List<String> v = new ArrayList<String>();
         try {
             while ((line = br.readLine()) != null) {
                 int width = SwingUtilities.computeStringWidth(metrics, line);
-                _maxWidth = (_maxWidth < width) ? width : _maxWidth;
+                maxW = (maxW < width) ? width : maxW;
                 v.add(line);
             }
         } catch (IOException ex) {
@@ -89,7 +89,7 @@ public class ExtendedToolTipUI extends MetalToolTipUI {
             }
         }
         int height = metrics.getHeight() * lines;
-        this.maxWidth = _maxWidth;
-        return new Dimension(_maxWidth + 6, height + 4);
+        this.maxWidth = maxW;
+        return new Dimension(maxW + 6, height + 4);
     }
 }
