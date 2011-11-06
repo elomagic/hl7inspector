@@ -60,18 +60,13 @@ public class MessageParserStreamReader {
     }
 
     private Reader reader;
-
     private StreamFormat format;
-
     private Frame frame;
-
     private LineNumberReader lineReader = null;
-
     private long bytesReads = 0;
-
     private String bufferedLine = "";
-
     private List<IOCharListener> listener = new ArrayList<IOCharListener>();
+
     private Message readNextMessage() throws IOException {
         Message result = null;
 
@@ -86,7 +81,7 @@ public class MessageParserStreamReader {
             cc = new Character((char) c);
             bytesReads++;
 
-            format = (cc.charValue() == frame.getStartFrame()) ? StreamFormat.FRAMED : StreamFormat.TEXT_LINE;
+            format = cc.charValue() == frame.getStartFrame() ? StreamFormat.FRAMED : StreamFormat.TEXT_LINE;
 
             fireCharReceived("Using parser format: " + ((format == StreamFormat.FRAMED) ? "FRAMED_FORMAT" : "LINE_FORMAT"));
         }
@@ -98,7 +93,7 @@ public class MessageParserStreamReader {
 
                 // Wait for start frame
                 do {
-                    c = (cc != null) ? cc.charValue() : (char) reader.read();
+                    c = cc != null ? cc.charValue() : (char) reader.read();
 
                     if (c == 0xffff) {
                         throw new EndOfStreamException();
@@ -153,7 +148,7 @@ public class MessageParserStreamReader {
                     lineReader = new LineNumberReader(reader);
                 }
 
-                String line = (bufferedLine.length() != 0) ? bufferedLine : lineReader.readLine();
+                String line = bufferedLine.length() != 0 ? bufferedLine : lineReader.readLine();
 
                 if (line != null) {
                     bytesReads = bytesReads + line.length() + 1;
@@ -175,11 +170,11 @@ public class MessageParserStreamReader {
 
                         List<String> msgText = new ArrayList<String>();
 
-                        while ((line != null) && (!done)) {
-                            if (!line.equals("")) {
+                        while ((line != null) && !done) {
+                            if (!line.isEmpty()) {
                                 String seg = (line.length() > x + 3) ? line.substring(x) : "";
 
-                                if ((!msgText.isEmpty()) && (seg.startsWith("MSH"))) {
+                                if (!msgText.isEmpty() && seg.startsWith("MSH")) {
                                     bufferedLine = line;
                                     done = true;
                                 } else {
@@ -194,9 +189,9 @@ public class MessageParserStreamReader {
 
                         }
 
-                        StringBuffer m = new StringBuffer();
-                        for (int i = 0; i < msgText.size(); i++) {
-                            m = m.append(msgText.get(i).toString()).append((char) 0xd);
+                        StringBuilder m = new StringBuilder();
+                        for (String s : msgText) {
+                            m = m.append(s).append((char) 0xd);
                         }
 
                         result = new Message();
@@ -217,15 +212,15 @@ public class MessageParserStreamReader {
 
     protected void fireCharReceived(String s) {
         for (int q = 0; q < s.length(); q++) {
-            for (int i = 0; i < listener.size(); i++) {
-                listener.get(i).charReceived(this, s.charAt(q));
+            for (IOCharListener l : listener) {
+                l.charReceived(this, s.charAt(q));
             }
         }
     }
 
     protected void fireCharReceived(char c) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).charReceived(this, c);
+        for (IOCharListener l : listener) {
+            l.charReceived(this, c);
         }
     }
 

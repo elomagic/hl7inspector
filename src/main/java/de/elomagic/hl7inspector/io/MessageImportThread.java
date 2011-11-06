@@ -47,14 +47,11 @@ public class MessageImportThread extends Thread implements IOCharListener {
     }
 
     public boolean terminate = false;
-
     private InputStream fin;
-
     private ImportOptionBean options;
-
     private MessageParserStreamReader fileparser;
-
     private List<MessageImportListener> listener = new ArrayList<MessageImportListener>();
+
     @Override
     public void run() {
         try {
@@ -77,28 +74,28 @@ public class MessageImportThread extends Thread implements IOCharListener {
                     fireMessageReadEvent(message);
                 }
             } while ((!terminate) && (message != null));
-        } catch (Exception e) {
-            Logger.getLogger(getClass()).error(e.getMessage(), e);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
             //SimpleDialog.error(e, "Reading stream error");
         }
         fireImportDoneEvent();
     }
 
     protected void fireImportDoneEvent() {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).importDone(new MessageImportEvent(this, null, fileparser.getBytesRead()));
+        for (MessageImportListener l : listener) {
+            l.importDone(new MessageImportEvent(this, null, fileparser.getBytesRead()));
         }
     }
 
     protected void fireMessageReadEvent(Message message) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).messageRead(new MessageImportEvent(this, message, fileparser.getBytesRead()));
+        for (MessageImportListener l : listener) {
+            l.messageRead(new MessageImportEvent(this, message, fileparser.getBytesRead()));
         }
     }
 
     protected void fireCharRead(char c) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).charRead(c);
+        for (MessageImportListener l : listener) {
+            l.charRead(c);
         }
     }
 

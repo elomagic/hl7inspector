@@ -49,6 +49,7 @@ public class MessageWriterThread extends Thread {
     }
 
     public boolean terminate = false;
+
     @Override
     public void run() {
         try {
@@ -59,7 +60,7 @@ public class MessageWriterThread extends Thread {
                 wout = new OutputStreamWriter(new FileOutputStream(bean.getSingleFileName(), false), bean.getEncoding());
             }
 
-            while ((!terminate) && (i < messages.size())) {
+            while (!terminate && (i < messages.size())) {
                 Message message = messages.get(i);
                 try {
                     if (bean.isManyFiles()) {
@@ -86,32 +87,30 @@ public class MessageWriterThread extends Thread {
             if (!bean.isManyFiles()) {
                 wout.close();
             }
-        } catch (Exception e) {
-            Logger.getLogger(getClass()).error(e.getMessage(), e);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
             //SimpleDialog.error(e, "Reading stream error");
         }
         fireWriterDoneEvent(0);
     }
 
     protected void fireMessageSavedEvent(File file, int count) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).messageSaved(this, file, count);
+        for (MessageWriterListener l : listener) {
+            l.messageSaved(this, file, count);
         }
     }
 
     protected void fireWriterDoneEvent(int count) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).writerDone(this, 0);
+        for (MessageWriterListener l : listener) {
+            l.writerDone(this, 0);
         }
     }
 
     private List<MessageWriterListener> listener = new ArrayList<MessageWriterListener>();
-
     private MessageWriterBean bean;
-
     private OutputStreamWriter wout;
-
     private List<Message> messages = new ArrayList<Message>();
+
     private void writeMessage(Message message) throws IOException {
         String msgText = message.toString();
 

@@ -27,6 +27,7 @@ public class SendOptionsBean {
     }
 
     private Frame frame = new Frame();
+
     public Frame getFrame() {
         return frame;
     }
@@ -36,6 +37,7 @@ public class SendOptionsBean {
     }
 
     private String host = "localhost";
+
     public String getHost() {
         return host;
     }
@@ -45,6 +47,7 @@ public class SendOptionsBean {
     }
 
     private int port = 2100;
+
     public int getPort() {
         return port;
     }
@@ -54,6 +57,7 @@ public class SendOptionsBean {
     }
 
     private String encoding = "ISO-8859-1";
+
     public String getEncoding() {
         return encoding;
     }
@@ -63,6 +67,7 @@ public class SendOptionsBean {
     }
 
     private boolean reuseSocket = true;
+
     public boolean isReuseSocket() {
         return reuseSocket;
     }
@@ -72,6 +77,7 @@ public class SendOptionsBean {
     }
 
     private boolean encryption = false;
+
     public boolean isEncryption() {
         return encryption;
     }
@@ -81,6 +87,7 @@ public class SendOptionsBean {
     }
 
     private boolean authentication = false;
+
     public boolean isAuthentication() {
         return authentication;
     }

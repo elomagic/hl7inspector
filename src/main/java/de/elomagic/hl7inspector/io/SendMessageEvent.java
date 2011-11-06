@@ -26,23 +26,26 @@ import java.net.Socket;
 public class SendMessageEvent {
 
     /** Creates a new instance of MessageImportEvent */
-    public SendMessageEvent(SendThread _source, Socket _socket, Message _message) {
-        source = _source;
-        socket = _socket;
-        message = _message;
+    public SendMessageEvent(SendThread source, Socket socket, Message message) {
+        this.source = source;
+        this.socket = socket;
+        this.message = message;
     }
 
     private Message message;
+
     public Message getMessage() {
         return message;
     }
 
     private SendThread source;
+
     public SendThread getSource() {
         return source;
     }
 
     private Socket socket;
+
     public Socket getSocket() {
         return socket;
     }

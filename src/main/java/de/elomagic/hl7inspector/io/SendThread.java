@@ -74,10 +74,10 @@ public class SendThread extends Thread implements IOCharListener {
     public void run() {
         fireThreadStartedEvent();
         try {
-            while ((!terminate) && (!done)) {
+            while (!terminate && !done) {
                 try {
                     if (socket == null) {
-                        if ((options.isAuthentication()) || options.isEncryption()) {
+                        if (options.isAuthentication() || options.isEncryption()) {
                             fireStatusEvent("Security enabled. (Encryption=" + Boolean.toString(options.isEncryption()) + ", Authentication=" + Boolean.toString(options.isAuthentication()) + ")");
                         }
 
@@ -93,9 +93,9 @@ public class SendThread extends Thread implements IOCharListener {
 
                         sendMessages();
                     }
-                } catch (Exception e) {
-                    Logger.getLogger(getClass()).warn(e.getMessage(), e);
-                    fireStatusEvent((e.getMessage() != null) ? e.getMessage() : e.toString());
+                } catch (Exception ex) {
+                    Logger.getLogger(getClass()).warn(ex.getMessage(), ex);
+                    fireStatusEvent((ex.getMessage() != null) ? ex.getMessage() : ex.toString());
                     terminateRequest();
                 }
             }
@@ -180,11 +180,11 @@ public class SendThread extends Thread implements IOCharListener {
 
                 String status;
 
-                if ((ac.equals("AA")) || (ac.equals("CA"))) {
+                if (ac.equals("AA") || ac.equals("CA")) {
                     status = "Evaluate acknowledge: Application | Commit Accept";
-                } else if ((ac.equals("AE")) || (ac.equals("CE"))) {
+                } else if (ac.equals("AE") || ac.equals("CE")) {
                     status = "Evaluate acknowledge: Application | Commit Error !!!";
-                } else if ((ac.equals("AR")) || (ac.equals("CR"))) {
+                } else if (ac.equals("AR") ||ac.equals("CR")) {
                     status = "Evaluate acknowledge: Application | Commit Reject !!!";
                 } else {
                     status = "Evaluate acknowledge: Unkown or missing acknowledge code in field MSA-1 !!!";
@@ -204,50 +204,46 @@ public class SendThread extends Thread implements IOCharListener {
     }
 
     private SendOptionsBean options = new SendOptionsBean();
-
     private List<Message> messages = new ArrayList<Message>();
-
     private Socket socket;
-
     private OutputStreamWriter writer;
-
     private InputStreamReader reader;
-
     private boolean terminate = false;
-
     private boolean done = false;
+
     protected void fireThreadStartedEvent() {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).threadStarted(this);
+        for (IOThreadListener l : listener) {
+            l.threadStarted(this);
         }
     }
 
     protected void fireThreadStoppedEvent() {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).threadStopped(this);
+        for (IOThreadListener l : listener) {
+            l.threadStopped(this);
         }
     }
 
     protected void fireCharReceivedEvent(char c) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).charReceived(this, c);
+        for (IOThreadListener l : listener) {
+            l.charReceived(this, c);
         }
     }
 
     protected void fireCharSendEvent(char c) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).charSend(this, c);
+        for (IOThreadListener l : listener) {
+            l.charSend(this, c);
         }
     }
 
     protected void fireStatusEvent(String text) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).status(this, text);
+        for (IOThreadListener l : listener) {
+            l.status(this, text);
         }
     }
 
     private List<IOThreadListener> listener = new ArrayList<IOThreadListener>();
     // Interface IOCharListener
+
     @Override
     public void charSend(Object source, char c) {
         fireCharSendEvent(c);

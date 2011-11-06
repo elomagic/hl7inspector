@@ -107,9 +107,9 @@ public class ReceiveThread extends Thread implements IOCharListener {
             } else {
                 new Socket("localhost", port).close();
             }
-        } catch (Exception e) {
-            Logger.getLogger(getClass()).warn(e, e);
-            fireStatusEvent((e.getMessage() != null) ? e.getMessage() : e.toString());
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).warn(ex.getMessage(), ex);
+            fireStatusEvent((ex.getMessage() != null) ? ex.getMessage() : ex.toString());
         }
     }
 
@@ -117,7 +117,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
     public void run() {
         fireThreadStartedEvent();
         try {
-            if ((isAuthentication()) || isEncryption()) {
+            if (isAuthentication() || isEncryption()) {
                 fireStatusEvent("Security enabled. (Encryption=" + Boolean.toString(isEncryption()) + ", Authentication=" + Boolean.toString(isAuthentication()) + ")");
             }
             fireStatusEvent("Listening on port " + port);
@@ -132,7 +132,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
                                 fireStatusEvent("Connecting from " + socket.getInetAddress().getHostName() + "(" + socket.getInetAddress().getHostAddress() + ").");
                             }
 
-                            writer = new OutputStreamWriter(socket.getOutputStream(), options.getEncoding());
+                            //writer = new OutputStreamWriter(socket.getOutputStream(), options.getEncoding());
                             reader = new InputStreamReader(socket.getInputStream(), options.getEncoding());
 
                             MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, StreamFormat.FRAMED, options.getFrame());
@@ -158,9 +158,9 @@ public class ReceiveThread extends Thread implements IOCharListener {
             } finally {
                 server.close();
             }
-        } catch (Exception e) {
-            Logger.getLogger(getClass()).error(e, e);
-            fireStatusEvent((e.getMessage() != null) ? e.getMessage() : e.toString());
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+            fireStatusEvent(ex.getMessage() != null ? ex.getMessage() : ex.toString());
         }
         fireStatusEvent("Receive server stopped.");
         fireThreadStoppedEvent();
@@ -177,13 +177,13 @@ public class ReceiveThread extends Thread implements IOCharListener {
     private void handleMessage(Message message) {
         boolean ignore = false;
         // Now filtering
-        if (options.getPhrase().length() != 0) {
-            String m = (options.isCaseSensitive() ? message.toString() : message.toString().toUpperCase());
-            String phrase = (options.isCaseSensitive() ? options.getPhrase() : options.getPhrase().toUpperCase());
+        if (!options.getPhrase().isEmpty()) {
+            String m = options.isCaseSensitive() ? message.toString() : message.toString().toUpperCase();
+            String phrase = options.isCaseSensitive() ? options.getPhrase() : options.getPhrase().toUpperCase();
 
             if (!options.isUseRegExpr()) {
-                boolean found = (m.indexOf(phrase) != -1);
-                ignore = (((!found && !options.isNegReg())
+                boolean found = m.contains(phrase);
+                ignore = ((!found && !options.isNegReg()
                         || found && options.isNegReg()));
             }
         }
@@ -265,20 +265,20 @@ public class ReceiveThread extends Thread implements IOCharListener {
 
     // protected methods
     protected void fireThreadStartedEvent() {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).threadStarted(this);
+        for (IOThreadListener l : listener) {
+            l.threadStarted(this);
         }
     }
 
     protected void fireThreadStoppedEvent() {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).threadStopped(this);
+        for (IOThreadListener l : listener) {
+            l.threadStopped(this);
         }
     }
 
     protected void fireCharReceivedEvent(char c) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).charReceived(this, c);
+        for (IOThreadListener l : listener) {
+            l.charReceived(this, c);
         }
     }
 
@@ -296,27 +296,18 @@ public class ReceiveThread extends Thread implements IOCharListener {
 
     // private
     private MessageImportThread importThread = null;
-
     private int port = 2100;
-
     private boolean reuse = true;
-
     private ImportOptionBean options = new ImportOptionBean();
-
     private boolean authentication = false;
-
     private boolean encryption = false;
-
     private Socket socket;
-
-    private OutputStreamWriter writer;
-
+    //private OutputStreamWriter writer;
     private InputStreamReader reader;
-
     private boolean terminate = false;
-
     private List<IOThreadListener> listener = new ArrayList<IOThreadListener>();
     // Interface IOCharListener
+
     @Override
     public void charSend(Object source, char c) {
         fireCharSendEvent(c);

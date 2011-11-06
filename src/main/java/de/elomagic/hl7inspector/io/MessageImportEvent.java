@@ -25,23 +25,26 @@ import de.elomagic.hl7inspector.hl7.model.Message;
 public class MessageImportEvent {
 
     /** Creates a new instance of MessageImportEvent */
-    public MessageImportEvent(MessageImportThread _source, Message _message, long _bytesRead) {
-        source = _source;
-        message = _message;
-        bytesRead = _bytesRead;
+    public MessageImportEvent(MessageImportThread source, Message message, long bytesRead) {
+        this.source = source;
+        this.message = message;
+        this.bytesRead = bytesRead;
     }
 
     private Message message;
+
     public Message getMessage() {
         return message;
     }
 
     private MessageImportThread source;
+
     public MessageImportThread getSource() {
         return source;
     }
 
     private long bytesRead;
+
     public long getBytesRead() {
         return bytesRead;
     }
