@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  *
  * @author rambow
  */
-public class TableModel extends ProfileModel<TableItem> {
+public class TableModel<E extends TableItem> extends ProfileModel<TableItem> {
 
     private static final long serialVersionUID = 3848893502635683042L;
 
@@ -33,20 +33,20 @@ public class TableModel extends ProfileModel<TableItem> {
     }
 
     /** Creates a new instance of DataTypeModel */
-    public TableModel(List<TableItem> list) {
+    public TableModel(List<E> list) {
         super();
 
         setModel(list);
     }
 
-    public final void setModel(List<TableItem> list) {
+    public final void setModel(List<E> list) {
         clear();
         table.addAll(list);
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        TableItem item = (TableItem) table.get(rowIndex);
+        TableItem item = getRow(rowIndex);
 
         switch (columnIndex) {
             case 0:
@@ -76,7 +76,7 @@ public class TableModel extends ProfileModel<TableItem> {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         try {
-            TableItem ti = (TableItem) table.get(rowIndex);
+            TableItem ti = getRow(rowIndex);
 
             switch (columnIndex) {
                 case 0:
@@ -109,16 +109,9 @@ public class TableModel extends ProfileModel<TableItem> {
         return 5;
     }
 
+    @Deprecated
     public TableItem getTableItem(int rowIndex) {
-        TableItem item = new TableItem();
-
-        item.setId(getValueAt(rowIndex, 0).toString());
-        item.setType(getValueAt(rowIndex, 1).toString());
-        item.setValue(getValueAt(rowIndex, 2).toString());
-        item.setDescription(getValueAt(rowIndex, 3).toString());
-        item.setTableDescription(getValueAt(rowIndex, 4).toString());
-
-        return item;
+        return getRow(rowIndex);
     }
 
     @Override

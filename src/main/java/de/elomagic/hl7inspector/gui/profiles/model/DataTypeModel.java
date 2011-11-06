@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  *
  * @author rambow
  */
-public class DataTypeModel extends ProfileModel {
+public class DataTypeModel<E extends DataTypeItem> extends ProfileModel<DataTypeItem> {
 
     private static final long serialVersionUID = -9155940816412596164L;
 
@@ -34,20 +34,20 @@ public class DataTypeModel extends ProfileModel {
     }
 
     /** Creates a new instance of DataTypeModel */
-    public DataTypeModel(List<DataTypeItem> list) {
+    public DataTypeModel(List<E> list) {
         super();
 
         setModel(list);
     }
 
-    public final void setModel(List<DataTypeItem> list) {
+    public final void setModel(List<E> list) {
         clear();
         table.addAll(list);
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        DataTypeItem de = (DataTypeItem) table.get(rowIndex);
+        DataTypeItem de = getRow(rowIndex);
 
         switch (columnIndex) {
             case 0:
@@ -85,7 +85,7 @@ public class DataTypeModel extends ProfileModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         try {
-            DataTypeItem de = (DataTypeItem) table.get(rowIndex);
+            DataTypeItem de = getRow(rowIndex);
 
             switch (columnIndex) {
                 case 0:
@@ -130,19 +130,9 @@ public class DataTypeModel extends ProfileModel {
         return 9;
     }
 
+    @Deprecated
     public DataTypeItem getDataTypeItem(int rowIndex) {
-        DataTypeItem de = new DataTypeItem();
-
-        de.setParentDataType(getValueAt(rowIndex, 0).toString());
-        de.setIndex(Integer.parseInt(getValueAt(rowIndex, 1).toString()));
-        de.setDataType(getValueAt(rowIndex, 2).toString());
-        de.setLength(Integer.parseInt(getValueAt(rowIndex, 3).toString()));
-        de.setDescription(getValueAt(rowIndex, 4).toString());
-        de.setOptionality(getValueAt(rowIndex, 5).toString());
-        de.setChapter(getValueAt(rowIndex, 6).toString());
-        de.setParentDataTypeName(getValueAt(rowIndex, 7).toString());
-        de.setTable(getValueAt(rowIndex, 8).toString());
-        return de;
+        return getRow(rowIndex);
     }
 
     @Override

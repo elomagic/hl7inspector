@@ -58,13 +58,9 @@ import javax.swing.table.*;
 public class SortedTableModel extends AbstractTableModel {
 
     public static final int DESCENDING = -1;
-
     public static final int NOT_SORTED = 0;
-
     public static final int ASCENDING = 1;
-
     private static Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
-
     public static final Comparator<Object> COMPARABLE_COMAPRATOR = new Comparator<Object>() {
 
         @Override
@@ -73,7 +69,6 @@ public class SortedTableModel extends AbstractTableModel {
         }
 
     };
-
     public static final Comparator<Object> LEXICAL_COMPARATOR = new Comparator<Object>() {
 
         @Override
@@ -82,22 +77,16 @@ public class SortedTableModel extends AbstractTableModel {
         }
 
     };
-
+    private static final long serialVersionUID = -8720265176774142637L;
     protected javax.swing.table.TableModel tableModel;
-
     private JTableHeader tableHeader;
-
     private List<Directive> sortingColumns = new ArrayList<Directive>();
-
     private Map<Class, Comparator> columnComparators = new HashMap<Class, Comparator>();
-
     private MouseListener mouseListener;
-
     private TableModelListener tableModelListener;
-
     private int[] modelToView;
-
     private Row[] viewToModel;
+
     public SortedTableModel() {
         this.mouseListener = new MouseHandler();
         this.tableModelListener = new TableModelHandler();
@@ -321,10 +310,9 @@ public class SortedTableModel extends AbstractTableModel {
     private static class Arrow implements Icon {
 
         private boolean descending;
-
         private int priority;
-
         private int size;
+
         public Arrow(boolean descending, int size, int priority) {
             this.descending = descending;
             this.size = size;
@@ -383,8 +371,8 @@ public class SortedTableModel extends AbstractTableModel {
     private static class Directive {
 
         private int column;
-
         private int direction;
+
         public Directive(int column, int direction) {
             this.column = column;
             this.direction = direction;
@@ -422,6 +410,7 @@ public class SortedTableModel extends AbstractTableModel {
     private class Row implements Comparable {
 
         private int modelIndex;
+
         public Row(int index) {
             this.modelIndex = index;
         }
@@ -463,6 +452,7 @@ public class SortedTableModel extends AbstractTableModel {
     private class SortableHeaderRenderer implements TableCellRenderer {
 
         private TableCellRenderer tableCellRenderer;
+
         public SortableHeaderRenderer(TableCellRenderer tableCellRenderer) {
             this.tableCellRenderer = tableCellRenderer;
         }
@@ -544,4 +534,5 @@ public class SortedTableModel extends AbstractTableModel {
         }
 
     }
+
 }

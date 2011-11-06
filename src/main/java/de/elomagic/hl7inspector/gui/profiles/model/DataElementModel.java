@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  *
  * @author rambow
  */
-public class DataElementModel <E extends DataElement> extends ProfileModel<DataElement> {
+public class DataElementModel<E extends DataElement> extends ProfileModel<DataElement> {
 
     private static final long serialVersionUID = -7858155541327476573L;
 
@@ -46,7 +46,7 @@ public class DataElementModel <E extends DataElement> extends ProfileModel<DataE
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        DataElement de = (DataElement) table.get(rowIndex);
+        DataElement de = getRow(rowIndex);
 
         switch (columnIndex) {
             case 0:
@@ -80,20 +80,9 @@ public class DataElementModel <E extends DataElement> extends ProfileModel<DataE
         return 9;
     }
 
+    @Deprecated
     public DataElement getDataElement(int rowIndex) {
-        DataElement de = new DataElement(
-                getValueAt(rowIndex, 0).toString(),
-                getValueAt(rowIndex, 3).toString(),
-                getValueAt(rowIndex, 7).toString(),
-                Integer.parseInt(getValueAt(rowIndex, 4).toString()),
-                getValueAt(rowIndex, 6).toString());
-
-        de.setSegment(getValueAt(rowIndex, 1).toString());
-        de.setSequence(Integer.parseInt(getValueAt(rowIndex, 2).toString()));
-        de.setRepeatable(getValueAt(rowIndex, 5).toString());
-        de.setChapter(getValueAt(rowIndex, 8).toString());
-
-        return de;
+        return getRow(rowIndex);
     }
 
     @Override
@@ -123,7 +112,7 @@ public class DataElementModel <E extends DataElement> extends ProfileModel<DataE
     }
 
     @Override
-    public Class getDefaultRowClass() {
+    public Class<DataElement> getDefaultRowClass() {
         return DataElement.class;
     }
 
@@ -139,7 +128,7 @@ public class DataElementModel <E extends DataElement> extends ProfileModel<DataE
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         try {
-            DataElement de = (DataElement) table.get(rowIndex);
+            DataElement de = getRow(rowIndex);
 
             switch (columnIndex) {
                 case 0:
@@ -173,8 +162,8 @@ public class DataElementModel <E extends DataElement> extends ProfileModel<DataE
             }
 
             fireTableCellUpdated(rowIndex, columnIndex);
-        } catch (Exception e) {
-            Logger.getLogger(getClass()).error(e.getMessage(), e);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
     }
 

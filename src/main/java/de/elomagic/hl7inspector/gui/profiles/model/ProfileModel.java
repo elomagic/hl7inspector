@@ -16,13 +16,13 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.model;
 
-import de.elomagic.hl7inspector.gui.VectorTableModel;
+import de.elomagic.hl7inspector.gui.ArrayListModel;
 
 /**
  *
  * @author rambow
  */
-public abstract class ProfileModel<E extends Object> extends VectorTableModel {
+public abstract class ProfileModel<E extends Object> extends ArrayListModel<E> {
 
     private static final long serialVersionUID = -5817455151118652785L;
 
@@ -35,7 +35,7 @@ public abstract class ProfileModel<E extends Object> extends VectorTableModel {
      * Creates a default class object an add it to the model
      */
     public int addRowObject() throws InstantiationException, IllegalAccessException {
-        Object o = getDefaultRowClass().newInstance();
+        E o = getDefaultRowClass().newInstance();
         return addRow(o);
     }
 
@@ -49,6 +49,6 @@ public abstract class ProfileModel<E extends Object> extends VectorTableModel {
         return true;
     }
 
-    public abstract Class getDefaultRowClass();
+    public abstract Class<E> getDefaultRowClass();
 
 }

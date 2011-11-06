@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
  *
  * @author rambow
  */
-public class SegmentModel extends ProfileModel {
+public class SegmentModel<E extends SegmentItem> extends ProfileModel<SegmentItem> {
 
     private static final long serialVersionUID = -6889471829107478846L;
 
@@ -34,20 +34,20 @@ public class SegmentModel extends ProfileModel {
     }
 
     /** Creates a new instance of SegmentModel */
-    public SegmentModel(List<SegmentItem> list) {
+    public SegmentModel(List<E> list) {
         super();
 
         setModel(list);
     }
 
-    public final void setModel(List<SegmentItem> list) {
+    public final void setModel(List<E> list) {
         clear();
         table.addAll(list);
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        SegmentItem seg = (SegmentItem) table.get(rowIndex);
+        SegmentItem seg = getRow(rowIndex);
 
         switch (columnIndex) {
             case 0:
@@ -73,7 +73,7 @@ public class SegmentModel extends ProfileModel {
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         try {
-            SegmentItem seg = (SegmentItem) table.get(rowIndex);
+            SegmentItem seg = getRow(rowIndex);
 
             switch (columnIndex) {
                 case 0: {
@@ -103,13 +103,9 @@ public class SegmentModel extends ProfileModel {
         return 3;
     }
 
+    @Deprecated
     public SegmentItem getSegment(int rowIndex) {
-        SegmentItem seg = new SegmentItem(
-                getValueAt(rowIndex, 0).toString(),
-                getValueAt(rowIndex, 1).toString(),
-                getValueAt(rowIndex, 2).toString());
-
-        return seg;
+        return getRow(rowIndex);
     }
 
     @Override
@@ -127,7 +123,7 @@ public class SegmentModel extends ProfileModel {
     }
 
     @Override
-    public Class getDefaultRowClass() {
+    public Class<SegmentItem> getDefaultRowClass() {
         return SegmentItem.class;
     }
 

@@ -63,7 +63,7 @@ public class ArchiveFileSelectDialog extends BaseDialog implements MouseListener
     
     public Object getSelectedObject() {
         int row = tblFiles.getSelectedRow();        
-        return (row == -1)?null:((VectorTableModel)tblFiles.getModel()).getRow(row);        
+        return (row == -1)?null:((ArrayListModel)tblFiles.getModel()).getRow(row);        
     }
     
     public ZipEntry getSelectedEntry() {

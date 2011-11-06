@@ -24,12 +24,12 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author rambow
  */
-public abstract class VectorTableModel<E extends Object> extends AbstractTableModel {
+public abstract class ArrayListModel<E extends Object> extends AbstractTableModel {
 
     private static final long serialVersionUID = -649617212368934188L;
 
     /** Creates a new instance of ProfileTableModel */
-    public VectorTableModel() {
+    public ArrayListModel() {
     }
 
     public void clear() {

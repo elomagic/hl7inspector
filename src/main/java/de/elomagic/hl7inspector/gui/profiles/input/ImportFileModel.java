@@ -16,7 +16,7 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.input;
 
-import de.elomagic.hl7inspector.gui.VectorTableModel;
+import de.elomagic.hl7inspector.gui.ArrayListModel;
 import de.elomagic.hl7inspector.utils.StringVector;
 import java.util.ArrayList;
 
@@ -24,7 +24,7 @@ import java.util.ArrayList;
  *
  * @author rambow
  */
-public class ImportFileModel extends VectorTableModel {
+public class ImportFileModel extends ArrayListModel {
 
     /** Creates a new instance of ImportFileModel */
     public ImportFileModel(ArrayList<Object> sampleLines) {

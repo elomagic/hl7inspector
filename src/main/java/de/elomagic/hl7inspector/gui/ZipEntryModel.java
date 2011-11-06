@@ -26,7 +26,7 @@ import java.util.zip.ZipFile;
  *
  * @author rambow
  */
-public class ZipEntryModel extends VectorTableModel {
+public class ZipEntryModel extends ArrayListModel {
 
     /** Creates a new instance of ZipEntryModel */
     public ZipEntryModel(ZipFile file) {
