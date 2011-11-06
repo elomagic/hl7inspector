@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.io;
 
 /**
@@ -22,38 +21,51 @@ package de.elomagic.hl7inspector.io;
  * @author rambow
  */
 public class Frame {
-  
-  /** Creates a new instance of Frame */
-  public Frame() { start = 0xb; stops = new char[] { 0x1c, 0xd }; }
 
-  public Frame(char startFrame, char[] stopFrames) {
-    start = startFrame;
-    stops = stopFrames;
-  }
-  
-  public Frame(Character startChar, Character stopChar1, Character stopChar2) {
-    start = startChar.charValue();
-    
-    int len = (stopChar2!=null)?2:1;
-    
-    stops = new char[len];   
-    stops[0] = stopChar1.charValue();
-    
-    if (len > 1) {
-        stops[1] = stopChar2.charValue();
+    /** Creates a new instance of Frame */
+    public Frame() {
+        start = 0xb;
+        stops = new char[]{0x1c, 0xd};
     }
-  }
-  
-  public void setStartChar(char c) { start = c; }
-  
-  public void setStopChars(char[] c) { stops = c; }  
-  
-  public char getStartFrame() { return start; }
-  
-  public char[] getStopFrame() { return stops; }
-  
-  public int getStopFrameLength() { return stops.length; }
-  
-  private char start;
-  private char[]stops;  
+
+    public Frame(char startFrame, final char[] stopFrames) {
+        start = startFrame;
+        stops = stopFrames;
+    }
+
+    public Frame(Character startChar, Character stopChar1, Character stopChar2) {
+        start = startChar.charValue();
+
+        stops = new char[stopChar2 != null ? 2 : 1];
+        stops[0] = stopChar1.charValue();
+
+        if (stops.length > 1) {
+            stops[1] = stopChar2.charValue();
+        }
+    }
+
+    private char start;
+
+    public char getStartFrame() {
+        return start;
+    }
+
+    public void setStartChar(char c) {
+        start = c;
+    }
+
+    private char[] stops;
+
+    public char[] getStopFrame() {
+        return stops;
+    }
+
+    public void setStopChars(final char[] c) {
+        stops = c;
+    }
+
+    public int getStopFrameLength() {
+        return stops.length;
+    }
+
 }
