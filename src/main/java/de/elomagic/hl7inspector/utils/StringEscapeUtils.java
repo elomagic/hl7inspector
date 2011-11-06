@@ -87,7 +87,6 @@ public class StringEscapeUtils {
 
             if (c != '&') {
                 sb.append(c);
-
             } else {
                 int q = str.indexOf(';', i);
                 String token = str.substring(i, q - i);
@@ -99,81 +98,81 @@ public class StringEscapeUtils {
                 } else if (token.equals("&quot;")) {
                     sb.append('"');
                 } else if (token.equals("&agrave")) {
-                    sb.append('‡');
+                    sb.append('\u00E0');
                 } else if (token.equals("&auml")) {
-                    sb.append('‰');
+                    sb.append('\u00E4');
                 } else if (token.equals("&Auml")) {
-                    sb.append('ƒ');
+                    sb.append('\u00C4');
                 } else if (token.equals("&ouml")) {
-                    sb.append('ˆ');
+                    sb.append('\u00F6');
                 } else if (token.equals("&Ouml")) {
-                    sb.append('÷');
+                    sb.append('\u00D6');
                 } else if (token.equals("&szlig")) {
-                    sb.append('ﬂ');
+                    sb.append('\u00DF');
                 } else if (token.equals("&uuml")) {
-                    sb.append('¸');
+                    sb.append('\u00FC');
                 } else if (token.equals("&Uuml")) {
-                    sb.append('‹');
+                    sb.append('\u00DC');
                 } else if (token.equals("&copy")) {
-                    sb.append('©');
+                    sb.append('\u00A9');
                 } else if (token.equals("&euro")) {
-                    sb.append('Ä');
+                    sb.append('\u20AC');
                 } else if (token.equals("&acirc")) {
-                    sb.append('‚');
+                    sb.append('\u00E2');
                 } else if (token.equals("&Acirc")) {
-                    sb.append('¬');
+                    sb.append('\u00C2');
                 } else if (token.equals("&aring")) {
-                    sb.append('Â');
+                    sb.append('\u00E5');
                 } else if (token.equals("&Aring")) {
-                    sb.append('≈');
+                    sb.append('\u00C5');
                 } else if (token.equals("&Agrave")) {
-                    sb.append('¿');
+                    sb.append('\u00C0');
                 } else if (token.equals("&aelig")) {
-                    sb.append('Ê');
+                    sb.append('\u00E6');
                 } else if (token.equals("&AElig")) {
-                    sb.append('∆');
+                    sb.append('\u00C6');
                 } else if (token.equals("&ccedil")) {
-                    sb.append('Á');
+                    sb.append('\u00E7');
                 } else if (token.equals("&Ccedil")) {
-                    sb.append('«');
+                    sb.append('\u00C7');
                 } else if (token.equals("&eacute")) {
-                    sb.append('È');
+                    sb.append('\u00E9');
                 } else if (token.equals("&Eacute")) {
-                    sb.append('…');
+                    sb.append('\u00C9');
                 } else if (token.equals("&egrave")) {
-                    sb.append('Ë');
+                    sb.append('\u00E8');
                 } else if (token.equals("&Egrave")) {
-                    sb.append('»');
+                    sb.append('\u00C8');
                 } else if (token.equals("&ecirc")) {
-                    sb.append('Í');
+                    sb.append('\u00EA');
                 } else if (token.equals("&Ecirc")) {
-                    sb.append(' ');
+                    sb.append('\u00CA');
                 } else if (token.equals("&euml")) {
-                    sb.append('Î');
+                    sb.append('\u00EB');
                 } else if (token.equals("&Euml")) {
-                    sb.append('À');
+                    sb.append('\u00CB');
                 } else if (token.equals("&iuml")) {
-                    sb.append('Ô');
+                    sb.append('\u00EF');
                 } else if (token.equals("&Iuml")) {
-                    sb.append('œ');
+                    sb.append('\u00CF');
                 } else if (token.equals("&ocirc")) {
-                    sb.append('Ù');
+                    sb.append('\u00F4');
                 } else if (token.equals("&Ocirc")) {
-                    sb.append('‘');
+                    sb.append('\u00D4');
                 } else if (token.equals("&oslash")) {
-                    sb.append('¯');
+                    sb.append('\u00F8');
                 } else if (token.equals("&Oslash")) {
-                    sb.append('ÿ');
+                    sb.append('\u00DB');
                 } else if (token.equals("&ugrave")) {
-                    sb.append('˘');
+                    sb.append('\u00F9');
                 } else if (token.equals("&Ugrave")) {
-                    sb.append('Ÿ');
+                    sb.append('\u00D9');
                 } else if (token.equals("&ucirc")) {
-                    sb.append('˚');
+                    sb.append('\u00FB');
                 } else if (token.equals("&Ucirc")) {
-                    sb.append('€');
+                    sb.append('\u00DB');
                 } else if (token.equals("&reg")) {
-                    sb.append('Æ');
+                    sb.append('\u00AE');
                 } else if (token.startsWith("&#")) {
                     int uc = Integer.parseInt(token.substring(2));
                     sb.append((char) uc);
