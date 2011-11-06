@@ -50,7 +50,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
         try {
             FileInputStream fin = new FileInputStream(file);
             try {
-                profile = ProfileIO.loadFromStream(fin);
+                profile = ProfileIO.load(fin);
             } finally {
                 fin.close();
             }

@@ -22,7 +22,9 @@ import de.elomagic.hl7inspector.gui.VectorTableModel;
  *
  * @author rambow
  */
-public abstract class ProfileModel extends VectorTableModel {
+public abstract class ProfileModel<E extends Object> extends VectorTableModel {
+
+    private static final long serialVersionUID = -5817455151118652785L;
 
     /** Creates a new instance of DataTypeModel */
     public ProfileModel() {

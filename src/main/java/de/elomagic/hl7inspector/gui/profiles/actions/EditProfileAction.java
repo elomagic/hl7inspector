@@ -62,7 +62,7 @@ public class EditProfileAction extends AbstractAction {
                         try {
                             FileOutputStream fout = new FileOutputStream(dialog.getProfileFile());
                             try {
-                                ProfileIO.saveToStream(dialog.getProfile(), fout);
+                                ProfileIO.save(fout, dialog.getProfile());
                                 dialog.getProfileFile().setDescription(dialog.getProfile().getName());
                             } finally {
                                 fout.close();
@@ -82,9 +82,9 @@ public class EditProfileAction extends AbstractAction {
             } else {
                 SimpleDialog.error("No profile selected!");
             }
-        } catch (Exception ee) {
-            Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-            SimpleDialog.error(ee);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+            SimpleDialog.error(ex);
         }
     }
 

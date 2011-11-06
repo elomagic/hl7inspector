@@ -24,14 +24,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.util.Iterator;
-import java.util.List;
+import java.io.StringWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 import javax.xml.bind.JAXB;
-import nanoxml.XMLElement;
+import javax.xml.bind.JAXBException;
 
 /**
  *
@@ -49,9 +47,7 @@ public class ProfileIO {
 
     private static Profile defaultProfile = new Profile();
 
-    public static Profile loadFromStream(InputStream in) throws Exception {
-
-
+    public static Profile load(InputStream in) throws Exception {
         InputStream fin = new BufferedInputStream(in);
         byte[] prefixBuffer = new byte[2];
         fin.mark(2);
@@ -60,210 +56,45 @@ public class ProfileIO {
 
         String prefix = new String(prefixBuffer);
 
+        boolean utf = false;
+
         if (prefix.equals("PK")) {
             ZipInputStream zin = new ZipInputStream(fin);
-            zin.getNextEntry();
+            ZipEntry entry = zin.getNextEntry();
+            utf = entry.getName().toLowerCase().endsWith(".xml");
             fin = zin;
         }
 
-        InputStreamReader reader = new InputStreamReader(fin);
+        InputStreamReader reader = utf ? new InputStreamReader(fin, "utf-8") : new InputStreamReader(fin);
         try {
-            return loadFromOld(reader);
-            //return load(reader);
+            //return loadFromOld(reader);
+            return JAXB.unmarshal(reader, Profile.class);
         } finally {
             reader.close();
         }
     }
 
-    public static Profile load(Reader reader) throws Exception {
-        return JAXB.unmarshal(reader, Profile.class);
-    }
-
-    private static Profile loadFromOld(Reader reader) throws IOException {
-        Profile profile = new Profile();
-
-        XMLElement xml = new XMLElement();
-        xml.parseFromReader(reader);
-
-        ElementTable rootElements = new ElementTable(xml.getChildren());
-
-        // Read profile description
-        if (rootElements.containsKey("description")) {
-            profile.setDescription(rootElements.get("description").getContent());
-        }
-
-        if (rootElements.containsKey("name")) {
-            profile.setName(rootElements.get("name").getContent());
-        }
-
-        if (rootElements.containsKey("schema-version")) {
-            profile.setSchemaVersion(rootElements.get("schema-version").getContent());
-        } else {
-            profile.setSchemaVersion(Hl7Inspector.getVersion());
-        }
-
-        // Read data elements
-        List dataElements = rootElements.get("data-elements").getChildren();
-        for (int i = 0; i < dataElements.size(); i++) {
-            XMLElement element = (XMLElement) dataElements.get(i);
-
-            DataElement de = new DataElement(element);
-
-            profile.getDataElementList().addDataElement(de);
-        }
-
-        // Read data types
-        if (rootElements.get("data-types") != null) {
-            List dataTypes = rootElements.get("data-types").getChildren();
-            for (int i = 0; i < dataTypes.size(); i++) {
-                XMLElement element = (XMLElement) dataTypes.get(i);
-
-                DataTypeItem dt = new DataTypeItem(element);
-
-                profile.getDataTypeList().addDataType(dt);
-            }
-        }
-
-        // Read segments
-        if (rootElements.get("segments") != null) {
-            List segments = rootElements.get("segments").getChildren();
-            for (int i = 0; i < segments.size(); i++) {
-                XMLElement element = (XMLElement) segments.get(i);
-
-                SegmentItem seg = new SegmentItem(element);
-
-                profile.getSegmentList().addSegment(seg);
-            }
-        }
-
-        // Read table data
-        if (rootElements.get("table-data") != null) {
-            List tableData = rootElements.get("table-data").getChildren();
-            for (int i = 0; i < tableData.size(); i++) {
-                XMLElement element = (XMLElement) tableData.get(i);
-
-                TableItem ti = new TableItem(element);
-
-                profile.getTableItemList().addTableItem(ti);
-            }
-        }
-
-        // Read validation mapping
-        if (rootElements.get("validate") != null) {
-            profile.getValidateMapper().read(rootElements.get("validate"));
-        }
-
-        return profile;
-    }
-
-    public static void saveToStream(Profile profile, OutputStream out) throws Exception {
-        XMLElement xml = new XMLElement();
-        xml.setName("hl7inspector-profile");
-
-        XMLElement xmlName = new XMLElement();
-        xmlName.setName("name");
-        xmlName.setContent(profile.getName());
-        xml.addChild(xmlName);
-
-        XMLElement xmlDesc = new XMLElement();
-        xmlDesc.setName("description");
-        xmlDesc.setContent(profile.getDescription());
-        xml.addChild(xmlDesc);
-
-        XMLElement xmlSchemaVersion = new XMLElement();
-        xmlSchemaVersion.setName("schema-version");
-        xmlSchemaVersion.setContent(Hl7Inspector.getVersion());
-        xml.addChild(xmlSchemaVersion);
-
-        // Data Elements
-        XMLElement xmlDataElements = new XMLElement();
-        xmlDataElements.setName("data-elements");
-        Iterator<DataElement> it1 = profile.getDataElementList().values().iterator();
-        while (it1.hasNext()) {
-            DataElement de = it1.next();
-
-            xmlDataElements.addChild(de.getXMLElement());
-        }
-        xml.addChild(xmlDataElements);
-
-        // Data Types
-        XMLElement xmlDataTypes = new XMLElement();
-        xmlDataTypes.setName("data-types");
-        Iterator<DataTypeItem> it2 = profile.getDataTypeList().values().iterator();
-        while (it2.hasNext()) {
-            DataTypeItem de = it2.next();
-
-            xmlDataTypes.addChild(de.getXMLElement());
-        }
-        xml.addChild(xmlDataTypes);
-
-        // Segments
-        XMLElement xmlSegments = new XMLElement();
-        xmlSegments.setName("segments");
-        Iterator<SegmentItem> it3 = profile.getSegmentList().values().iterator();
-        while (it3.hasNext()) {
-            SegmentItem se = it3.next();
-
-            xmlSegments.addChild(se.getXMLElement());
-        }
-        xml.addChild(xmlSegments);
-
-        // Table Data
-        XMLElement xmlTableData = new XMLElement();
-        xmlTableData.setName("table-data");
-        Iterator<TableItem> it4 = profile.getTableItemList().values().iterator();
-        while (it4.hasNext()) {
-            TableItem ti = it4.next();
-
-            xmlTableData.addChild(ti.getXMLElement());
-        }
-        xml.addChild(xmlTableData);
-
-        // Table Data
-        XMLElement xmlValidateData = profile.getValidateMapper().write();
-        xml.addChild(xmlValidateData);
-
+    public static void save(OutputStream out, Profile p) throws IOException, JAXBException {
         BufferedOutputStream bout = new BufferedOutputStream(out);
-        try {
+        ZipOutputStream zout = new ZipOutputStream(bout);
+        zout.putNextEntry(new ZipEntry("profile-data.xml"));
+        zout.setComment("Generated by HL7 Inspector Version " + Hl7Inspector.getVersion());
 
-            ZipOutputStream zout = new ZipOutputStream(bout);
-            try {
-                zout.putNextEntry(new ZipEntry("profile-data"));
-                zout.setComment("Generated by HL7 Inspector Version " + Hl7Inspector.getVersion());
+        OutputStreamWriter writer = new OutputStreamWriter(zout, "utf-8");
 
-                OutputStreamWriter sout = new OutputStreamWriter(zout);
-                try {
-                    String s = xml.toString();
+        //JAXBContext context = JAXBContext.newInstance(Profile.class);
+        //Marshaller m = context.createMarshaller();
+        //m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        //m.marshal(p, System.out);
 
-                    sout.write(s);
-                    sout.flush();
-                } finally {
-                    sout.close();
-                }
-//
-//            zout.putNextEntry(new ZipEntry("profile-data-new.xml"));
-//            zout.setComment("Generated by HL7 Inspector Version " + Hl7Inspector.getVersion());
-//
-//            sout = new OutputStreamWriter(zout, "utf-8");
-//            try {
-//                BufferedWriter bout = new BufferedWriter(sout);
-//                try {
-//                    Serializer serializer = new Persister();
-//                    serializer.write(this, bout);
-//
-//                    bout.flush();
-//                } finally {
-//                    bout.close();
-//                }
-//            } finally {
-//                sout.close();
-//            }
-            } finally {
-                zout.close();
-            }
-        } finally {
-            bout.close();
-        }
+        StringWriter sw = new StringWriter();
+        JAXB.marshal(p, sw);
+        zout.write(sw.toString().getBytes("utf-8"));
+
+        zout.closeEntry();
+        zout.flush();
+
+        p.reindex();
     }
 
 }

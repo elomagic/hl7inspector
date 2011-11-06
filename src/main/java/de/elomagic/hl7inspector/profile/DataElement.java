@@ -16,12 +16,10 @@
  */
 package de.elomagic.hl7inspector.profile;
 
-import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import nanoxml.XMLElement;
 
 /**
  *
@@ -29,98 +27,19 @@ import nanoxml.XMLElement;
  */
 @XmlRootElement(name = "data-element")
 @XmlAccessorType(XmlAccessType.NONE)
-public class DataElement {
+public final class DataElement {
 
     /** Creates a new instance of FieldId */
     public DataElement() {
     }
 
-    public DataElement(XMLElement xml) {
-        List v = xml.getChildren();
-        for (int i = 0; i < v.size(); i++) {
-            XMLElement el = (XMLElement) v.get(i);
-            if (el.getName().equals("item")) {
-                setItem(el.getContent());
-            } else if (el.getName().equals("name")) {
-                setName(el.getContent());
-            } else if (el.getName().equals("segment")) {
-                setSegment(el.getContent());
-            } else if (el.getName().equals("sequence")) {
-                setSequence(Integer.parseInt(el.getContent()));
-            } else if (el.getName().equals("chapter")) {
-                setChapter(el.getContent());
-            } else if (el.getName().equals("length")) {
-                setLen(Integer.parseInt(el.getContent()));
-            } else if (el.getName().equals("data-type")) {
-                setDataType(el.getContent());
-            } else if (el.getName().equals("repeatable")) {
-                setRepeatable(el.getContent());
-            } else if (el.getName().equals("table")) {
-                setTable(el.getContent());
-            }
-        }
-    }
-
     //Name	Item#	Seg	Seq#	Chp	Len	DT	Rep	Qty	Table
-    public DataElement(String id, String dataType, String desc, int len, String _table) {
+    public DataElement(String id, String dataType, String name, int len, String table) {
         this.item = id;
         this.dataType = dataType;
-        this.name = desc;
+        this.name = name;
         this.len = len;
-        setTable(_table);
-    }
-
-    public XMLElement getXMLElement() {
-        XMLElement xml = new XMLElement();
-        xml.setName("data-element");
-        xml.setAttribute("id", getItem());
-
-        XMLElement el = new XMLElement();
-        el.setName("item");
-        el.setContent(getItem());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("name");
-        el.setContent(getName());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("segment");
-        el.setContent(getSegment());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("sequence");
-        el.setContent(Integer.toString(getSequence()));
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("chapter");
-        el.setContent(getChapter());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("length");
-        el.setContent(Integer.toString(getLen()));
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("data-type");
-        el.setContent(getDataType());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("repeatable");
-        el.setContent(getRepeatable());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("table");
-        el.setContent(getTable());
-        xml.addChild(el);
-
-        return xml;
+        setTable(table);
     }
 
     private String name = "";
@@ -221,18 +140,6 @@ public class DataElement {
         }
     }
 
-    public int getRepeatableCount() {
-        int c;
-
-        try {
-            c = Integer.parseInt(repeat);
-        } catch (Exception e) {
-            c = (repeat.startsWith("Y")) ? Integer.MAX_VALUE : 1;
-        }
-
-        return c;
-    }
-
     private String table = "";
 
     @XmlElement(name = "table")
@@ -246,6 +153,18 @@ public class DataElement {
         } catch (Exception e) {
             this.table = table.trim();
         }
+    }
+
+    public int getRepeatableCount() {
+        int c;
+
+        try {
+            c = Integer.parseInt(repeat);
+        } catch (Exception e) {
+            c = (repeat.startsWith("Y")) ? Integer.MAX_VALUE : 1;
+        }
+
+        return c;
     }
 
 }

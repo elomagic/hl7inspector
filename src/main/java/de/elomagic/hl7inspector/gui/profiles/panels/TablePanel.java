@@ -14,49 +14,67 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.panels;
 
 import de.elomagic.hl7inspector.gui.PanelDialog;
-import de.elomagic.hl7inspector.gui.profiles.*;
 import de.elomagic.hl7inspector.gui.profiles.model.TableModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.profile.TableItemMap;
+import de.elomagic.hl7inspector.profile.TableItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author rambow
  */
 public class TablePanel extends ProfileTablePanel {
-    
+
+    private static final long serialVersionUID = -3661005431150970703L;
+
     /** Creates a new instance of TablePane */
-    public TablePanel(PanelDialog d) { super(d); }
-    
+    public TablePanel(PanelDialog d) {
+        super(d);
+    }
+
+    @Override
     protected void init() {
         model = new TableModel();
-        
-        super.init();              
-    }   
-    
+
+        super.init();
+    }
+
+    @Override
     public void write(Profile profile) {
-        TableModel model = (TableModel)getModel();
-        
-        TableItemMap list = new TableItemMap();
-        
-        for (int i=0; i<model.getRowCount(); i++) {
-            list.addTableItem(model.getTableItem(i));
+        TableModel m = (TableModel) getModel();
+
+        List<TableItem> list = new ArrayList<TableItem>();
+
+        for (int i = 0; i < m.getRowCount(); i++) {
+            list.add(m.getTableItem(i));
         }
-        
-       profile.setTableItemList(list); 
+
+        profile.setTableDataList(list);
     }
-    
+
+    @Override
     public void read(Profile profile) {
-        ((TableModel)model).setModel(profile.getTableItemList());
+        ((TableModel) model).setModel(profile.getTableDataList());
     }
-    public String getTitle() { return "Tables"; }
-    
-    public javax.swing.Icon getIcon() { return ResourceLoader.loadImageIcon("x-profile-data-editor.png", ResourceLoader.LARGE_IMAGE); }
-    
-    public String getDescription() { return ""; }    
+
+    @Override
+    public String getTitle() {
+        return "Tables";
+    }
+
+    @Override
+    public javax.swing.Icon getIcon() {
+        return ResourceLoader.loadImageIcon("x-profile-data-editor.png", ResourceLoader.LARGE_IMAGE);
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
 }

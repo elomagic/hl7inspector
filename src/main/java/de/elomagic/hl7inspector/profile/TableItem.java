@@ -16,72 +16,26 @@
  */
 package de.elomagic.hl7inspector.profile;
 
-import java.util.List;
-import nanoxml.XMLElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author rambow
  */
+@XmlRootElement(name = "table")
+@XmlAccessorType(XmlAccessType.NONE)
 public class TableItem {
 
     /** Creates a new instance of TableItem */
     public TableItem() {
     }
 
-    public TableItem(XMLElement xml) {
-        List v = xml.getChildren();
-        for (int i = 0; i < v.size(); i++) {
-            XMLElement el = (XMLElement) v.get(i);
-
-            if (el.getName().equals("id")) {
-                setId(el.getContent());
-            } else if (el.getName().equals("type")) {
-                setType(el.getContent());
-            } else if (el.getName().equals("table-description")) {
-                setTableDescription(el.getContent());
-            } else if (el.getName().equals("value")) {
-                setValue(el.getContent());
-            } else if (el.getName().equals("description")) {
-                setDescription(el.getContent());
-            }
-        }
-    }
-
-    public XMLElement getXMLElement() {
-        XMLElement xml = new XMLElement();
-        xml.setName("table");
-        xml.setAttribute("id", getId());
-
-        XMLElement el = new XMLElement();
-        el.setName("id");
-        el.setContent(getId());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("type");
-        el.setContent(getType());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("table-description");
-        el.setContent(getTableDescription());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("value");
-        el.setContent(getValue());
-        xml.addChild(el);
-
-        el = new XMLElement();
-        el.setName("description");
-        el.setContent(getDescription());
-        xml.addChild(el);
-
-        return xml;
-    }
-
     private String type = "HL7";
+
+    @XmlElement(name = "type")
     public String getType() {
         return type;
     }
@@ -91,6 +45,8 @@ public class TableItem {
     }
 
     private String id = "";
+
+    @XmlElement(name = "id")
     public String getId() {
         return id;
     }
@@ -104,6 +60,8 @@ public class TableItem {
     }
 
     private String tableDescription = "";
+
+    @XmlElement(name = "table-description")
     public String getTableDescription() {
         return tableDescription;
     }
@@ -113,6 +71,8 @@ public class TableItem {
     }
 
     private String value = "";
+
+    @XmlElement(name = "value")
     public String getValue() {
         return value;
     }
@@ -122,6 +82,8 @@ public class TableItem {
     }
 
     private String desciption = "";
+
+    @XmlElement(name = "description")
     public String getDescription() {
         return desciption;
     }

@@ -186,7 +186,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
             try {
                 FileInputStream fin = new FileInputStream(file);
                 try {
-                    profile = ProfileIO.loadFromStream(fin);
+                    profile = ProfileIO.load(fin);
                 } catch (Exception e) {
                     profile = ProfileIO.getDefault();
                 } finally {

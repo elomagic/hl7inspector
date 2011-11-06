@@ -17,92 +17,26 @@
 package de.elomagic.hl7inspector.profile;
 
 import de.elomagic.hl7inspector.validate.ValidateStatus;
-import nanoxml.XMLElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author rambow
  */
+@XmlRootElement(name = "validate")
+@XmlAccessorType(XmlAccessType.NONE)
 public class ValidateMapper {
 
     /** Creates a new instance of ValidateMapper */
     public ValidateMapper() {
     }
 
-    public void read(XMLElement element) {
-        ElementTable elements = new ElementTable(element.getChildren());
+    private int mapLength = ValidateStatus.WARN;
 
-        if (elements.containsKey("length")) {
-            mapLength = Integer.parseInt(elements.get("length").getContent());
-        }
-
-        if (elements.containsKey("deprecated")) {
-            mapDeprecated = Integer.parseInt(elements.get("deprecated").getContent());
-        }
-
-        if (elements.containsKey("conditional")) {
-            mapConditional = Integer.parseInt(elements.get("conditional").getContent());
-        }
-
-        if (elements.containsKey("required")) {
-            mapRequired = Integer.parseInt(elements.get("required").getContent());
-        }
-
-        if (elements.containsKey("item-missing")) {
-            mapItemMissing = Integer.parseInt(elements.get("item-missing").getContent());
-        }
-
-        if (elements.containsKey("definition-not-found")) {
-            mapDefNotFound = Integer.parseInt(elements.get("definition-not-found").getContent());
-        }
-
-        if (elements.containsKey("repetition")) {
-            mapRepetition = Integer.parseInt(elements.get("repetition").getContent());
-        }
-    }
-
-    public XMLElement write() {
-        XMLElement xmlElement = new XMLElement();
-        xmlElement.setName("validate");
-
-        XMLElement xmlMap = new XMLElement();
-        xmlMap.setName("length");
-        xmlMap.setContent(Integer.toString(mapLength));
-        xmlElement.addChild(xmlMap);
-
-        xmlMap = new XMLElement();
-        xmlMap.setName("deprecated");
-        xmlMap.setContent(Integer.toString(mapDeprecated));
-        xmlElement.addChild(xmlMap);
-
-        xmlMap = new XMLElement();
-        xmlMap.setName("conditional");
-        xmlMap.setContent(Integer.toString(mapConditional));
-        xmlElement.addChild(xmlMap);
-
-        xmlMap = new XMLElement();
-        xmlMap.setName("required");
-        xmlMap.setContent(Integer.toString(mapRequired));
-        xmlElement.addChild(xmlMap);
-
-        xmlMap = new XMLElement();
-        xmlMap.setName("item-missing");
-        xmlMap.setContent(Integer.toString(mapItemMissing));
-        xmlElement.addChild(xmlMap);
-
-        xmlMap = new XMLElement();
-        xmlMap.setName("definition-not-found");
-        xmlMap.setContent(Integer.toString(mapDefNotFound));
-        xmlElement.addChild(xmlMap);
-
-        xmlMap = new XMLElement();
-        xmlMap.setName("repetition");
-        xmlMap.setContent(Integer.toString(mapRepetition));
-        xmlElement.addChild(xmlMap);
-
-        return xmlElement;
-    }
-
+    @XmlElement(name = "length")
     public int getMapLength() {
         return mapLength;
     }
@@ -111,6 +45,9 @@ public class ValidateMapper {
         mapLength = map;
     }
 
+    private int mapDeprecated = ValidateStatus.INFO;
+
+    @XmlElement(name = "deprecated")
     public int getMapDeprecated() {
         return mapDeprecated;
     }
@@ -119,6 +56,9 @@ public class ValidateMapper {
         mapDeprecated = map;
     }
 
+    private int mapConditional = ValidateStatus.INFO;
+
+    @XmlElement(name = "conditional")
     public int getMapConditional() {
         return mapConditional;
     }
@@ -127,6 +67,9 @@ public class ValidateMapper {
         mapConditional = map;
     }
 
+    private int mapRequired = ValidateStatus.ERROR;
+
+    @XmlElement(name = "required")
     public int getMapRequired() {
         return mapRequired;
     }
@@ -135,6 +78,9 @@ public class ValidateMapper {
         mapRequired = map;
     }
 
+    private int mapItemMissing = ValidateStatus.ERROR;
+
+    @XmlElement(name = "item-missing")
     public int getMapItemMiss() {
         return mapItemMissing;
     }
@@ -143,6 +89,9 @@ public class ValidateMapper {
         mapItemMissing = map;
     }
 
+    private int mapDefNotFound = ValidateStatus.WARN;
+
+    @XmlElement(name = "definition-not-found")
     public int getMapDefNotFound() {
         return mapDefNotFound;
     }
@@ -151,6 +100,9 @@ public class ValidateMapper {
         mapDefNotFound = map;
     }
 
+    private int mapRepetition = ValidateStatus.ERROR;
+
+    @XmlElement(name = "repetition")
     public int getMapRepetition() {
         return mapRepetition;
     }
@@ -159,17 +111,4 @@ public class ValidateMapper {
         mapRepetition = map;
     }
 
-    private int mapLength = ValidateStatus.WARN;
-
-    private int mapDeprecated = ValidateStatus.INFO;
-
-    private int mapConditional = ValidateStatus.INFO;
-
-    private int mapRequired = ValidateStatus.ERROR;
-
-    private int mapItemMissing = ValidateStatus.ERROR;
-
-    private int mapDefNotFound = ValidateStatus.WARN;
-
-    private int mapRepetition = ValidateStatus.ERROR;
 }

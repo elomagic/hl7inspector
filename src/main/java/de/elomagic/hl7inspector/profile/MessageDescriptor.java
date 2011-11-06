@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
 import de.elomagic.hl7inspector.hl7.model.Component;
@@ -30,133 +29,133 @@ import de.elomagic.hl7inspector.hl7.model.Subcomponent;
  * @author rambow
  */
 public class MessageDescriptor {
-    
+
     /** Creates a new instance of MessageDescriptor */
     public MessageDescriptor(Profile profile) {
         p = profile;
     }
-    
+
     private Message msg;
     private Profile p;
-    
+
     public SegmentItem getSegmentType(Hl7Object o) {
         SegmentItem seg = null;
-        
-        Segment s = (Segment)getObjectOfType(o, Segment.class);
+
+        Segment s = (Segment) getObjectOfType(o, Segment.class);
         if (s != null) {
-            seg = (s.size() == 0)?null:p.getSegmentList().getSegment(((Segment)s).get(0).toString());
+            seg = s.size() == 0 ? null : p.getSegment(((Segment) s).get(0).toString());
         }
-        
+
         return seg;
     }
-    
+
     public DataElement getDataElement(Hl7Object o) {
         DataElement de = null;
-        
-        Hl7Object field = (Field)getObjectOfType(o, Field.class);
+
+        Hl7Object field = (Field) getObjectOfType(o, Field.class);
         if (field == null) {
             field = getObjectOfType(o, RepetitionField.class);
         }
-        
+
         if (field != null) {
             int index = field.getIndex();
-            
+
             if (field.getHl7Parent() instanceof RepetitionField) {
                 index = field.getHl7Parent().getIndex();
             }
-            
+
             SegmentItem seg = getSegmentType(o);
-            
+
             if (seg != null) {
-                de = p.getDataElementList().getDataElement(seg.getId(), index);
+                de = p.getDataElement(seg.getId(), index);
             }
         }
-        
+
         return de;
     }
-    
+
     public DataTypeItem getDataType(Hl7Object o) {
         DataTypeItem dt = null;
-        
-        Subcomponent s = (Subcomponent)getObjectOfType(o, Subcomponent.class);
+
+        Subcomponent s = (Subcomponent) getObjectOfType(o, Subcomponent.class);
         if (s != null) {
             DataTypeItem pdt = getDataType(s.getHl7Parent());
             if (pdt != null) {
-                dt = p.getDataTypeList().getDataType(pdt.getDataType(), s.getIndex()+1);
+                dt = p.getDataType(pdt.getDataType(), s.getIndex() + 1);
             }
         } else {
-            Component c = (Component)getObjectOfType(o, Component.class);
+            Component c = (Component) getObjectOfType(o, Component.class);
             if (c != null) {
                 DataElement de = getDataElement(o);
                 if (de != null) {
-                    dt = p.getDataTypeList().getDataType(de.getDataType(), c.getIndex()+1);
+                    dt = p.getDataType(de.getDataType(), c.getIndex() + 1);
                 }
             }
         }
-        
+
         return dt;
     }
-    
+
     public static Hl7Object getObjectOfType(Hl7Object child, Class hl7ObjectClass) {
         Hl7Object result = null;
-        
+
         while ((child.getHl7Parent() != null) && (result == null)) {
             if (child.getClass().equals(hl7ObjectClass)) {
                 result = child;
             }
-            
+
             child = child.getHl7Parent();
         }
-        
+
         return result;
-        
-        
+
+
     }
-    
+
     public String getSimpleDescription(Hl7Object o, boolean htmlFormated) {
-        String HS = (htmlFormated)?"<B>":"";
-        String HE = (htmlFormated)?"</B>":"";
-        
+        String HS = (htmlFormated) ? "<B>" : "";
+        String HE = (htmlFormated) ? "</B>" : "";
+
         String s = "";
-        
+
         if (o instanceof Segment) {
             SegmentItem seg = getSegmentType(o);
             if (seg != null) {
                 s = HS.concat(seg.getDescription().concat(HE));
             }
-        } else if ((o instanceof Field) || (o instanceof RepetitionField)){
+        } else if ((o instanceof Field) || (o instanceof RepetitionField)) {
             DataElement de = getDataElement(o);
             if (de != null) {
                 s = HS.concat("[" + de.getDataType() + "] " + de.getName().concat(HE));
             }
-        } else if ((o instanceof Component) || (o instanceof Subcomponent)){
+        } else if ((o instanceof Component) || (o instanceof Subcomponent)) {
             DataTypeItem dt = getDataType(o);
             if (dt != null) {
                 s = HS.concat("[" + dt.getDataType() + "] " + dt.getDescription().concat(HE));
             }
         }
-        
+
         if ((htmlFormated) && (s.length() != 0)) {
             s = "<font face=\"Arial\">".concat(s).concat("</font>");
         }
-        
+
         return s;
     }
-    
+
     public String getDescription(Hl7Object o, boolean htmlFormated) {
-        String BR = (htmlFormated)?"<BR>":Character.toString((char)13);
-        String HS = (htmlFormated)?"<B>":"";
-        String HE = (htmlFormated)?"</B>":"";
-        
+        String BR = (htmlFormated) ? "<BR>" : Character.toString((char) 13);
+        String HS = (htmlFormated) ? "<B>" : "";
+        String HE = (htmlFormated) ? "</B>" : "";
+
         String s = "";
-        
+
         if (o instanceof Segment) {
             SegmentItem seg = getSegmentType(o);
             if (seg != null) {
                 s = HS.concat(seg.getId() + " " + seg.getDescription().concat(HE).concat(BR));
                 s = s + "Chapter: " + seg.getChapter();
             }
-        } else if ((o instanceof Field) || (o instanceof RepetitionField)){
+        } else if ((o instanceof Field) || (o instanceof RepetitionField)) {
             DataElement de = getDataElement(o);
             if (de != null) {
                 s = HS.concat(de.getSegment() + "." + de.getSequence() + " " + de.getName().concat(HE).concat(BR));
@@ -167,7 +166,7 @@ public class MessageDescriptor {
                 s = s + "Table: " + de.getTable().concat(BR);
                 s = s + "Repetition: " + de.getRepeatable().concat(BR);
             }
-        } else if ((o instanceof Component) || (o instanceof Subcomponent)){
+        } else if ((o instanceof Component) || (o instanceof Subcomponent)) {
             DataTypeItem dt = getDataType(o);
             if (dt != null) {
                 s = HS.concat(dt.getParentDataType() + "." + dt.getIndex() + " " + dt.getDescription().concat(HE).concat(BR));
@@ -178,11 +177,12 @@ public class MessageDescriptor {
                 s = s + "Optionality: " + dt.getOptionality().concat(BR);
             }
         }
-        
+
         if ((htmlFormated) && (s.length() != 0)) {
             s = "<font face=\"Arial\">".concat(s).concat("</font>");
         }
-        
+
         return s;
     }
+
 }

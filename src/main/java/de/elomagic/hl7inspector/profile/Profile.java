@@ -16,11 +16,16 @@
  */
 package de.elomagic.hl7inspector.profile;
 
+import de.elomagic.hl7inspector.Hl7Inspector;
 import de.elomagic.hl7inspector.utils.StringVector;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -57,7 +62,7 @@ public class Profile {
         this.name = name;
     }
 
-    private String schemaVersion = "";
+    private String schemaVersion = Hl7Inspector.getVersion();
 
     @XmlElement(name = "schema-version")
     public String getSchemaVersion() {
@@ -68,66 +73,155 @@ public class Profile {
         this.schemaVersion = schemaVersion;
     }
 
-    private DataElementMap dataElementList = new DataElementMap();
+    private List<DataElement> dataElementList = new ArrayList<DataElement>();
 
-    public DataElementMap getDataElementList() {
+    @XmlElementWrapper(name = "data-elements")
+    @XmlElement(name = "data-element")
+    public List<DataElement> getDataElementList() {
         return dataElementList;
     }
 
-    public void setDataElementList(DataElementMap value) {
-        dataElementList = value;
+    public void setDataElementList(List<DataElement> dataElementList) {
+        this.dataElementList = dataElementList;
     }
 
-    private DataTypeItemMap dataTypeList = new DataTypeItemMap();
+    private List<SegmentItem> segmentList = new ArrayList<SegmentItem>();
 
-    public DataTypeItemMap getDataTypeList() {
-        return dataTypeList;
-    }
-
-    public void setDataTypeList(DataTypeItemMap value) {
-        dataTypeList = value;
-    }
-
-//    @ElementMap(name = "segments",
-//    key = "ID",
-//    value = "segment",
-//    valueType = de.elomagic.hl7inspector.profile.SegmentItem.class,
-//    attribute = true,
-//    required = false)
-    private SegmentMap segmentList = new SegmentMap();
-
-    public SegmentMap getSegmentList() {
+    @XmlElementWrapper(name = "segments")
+    @XmlElement(name = "segment")
+    public List<SegmentItem> getSegmentList() {
         return segmentList;
     }
 
-    public void setSegmentList(SegmentMap value) {
-        segmentList = value;
+    public void setSegmentList(List<SegmentItem> segmentList) {
+        this.segmentList = segmentList;
     }
 
-    private TableItemMap tableItemList = new TableItemMap();
+    private List<DataTypeItem> dataTypeList = new ArrayList<DataTypeItem>();
 
-    public TableItemMap getTableItemList() {
-        return tableItemList;
+    @XmlElementWrapper(name = "data-types")
+    @XmlElement(name = "data-type")
+    public List<DataTypeItem> getDataTypeList() {
+        return dataTypeList;
     }
 
-    public void setTableItemList(TableItemMap value) {
-        tableItemList = value;
+    public void setDataTypeList(List<DataTypeItem> dataTypeList) {
+        this.dataTypeList = dataTypeList;
     }
 
-    private ValidateMapper validate = new ValidateMapper();
+    private List<TableItem> tableDataList = new ArrayList<TableItem>();
 
+    @XmlElementWrapper(name = "table-data")
+    @XmlElement(name = "table")
+    public List<TableItem> getTableDataList() {
+        return tableDataList;
+    }
+
+    public void setTableDataList(List<TableItem> tableDataList) {
+        this.tableDataList = tableDataList;
+    }
+
+    private ValidateMapper validateMapper = new ValidateMapper();
+
+    @XmlElement(name = "validate")
     public ValidateMapper getValidateMapper() {
-        return validate;
+        return validateMapper;
+    }
+
+    public void setValidateMapper(ValidateMapper validateMapper) {
+        this.validateMapper = validateMapper;
+    }
+
+    public void reindex() {
+        dataElementMap.clear();
+        dataTypeMap.clear();
+        segmentMap.clear();
+        tableDataMap.clear();
+    }
+
+    private Map<String, DataElement> dataElementMap = new HashMap<String, DataElement>();
+
+    public DataElement getDataElement(String segmentType, int indexOfField) {
+        if (dataElementMap.size() != dataElementList.size()) {
+            dataElementMap.clear();
+
+            for (DataElement de : dataElementList) {
+                dataElementMap.put(de.getSegment() + "-" + de.getSequence(), de);
+            }
+        }
+
+        return dataElementMap.get(segmentType + '-' + indexOfField);
+    }
+
+    private Map<String, DataTypeItem> dataTypeMap = new HashMap<String, DataTypeItem>();
+
+    public DataTypeItem getDataType(String dataType, int index) {
+        if (dataTypeMap.size() != dataTypeList.size()) {
+            dataTypeMap.clear();
+
+            for (DataTypeItem t : dataTypeList) {
+                dataTypeMap.put(t.getParentDataType() + '-' + t.getIndex(), t);
+            }
+        }
+
+        return dataTypeMap.get(dataType + '-' + index);
+    }
+
+    private Map<String, SegmentItem> segmentMap = new HashMap<String, SegmentItem>();
+
+    public SegmentItem getSegment(String segmentType) {
+        if (segmentMap.size() != segmentList.size()) {
+            segmentMap.clear();
+
+            for (SegmentItem item : segmentList) {
+                segmentMap.put(item.getId(), item);
+            }
+        }
+
+        return segmentMap.get(segmentType);
+    }
+
+    private Map<String, TableItem> tableDataMap = new HashMap<String, TableItem>();
+
+    public TableItem getTableData(String tableId, String value) {
+        if (tableDataMap.size() != tableDataList.size()) {
+            tableDataMap.clear();
+
+            for (TableItem item : tableDataList) {
+                tableDataMap.put(item.getId() + '-' + item.getValue(), item);
+            }
+        }
+
+        return tableDataMap.get(tableId + '-' + value);
+    }
+
+    public boolean containsParentDataType(String dataType) {
+        for (DataTypeItem dt : getDataTypeList()) {
+            if (dt.getParentDataType().equals(dataType)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean containsTableData(String tableId) {
+        boolean result = false;
+
+        for (TableItem ti : tableDataList) {
+            if (ti.getId().equals(tableId)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public StringVector validate() {
         StringVector result = new StringVector();
 
         // Validate data types
-        Iterator<DataTypeItem> it = getDataTypeList().values().iterator();
-        while (it.hasNext()) {
-            DataTypeItem dt = it.next();
-
+        for (DataTypeItem dt : dataTypeList) {
             if ((dt.getIndex() == 0) && !dt.getParentDataType().trim().isEmpty()) {
                 result.add("Error in data type definition " + dt.getParentDataType() + ": Index invalid. Must be greater then 0.");
             }
@@ -138,27 +232,24 @@ public class Profile {
             }
 
             if (!dt.getTable().trim().isEmpty()) {
-                if (!getTableItemList().containsTable(dt.getTable())) {
+                if (!containsTableData(dt.getTable())) {
                     result.add("Error in data type definition " + dt.getParentDataType() + "." + dt.getIndex() + ": Table definition " + dt.getTable() + " not found.");
                 }
             }
 
             if (!dt.getDataType().trim().isEmpty()) {
-                if (!getDataTypeList().containsDataType(dt.getDataType())) {
+                if (!containsParentDataType(dt.getDataType())) {
                     result.add("Error in data type definition " + dt.getParentDataType() + "." + dt.getIndex() + ": Data type definition " + dt.getDataType() + " not found.");
                 }
             }
         }
 
         // Validate data elements
-        Iterator<DataElement> dataElements = getDataElementList().values().iterator();
-        while (dataElements.hasNext()) {
-            DataElement de = dataElements.next();
-
+        for (DataElement de : dataElementList) {
             if (de.getSegment().trim().isEmpty()) {
                 result.add("Error in data element definition " + de.getName() + ": Segment not set.");
             } else {
-                if (getSegmentList().getSegment(de.getSegment().trim()) == null) {
+                if (getSegment(de.getSegment().trim()) == null) {
                     result.add("Error in data element definition " + de.getSegment() + "." + de.getSequence() + ": Segment definition " + de.getSegment() + " not found.");
                 }
             }
@@ -173,7 +264,7 @@ public class Profile {
             }
 
             if (!de.getDataType().trim().isEmpty()) {
-                if (!getDataTypeList().containsDataType(de.getDataType())) {
+                if (!containsParentDataType(de.getDataType())) {
                     result.add("Error in data element definition " + de.getSegment() + "." + de.getSequence() + ": Data type definition " + de.getDataType() + " not found.");
                 }
             } else {
@@ -181,7 +272,7 @@ public class Profile {
             }
 
             if (!de.getTable().trim().isEmpty()) {
-                if (!getTableItemList().containsTable(de.getTable())) {
+                if (!containsTableData(de.getTable())) {
                     result.add("Error in data element definition " + de.getSegment() + "." + de.getSequence() + ": Table definition " + de.getTable() + " not found.");
                 }
             }

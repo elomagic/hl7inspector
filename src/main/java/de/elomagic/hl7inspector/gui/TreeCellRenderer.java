@@ -253,7 +253,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 
                     if (value instanceof de.elomagic.hl7inspector.hl7.model.Segment) {
                         try {
-                            SegmentItem segDef = profile.getSegmentList().getSegment(segType);
+                            SegmentItem segDef = profile.getSegment(segType);
 
                             if (segDef != null) {
                                 desc = segDef.getDescription();
@@ -266,7 +266,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                             Logger.getLogger(this.getClass()).error(ex.getMessage(), ex);
                         }
                     } else if (value instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) {
-                        DataElement de = profile.getDataElementList().getDataElement(segType, index);
+                        DataElement de = profile.getDataElement(segType, index);
                         if (de != null) {
                             desc = de.getName();
                             tt.add("Field Name: ".concat(de.getName()));
@@ -291,9 +291,9 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                             }
                         }
                     } else if (value instanceof de.elomagic.hl7inspector.hl7.model.Component) {
-                        DataElement de = profile.getDataElementList().getDataElement(segType, fieldIndex);
+                        DataElement de = profile.getDataElement(segType, fieldIndex);
                         if (de != null) {
-                            DataTypeItem dt = profile.getDataTypeList().getDataType(de.getDataType(), index);
+                            DataTypeItem dt = profile.getDataType(de.getDataType(), index);
                             if (dt != null) {
                                 desc = "[".concat(dt.getDataType()).concat("] ").concat(dt.getDescription());
                                 tt.add("Component Type: ".concat(dt.getDescription()));
@@ -306,12 +306,12 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                             }
                         }
                     } else if (value instanceof de.elomagic.hl7inspector.hl7.model.Subcomponent) {
-                        DataElement de = profile.getDataElementList().getDataElement(segType, fieldIndex);
+                        DataElement de = profile.getDataElement(segType, fieldIndex);
                         if (de != null) {
                             int compIndex = obj.getHl7Parent().getIndex() + 1;
-                            DataTypeItem dt = profile.getDataTypeList().getDataType(de.getDataType(), compIndex);
+                            DataTypeItem dt = profile.getDataType(de.getDataType(), compIndex);
                             if (dt != null) {
-                                dt = profile.getDataTypeList().getDataType(dt.getDataType(), index);
+                                dt = profile.getDataType(dt.getDataType(), index);
                                 if (dt != null) {
                                     desc = "[".concat(dt.getDataType()).concat("] ").concat(dt.getDescription());
                                     tt.add("SubComponent Type: ".concat(dt.getDescription()));

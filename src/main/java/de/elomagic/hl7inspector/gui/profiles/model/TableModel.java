@@ -17,37 +17,31 @@
 package de.elomagic.hl7inspector.gui.profiles.model;
 
 import de.elomagic.hl7inspector.profile.TableItem;
-import de.elomagic.hl7inspector.profile.TableItemMap;
-import java.util.Iterator;
+import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
  *
  * @author rambow
  */
-public class TableModel extends ProfileModel {
+public class TableModel extends ProfileModel<TableItem> {
+
+    private static final long serialVersionUID = 3848893502635683042L;
 
     public TableModel() {
         super();
     }
 
     /** Creates a new instance of DataTypeModel */
-    public TableModel(TableItemMap tableList) {
+    public TableModel(List<TableItem> list) {
         super();
 
-        setModel(tableList);
+        setModel(list);
     }
 
-    public void setModel(TableItemMap tableList) {
+    public final void setModel(List<TableItem> list) {
         clear();
-
-        Iterator<String> it = tableList.keySet().iterator();
-
-        while (it.hasNext()) {
-            String key = it.next();
-            TableItem item = tableList.get(key);
-            table.add(item);
-        }
+        table.addAll(list);
     }
 
     @Override
@@ -105,8 +99,8 @@ public class TableModel extends ProfileModel {
             }
 
             fireTableCellUpdated(rowIndex, columnIndex);
-        } catch (Exception e) {
-            Logger.getLogger(getClass()).error(e.getMessage(), e);
+        } catch (Exception ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
     }
 

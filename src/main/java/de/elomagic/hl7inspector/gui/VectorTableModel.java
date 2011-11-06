@@ -17,13 +17,16 @@
 package de.elomagic.hl7inspector.gui;
 
 import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 /**
  *
  * @author rambow
  */
-public abstract class VectorTableModel extends AbstractTableModel {
+public abstract class VectorTableModel<E extends Object> extends AbstractTableModel {
+
+    private static final long serialVersionUID = -649617212368934188L;
 
     /** Creates a new instance of ProfileTableModel */
     public VectorTableModel() {
@@ -34,7 +37,7 @@ public abstract class VectorTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
-    public int addRow(Object object) {
+    public int addRow(E object) {
         table.add(object);
 
         int l = table.size() - 1;
@@ -53,7 +56,7 @@ public abstract class VectorTableModel extends AbstractTableModel {
         fireTableRowsDeleted(rowIndex, rowIndex);
     }
 
-    public Object getRow(int rowIndex) {
+    public E getRow(int rowIndex) {
         return table.get(rowIndex);
     }
 
@@ -82,7 +85,6 @@ public abstract class VectorTableModel extends AbstractTableModel {
         return table.size();
     }
 
-    protected ArrayList<Object> table = new ArrayList<Object>();
-
+    protected List<E> table = new ArrayList<E>();
     private int lockCount = 0;
 }

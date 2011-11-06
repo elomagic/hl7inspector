@@ -14,51 +14,67 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.panels;
 
 import de.elomagic.hl7inspector.gui.PanelDialog;
-import de.elomagic.hl7inspector.gui.profiles.*;
 import de.elomagic.hl7inspector.gui.profiles.model.SegmentModel;
-import de.elomagic.hl7inspector.gui.profiles.model.SortedTableModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.profile.SegmentMap;
+import de.elomagic.hl7inspector.profile.SegmentItem;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author rambow
  */
 public class SegmentPanel extends ProfileTablePanel {
-    
+
+    private static final long serialVersionUID = 8012235037752284322L;
+
     /** Creates a new instance of SegmentPane */
-    public SegmentPanel(PanelDialog d) { super(d); }
-    
+    public SegmentPanel(PanelDialog d) {
+        super(d);
+    }
+
+    @Override
     protected void init() {
         model = new SegmentModel();
-        
-        super.init();        
+
+        super.init();
     }
-        
+
+    @Override
     public void write(Profile profile) {
-        SegmentModel model = (SegmentModel)getModel();
-        
-        SegmentMap list = new SegmentMap();
-        
-        for (int i=0; i<model.getRowCount(); i++) {
-            list.addSegment(model.getSegment(i));
+        SegmentModel m = (SegmentModel) getModel();
+
+        List<SegmentItem> list = new ArrayList();
+
+        for (int i = 0; i < m.getRowCount(); i++) {
+            list.add(m.getSegment(i));
         }
-        
+
         profile.setSegmentList(list);
     }
-    
+
+    @Override
     public void read(Profile profile) {
-        ((SegmentModel)model).setModel(profile.getSegmentList());
+        ((SegmentModel) model).setModel(profile.getSegmentList());
     }
-    
-    public String getTitle() { return "Segments"; }
-    
-    public javax.swing.Icon getIcon() { return ResourceLoader.loadImageIcon("x-profile-data-editor.png", ResourceLoader.LARGE_IMAGE); }
-    
-    public String getDescription() { return ""; }
+
+    @Override
+    public String getTitle() {
+        return "Segments";
+    }
+
+    @Override
+    public javax.swing.Icon getIcon() {
+        return ResourceLoader.loadImageIcon("x-profile-data-editor.png", ResourceLoader.LARGE_IMAGE);
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
 }

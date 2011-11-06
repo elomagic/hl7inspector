@@ -17,8 +17,7 @@
 package de.elomagic.hl7inspector.gui.profiles.model;
 
 import de.elomagic.hl7inspector.profile.SegmentItem;
-import de.elomagic.hl7inspector.profile.SegmentMap;
-import java.util.Iterator;
+import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
@@ -27,28 +26,23 @@ import org.apache.log4j.Logger;
  */
 public class SegmentModel extends ProfileModel {
 
+    private static final long serialVersionUID = -6889471829107478846L;
+
     /** Creates a new instance of SegmentModel */
     public SegmentModel() {
         super();
     }
 
     /** Creates a new instance of SegmentModel */
-    public SegmentModel(SegmentMap segmentList) {
+    public SegmentModel(List<SegmentItem> list) {
         super();
 
-        setModel(segmentList);
+        setModel(list);
     }
 
-    public final void setModel(SegmentMap segmentList) {
+    public final void setModel(List<SegmentItem> list) {
         clear();
-
-        Iterator<String> it = segmentList.keySet().iterator();
-
-        while (it.hasNext()) {
-            String key = it.next();
-            SegmentItem seg = segmentList.getSegment(key);
-            table.add(seg);
-        }
+        table.addAll(list);
     }
 
     @Override

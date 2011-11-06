@@ -14,165 +14,149 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.profile;
 
-import java.util.List;
-import java.util.Vector;
-import nanoxml.XMLElement;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author rambow
  */
-public class DataTypeItem {
-    
+@XmlRootElement(name = "data-type")
+@XmlAccessorType(XmlAccessType.NONE)
+public final class DataTypeItem {
+
     /** Creates a new instance of DataType */
-    public DataTypeItem() { }
+    public DataTypeItem() {
+    }
+
     public DataTypeItem(String parentDataType, int index, String desc, String dataType) {
         setParentDataType(parentDataType);
         setIndex(index);
         setDescription(desc);
         setDataType(dataType);
     }
-    
-    public DataTypeItem(XMLElement xml) {
-        List v = xml.getChildren();
-        for (int i=0;i<v.size();i++) {
-            XMLElement el = (XMLElement)v.get(i);
-            
-            if (el.getName().equals("parent")) {
-                setParentDataType(el.getContent());
-            } else if (el.getName().equals("index")) {
-                setIndex(Integer.parseInt(el.getContent()));
-            } else if (el.getName().equals("parent")) {
-                setParentDataType(el.getContent());
-            } else if (el.getName().equals("datatype")) {
-                setDataType(el.getContent());
-            } else if (el.getName().equals("description")) {
-                setDescription(el.getContent());
-            } else if (el.getName().equals("length")) {
-                setLength(Integer.parseInt(el.getContent()));
-            } else if (el.getName().equals("opt")) {
-                setOptionality(el.getContent());
-            } else if (el.getName().equals("chapter")) {
-                setChapter(el.getContent());
-            } else if (el.getName().equals("parent-name")) {
-                setParentDataTypeName(el.getContent());
-            } else if (el.getName().equals("table")) {
-                setTable(el.getContent());
-            }
-        }
+
+    private int len = 0;
+
+    @XmlElement(name = "length")
+    public int getLength() {
+        return len;
     }
-    
-    public XMLElement getXMLElement() {
-        XMLElement xml = new XMLElement();
-        xml.setName("data-type");
-        xml.setAttribute("id", getParentDataType());
-        
-        XMLElement el = new XMLElement();
-        el.setName("parent");
-        el.setContent(getParentDataType());
-        xml.addChild(el);        
 
-        el = new XMLElement();
-        el.setName("datatype");
-        el.setContent(getDataType());
-        xml.addChild(el);        
-
-        el = new XMLElement();
-        el.setName("index");
-        el.setContent(Integer.toString(getIndex()));
-        xml.addChild(el);        
-
-        el = new XMLElement();
-        el.setName("length");
-        el.setContent(Integer.toString(getLength()));
-        xml.addChild(el);        
-
-        el = new XMLElement();
-        el.setName("description");
-        el.setContent(getDescription());
-        xml.addChild(el);
-        
-        el = new XMLElement();
-        el.setName("opt");
-        el.setContent(getOptionality());
-        xml.addChild(el);        
-        
-        el = new XMLElement();
-        el.setName("chapter");
-        el.setContent(getChapter());
-        xml.addChild(el);                        
-        
-        el = new XMLElement();
-        el.setName("parent-name");
-        el.setContent(getParentDataTypeName());
-        xml.addChild(el);                        
-
-        el = new XMLElement();
-        el.setName("table");
-        el.setContent(getTable());
-        xml.addChild(el);                                                       
-        
-        return xml;
+    public void setLength(int l) {
+        this.len = l;
     }
-    
-    
-    private int     index           = 0;
-    private String  dataType        = "";
-    private String  description     = "";
-    private String  parentDataType  = "";
-    private String  parentDataTypeName  = "";
-    private int     len             = 0;
-    private String  opt             = "O";
-    private String  chapter         = "";
-    private String  table           = "";
-    
-    public int getLength() { return len; }    
-    public void setLength(int l) { this.len = l; }
-    public void setLength(String l) { 
+
+    public void setLength(String l) {
         try {
-            this.len = Integer.parseInt(l);            
+            this.len = Integer.parseInt(l);
         } catch (Exception e) {
             this.len = 0;
         }
     }
-    
-    public int getIndex() { return index; }    
-    public void setIndex(int index) { this.index = index; }
-    public void setIndex(String index) { 
+
+    private int index = 0;
+
+    @XmlElement(name = "index")
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public void setIndex(String index) {
         try {
-            this.index = Integer.parseInt(index);            
+            this.index = Integer.parseInt(index);
         } catch (Exception e) {
             this.index = 0;
         }
     }
-    
-    public String getDescription() { return description; }    
-    public void setDescription(String description) { this.description = description; }
-    
-    public String getDataType() { return dataType; }    
-    public void setDataType(String dataType) { this.dataType = dataType.trim(); }
-    
-    public String getParentDataType() { return parentDataType; }    
-    public void setParentDataType(String dataType) { this.parentDataType = dataType.trim(); }
-    
-    public String getOptionality() { return opt; }    
-    public void setOptionality(String value) { opt = value.trim(); }    
-    
-    public String getChapter() { return chapter; }
-    public void setChapter(String chapter) { this.chapter = chapter; }    
 
-    public String getParentDataTypeName() { return parentDataTypeName; }
-    public void setParentDataTypeName(String parentDataTypeName) { this.parentDataTypeName = parentDataTypeName.trim(); }
-    
-    public String getTable() { return table; }
+    private String description = "";
+
+    @XmlElement(name = "description")
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String dataType = "";
+
+    @XmlElement(name = "datatype")
+    public String getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(String dataType) {
+        this.dataType = dataType.trim();
+    }
+
+    private String parentDataType = "";
+
+    @XmlElement(name = "parent")
+    public String getParentDataType() {
+        return parentDataType;
+    }
+
+    public void setParentDataType(String dataType) {
+        this.parentDataType = dataType.trim();
+    }
+
+    private String opt = "O";
+
+    @XmlElement(name = "opt")
+    public String getOptionality() {
+        return opt;
+    }
+
+    public void setOptionality(String value) {
+        opt = value.trim();
+    }
+
+    private String chapter = "";
+
+    @XmlElement(name = "chapter")
+    public String getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(String chapter) {
+        this.chapter = chapter;
+    }
+
+    private String parentDataTypeName = "";
+
+    @XmlElement(name = "parent-name")
+    public String getParentDataTypeName() {
+        return parentDataTypeName;
+    }
+
+    public void setParentDataTypeName(String parentDataTypeName) {
+        this.parentDataTypeName = parentDataTypeName.trim();
+    }
+
+    private String table = "";
+
+    @XmlElement(name = "table")
+    public String getTable() {
+        return table;
+    }
+
     public void setTable(String table) {
         try {
             this.table = Integer.valueOf(table).toString();
-        } catch (Exception e) {
+        } catch (Exception ex) {
             this.table = table.trim();
         }
-    }   
+    }
+
 }

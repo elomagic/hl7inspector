@@ -14,52 +14,68 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.profiles.panels;
 
 import de.elomagic.hl7inspector.gui.PanelDialog;
-import de.elomagic.hl7inspector.gui.profiles.*;
 import de.elomagic.hl7inspector.gui.profiles.model.DataTypeModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.DataTypeItem;
-import de.elomagic.hl7inspector.profile.DataTypeItemMap;
 import de.elomagic.hl7inspector.profile.Profile;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author rambow
  */
 public class DataTypePanel extends ProfileTablePanel {
-    
+
+    private static final long serialVersionUID = -1867620600189483742L;
+
     /** Creates a new instance of DataTypePane */
-    public DataTypePanel(PanelDialog d) { super(d); }
-    
+    public DataTypePanel(PanelDialog d) {
+        super(d);
+    }
+
+    @Override
     protected void init() {
         model = new DataTypeModel();
-        
-        super.init();              
-    }  
-    
-    public void write(Profile profile) {
-        DataTypeModel model = (DataTypeModel)getModel();
-        
-        DataTypeItemMap list = new DataTypeItemMap();
-        
-        for (int i=0; i<model.getRowCount(); i++) {
-            DataTypeItem item = model.getDataTypeItem(i);
-            list.addDataType(item);            
-        }
-                        
-        profile.setDataTypeList(list);                        
+
+        super.init();
     }
-    
+
+    @Override
+    public void write(Profile profile) {
+        DataTypeModel m = (DataTypeModel) getModel();
+
+        List<DataTypeItem> list = new ArrayList<DataTypeItem>();
+
+        for (int i = 0; i < m.getRowCount(); i++) {
+            DataTypeItem item = m.getDataTypeItem(i);
+            list.add(item);
+        }
+
+        profile.setDataTypeList(list);
+    }
+
+    @Override
     public void read(Profile profile) {
-        ((DataTypeModel)model).setModel(profile.getDataTypeList());      
-    }               
-    
-    public String getTitle() { return "Data Types"; }
-    
-    public javax.swing.Icon getIcon() {return ResourceLoader.loadImageIcon("x-profile-data-editor.png", ResourceLoader.LARGE_IMAGE); }
-    
-    public String getDescription() { return ""; }
+        ((DataTypeModel) model).setModel(profile.getDataTypeList());
+    }
+
+    @Override
+    public String getTitle() {
+        return "Data Types";
+    }
+
+    @Override
+    public javax.swing.Icon getIcon() {
+        return ResourceLoader.loadImageIcon("x-profile-data-editor.png", ResourceLoader.LARGE_IMAGE);
+    }
+
+    @Override
+    public String getDescription() {
+        return "";
+    }
+
 }

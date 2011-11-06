@@ -73,7 +73,7 @@ public class NewProfileAction extends AbstractAction {
 
                     FileOutputStream fout = new FileOutputStream(file);
                     try {
-                        ProfileIO.saveToStream(new Profile(), fout);
+                        ProfileIO.save(fout, new Profile());
                     } finally {
                         fout.close();
                     }

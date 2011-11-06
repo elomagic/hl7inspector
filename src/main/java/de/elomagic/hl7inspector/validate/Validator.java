@@ -37,6 +37,7 @@ public class Validator {
     }
 
     private Profile profile;
+
     public ValidateStatus validate(Message message) throws Exception {
         List<ValidateStatus> statusList = validateObject(message);
 
@@ -66,7 +67,7 @@ public class Validator {
                 statusList.addAll(validateObject(obj.get(i)));
             }
         } else if (obj instanceof Segment) {
-            SegmentItem si = profile.getSegmentList().getSegment(segName);
+            SegmentItem si = profile.getSegment(segName);
             if (si == null) {
                 statusList.add(new ValidateStatus(profile.getValidateMapper().getMapDefNotFound(), getObjectName(obj) + ": Unknown segment."));
             }
@@ -135,7 +136,7 @@ public class Validator {
                 fieldSeq = obj.getIndex();
             }
 
-            de = profile.getDataElementList().getDataElement(segName, fieldSeq);
+            de = profile.getDataElement(segName, fieldSeq);
         }
         return de;
     }
@@ -179,14 +180,12 @@ public class Validator {
             try {
                 Hl7Object child = obj.get(i);
 
-                DataTypeItem dt = profile.getDataTypeList().getDataType(dataType, i + 1);
+                DataTypeItem dt = profile.getDataType(dataType, i + 1);
                 if (dt == null) {
                     errorList.add(new ValidateStatus(profile.getValidateMapper().getMapDefNotFound(), getObjectName(child) + ": Invalid data type object."));
                     break;
-                    //} else {
-
                 }
-            } catch (Exception e) {
+            } catch (Exception ex) {
                 //errorList.add(e.getMessage());                
             }
         }
@@ -204,6 +203,7 @@ public class Validator {
 
     private static String ILLEGAL_DATA_TYPE_FORMAT_TEXT = "Illegal data type format";
     // Simple data type = DT, DTM, FT, GTS, ID, IS, NM, SI ST, TM, TX    
+
     private ValidateStatus validateDataTypeDT(Hl7Object obj) {
         ValidateStatus status = null;
 

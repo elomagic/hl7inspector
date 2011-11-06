@@ -68,7 +68,7 @@ public class AddProfileAction extends AbstractAction {
             try {
                 FileInputStream fin = new FileInputStream(file);
                 try {
-                    Profile p = ProfileIO.loadFromStream(fin);
+                    Profile p = ProfileIO.load(fin);
                     file.setDescription(p.getDescription());
 
                     VectorListModel<ProfileFile> model = ((VectorListModel<ProfileFile>) list.getModel());
