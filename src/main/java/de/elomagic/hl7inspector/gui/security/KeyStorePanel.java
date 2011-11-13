@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.security;
 
 import de.elomagic.hl7inspector.gui.AbstractPanel;
@@ -26,19 +25,28 @@ import java.security.KeyStore;
  * @author rambow
  */
 public abstract class KeyStorePanel extends AbstractPanel {
-    
+
+    private static final long serialVersionUID = 1L;
+
     /** Creates a new instance of ProfilePanel */
     public KeyStorePanel(PanelDialog d) {
         super(d);
-        
+
         init();
     }
-    
-    public void write() { write(((KeyStoreDialog)getDialog()).getKeyStore()); }
-    
-    public void read() { read(((KeyStoreDialog)getDialog()).getKeyStore()); }    
-    
+
+    @Override
+    public void write() {
+        write(((KeyStoreDialog) getDialog()).getKeyStore());
+    }
+
+    @Override
+    public void read() {
+        read(((KeyStoreDialog) getDialog()).getKeyStore());
+    }
+
     public abstract void read(KeyStore keyStore);
 
-    public abstract void write(KeyStore keyStore);    
+    public abstract void write(KeyStore keyStore);
+
 }
