@@ -41,6 +41,7 @@ public class Message extends Hl7Object {
     }
 
     private String source = "";
+
     public void setSource(String messageSource) {
         source = messageSource;
     }
@@ -51,14 +52,15 @@ public class Message extends Hl7Object {
 
     public void setFile(File f) {
         try {
-            source = (f == null) ? "" : f.toURI().toString();
-        } catch (Exception e) {
+            source = f == null ? "" : f.toURI().toString();
+        } catch (Exception ex) {
             source = "";
-            Logger.getLogger(getClass()).error(e.getMessage(), e);
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
     }
 
     private TreeNode parent;
+
     @Override
     public TreeNode getParent() {
         return parent;
@@ -69,21 +71,19 @@ public class Message extends Hl7Object {
     }
 
     public int indexOfName(String segmentName) {
-        int r = -1;
-
-        for (int i = 0; (i < size()) && (r == -1); i++) {
+        for (int i = 0; i < size(); i++) {
             if (get(i).size() != 0) {
                 if (segmentName.equals(get(i).get(0).toString())) {
-                    r = i;
+                    return i;
                 }
             }
         }
 
-        return r;
+        return -1;
     }
 
     public Segment getSegment(String segName) {
-        return (indexOfName(segName) == -1) ? null : (Segment) get(indexOfName(segName));
+        return indexOfName(segName) == -1 ? null : (Segment) get(indexOfName(segName));
     }
 
 }
