@@ -53,7 +53,7 @@ public class ProfileCellRenderer extends DefaultListCellRenderer implements List
             setToolTipText("");
         }
 
-        setText((file.getDescription().isEmpty()) ? file.toString() : file.getDescription());
+        setText(file.getDescription().isEmpty() ? file.toString() : file.getDescription());
         setBackground(isSelected ? SystemColor.textHighlight : SystemColor.text);
         setForeground(isSelected ? SystemColor.textHighlightText : SystemColor.textText);
 
