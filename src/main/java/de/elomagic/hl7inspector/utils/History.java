@@ -39,12 +39,10 @@ public class History {
     }
 
     private String HISTORY = "runtime-history.";
-
     private String path = "";
-
     private int buffer = 5;
+    private List<String> v = new ArrayList<String>();
 
-    private List<Object> v = new ArrayList<Object>();
     public void clear() {
         v.clear();
     }
@@ -53,7 +51,7 @@ public class History {
         return v.size();
     }
 
-    public void set(Object o) {
+    public void set(String o) {
         if (v.contains(o)) {
             v.remove(o);
         }
@@ -67,22 +65,12 @@ public class History {
         write(System.getProperties());
     }
 
-    public List getVector() {
+    public List<String> getList() {
         return v;
     }
 
     public Iterator getIterator() {
         return v.iterator();
-    }
-
-    public List<String> getStrings() {
-        List<String> r = new ArrayList<String>();
-
-        for (int i = 0; i < v.size(); i++) {
-            r.add(v.get(i).toString());
-        }
-
-        return r;
     }
 
     private void clearProperties(Properties prop) {
@@ -111,11 +99,10 @@ public class History {
         }
 
         for (int i = 0; i < v.size(); i++) {
-            Object o = v.get(i);
-
             String key = p + Integer.toString(i + 1);
+            String value = v.get(i);
 
-            prop.setProperty(key, o.toString());
+            prop.setProperty(key, value);
         }
     }
 
