@@ -36,6 +36,7 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     private Delimiters delimiters = new Delimiters();
+
     public void parse(String text, Delimiters del) {
         this.delimiters = del;
 
@@ -103,7 +104,7 @@ public abstract class Hl7Object implements TreeNode {
             if (subText.length() != 0) {
                 add(subText.toString());
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
             System.err.println("Error parsing message!");
         }
     }
@@ -156,6 +157,7 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     private String validationText = "";
+
     public String getValidationText() {
         return validationText;
     }
@@ -165,6 +167,7 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     private String description = "";
+
     public String getDescription() {
         return description;
     }
@@ -174,6 +177,7 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     private String nodeText = null;
+
     public String getText() {
         return nodeText;
     }
@@ -183,6 +187,7 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     private ValidateStatus val = null;
+
     public ValidateStatus getValidateStatus() {
         return val;
     }
@@ -192,6 +197,7 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     private String htmlText = null;
+
     public String toHtmlEscapedString() {
         if (htmlText == null) {
             htmlText = StringEscapeUtils.escapeHtml(toString());
@@ -333,14 +339,12 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     private List<Hl7Object> objList = new ArrayList<Hl7Object>();
-
     private Object root = null;
-
     private Hl7Object parent = null;
-
     public final static String COMPRESSED_KEY = Hl7Object.class.getName().concat(".compressed");
     // TODO Muste be implemented
     // Interface TreeNode
+
     /** Returns the children of the receiver as an Enumeration. */
     @Override
     public Enumeration<TreeNode> children() {
@@ -368,7 +372,7 @@ public abstract class Hl7Object implements TreeNode {
     public int getChildCount() {
         boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
 
-        int result = (compressed) ? sizeCompressed() : size();
+        int result = compressed ? sizeCompressed() : size();
 
         if ((this instanceof Segment) && (result > 0)) {
             result--;
@@ -408,19 +412,13 @@ public abstract class Hl7Object implements TreeNode {
      */
     @Override
     public int getIndex(TreeNode node) {
-        int result = -1;
-        int c = getChildCount();
-        int i = 0;
-
-        while ((i < c) && (result == -1)) {
+        for (int i = 0; i < getChildCount(); i++) {
             if (getChildAt(i).equals(node)) {
-                result = i;
+                return i;
             }
-
-            i++;
         }
 
-        return result;
+        return -1;
     }
 
     /**
