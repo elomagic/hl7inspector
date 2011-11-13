@@ -43,10 +43,6 @@ public class MessageParserStreamReader {
         return readNextMessage();
     }
 
-    public boolean available() {
-        return false;
-    }
-
     private long bytesReads = 0;
 
     public long getBytesRead() {
@@ -151,11 +147,6 @@ public class MessageParserStreamReader {
                 }
 
                 String line = bufferedLine.length() != 0 ? bufferedLine : lineReader.readLine();
-
-                if (line != null) {
-                    bytesReads = bytesReads + line.length() + 1;
-                }
-
                 if (cc != null) {
                     line = cc.charValue() + line;
                     cc = null;
@@ -165,7 +156,6 @@ public class MessageParserStreamReader {
                 boolean done = false;
 
                 while ((line != null) && !done) {
-                    bytesReads = bytesReads + line.length() + 1;
                     int x = line.indexOf("MSH");
                     if (x != -1) { // New message begins
                         Delimiters del = new Delimiters(line.substring(x + 3));
@@ -173,6 +163,7 @@ public class MessageParserStreamReader {
                         List<String> msgText = new ArrayList<String>();
 
                         while ((line != null) && !done) {
+                            bytesReads += line.length() + 1;
                             if (!line.isEmpty()) {
                                 String seg = (line.length() > x + 3) ? line.substring(x) : "";
 
@@ -199,6 +190,7 @@ public class MessageParserStreamReader {
                         result = new Message();
                         result.parse(m.toString(), del);
                     } else {
+                        bytesReads += line.length() + 1;
                         line = lineReader.readLine();
                     }
                 }
@@ -213,9 +205,9 @@ public class MessageParserStreamReader {
     }
 
     protected void fireCharReceived(String s) {
-        for (int q = 0; q < s.length(); q++) {
+        for (char c : s.toCharArray()) {
             for (IOCharListener l : listener) {
-                l.charReceived(this, s.charAt(q));
+                l.charReceived(this, c);
             }
         }
     }
