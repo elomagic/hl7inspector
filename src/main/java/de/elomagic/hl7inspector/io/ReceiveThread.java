@@ -25,6 +25,7 @@ import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import de.elomagic.hl7inspector.utils.StringVector;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,6 +54,8 @@ public class ReceiveThread extends Thread implements IOCharListener {
         options.setFrame(f);
     }
 
+    private ImportOptionBean options = new ImportOptionBean();
+
     public ImportOptionBean getOptions() {
         return options;
     }
@@ -60,6 +63,8 @@ public class ReceiveThread extends Thread implements IOCharListener {
     public void setOptions(ImportOptionBean o) {
         options = o;
     }
+
+    private int port = 2100;
 
     public int getPort() {
         return port;
@@ -69,6 +74,8 @@ public class ReceiveThread extends Thread implements IOCharListener {
         port = p;
     }
 
+    private boolean reuse = true;
+
     public boolean isReuseSocket() {
         return reuse;
     }
@@ -77,6 +84,8 @@ public class ReceiveThread extends Thread implements IOCharListener {
         reuse = value;
     }
 
+    private boolean authentication = false;
+
     public boolean isAuthentication() {
         return authentication;
     }
@@ -84,6 +93,8 @@ public class ReceiveThread extends Thread implements IOCharListener {
     public void setAuthentication(boolean authentication) {
         this.authentication = authentication;
     }
+
+    private boolean encryption = false;
 
     public boolean isEncryption() {
         return encryption;
@@ -132,14 +143,13 @@ public class ReceiveThread extends Thread implements IOCharListener {
                                 fireStatusEvent("Connecting from " + socket.getInetAddress().getHostName() + "(" + socket.getInetAddress().getHostAddress() + ").");
                             }
 
-                            //writer = new OutputStreamWriter(socket.getOutputStream(), options.getEncoding());
-                            reader = new InputStreamReader(socket.getInputStream(), options.getEncoding());
+                            Reader reader = new InputStreamReader(socket.getInputStream(), options.getEncoding());
 
                             MessageParserStreamReader messageReader = new MessageParserStreamReader(reader, StreamFormat.FRAMED, options.getFrame());
                             try {
                                 messageReader.addListener(this);
 
-                                while ((!terminate) && (reuse)) {
+                                while (!terminate && reuse) {
                                     fireStatusEvent("Waiting for data...");
                                     Message message = messageReader.readMessage();
                                     handleMessage(message);
@@ -183,8 +193,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
 
             if (!options.isUseRegExpr()) {
                 boolean found = m.contains(phrase);
-                ignore = ((!found && !options.isNegReg()
-                        || found && options.isNegReg()));
+                ignore = ((!found && !options.isNegReg()) || (found && options.isNegReg()));
             }
         }
 
@@ -248,9 +257,9 @@ public class ReceiveThread extends Thread implements IOCharListener {
             } finally {
                 out.flush();
             }
-        } catch (Exception e) {
-            fireStatusEvent(e.getMessage());
-            Logger.getLogger(getClass()).error(e.getMessage(), e);
+        } catch (Exception ex) {
+            fireStatusEvent(ex.getMessage());
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
     }
 
@@ -283,27 +292,18 @@ public class ReceiveThread extends Thread implements IOCharListener {
     }
 
     protected void fireCharSendEvent(char c) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).charSend(this, c);
+        for (IOThreadListener l : listener) {
+            l.charSend(this, c);
         }
     }
 
     protected void fireStatusEvent(String text) {
-        for (int i = 0; i < listener.size(); i++) {
-            listener.get(i).status(this, text);
+        for (IOThreadListener l : listener) {
+            l.status(this, text);
         }
     }
 
-    // private
-    private MessageImportThread importThread = null;
-    private int port = 2100;
-    private boolean reuse = true;
-    private ImportOptionBean options = new ImportOptionBean();
-    private boolean authentication = false;
-    private boolean encryption = false;
     private Socket socket;
-    //private OutputStreamWriter writer;
-    private InputStreamReader reader;
     private boolean terminate = false;
     private List<IOThreadListener> listener = new ArrayList<IOThreadListener>();
     // Interface IOCharListener
