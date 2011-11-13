@@ -47,9 +47,13 @@ public class MessageParserStreamReader {
         return false;
     }
 
+    private long bytesReads = 0;
+
     public long getBytesRead() {
         return bytesReads;
     }
+
+    private List<IOCharListener> listener = new ArrayList<IOCharListener>();
 
     public void addListener(IOCharListener value) {
         listener.add(value);
@@ -63,9 +67,7 @@ public class MessageParserStreamReader {
     private StreamFormat format;
     private Frame frame;
     private LineNumberReader lineReader = null;
-    private long bytesReads = 0;
     private String bufferedLine = "";
-    private List<IOCharListener> listener = new ArrayList<IOCharListener>();
 
     private Message readNextMessage() throws IOException {
         Message result = null;
@@ -162,7 +164,7 @@ public class MessageParserStreamReader {
 
                 boolean done = false;
 
-                while ((line != null) && (!done)) {
+                while ((line != null) && !done) {
                     bytesReads = bytesReads + line.length() + 1;
                     int x = line.indexOf("MSH");
                     if (x != -1) { // New message begins

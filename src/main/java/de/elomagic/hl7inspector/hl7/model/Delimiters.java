@@ -24,6 +24,10 @@ public class Delimiters {
 
     /** Creates a new instance of Delimiters */
     public Delimiters(String value) {
+        if (value.length() != 5) {
+            throw new IllegalArgumentException("Delimiter string must be 5 character long");
+        }
+
         fieldDelimiter = value.charAt(0);
         componentDelimiter = value.charAt(1);
         repetitionDelimiter = value.charAt(2);
@@ -35,28 +39,19 @@ public class Delimiters {
     }
 
     public final static char DEFAULT_REPETITION = '~';
-
     public final static char DEFAULT_FIELD = '|';
-
     public final static char DEFAULT_COMPONENT = '^';
-
     public final static char DEFAULT_ESCAPE_CHAR = '\\';
-
     public final static char DEFAULT_SUPCOMPONENT = '&';
-
     public char repetitionDelimiter = '~';
-
     public char fieldDelimiter = '|';
-
     public char componentDelimiter = '^';
-
     public char escapeCharacter = '\\';
-
     public char subcomponentDelimiter = '&';
+
     @Override
     public String toString() {
         return "" + fieldDelimiter + componentDelimiter + repetitionDelimiter + escapeCharacter + subcomponentDelimiter;
     }
-
 
 }

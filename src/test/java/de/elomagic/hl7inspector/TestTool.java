@@ -31,4 +31,13 @@ public class TestTool {
         return IOUtils.toString(in);
     }
 
+    public static String readMessageResource(String resourceName) throws IOException {
+        String s = readResource(resourceName);
+
+        s = s.replace("\r\n", "\r");
+        s = s.replace("\n", "\r");
+
+        return s;
+    }
+
 }
