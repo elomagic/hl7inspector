@@ -35,6 +35,7 @@ public class Hl7Decoder {
     };
 
     private Delimiters d;
+
     /** Returns a html formated decoded hl7 string without html tag frame */
     public String decodeString(String encodedValue) {
         setStatus(Status.OK, "");
@@ -56,9 +57,9 @@ public class Hl7Decoder {
                     String seq = encodedValue.substring(i, li);
                     i = li;
 
-                    if (seq.length() != 0) {
+                    if (!seq.isEmpty()) {
                         char control = seq.charAt(0);
-                        String value = (seq.length() == 0) ? "" : seq.substring(1);
+                        String value = seq.substring(1);
 
                         switch (control) {
                             case 'H': {
@@ -140,7 +141,6 @@ public class Hl7Decoder {
 
     private Status status = Status.OK;
 
-    private String statusText = "";
     private void setStatus(Status s, String text) {
         status = s;
         statusText = text;
@@ -149,6 +149,8 @@ public class Hl7Decoder {
     public Status getStatus() {
         return status;
     }
+
+    private String statusText = "";
 
     public String getStatusText() {
         return statusText;
