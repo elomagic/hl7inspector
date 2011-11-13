@@ -18,11 +18,9 @@ package de.elomagic.hl7inspector.gui.security;
 
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.security.KeyStoreUtil;
 import java.awt.Component;
 import java.awt.SystemColor;
 import java.io.File;
-import java.security.KeyStore;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -32,30 +30,35 @@ import javax.swing.ListCellRenderer;
  * @author rambow
  */
 public class KeyStoreCellRenderer extends DefaultListCellRenderer implements ListCellRenderer {
-    
+
+    private static final long serialVersionUID = -2700735747239354278L;
+
     /** Creates a new instance of ProfileCellRenderer */
-    public KeyStoreCellRenderer() { }
-    
+    public KeyStoreCellRenderer() {
+    }
+
+    @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        File file = (File)value;
-        
+        File file = (File) value;
+
         setToolTipText("File: " + file.toString());
         if (!file.exists()) {
             setIcon(ResourceLoader.loadImageIcon("warning.png"));
             setToolTipText("Profile " + file.toString() + " not found!");
-        } else if(file.toString().equals(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PRIVATE_KEYSTORE, ""))) {
+        } else if (file.toString().equals(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PRIVATE_KEYSTORE, ""))) {
             setIcon(ResourceLoader.loadImageIcon("ok.png"));
             setToolTipText("");
         } else {
             setIcon(ResourceLoader.loadImageIcon("clear.png"));
             setToolTipText("");
         }
-        
+
         setText(file.getAbsolutePath());
-        
+
         setBackground(isSelected ? SystemColor.textHighlight : SystemColor.text);
         setForeground(isSelected ? SystemColor.textHighlightText : SystemColor.textText);
-        
+
         return this;
     }
+
 }
