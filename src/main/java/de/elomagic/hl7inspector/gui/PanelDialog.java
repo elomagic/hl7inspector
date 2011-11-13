@@ -30,6 +30,8 @@ import java.util.List;
  */
 public class PanelDialog extends BaseDialog {
 
+    private static final long serialVersionUID = 6158738386923154208L;
+
     /** Creates a new instance of PanelDialog */
     public PanelDialog(Frame owner, String title, boolean modal) {
         super(owner, title, modal);
@@ -81,14 +83,14 @@ public class PanelDialog extends BaseDialog {
     }
 
     protected void read() {
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).read();
+        for (AbstractPanel p : panelList) {
+            p.read();
         }
     }
 
     protected void write() {
-        for (int i = 0; i < panelList.size(); i++) {
-            panelList.get(i).write();
+        for (AbstractPanel p : panelList) {
+            p.write();
         }
     }
 
@@ -98,8 +100,8 @@ public class PanelDialog extends BaseDialog {
         JButtonBar buttonBar = new JButtonBar();
         buttonBar.setOrientation(JButtonBar.VERTICAL);
 
-        for (int i = 0; i < panelList.size(); i++) {
-            buttonBar.add(panelList.get(i).getBarButton());
+        for (AbstractPanel p : panelList) {
+            buttonBar.add(p.getBarButton());
         }
 
         buttonBar.setPreferredSize(new Dimension(80, 10));
@@ -123,6 +125,5 @@ public class PanelDialog extends BaseDialog {
     }
 
     private List<AbstractPanel> panelList = new ArrayList<AbstractPanel>();
-
     protected AbstractPanel selectedPanel = null;
 }
