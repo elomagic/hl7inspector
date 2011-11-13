@@ -24,8 +24,8 @@ public class Delimiters {
 
     /** Creates a new instance of Delimiters */
     public Delimiters(String value) {
-        if (value.length() != 5) {
-            throw new IllegalArgumentException("Delimiter string must be 5 character long");
+        if (value.length() > 4) {
+            throw new IllegalArgumentException("Delimiter string must at least 5 character long");
         }
 
         fieldDelimiter = value.charAt(0);
