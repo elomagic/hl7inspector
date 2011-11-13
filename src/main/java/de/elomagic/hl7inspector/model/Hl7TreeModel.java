@@ -93,6 +93,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     private int _locked = 0;
 //    private boolean _changed = false;
     // Interface TreeModel
+
     @Override
     public boolean isLeaf(Object node) {
         boolean result;
@@ -202,21 +203,20 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
         return "Parsed hl7 messages";
     }
 
-    /** @deprecated */
-    public void fireTreeNodesRemoved(TreePath path, int _index, Hl7Object o) {
-        int index[] = new int[1];
-        Object nodes[] = new Object[1];
-
-        index[0] = _index;
-        nodes[0] = o;
-
-        TreeModelEvent e = new TreeModelEvent(this, path.getParentPath(), index, nodes);
-
-        for (int i = 0; i < listenerList.size(); i++) {
-            ((TreeModelListener) listenerList.get(i)).treeNodesRemoved(e);
-        }
-    }
-
+//    /** @deprecated */
+//    public void fireTreeNodesRemoved(TreePath path, int _index, Hl7Object o) {
+//        int index[] = new int[1];
+//        Object nodes[] = new Object[1];
+//
+//        index[0] = _index;
+//        nodes[0] = o;
+//
+//        TreeModelEvent e = new TreeModelEvent(this, path.getParentPath(), index, nodes);
+//
+//        for (TreeModelListener l : listenerList) {
+//            l.treeNodesRemoved(e);
+//        }
+//    }
     public void fireTreeNodesInsert(TreePath parentPath, Object[] newNodes) {
         int index[] = new int[newNodes.length];
 
@@ -226,19 +226,17 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
 
         TreeModelEvent e = new TreeModelEvent(this, parentPath, index, newNodes);
 
-        for (int i = 0; i < listenerList.size(); i++) {
-            ((TreeModelListener) listenerList.get(i)).treeNodesInserted(e);
+        for (TreeModelListener l : listenerList) {
+            l.treeNodesInserted(e);
         }
     }
 
     public void fireTreeStructureChanged(TreePath path) {
         if (_locked == 0) {
-            int len = listenerList.size();
-
             TreeModelEvent e = new TreeModelEvent(this, path);
 
-            for (int i = 0; i < len; i++) {
-                ((TreeModelListener) listenerList.get(i)).treeStructureChanged(e);
+            for (TreeModelListener l : listenerList) {
+                l.treeStructureChanged(e);
             }
         }
     }
@@ -249,19 +247,17 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
 
             TreeModelEvent e = new TreeModelEvent(this, new Object[]{root});
 
-            for (int i = 0; i < len; i++) {
-                ((TreeModelListener) listenerList.get(i)).treeStructureChanged(e);
+            for (TreeModelListener l : listenerList) {
+                l.treeStructureChanged(e);
             }
         }
     }
 
     private List<Message> objList = new ArrayList<Message>();
-
     private List<TreeModelListener> listenerList = new ArrayList<TreeModelListener>();
-
     private boolean compressed;// = true;
-
     private boolean viewDescription = false;
+
     public boolean isViewDescription() {
         return viewDescription;
     }
