@@ -34,6 +34,8 @@ import javax.swing.tree.TreePath;
  */
 public class Hl7Tree extends JTree implements MouseMotionListener {
 
+    private static final long serialVersionUID = -7337977619165561183L;
+
     /** Creates a new instance of Hl7Tree */
     public Hl7Tree() {
         super();
@@ -66,7 +68,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
 
         // start search from the next/previous element froom the
         // selected element
-        int increment = (forward) ? 1 : -1;
+        int increment = forward ? 1 : -1;
         int row = startingRow;
         do {
             TreePath path = getPathForRow(row);
@@ -88,9 +90,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
         TreePath[] paths = getSelectionPaths();
 
         if (paths != null) {
-            for (int i = 0; i < paths.length; i++) {
-                TreePath path = paths[i];
-
+            for (TreePath path : paths) {
                 Hl7Object node = (Hl7Object) path.getLastPathComponent();
 
                 while (!(node instanceof Message)) {
@@ -99,7 +99,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
 
                 Message message = (Message) node;
 
-                if (messages.indexOf(message) == -1) {
+                if (!messages.contains(message)) {
                     messages.add(message);
                 }
             }
@@ -118,10 +118,10 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
     @Override
     public void mouseMoved(MouseEvent evt) {
         /*        TreePath path = getPathForLocation(evt.getX(), evt.getY());
-
+        
         if ((path != null) && (path.getLastPathComponent() instanceof Hl7Object)) {
         Hl7Object obj = (Hl7Object)path.getLastPathComponent();
-
+        
         String tt = obj.getValidationText();
         setToolTipText(tt);
         }*/
@@ -143,11 +143,11 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
 
             /*
             // Get profile Information
-
+            
             if (obj.getDescription().length() != 0) {
             tt = obj.getDescription();
             }
-
+            
             if ((obj.getDescription().length() != 0) && (obj.getValidationText().length() != 0)) {
             tt = tt.concat("\n---\n");
             }*/
@@ -158,7 +158,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
             //setToolTipText(tt);
         }
 
-        return (tt.length() == 0) ? null : tt;
+        return tt.isEmpty() ? null : tt;
     }
 
 }
