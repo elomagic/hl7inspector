@@ -14,7 +14,6 @@
  * limitations under the License.
  *
  */
-
 package de.elomagic.hl7inspector.gui.tooltip;
 
 import javax.swing.JToolTip;
@@ -24,10 +23,12 @@ import javax.swing.JToolTip;
  * @author rambow
  */
 public class ExtendedTooltip extends JToolTip {
-    
+
+    private static final long serialVersionUID = -2429414675049406489L;
+
     /** Creates a new instance of ExtendedTooltip */
     public ExtendedTooltip() {
         setUI(new ExtendedToolTipUI());
     }
-    
+
 }
