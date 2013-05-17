@@ -8,6 +8,16 @@
             </goals>
             <properties>
                 <exec.classpathScope>runtime</exec.classpathScope>
+<?xml version="1.0" encoding="UTF-8"?>
+<actions>
+        <action>
+            <actionName>run</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
                 <exec.args>-classpath %classpath de.elomagic.hl7inspector.Hl7Inspector</exec.args>
                 <exec.executable>java</exec.executable>
             </properties>
@@ -80,6 +90,18 @@
             <goals>
                 <goal>assembly:single</goal>
             </goals>
+        </action>
+        <action>
+            <actionName>run</actionName>
+            <goals>
+                <goal>process-classes</goal>
+                <goal>org.codehaus.mojo:exec-maven-plugin:1.1.1:exec</goal>
+            </goals>
+            <properties>
+                <exec.classpathScope>runtime</exec.classpathScope>
+                <exec.args>-classpath %classpath de.elomagic.hl7inspector.Hl7Inspector</exec.args>
+                <exec.executable>java</exec.executable>
+            </properties>
         </action>
         <action>
             <actionName>run</actionName>

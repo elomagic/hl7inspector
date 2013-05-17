@@ -16,6 +16,18 @@
  */
 package de.elomagic.hl7inspector.gui;
 
+import java.awt.Component;
+import java.awt.SystemColor;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.swing.JLabel;
+import javax.swing.JTree;
+import javax.swing.tree.TreeModel;
+
+import org.apache.log4j.Logger;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.hl7.model.*;
 import de.elomagic.hl7inspector.images.ResourceLoader;
@@ -28,22 +40,12 @@ import de.elomagic.hl7inspector.profile.ProfileIO;
 import de.elomagic.hl7inspector.profile.SegmentItem;
 import de.elomagic.hl7inspector.utils.StringEscapeUtils;
 import de.elomagic.hl7inspector.utils.StringVector;
-import java.awt.Component;
-import java.awt.SystemColor;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.swing.JLabel;
-import javax.swing.JTree;
-import javax.swing.tree.TreeModel;
-import org.apache.log4j.Logger;
 
 /**
  *
  * @author rambow
  */
-public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ implements javax.swing.tree.TreeCellRenderer {
-
+public class TreeCellRenderer extends JLabel implements javax.swing.tree.TreeCellRenderer {
     private static final long serialVersionUID = 7002466630618664033L;
 
     /** Creates a new instance of TreeCellRenderer */
@@ -65,32 +67,32 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 
         boolean highlight = FindBar.getInstance().isHighlight() && FindBar.getInstance().isVisible();
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
 
-        TreeModel model = (TreeModel) tree.getModel();
+        TreeModel model = (TreeModel)tree.getModel();
         int index = -1;
 
         String nodeText = "";
 
-        if (model instanceof Hl7TreeModel) {
-            if (value instanceof Hl7Object) {
-                Hl7Object hl7Object = (Hl7Object) value;
+        if(model instanceof Hl7TreeModel) {
+            if(value instanceof Hl7Object) {
+                Hl7Object hl7Object = (Hl7Object)value;
 
                 Hl7Object parent = hl7Object.getHl7Parent();
 
-                if (!(value instanceof de.elomagic.hl7inspector.hl7.model.Segment)) {
-                    if (value instanceof de.elomagic.hl7inspector.hl7.model.Message) {
+                if(!(value instanceof Segment)) {
+                    if(value instanceof Message) {
                         index = model.getIndexOfChild(hl7Object.getRoot(), value) + 1;
-                    } else if ((value instanceof de.elomagic.hl7inspector.hl7.model.Field)
-                            && (parent.size() < 2)) {
+                    } else if((value instanceof Field)
+                              && (parent.size() < 2)) {
                         index = parent.getIndex();
-                    } else if (value instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) {
+                    } else if(value instanceof RepetitionField) {
                         index = hl7Object.getIndex();
                     } else {
                         index = hl7Object.getIndex() + 1;
                     }
 
-                    if (!sel) {
+                    if(!sel) {
                         sb.append("<font color=\"#");
                         sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB() & 0xffffff));
                         sb.append("\">");
@@ -100,21 +102,21 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     sb.append(index);
                     sb.append("&gt;</B>");
 
-                    if (!sel) {
+                    if(!sel) {
                         sb.append("</font>");
                     }
                 }
 
-                if ((value instanceof de.elomagic.hl7inspector.hl7.model.Message) && (prop.getTreeViewMode() == 1)) {
-                    Message m = (Message) value;
+                if((value instanceof Message) && (prop.getTreeViewMode() == 1)) {
+                    Message m = (Message)value;
 
                     // Get date/time
                     String d = m.get(0).get(7).toHtmlEscapedString();
                     try {
-                        if (d.length() != 0) {
+                        if(d.length() != 0) {
                             String pt = "yyyyMMddHHmmss";
 
-                            if (d.length() > pt.length()) {
+                            if(d.length() > pt.length()) {
                                 d = d.substring(0, pt.length());
                             }
 
@@ -124,7 +126,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                             d = DateFormat.getDateTimeInstance().format(dt);
                             sb.append(d);
                         }
-                    } catch (Exception e) {
+                    } catch(Exception e) {
                         sb.append(d);
                         Logger.getLogger(getClass()).warn(e.getMessage(), e);
                     }
@@ -143,14 +145,14 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 
                     boolean truncate = ((prop.getTreeNodeLength() != 0) && (prop.getTreeNodeLength() < nodeText.length()));
 
-                    if (truncate) {
-                        if (nodeText.length() > prop.getTreeNodeLength()) {
+                    if(truncate) {
+                        if(nodeText.length() > prop.getTreeNodeLength()) {
                             nodeText = nodeText.substring(0, prop.getTreeNodeLength());
                         }
                         sb.append(nodeText);
 //                        sb.delete(prop.getTreeNodeLength(), sb.length());
 
-                        if (!sel) {
+                        if(!sel) {
                             sb.append("<font color=\"#");
                             sb.append(Integer.toHexString(SystemColor.magenta.getRGB() & 0xffffff));
                             sb.append("\">");
@@ -158,7 +160,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 
                         sb.append("<B>###</B></font>");
 
-                        if (!sel) {
+                        if(!sel) {
                             sb.append("</font>");
                         }
                     } else {
@@ -171,154 +173,154 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
         String v = sb.toString();
         String ov = v;
 
-        if (highlight) {
+        if(highlight) {
             String phrase = FindBar.getInstance().getEscapedPhrase();
 
-            if (phrase.length() != 0) {
+            if(phrase.length() != 0) {
                 boolean caseSensitive = FindBar.getInstance().isCaseSensitive();
 
-                if (!caseSensitive) {
+                if(!caseSensitive) {
                     v = v.toUpperCase();
                     phrase = phrase.toUpperCase();
                 }
 
                 int i = v.indexOf(phrase);
 
-                if (i != -1) {
-                    String nv = "";
+                if(i != -1) {
+                    StringBuilder nv = new StringBuilder();
                     int oi = 0;
 
-                    while (i != -1) {
+                    while(i != -1) {
                         String op = ov.substring(i, i + phrase.length());
 
-                        nv = nv.concat(ov.substring(oi, i));
-                        nv = nv.concat("<font color=\"#ff0000\"><b>");
-                        nv = nv.concat(op);
-                        nv = nv.concat("</b></font>");
+                        nv.append(ov.substring(oi, i));
+                        nv.append("<font color=\"#ff0000\"><b>");
+                        nv.append(op);
+                        nv.append("</b></font>");
                         i = i + phrase.length();
                         oi = i;
                         i = v.indexOf(phrase, oi);
                     }
 
-                    v = nv.concat(ov.substring(oi));
+                    v = nv.append(ov.substring(oi)).toString();
                 } else {
                     v = ov;
                 }
             }
         }
 
-        sb = new StringBuffer(v);
+        sb = new StringBuilder(v);
 
         setOpaque(sel);
 
 // Get node description
-        if (value instanceof Hl7Object) {
-            Hl7Object obj = (Hl7Object) value;
+        if(value instanceof Hl7Object) {
+            Hl7Object obj = (Hl7Object)value;
 //            setToolTipText(obj.getValidationText());
 
-            if (((Hl7TreeModel) model).isViewDescription()) {
+            if(((Hl7TreeModel)model).isViewDescription()) {
                 Profile profile = ProfileIO.getDefault();
 
                 String desc = obj.getText();
                 StringVector tt = new StringVector();
                 String segType = "";
 
-                if (desc == null) {
+                if(desc == null) {
                     desc = "";
                     // Get segment type
                     Hl7Object o = obj;
-                    while (!((o instanceof de.elomagic.hl7inspector.hl7.model.Segment) || (o instanceof de.elomagic.hl7inspector.hl7.model.Message))) {
+                    while(!((o instanceof Segment) || (o instanceof Message))) {
                         o = o.getHl7Parent();
                     }
-                    if (o != null) {
+                    if(o != null) {
                         segType = o.get(0).toString();
-                        if (segType.length() > 3) {
+                        if(segType.length() > 3) {
                             segType = segType.substring(0, 2);
                         }
                     }
 
                     o = obj;
 
-                    while (!(o.getHl7Parent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) && o.getHl7Parent() != null) {
+                    while(!(o.getHl7Parent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) && o.getHl7Parent() != null) {
                         o = o.getHl7Parent();
                     }
 
                     int fieldIndex = index;
-                    if ((o.getHl7Parent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField)) {
+                    if((o.getHl7Parent() instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField)) {
                         //    && (o.getHl7Parent().size() > 1))
                         fieldIndex = o.getHl7Parent().getIndex();
                     }
 
                     MessageDescriptor md = new MessageDescriptor(profile);
 
-                    if (value instanceof de.elomagic.hl7inspector.hl7.model.Segment) {
+                    if(value instanceof de.elomagic.hl7inspector.hl7.model.Segment) {
                         try {
                             SegmentItem segDef = profile.getSegment(segType);
 
-                            if (segDef != null) {
+                            if(segDef != null) {
                                 desc = segDef.getDescription();
                                 tt.add("Segment Name: ".concat(segDef.getDescription()));
-                                if (!segDef.getChapter().isEmpty()) {
+                                if(!segDef.getChapter().isEmpty()) {
                                     tt.add("Chapter: ".concat(segDef.getChapter()));
                                 }
                             }
-                        } catch (Exception ex) {
+                        } catch(Exception ex) {
                             Logger.getLogger(this.getClass()).error(ex.getMessage(), ex);
                         }
-                    } else if (value instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) {
+                    } else if(value instanceof de.elomagic.hl7inspector.hl7.model.RepetitionField) {
                         DataElement de = profile.getDataElement(segType, index);
-                        if (de != null) {
+                        if(de != null) {
                             desc = de.getName();
                             tt.add("Field Name: ".concat(de.getName()));
-                            if (!de.getChapter().isEmpty()) {
+                            if(!de.getChapter().isEmpty()) {
                                 tt.add("Chapter: ".concat(de.getChapter()));
                             }
-                            if (!de.getTable().isEmpty()) {
+                            if(!de.getTable().isEmpty()) {
                                 tt.add("Table: ".concat(de.getTable()));
                             }
                         }
-                    } else if (value instanceof de.elomagic.hl7inspector.hl7.model.Field) {
-                        DataElement de = md.getDataElement((Hl7Object) value);
+                    } else if(value instanceof de.elomagic.hl7inspector.hl7.model.Field) {
+                        DataElement de = md.getDataElement((Hl7Object)value);
 //                        DataElement de = profile.getDataElementList().getDataElement(segType, index);
-                        if (de != null) {
+                        if(de != null) {
                             desc = "[".concat(de.getDataType()).concat("] ").concat(de.getName());
                             tt.add("Field Name: ".concat(de.getName()));
-                            if (!de.getChapter().isEmpty()) {
+                            if(!de.getChapter().isEmpty()) {
                                 tt.add("Chapter: ".concat(de.getChapter()));
                             }
-                            if (!de.getTable().isEmpty()) {
+                            if(!de.getTable().isEmpty()) {
                                 tt.add("Table: ".concat(de.getTable()));
                             }
                         }
-                    } else if (value instanceof de.elomagic.hl7inspector.hl7.model.Component) {
+                    } else if(value instanceof de.elomagic.hl7inspector.hl7.model.Component) {
                         DataElement de = profile.getDataElement(segType, fieldIndex);
-                        if (de != null) {
+                        if(de != null) {
                             DataTypeItem dt = profile.getDataType(de.getDataType(), index);
-                            if (dt != null) {
+                            if(dt != null) {
                                 desc = "[".concat(dt.getDataType()).concat("] ").concat(dt.getDescription());
                                 tt.add("Component Type: ".concat(dt.getDescription()));
-                                if (!dt.getChapter().isEmpty()) {
+                                if(!dt.getChapter().isEmpty()) {
                                     tt.add("Chapter: ".concat(dt.getChapter()));
                                 }
-                                if (!dt.getTable().isEmpty()) {
+                                if(!dt.getTable().isEmpty()) {
                                     tt.add("Table: ".concat(dt.getTable()));
                                 }
                             }
                         }
-                    } else if (value instanceof de.elomagic.hl7inspector.hl7.model.Subcomponent) {
+                    } else if(value instanceof de.elomagic.hl7inspector.hl7.model.Subcomponent) {
                         DataElement de = profile.getDataElement(segType, fieldIndex);
-                        if (de != null) {
+                        if(de != null) {
                             int compIndex = obj.getHl7Parent().getIndex() + 1;
                             DataTypeItem dt = profile.getDataType(de.getDataType(), compIndex);
-                            if (dt != null) {
+                            if(dt != null) {
                                 dt = profile.getDataType(dt.getDataType(), index);
-                                if (dt != null) {
+                                if(dt != null) {
                                     desc = "[".concat(dt.getDataType()).concat("] ").concat(dt.getDescription());
                                     tt.add("SubComponent Type: ".concat(dt.getDescription()));
-                                    if (dt.getChapter().length() != 0) {
+                                    if(dt.getChapter().length() != 0) {
                                         tt.add("Chapter: ".concat(dt.getChapter()));
                                     }
-                                    if (!dt.getTable().isEmpty()) {
+                                    if(!dt.getTable().isEmpty()) {
                                         tt.add("Table: ".concat(dt.getTable()));
                                     }
                                 }
@@ -334,8 +336,8 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 //                    setToolTipText(tt.toString());
                 }
 
-                if (!desc.isEmpty()) {
-                    if (!sel) {
+                if(!desc.isEmpty()) {
+                    if(!sel) {
                         sb.append("<font color=\"#");
                         sb.append(Integer.toHexString(SystemColor.textInactiveText.getRGB() & 0xffffff));
                         sb.append("\">");
@@ -344,7 +346,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
                     sb.append(desc);
                     sb.append(")</B>");
 
-                    if (sel) {
+                    if(sel) {
                         sb.append("</font>");
                     }
                 }
@@ -353,7 +355,7 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 
         String fontName = prop.getTreeFontName();
 
-        if (sel) {
+        if(sel) {
             sb.insert(0, "<html><font face=\"" + fontName + "\" color=\"#" + Integer.toHexString(SystemColor.textHighlightText.getRGB() & 0xffffff) + "\">");
         } else {
             sb.insert(0, "<html><font face=\"" + fontName + "\">");
@@ -365,13 +367,13 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 //boolean c = !(getText().equals(v));
         setText(sb.toString());
 
-        if (value instanceof Hl7Object) {
-            Hl7Object obj = (Hl7Object) value;
+        if(value instanceof Hl7Object) {
+            Hl7Object obj = (Hl7Object)value;
 
-            if (obj.getValidateStatus() != null) {
+            if(obj.getValidateStatus() != null) {
                 setIcon(obj.getValidateStatus().getIcon());
             } else {
-                if ((obj instanceof RepetitionField) && (obj.size() != 0) && (!(obj instanceof EncodingObject))) {
+                if((obj instanceof RepetitionField) && (obj.size() != 0) && (!(obj instanceof EncodingObject))) {
                     setIcon(ResourceLoader.loadImageIcon("repeatfield.png"));
                 } else {
                     setIcon(ResourceLoader.loadImageIcon("hole_white.gif"));
@@ -383,5 +385,4 @@ public class TreeCellRenderer extends JLabel /*DefaultTreeCellRenderer*/ impleme
 
         return this;
     }
-
 }

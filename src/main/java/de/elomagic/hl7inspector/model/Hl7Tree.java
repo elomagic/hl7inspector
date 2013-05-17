@@ -16,24 +16,25 @@
  */
 package de.elomagic.hl7inspector.model;
 
-import de.elomagic.hl7inspector.gui.tooltip.ExtendedTooltip;
-import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.hl7.model.Message;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JToolTip;
 import javax.swing.JTree;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+
+import de.elomagic.hl7inspector.gui.tooltip.ExtendedTooltip;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
 
 /**
  *
  * @author rambow
  */
 public class Hl7Tree extends JTree implements MouseMotionListener {
-
     private static final long serialVersionUID = -7337977619165561183L;
 
     /** Creates a new instance of Hl7Tree */
@@ -43,7 +44,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
     }
 
     public Hl7Tree(Hl7TreeModel model) {
-        super((TreeModel) model);
+        super((TreeModel)model);
         init();
     }
 
@@ -58,10 +59,10 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
 
     public TreePath findNextNode(String pharse, int startingRow, boolean forward) {
         int max = getRowCount();
-        if (pharse == null) {
+        if(pharse == null) {
             throw new IllegalArgumentException();
         }
-        if (startingRow < 0 || startingRow >= max) {
+        if(startingRow < 0 || startingRow >= max) {
             throw new IllegalArgumentException();
         }
         pharse = pharse.toUpperCase();
@@ -76,30 +77,30 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
                     path.getLastPathComponent(), isRowSelected(row),
                     isExpanded(row), true, row, false);
 
-            if (text.toUpperCase().indexOf(pharse) != -1) {
+            if(text.toUpperCase().indexOf(pharse) != -1) {
                 return path;
             }
             row = (row + increment + max) % max;
-        } while (row != startingRow);
+        } while(row != startingRow);
         return null;
     }
 
     public List<Message> getSelectedMessages() {
-        List<Message> messages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<>();
 
         TreePath[] paths = getSelectionPaths();
 
-        if (paths != null) {
-            for (TreePath path : paths) {
-                Hl7Object node = (Hl7Object) path.getLastPathComponent();
+        if(paths != null) {
+            for(TreePath path : paths) {
+                Hl7Object node = (Hl7Object)path.getLastPathComponent();
 
-                while (!(node instanceof Message)) {
+                while(!(node instanceof Message)) {
                     node = node.getHl7Parent();
                 }
 
-                Message message = (Message) node;
+                Message message = (Message)node;
 
-                if (!messages.contains(message)) {
+                if(!messages.contains(message)) {
                     messages.add(message);
                 }
             }
@@ -118,13 +119,13 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
     @Override
     public void mouseMoved(MouseEvent evt) {
         /*        TreePath path = getPathForLocation(evt.getX(), evt.getY());
-        
-        if ((path != null) && (path.getLastPathComponent() instanceof Hl7Object)) {
-        Hl7Object obj = (Hl7Object)path.getLastPathComponent();
-        
-        String tt = obj.getValidationText();
-        setToolTipText(tt);
-        }*/
+
+         if ((path != null) && (path.getLastPathComponent() instanceof Hl7Object)) {
+         Hl7Object obj = (Hl7Object)path.getLastPathComponent();
+
+         String tt = obj.getValidationText();
+         setToolTipText(tt);
+         }*/
     }
 
     @Override
@@ -136,29 +137,28 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
         String tt = "";
         TreePath path = getPathForLocation(event.getX(), event.getY());
 
-        if ((path != null) && (path.getLastPathComponent() instanceof Hl7Object)) {
-            Hl7Object obj = (Hl7Object) path.getLastPathComponent();
+        if((path != null) && (path.getLastPathComponent() instanceof Hl7Object)) {
+            Hl7Object obj = (Hl7Object)path.getLastPathComponent();
 
             tt = "";
 
             /*
-            // Get profile Information
-            
-            if (obj.getDescription().length() != 0) {
-            tt = obj.getDescription();
-            }
-            
-            if ((obj.getDescription().length() != 0) && (obj.getValidationText().length() != 0)) {
-            tt = tt.concat("\n---\n");
-            }*/
+             // Get profile Information
 
-            if (obj.getValidationText() != null) {
+             if (obj.getDescription().length() != 0) {
+             tt = obj.getDescription();
+             }
+
+             if ((obj.getDescription().length() != 0) && (obj.getValidationText().length() != 0)) {
+             tt = tt.concat("\n---\n");
+             }*/
+
+            if(obj.getValidationText() != null) {
                 tt = tt.concat(obj.getValidationText());
             }
             //setToolTipText(tt);
         }
 
-        return tt.isEmpty() ? null : tt;
+        return "".equals(tt) ? null : tt;
     }
-
 }

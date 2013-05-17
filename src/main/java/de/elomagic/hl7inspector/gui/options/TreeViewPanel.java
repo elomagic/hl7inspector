@@ -34,6 +34,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
@@ -48,18 +49,30 @@ public class TreeViewPanel extends AbstractPanel {
     
     @Override
     public void init() {
-        editViewMode        = new JComboBox(new String[] { "Plain HL7 message in root message node", "Compact HL7 message information in root message node"} );
+        editViewMode = new JComboBox(new String[] { "Plain HL7 message in root message node", "Compact HL7 message information in root message node"} );
         //editNodeLength      = new JTextField();
-        btNodeLength        = new JCheckBox(new AbstractAction() {
+        btNodeLength = new JCheckBox(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) { btSpinNodeLength.setEnabled(btNodeLength.isSelected()); }            
         });
-        btSpinNodeLength        = new JSpinner();
+
+        btSpinNodeLength = new JSpinner();
+        
+        edTreeMessageNodeFormat = new JTextField();
+        // TODO Set tooltip with valid parameters
+        edTreeMessageNodeFormat.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Update sample text field
+            }
+        });
+
+        edTreeMessageNodeFormatSample = new JLabel();
         
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 
-        editFontSample = new JTextField("Text sample. ABCDEF 0123456");
-        editFontSample.setEditable(false);
+        editFontSample = new JLabel("Text sample. ABCDEF 0123456");
                 
         cbFont                  = new JComboBox(ge.getAvailableFontFamilyNames());
         cbFont.addActionListener(new ActionListener() {
@@ -69,12 +82,12 @@ public class TreeViewPanel extends AbstractPanel {
             }
         });
         cbFont.setEditable(false);                
-//        cbFont.setM
         
         FormLayout layout = new FormLayout(
                 "8dlu, p,  4dlu, 60dlu, 4dlu, p:grow, 4dlu, p",
 //            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
-                "p, 3dlu, p, 7dlu, " +
+                "p, 3dlu, p, 3dlu, " +
+                "p, 3dlu, p, 4dlu, " +
                 "p, 3dlu, p, 7dlu, p, 3dlu, p, 3dlu, p");   // rows
         
         PanelBuilder builder = new PanelBuilder(layout);
@@ -82,24 +95,30 @@ public class TreeViewPanel extends AbstractPanel {
         CellConstraints cc = new CellConstraints();
         
         // 1st row
-        builder.add(new GradientLabel("View Options"),  cc.xyw(1,  1, 6));
+        builder.add(new GradientLabel("View Options"),  cc.xyw(1, 1, 6));
         
-        builder.addLabel("View mode:",                  cc.xy(2,   3));      // Ok
-        builder.add(editViewMode,                       cc.xyw(4,   3, 3));
+        builder.addLabel("View mode:",                  cc.xy(2,  3));      // Ok
+        builder.add(editViewMode,                       cc.xyw(4, 3, 3));
         
-        builder.addLabel("Node text limit:",            cc.xy(2,   5));      // Ok
-        builder.add(btNodeLength,                       cc.xy(4,   5));
+        builder.addLabel("Node text limit:",            cc.xy(2,  5));      // Ok
+        builder.add(btNodeLength,                       cc.xy(4,  5));
 
-        builder.addLabel("Length:",                     cc.xy(2,   7));      // Ok
-        builder.add(btSpinNodeLength,                   cc.xy(4,   7));
+        builder.addLabel("Length:",                     cc.xy(2,  7));      // Ok
+        builder.add(btSpinNodeLength,                   cc.xy(4,  7));
+
+        builder.addLabel("Message Node Format:",        cc.xy(2,  9));      // Ok
+        builder.add(edTreeMessageNodeFormat,            cc.xyw(4, 9, 3));
         
-        builder.add(new GradientLabel("Font"),          cc.xyw(1,  9, 6));
+        builder.addLabel("Message Node Sample:",        cc.xy(2,  11));      // Ok
+        builder.add(edTreeMessageNodeFormatSample,      cc.xyw(4, 11, 3));
+
+        builder.add(new GradientLabel("Font"),          cc.xyw(1, 13, 6));
         
-        builder.addLabel("Name:",                       cc.xy(2,   11));      // Ok
-        builder.add(cbFont,                             cc.xyw(4,   11, 3));        
+        builder.addLabel("Name:",                       cc.xy(2,  15));      // Ok
+        builder.add(cbFont,                             cc.xyw(4, 15, 3));
         
-        builder.addLabel("Example:",                    cc.xy(2,   13));      // Ok
-        builder.add(editFontSample,                     cc.xyw(4,   13, 3));        
+        builder.addLabel("Example:",                    cc.xy(2,  17));      // Ok
+        builder.add(editFontSample,                     cc.xyw(4, 17, 3));
         
         add(builder.getPanel(), BorderLayout.CENTER);
     }
@@ -119,6 +138,7 @@ public class TreeViewPanel extends AbstractPanel {
         
         editViewMode.setSelectedIndex(p.getTreeViewMode());
         btNodeLength.setSelected(p.getTreeNodeLength()!=0);
+        edTreeMessageNodeFormat.setText(StartupProperties.getTreeMessageNodeFormat());
         btSpinNodeLength.setValue(new Integer(p.getTreeNodeLength()==0?200:p.getTreeNodeLength()));
         btSpinNodeLength.setEnabled(p.getTreeNodeLength()!=0);
         cbFont.setSelectedItem(p.getTreeFontName());
@@ -131,11 +151,14 @@ public class TreeViewPanel extends AbstractPanel {
         p.setTreeViewMode(editViewMode.getSelectedIndex());
         p.setTreeNodeLength(btNodeLength.isSelected()?Integer.parseInt(btSpinNodeLength.getValue().toString()):0);
         p.setTreeFontName(cbFont.getSelectedItem().toString());
+        StartupProperties.setTreeMessageNodeFormat(edTreeMessageNodeFormat.getText());
     }       
     
-    private JComboBox   editViewMode;
-    private JCheckBox   btNodeLength;
-    private JSpinner    btSpinNodeLength;        
-    private JComboBox   cbFont;
-    private JTextField  editFontSample;
+    private JComboBox editViewMode;
+    private JCheckBox btNodeLength;
+    private JSpinner btSpinNodeLength;        
+    private JComboBox cbFont;
+    private JLabel editFontSample;
+    private JTextField edTreeMessageNodeFormat;
+    private JLabel edTreeMessageNodeFormatSample;
 }
