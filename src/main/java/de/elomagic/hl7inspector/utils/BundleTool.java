@@ -3,8 +3,6 @@
  */
 package de.elomagic.hl7inspector.utils;
 
-import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
