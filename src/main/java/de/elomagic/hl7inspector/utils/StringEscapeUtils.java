@@ -21,7 +21,9 @@ package de.elomagic.hl7inspector.utils;
  * @author rambow
  */
 public class StringEscapeUtils {
-    /** Creates a new instance of StringEscapeUtils */
+    /**
+     * Creates a new instance of StringEscapeUtils.
+     */
     private StringEscapeUtils() {
     }
 
