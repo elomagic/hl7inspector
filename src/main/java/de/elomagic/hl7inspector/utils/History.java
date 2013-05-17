@@ -31,7 +31,9 @@ public class History {
     private int buffer = 5;
     private List<String> v = new ArrayList<>();
 
-    /** Creates a new instance of History */
+    /**
+     * Creates a new instance of History.
+     */
     public History(String path) {
         this.path = HISTORY.concat(path);
 
@@ -109,7 +111,7 @@ public class History {
         clear();
 
         int i = 1;
-        boolean next = false;
+        boolean next;
 
         do {
             String key = path.concat(Integer.toString(i));
