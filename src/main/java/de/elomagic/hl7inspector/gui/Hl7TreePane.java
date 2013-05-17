@@ -26,6 +26,7 @@ import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetListener;
@@ -33,6 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.tree.*;
@@ -43,8 +45,11 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class Hl7TreePane extends JScrollPane implements DropTargetListener {
+    private Hl7Tree tree;
 
-    /** Creates a new instance of Hl7Tree */
+    /**
+     * Creates a new instance of Hl7Tree.
+     */
     public Hl7TreePane() {
         init(null);
     }
@@ -59,22 +64,21 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
         tree.setOpaque(false);
         tree.setComponentPopupMenu(new TreePopupMenu());
         tree.addMouseListener(new MouseListener() {
-
             @Override
             public void mouseClicked(MouseEvent event) {
 
-                if (event.getClickCount() == 2) {
+                if(event.getClickCount() == 2) {
                     TreePath path = tree.getPathForLocation(event.getX(), event.getY());
-                    if (path != null) {
-                        Hl7Object o = (Hl7Object) path.getLastPathComponent();
+                    if(path != null) {
+                        Hl7Object o = (Hl7Object)path.getLastPathComponent();
 
-                        if (!(o instanceof Message) && ((o.getChildCount() == 0) || (StartupProperties.isTreeNodeDoubleClick()))) {
+                        if(!(o instanceof Message) && ((o.getChildCount() == 0) || (StartupProperties.isTreeNodeDoubleClick()))) {
                             EditMessageItemAction action = new EditMessageItemAction();
                             action.actionPerformed(new ActionEvent(event.getSource(), event.getID(), ""));
                         }
                     }
                 }
-                
+
             }
 
             @Override
@@ -92,7 +96,6 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
             @Override
             public void mouseExited(MouseEvent e) {
             }
-
         });
 
         new DropTarget(tree, this);
@@ -114,20 +117,18 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
         return tree;
     }
 
-    private Hl7Tree tree;
     // Interface implementationof drag an drop
-
     @Override
     public void drop(java.awt.dnd.DropTargetDropEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
-            if (tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+            if(tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
                 dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 
-                java.util.List fileList = (java.util.List) tr.getTransferData(DataFlavor.javaFileListFlavor);
+                java.util.List fileList = (java.util.List)tr.getTransferData(DataFlavor.javaFileListFlavor);
                 Iterator iterator = fileList.iterator();
-                while (iterator.hasNext()) {
-                    File file = (File) iterator.next();
+                while(iterator.hasNext()) {
+                    File file = (File)iterator.next();
 
                     Desktop.getInstance().toFront();
 
@@ -138,13 +139,13 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
 
                 //      if (dtde.getCurrentDataFlavorsAsList().size() == 1) {
                 //          SimpleDialog.info(dtde.getCurrentDataFlavors()[0].getHumanPresentableName());
-            } else if (tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+            } else if(tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
                 dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
 
                 String text = tr.getTransferData(DataFlavor.stringFlavor).toString();
                 PasteTextAction.importText(text);
             }
-        } catch (Exception e) {
+        } catch(UnsupportedFlavorException | IOException e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             dtde.rejectDrop();
         }
@@ -165,14 +166,13 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
     public void dragEnter(java.awt.dnd.DropTargetDragEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
-            if (!tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
-                    && !tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+            if(!tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
+               && !tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
                 dtde.rejectDrag();
             }
-        } catch (Exception e) {
+        } catch(Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             dtde.rejectDrag();
         }
     }
-
 }
