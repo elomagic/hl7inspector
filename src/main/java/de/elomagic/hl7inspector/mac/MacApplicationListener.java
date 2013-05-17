@@ -21,19 +21,17 @@ package de.elomagic.hl7inspector.mac;
  * @author carstenrambow
  */
 public interface MacApplicationListener {
+    void handleAbout(MacApplicationEvent ae);
 
-    public void handleAbout(MacApplicationEvent ae);
+    void handleOpenApplication(MacApplicationEvent ae);
 
-    public void handleOpenApplication(MacApplicationEvent ae);
+    void handleOpenFile(MacApplicationEvent ae);
 
-    public void handleOpenFile(MacApplicationEvent ae);
+    void handlePreferences(MacApplicationEvent ae);
 
-    public void handlePreferences(MacApplicationEvent ae);
+    void handlePrintFile(MacApplicationEvent ae);
 
-    public void handlePrintFile(MacApplicationEvent ae);
+    void handleQuit(MacApplicationEvent ae);
 
-    public void handleQuit(MacApplicationEvent ae);
-
-    public void handleReOpenApplication(MacApplicationEvent ae);
-
+    void handleReOpenApplication(MacApplicationEvent ae);
 }

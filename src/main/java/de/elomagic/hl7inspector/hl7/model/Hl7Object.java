@@ -16,26 +16,35 @@
  */
 package de.elomagic.hl7inspector.hl7.model;
 
-import de.elomagic.hl7inspector.utils.StringEscapeUtils;
-import de.elomagic.hl7inspector.validate.ValidateStatus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+
+import de.elomagic.hl7inspector.utils.StringEscapeUtils;
+import de.elomagic.hl7inspector.validate.ValidateStatus;
 
 /**
  *
  * @author rambow
  */
 public abstract class Hl7Object implements TreeNode {
+    private Delimiters delimiters = new Delimiters();
+    private String validationText = "";
+    private String description = "";
+    private String nodeText = null;
+    private ValidateStatus val = null;
+    private String htmlText = null;
+    private List<Hl7Object> objList = new ArrayList<>();
+    private Object root = null;
+    private Hl7Object parent = null;
 
     /** Creates a new instance of Hl7Object */
     public Hl7Object() {
     }
-
-    private Delimiters delimiters = new Delimiters();
 
     public void parse(String text, Delimiters del) {
         this.delimiters = del;
@@ -52,10 +61,10 @@ public abstract class Hl7Object implements TreeNode {
             StringBuilder subText = new StringBuilder();
             int p = 0;
 
-            while (p < text.length()) {
+            while(p < text.length()) {
                 char c = text.charAt(p);
 
-                if (!(text.startsWith("MSH" + delimiters.toString()) && (p == 6)) && (c == Delimiters.DEFAULT_ESCAPE_CHAR)) {
+                if(!(text.startsWith("MSH" + delimiters.toString()) && (p == 6)) && (c == Delimiters.DEFAULT_ESCAPE_CHAR)) {
                     // Wenn Escapezeichen kommt dann nächstes Zeichen nicht interpretieren
 //                    subText = subText.append(c);
 //                    p++;
@@ -69,21 +78,21 @@ public abstract class Hl7Object implements TreeNode {
                         subText = subText.append(c);
                         p++;
 
-                        if (text.length() > p) {
+                        if(text.length() > p) {
                             c = text.charAt(p);
                         }
-                    } while ((text.length() > p) && (c != Delimiters.DEFAULT_ESCAPE_CHAR));
-                    if (c == Delimiters.DEFAULT_ESCAPE_CHAR) {
+                    } while((text.length() > p) && (c != Delimiters.DEFAULT_ESCAPE_CHAR));
+                    if(c == Delimiters.DEFAULT_ESCAPE_CHAR) {
                         subText = subText.append(c);
                     }
                 } else {
-                    if (c == getSubDelimiter()) {
+                    if(c == getSubDelimiter()) {
                         // Wenn neues Feld dann altes in Array sichern
 //            add(subText, not ((subText = (COMPONENT_CHAR + REPEATION_CHAR + ESCAPE_CHAR + SUBCOMPONENT_CHAR)) and (p == 9) and (copy(text, 1, 3) = 'MSH')));
 
 //                        if (subText.eq)
 
-                        if ((c == Delimiters.DEFAULT_FIELD) && (subText.toString().equals("MSH")) && (objList.isEmpty())) {
+                        if((c == Delimiters.DEFAULT_FIELD) && (subText.toString().equals("MSH")) && (objList.isEmpty())) {
                             add("MSH");
                             add("" + Delimiters.DEFAULT_FIELD);
                             add(new EncodingObject());
@@ -101,10 +110,10 @@ public abstract class Hl7Object implements TreeNode {
                 p++;
             }
 
-            if (subText.length() != 0) {
+            if(subText.length() != 0) {
                 add(subText.toString());
             }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             System.err.println("Error parsing message!");
         }
     }
@@ -117,7 +126,7 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     private void resetTreeData(Hl7Object o) {
-        while (o != null) {
+        while(o != null) {
             o.htmlText = null;
             o.nodeText = null;
             o.val = null;
@@ -135,11 +144,11 @@ public abstract class Hl7Object implements TreeNode {
 
     public Hl7Object add(String text) throws Exception {
         Class child = getChildClass();
-        if (child == null) {
+        if(child == null) {
             throw new Exception("Child items are not allowed for this item type");
         }
 
-        Hl7Object obj = (Hl7Object) (child.newInstance());
+        Hl7Object obj = (Hl7Object)(child.newInstance());
         obj.setRoot(getRoot());
         obj.setHl7Parent(this);
         obj.parse(text);
@@ -156,8 +165,6 @@ public abstract class Hl7Object implements TreeNode {
         resetTreeData(p);
     }
 
-    private String validationText = "";
-
     public String getValidationText() {
         return validationText;
     }
@@ -165,8 +172,6 @@ public abstract class Hl7Object implements TreeNode {
     public void setValidationText(String value) {
         validationText = value;
     }
-
-    private String description = "";
 
     public String getDescription() {
         return description;
@@ -176,8 +181,6 @@ public abstract class Hl7Object implements TreeNode {
         this.description = description.trim();
     }
 
-    private String nodeText = null;
-
     public String getText() {
         return nodeText;
     }
@@ -185,8 +188,6 @@ public abstract class Hl7Object implements TreeNode {
     public void setText(String value) {
         nodeText = value;
     }
-
-    private ValidateStatus val = null;
 
     public ValidateStatus getValidateStatus() {
         return val;
@@ -196,10 +197,8 @@ public abstract class Hl7Object implements TreeNode {
         val = v;
     }
 
-    private String htmlText = null;
-
     public String toHtmlEscapedString() {
-        if (htmlText == null) {
+        if(htmlText == null) {
             htmlText = StringEscapeUtils.escapeHtml(toString());
         }
 
@@ -215,14 +214,14 @@ public abstract class Hl7Object implements TreeNode {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < objList.size(); i++) {
-            if (!((this instanceof Segment) && (i == 1) && (get(0).toString().equals("MSH")))) {
+        for(int i = 0; i < objList.size(); i++) {
+            if(!((this instanceof Segment) && (i == 1) && (get(0).toString().equals("MSH")))) {
                 sb.append(objList.get(i).toString());
                 sb.append(getSubDelimiter());
             }
         }
 
-        if ((sb.length() != 0) && (!(this instanceof Message))) {
+        if((sb.length() != 0) && (!(this instanceof Message))) {
             sb.deleteCharAt(sb.length() - 1);
         }
 
@@ -231,7 +230,7 @@ public abstract class Hl7Object implements TreeNode {
 
     public boolean isSinglePath() {
         boolean r = (objList.isEmpty());
-        if (objList.size() == 1) {
+        if(objList.size() == 1) {
             r = objList.get(0).isSinglePath();
         }
 
@@ -239,12 +238,12 @@ public abstract class Hl7Object implements TreeNode {
     }
 
     public TreePath getPath() {
-        List<Object> v = new ArrayList<Object>();
+        List<Object> v = new ArrayList<>();
 
         TreeNode o = this;
         v.add(o);
 
-        while (o.getParent() != null) {
+        while(o.getParent() != null) {
             o = o.getParent();
             v.add(0, o);
         }
@@ -281,8 +280,8 @@ public abstract class Hl7Object implements TreeNode {
     public int sizeCompressed() {
         int r = 0;
 
-        for (int i = 0; i < size(); i++) {
-            if (!get(i).isNULL()) {
+        for(int i = 0; i < size(); i++) {
+            if(!get(i).isNULL()) {
                 r++;
             }
         }
@@ -296,12 +295,12 @@ public abstract class Hl7Object implements TreeNode {
 
     public Hl7Object getCompressed(int index) throws IndexOutOfBoundsException {
         int idx = -1;
-        for (int i = 0; i < size(); i++) {
-            if (!get(i).isNULL()) {
+        for(int i = 0; i < size(); i++) {
+            if(!get(i).isNULL()) {
                 idx++;
             }
 
-            if (idx == index) {
+            if(idx == index) {
                 return get(i);
             }
         }
@@ -312,7 +311,7 @@ public abstract class Hl7Object implements TreeNode {
     public int getIndex() {
         int r = -1;
 
-        if (getHl7Parent() != null) {
+        if(getHl7Parent() != null) {
             r = getHl7Parent().indexOf(this);
         }
 
@@ -326,8 +325,8 @@ public abstract class Hl7Object implements TreeNode {
     public int indexCompressedOf(TreeNode value) {
         int idx = indexOf(value);
         int r = 0;
-        for (int i = 0; i < idx; i++) {
-            if (!get(i).isNULL()) {
+        for(int i = 0; i < idx; i++) {
+            if(!get(i).isNULL()) {
                 r++;
             }
         }
@@ -337,10 +336,6 @@ public abstract class Hl7Object implements TreeNode {
     protected boolean isNULL() {
         return objList.isEmpty();
     }
-
-    private List<Hl7Object> objList = new ArrayList<Hl7Object>();
-    private Object root = null;
-    private Hl7Object parent = null;
     public final static String COMPRESSED_KEY = Hl7Object.class.getName().concat(".compressed");
     // TODO Muste be implemented
     // Interface TreeNode
@@ -348,25 +343,25 @@ public abstract class Hl7Object implements TreeNode {
     /** Returns the children of the receiver as an Enumeration. */
     @Override
     public Enumeration<TreeNode> children() {
-        List<TreeNode> result = new ArrayList<TreeNode>();
+        List<TreeNode> result = new ArrayList<>();
 
-        for (int i = 0; i < getChildCount(); i++) {
+        for(int i = 0; i < getChildCount(); i++) {
             result.add(getChildAt(i));
         }
 
         return Collections.enumeration(result);
     }
 
-    /** 
-     * Returns true if the receiver allows children. 
+    /**
+     * Returns true if the receiver allows children.
      */
     @Override
     public boolean getAllowsChildren() {
         return getChildClass() != null;
     }
 
-    /** 
-     * Returns the number of children TreeNodes the receiver contains. 
+    /**
+     * Returns the number of children TreeNodes the receiver contains.
      */
     @Override
     public int getChildCount() {
@@ -374,7 +369,7 @@ public abstract class Hl7Object implements TreeNode {
 
         int result = compressed ? sizeCompressed() : size();
 
-        if ((this instanceof Segment) && (result > 0)) {
+        if((this instanceof Segment) && (result > 0)) {
             result--;
         }
 
@@ -386,21 +381,15 @@ public abstract class Hl7Object implements TreeNode {
      */
     @Override
     public TreeNode getChildAt(int childIndex) {
-        if (this instanceof Segment) {
+        if(this instanceof Segment) {
             childIndex++; // Filter segment from fields
         }
 
-        TreeNode result = null;
-
         boolean compressed = "t".equals(System.getProperty(COMPRESSED_KEY, "f"));
 
-        if (!compressed) {
-            result = get(childIndex);
-        } else {
-            result = getCompressed(childIndex);
-        }
+        TreeNode result = compressed ? getCompressed(childIndex) : get(childIndex);
 
-        if ((result instanceof RepetitionField) && (result.getChildCount() == 1)) {
+        if((result instanceof RepetitionField) && (result.getChildCount() == 1)) {
             result = result.getChildAt(0);
         }
 
@@ -412,8 +401,8 @@ public abstract class Hl7Object implements TreeNode {
      */
     @Override
     public int getIndex(TreeNode node) {
-        for (int i = 0; i < getChildCount(); i++) {
-            if (getChildAt(i).equals(node)) {
+        for(int i = 0; i < getChildCount(); i++) {
+            if(getChildAt(i).equals(node)) {
                 return i;
             }
         }
@@ -428,7 +417,7 @@ public abstract class Hl7Object implements TreeNode {
     public TreeNode getParent() {
         TreeNode result = parent;
 
-        if ((parent instanceof RepetitionField) && (parent.size() == 1)) {
+        if((parent instanceof RepetitionField) && (parent.size() == 1)) {
             result = parent.getParent();
         }
 
@@ -442,5 +431,4 @@ public abstract class Hl7Object implements TreeNode {
     public boolean isLeaf() {
         return !isSinglePath();
     }
-
 }

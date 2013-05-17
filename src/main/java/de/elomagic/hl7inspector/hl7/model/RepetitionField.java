@@ -21,7 +21,6 @@ package de.elomagic.hl7inspector.hl7.model;
  * @author rambow
  */
 public class RepetitionField extends Hl7Object {
-
     /** Creates a new instance of RepetitionField */
     public RepetitionField() {
     }
@@ -35,5 +34,4 @@ public class RepetitionField extends Hl7Object {
     public Class getChildClass() {
         return Field.class;
     }
-
 }

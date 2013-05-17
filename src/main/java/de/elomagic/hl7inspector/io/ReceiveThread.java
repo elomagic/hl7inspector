@@ -16,6 +16,18 @@
  */
 package de.elomagic.hl7inspector.io;
 
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.ImportOptionBean;
 import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
@@ -23,22 +35,20 @@ import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.Segment;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import de.elomagic.hl7inspector.utils.StringVector;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import org.apache.log4j.Logger;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 /**
  *
  * @author rambow
  */
 public class ReceiveThread extends Thread implements IOCharListener {
+    private ImportOptionBean options = new ImportOptionBean();
+    private int port = 2100;
+    private boolean reuse = true;
+    private boolean authentication = false;
+    private boolean encryption = false;
+    private Socket socket;
+    private boolean terminate = false;
+    private List<IOThreadListener> listener = new ArrayList<>();
 
     /** Creates a new instance of ReceiveThread */
     public ReceiveThread() {
@@ -54,8 +64,6 @@ public class ReceiveThread extends Thread implements IOCharListener {
         options.setFrame(f);
     }
 
-    private ImportOptionBean options = new ImportOptionBean();
-
     public ImportOptionBean getOptions() {
         return options;
     }
@@ -63,8 +71,6 @@ public class ReceiveThread extends Thread implements IOCharListener {
     public void setOptions(ImportOptionBean o) {
         options = o;
     }
-
-    private int port = 2100;
 
     public int getPort() {
         return port;
@@ -74,8 +80,6 @@ public class ReceiveThread extends Thread implements IOCharListener {
         port = p;
     }
 
-    private boolean reuse = true;
-
     public boolean isReuseSocket() {
         return reuse;
     }
@@ -84,8 +88,6 @@ public class ReceiveThread extends Thread implements IOCharListener {
         reuse = value;
     }
 
-    private boolean authentication = false;
-
     public boolean isAuthentication() {
         return authentication;
     }
@@ -93,8 +95,6 @@ public class ReceiveThread extends Thread implements IOCharListener {
     public void setAuthentication(boolean authentication) {
         this.authentication = authentication;
     }
-
-    private boolean encryption = false;
 
     public boolean isEncryption() {
         return encryption;
@@ -105,20 +105,20 @@ public class ReceiveThread extends Thread implements IOCharListener {
     }
 
     public void terminateRequest() {
-        if (!terminate) {
+        if(!terminate) {
             fireStatusEvent("Shutting down receive server...");
         }
 
         terminate = true;
         try {
-            if (socket != null) {
-                if (!socket.isClosed()) {
+            if(socket != null) {
+                if(!socket.isClosed()) {
                     socket.close();
                 }
             } else {
                 new Socket("localhost", port).close();
             }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             Logger.getLogger(getClass()).warn(ex.getMessage(), ex);
             fireStatusEvent((ex.getMessage() != null) ? ex.getMessage() : ex.toString());
         }
@@ -128,18 +128,18 @@ public class ReceiveThread extends Thread implements IOCharListener {
     public void run() {
         fireThreadStartedEvent();
         try {
-            if (isAuthentication() || isEncryption()) {
+            if(isAuthentication() || isEncryption()) {
                 fireStatusEvent("Security enabled. (Encryption=" + Boolean.toString(isEncryption()) + ", Authentication=" + Boolean.toString(isAuthentication()) + ")");
             }
             fireStatusEvent("Listening on port " + port);
             ServerSocket server = new ServerSocket(port);
             try {
-                while (!terminate) {
+                while(!terminate) {
                     try {
                         socket = server.accept();
                         try {
 //                        socket.setSoTimeout(5000);
-                            if (!terminate) {
+                            if(!terminate) {
                                 fireStatusEvent("Connecting from " + socket.getInetAddress().getHostName() + "(" + socket.getInetAddress().getHostAddress() + ").");
                             }
 
@@ -149,7 +149,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
                             try {
                                 messageReader.addListener(this);
 
-                                while (!terminate && reuse) {
+                                while(!terminate && reuse) {
                                     fireStatusEvent("Waiting for data...");
                                     Message message = messageReader.readMessage();
                                     handleMessage(message);
@@ -161,14 +161,14 @@ public class ReceiveThread extends Thread implements IOCharListener {
                             socket.close();
                             socket = null;
                         }
-                    } catch (EndOfStreamException ex) {
+                    } catch(EndOfStreamException ex) {
                         fireStatusEvent("End of stream detected. Still listening on port " + port);
                     }
                 }
             } finally {
                 server.close();
             }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
             fireStatusEvent(ex.getMessage() != null ? ex.getMessage() : ex.toString());
         }
@@ -187,24 +187,24 @@ public class ReceiveThread extends Thread implements IOCharListener {
     private void handleMessage(Message message) {
         boolean ignore = false;
         // Now filtering
-        if (!options.getPhrase().isEmpty()) {
+        if(!options.getPhrase().isEmpty()) {
             String m = options.isCaseSensitive() ? message.toString() : message.toString().toUpperCase();
             String phrase = options.isCaseSensitive() ? options.getPhrase() : options.getPhrase().toUpperCase();
 
-            if (!options.isUseRegExpr()) {
+            if(!options.isUseRegExpr()) {
                 boolean found = m.contains(phrase);
                 ignore = ((!found && !options.isNegReg()) || (found && options.isNegReg()));
             }
         }
 
-        Hl7TreeModel model = (Hl7TreeModel) Desktop.getInstance().getModel();
+        Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getModel();
         model.locked();
         try {
             model.addMessage(message);
 
             // Check buffer overflow
-            while (model.getChildCount(model) > options.getBufferSize()) {
-                if (options.isReadBottom()) {
+            while(model.getChildCount(model) > options.getBufferSize()) {
+                if(options.isReadBottom()) {
                     model.removeChild(model, 0);
                 } else {
                     model.removeChild(model, model.getChildCount(model) - 1);
@@ -240,7 +240,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
                 seg.add(""); // Field 14
                 seg.add(""); // Field 15
                 seg.add(""); // Field 16
-                seg.add(""); // Field 17                
+                seg.add(""); // Field 17
                 seg.add(getField(msh, 18)); // Field 18
                 out.write(seg.toString('|'));
                 out.write("\r");
@@ -257,7 +257,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
             } finally {
                 out.flush();
             }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             fireStatusEvent(ex.getMessage());
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
@@ -266,7 +266,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
     private String getField(Segment seg, int index) {
         String result = "";
 
-        if (seg.size() >= index) {
+        if(seg.size() >= index) {
             result = seg.get(index).toString();
         }
         return result;
@@ -274,40 +274,36 @@ public class ReceiveThread extends Thread implements IOCharListener {
 
     // protected methods
     protected void fireThreadStartedEvent() {
-        for (IOThreadListener l : listener) {
+        for(IOThreadListener l : listener) {
             l.threadStarted(this);
         }
     }
 
     protected void fireThreadStoppedEvent() {
-        for (IOThreadListener l : listener) {
+        for(IOThreadListener l : listener) {
             l.threadStopped(this);
         }
     }
 
     protected void fireCharReceivedEvent(char c) {
-        for (IOThreadListener l : listener) {
+        for(IOThreadListener l : listener) {
             l.charReceived(this, c);
         }
     }
 
     protected void fireCharSendEvent(char c) {
-        for (IOThreadListener l : listener) {
+        for(IOThreadListener l : listener) {
             l.charSend(this, c);
         }
     }
 
     protected void fireStatusEvent(String text) {
-        for (IOThreadListener l : listener) {
+        for(IOThreadListener l : listener) {
             l.status(this, text);
         }
     }
 
-    private Socket socket;
-    private boolean terminate = false;
-    private List<IOThreadListener> listener = new ArrayList<IOThreadListener>();
     // Interface IOCharListener
-
     @Override
     public void charSend(Object source, char c) {
         fireCharSendEvent(c);
@@ -317,5 +313,4 @@ public class ReceiveThread extends Thread implements IOCharListener {
     public void charReceived(Object source, char c) {
         fireCharReceivedEvent(c);
     }
-
 }

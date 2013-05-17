@@ -21,7 +21,6 @@ package de.elomagic.hl7inspector.hl7.model;
  * @author rambow
  */
 public class Field extends Hl7Object {
-
     /** Creates a new instance of Field */
     public Field() {
     }
@@ -35,5 +34,4 @@ public class Field extends Hl7Object {
     public Class getChildClass() {
         return Component.class;
     }
-
 }

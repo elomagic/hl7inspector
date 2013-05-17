@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,26 +16,25 @@
  */
 package de.elomagic.hl7inspector.validate;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 import de.elomagic.hl7inspector.hl7.model.*;
 import de.elomagic.hl7inspector.profile.DataElement;
 import de.elomagic.hl7inspector.profile.DataTypeItem;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.SegmentItem;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author rambow
  */
 public class Validator {
-
     /** Creates a new instance of Validator */
     public Validator(Profile profile) {
         this.profile = profile;
     }
-
     private Profile profile;
 
     public ValidateStatus validate(Message message) throws Exception {
@@ -44,7 +43,7 @@ public class Validator {
         // Check results
         String s = "";
         ValidateStatus status = new ValidateStatus(ValidateStatus.OK);
-        for (int i = 0; i < statusList.size(); i++) {
+        for(int i = 0; i < statusList.size(); i++) {
             ValidateStatus childStatus = statusList.get(i);
             status = (status.compareTo(childStatus) > 0) ? status : childStatus;
             s = s.concat("\n".concat(statusList.get(i).getText()));
@@ -57,43 +56,43 @@ public class Validator {
     }
 
     private List<ValidateStatus> validateObject(Hl7Object obj) {
-        List<ValidateStatus> statusList = new ArrayList<ValidateStatus>();
+        List<ValidateStatus> statusList = new ArrayList<>();
 
         DataElement de = getDataElement(obj);
         String segName = getSegmentName(obj);
 
-        if (obj instanceof Message) {
-            for (int i = 0; i < obj.size(); i++) {
+        if(obj instanceof Message) {
+            for(int i = 0; i < obj.size(); i++) {
                 statusList.addAll(validateObject(obj.get(i)));
             }
-        } else if (obj instanceof Segment) {
+        } else if(obj instanceof Segment) {
             SegmentItem si = profile.getSegment(segName);
-            if (si == null) {
+            if(si == null) {
                 statusList.add(new ValidateStatus(profile.getValidateMapper().getMapDefNotFound(), getObjectName(obj) + ": Unknown segment."));
             }
 
-            for (int i = 1; i < obj.size(); i++) {
+            for(int i = 1; i < obj.size(); i++) {
                 statusList.addAll(validateObject(obj.get(i)));
             }
-        } else if (obj instanceof RepetitionField) {
-            if (de == null) {
+        } else if(obj instanceof RepetitionField) {
+            if(de == null) {
                 statusList.add(new ValidateStatus(profile.getValidateMapper().getMapDefNotFound(), getObjectName(obj) + ": Unknown field."));
             } else {
-                if (de.getRepeatableCount() < obj.size()) {
+                if(de.getRepeatableCount() < obj.size()) {
                     statusList.add(new ValidateStatus(profile.getValidateMapper().getMapRepetition(), getObjectName(obj) + ": Repetition count too large."));
                 }
 
-                for (int i = 0; i < obj.size(); i++) {
+                for(int i = 0; i < obj.size(); i++) {
                     statusList.addAll(validateObject(obj.get(i)));
                 }
             }
-        } else if (obj instanceof Field) {
-            if (de == null) {
+        } else if(obj instanceof Field) {
+            if(de == null) {
                 statusList.add(new ValidateStatus(profile.getValidateMapper().getMapDefNotFound(), getObjectName(obj) + ": Unknown field."));
             } else {
                 int len = obj.toString().length();
 
-                if (len > de.getLen()) {
+                if(len > de.getLen()) {
                     statusList.add(new ValidateStatus(profile.getValidateMapper().getMapLength(), getObjectName(obj) + ": Field length too large."));
                 }
 
@@ -105,7 +104,7 @@ public class Validator {
         // Check results
         String s = "";
         ValidateStatus status = new ValidateStatus(ValidateStatus.OK);
-        for (int i = 0; i < statusList.size(); i++) {
+        for(int i = 0; i < statusList.size(); i++) {
             ValidateStatus childStatus = statusList.get(i);
             status = (status.compareTo(childStatus) > 0) ? status : childStatus;
             s = s.concat("\n".concat(statusList.get(i).getText()));
@@ -121,18 +120,18 @@ public class Validator {
         int fieldSeq = -1;
         DataElement de = null;
 
-        while ((obj.getHl7Parent() != null) && (!(obj.getHl7Parent() instanceof Segment))) {
-            if (obj instanceof Field) {
+        while((obj.getHl7Parent() != null) && (!(obj.getHl7Parent() instanceof Segment))) {
+            if(obj instanceof Field) {
                 fieldSeq = obj.getHl7Parent().getIndex();
             }
 
             obj = obj.getHl7Parent();
         }
 
-        if (obj instanceof RepetitionField) {
+        if(obj instanceof RepetitionField) {
             String segName = obj.getHl7Parent().get(0).toString();
 
-            if (fieldSeq == -1) {
+            if(fieldSeq == -1) {
                 fieldSeq = obj.getIndex();
             }
 
@@ -144,14 +143,14 @@ public class Validator {
     private String getObjectName(Hl7Object obj) {
         String s = "";
 
-        while (!(obj instanceof Message)) {
-            if (obj instanceof Component) {
+        while(!(obj instanceof Message)) {
+            if(obj instanceof Component) {
                 s = ".".concat(Integer.toString(obj.getIndex() + 1));
-            } else if (obj instanceof Field) {
+            } else if(obj instanceof Field) {
                 s = "-".concat(Integer.toString(obj.getHl7Parent().getIndex())).concat(s);
-            } else if ((obj instanceof RepetitionField) && (s.indexOf('-') == -1)) {
+            } else if((obj instanceof RepetitionField) && (s.indexOf('-') == -1)) {
                 s = "-".concat(Integer.toString(obj.getIndex())).concat(s);
-            } else if (obj instanceof Segment) {
+            } else if(obj instanceof Segment) {
                 s = obj.get(0).toString().concat(s);
             }
             obj = obj.getHl7Parent();
@@ -163,8 +162,8 @@ public class Validator {
     private String getSegmentName(Hl7Object obj) {
         String seg = null;
 
-        while ((!(obj instanceof Message)) && (seg == null)) {
-            if (obj instanceof Segment) {
+        while((!(obj instanceof Message)) && (seg == null)) {
+            if(obj instanceof Segment) {
                 seg = obj.get(0).toString();
             }
             obj = obj.getHl7Parent();
@@ -174,24 +173,24 @@ public class Validator {
     }
 
     private List<ValidateStatus> validateDataType(Hl7Object obj, String dataType) {
-        List<ValidateStatus> errorList = new ArrayList<ValidateStatus>();
+        List<ValidateStatus> errorList = new ArrayList<>();
 
-        for (int i = 0; i < obj.size(); i++) {
+        for(int i = 0; i < obj.size(); i++) {
             try {
                 Hl7Object child = obj.get(i);
 
                 DataTypeItem dt = profile.getDataType(dataType, i + 1);
-                if (dt == null) {
+                if(dt == null) {
                     errorList.add(new ValidateStatus(profile.getValidateMapper().getMapDefNotFound(), getObjectName(child) + ": Invalid data type object."));
                     break;
                 }
-            } catch (Exception ex) {
-                //errorList.add(e.getMessage());                
+            } catch(Exception ex) {
+                //errorList.add(e.getMessage());
             }
         }
 
         ValidateStatus status = new ValidateStatus(ValidateStatus.OK);
-        for (int i = 0; i < errorList.size(); i++) {
+        for(int i = 0; i < errorList.size(); i++) {
             ValidateStatus childStatus = errorList.get(i);
             status = (status.compareTo(childStatus) > 0) ? status : childStatus;
         }
@@ -200,22 +199,21 @@ public class Validator {
 
         return errorList;
     }
-
     private static String ILLEGAL_DATA_TYPE_FORMAT_TEXT = "Illegal data type format";
-    // Simple data type = DT, DTM, FT, GTS, ID, IS, NM, SI ST, TM, TX    
+    // Simple data type = DT, DTM, FT, GTS, ID, IS, NM, SI ST, TM, TX
 
     private ValidateStatus validateDataTypeDT(Hl7Object obj) {
         ValidateStatus status = null;
 
         try {
-            if (obj.size() > 1) {
+            if(obj.size() > 1) {
                 throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
             }
 
             int len = obj.toString().length();
             String pat = "";
 
-            switch (len) {
+            switch(len) {
                 case 4:
                     pat = "yyyy";
                     break;
@@ -232,7 +230,7 @@ public class Validator {
             SimpleDateFormat sdf = new SimpleDateFormat(pat);
 
             sdf.parse(obj.toString());
-        } catch (Exception e) {
+        } catch(Exception e) {
         }
 
         return status;
@@ -243,7 +241,7 @@ public class Validator {
         ValidateStatus status = null;
 
         try {
-            if (obj.size() > 1) {
+            if(obj.size() > 1) {
                 throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
             }
 
@@ -253,17 +251,17 @@ public class Validator {
             int len = s.toString().length();
 
             // If timezone set ...
-            if ((s.indexOf('-') != -1) || (s.indexOf('+') != -1)) {
+            if((s.indexOf('-') != -1) || (s.indexOf('+') != -1)) {
                 int i = (s.indexOf('-') != -1) ? s.indexOf('-') : s.indexOf('+');
                 len = s.substring(0, i).length();
                 patTz = "Z";
 
-                if (s.substring(i + 1).length() != 4) {
+                if(s.substring(i + 1).length() != 4) {
                     throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
                 }
             }
 
-            switch (len) {
+            switch(len) {
                 case 4:
                     pat = "yyyy";
                     break;
@@ -301,7 +299,7 @@ public class Validator {
             SimpleDateFormat sdf = new SimpleDateFormat(pat.concat(patTz));
 
             sdf.parse(s);
-        } catch (Exception e) {
+        } catch(Exception e) {
         }
 
         return status;
@@ -311,12 +309,12 @@ public class Validator {
         ValidateStatus status = null;
 
         try {
-            if (obj.size() > 1) {
+            if(obj.size() > 1) {
                 throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
             }
 
             Long.parseLong(obj.toString());
-        } catch (Exception e) {
+        } catch(Exception e) {
         }
 
         return status;
@@ -326,14 +324,14 @@ public class Validator {
         ValidateStatus status = null;
 
         try {
-            if (obj.size() > 1) {
+            if(obj.size() > 1) {
                 throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
             }
 
-            if (Long.parseLong(obj.toString()) < 0) {
+            if(Long.parseLong(obj.toString()) < 0) {
                 throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
             }
-        } catch (Exception e) {
+        } catch(Exception e) {
         }
 
         return status;
@@ -343,7 +341,7 @@ public class Validator {
         ValidateStatus status = null;
 
         try {
-            if (obj.size() > 1) {
+            if(obj.size() > 1) {
                 throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
             }
 
@@ -353,17 +351,17 @@ public class Validator {
             int len = s.toString().length();
 
             // If timezone set ...
-            if ((s.indexOf('-') != -1) || (s.indexOf('+') != -1)) {
+            if((s.indexOf('-') != -1) || (s.indexOf('+') != -1)) {
                 int i = (s.indexOf('-') != -1) ? s.indexOf('-') : s.indexOf('+');
                 len = s.substring(0, i).length();
                 patTz = "Z";
 
-                if (s.substring(i + 1).length() != 4) {
+                if(s.substring(i + 1).length() != 4) {
                     throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
                 }
             }
 
-            switch (len) {
+            switch(len) {
                 case 2:
                     pat = "HH";
                     break;
@@ -392,10 +390,9 @@ public class Validator {
             SimpleDateFormat sdf = new SimpleDateFormat(pat.concat(patTz));
 
             sdf.parse(s);
-        } catch (Exception e) {
+        } catch(Exception e) {
         }
 
         return status;
     }
-
 }

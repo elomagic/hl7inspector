@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,6 +25,8 @@ import java.security.KeyStore;
  * @author rambow
  */
 public class KeyStoreUtil {
+    private KeyStoreUtil() {
+    }
 
     /** Creates a new instance of KeyStoreUtil */
 //    public KeyStoreUtil() {
@@ -32,11 +34,8 @@ public class KeyStoreUtil {
     public static KeyStore loadPublicKeyStore(File file) throws Exception {
         String publicPath = file.getPath() + "/trusted/publicstore";
         KeyStore result = KeyStore.getInstance("JKS");
-        FileInputStream fin = new FileInputStream(publicPath);
-        try {
+        try (FileInputStream fin = new FileInputStream(publicPath)) {
             result.load(fin, "elomagic".toCharArray());
-        } finally {
-            fin.close();
         }
 
         return result;
@@ -54,5 +53,4 @@ public class KeyStoreUtil {
 
         return result;
     }
-
 }

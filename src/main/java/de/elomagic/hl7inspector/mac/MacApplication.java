@@ -17,11 +17,14 @@
 package de.elomagic.hl7inspector.mac;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.UIManager;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -29,17 +32,18 @@ import org.apache.log4j.Logger;
  * @author carstenrambow
  */
 public class MacApplication {
-
     private Object app;
     private Class appc;
     private final static MacApplication instance = new MacApplication();
+    private static List<MacApplicationListener> listeners = new ArrayList<>();
+    private Logger log = Logger.getLogger(this.getClass());
 
     public static MacApplication getApplication() {
         return instance;
     }
 
     private void createInstance() throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-        if (isMacOS()) {
+        if(isMacOS()) {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
 
             appc = Class.forName("com.apple.eawt.Application");
@@ -47,58 +51,57 @@ public class MacApplication {
 
 
             Class lc = Class.forName("com.apple.eawt.ApplicationListener");
-            Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class[]{lc}, new InvocationHandler() {
-
+            Object listener = Proxy.newProxyInstance(lc.getClassLoader(), new Class[] {lc}, new InvocationHandler() {
                 @Override
                 public Object invoke(Object proxy, Method method, Object[] args) {
                     Object event = args[0];
                     MacApplicationEvent macEvent = wrapEvent(event);
                     boolean handled = false;
 
-                    if (method.getName().equals("handleQuit")) {
-                        for (int i = 0; i < listeners.size(); i++) {
+                    if(method.getName().equals("handleQuit")) {
+                        for(int i = 0; i < listeners.size(); i++) {
                             listeners.get(i).handleQuit(macEvent);
                             handled = handled || macEvent.isHandled();
                         }
                     }
 
-                    if (method.getName().equals("handlePreferences")) {
-                        for (int i = 0; i < listeners.size(); i++) {
+                    if(method.getName().equals("handlePreferences")) {
+                        for(int i = 0; i < listeners.size(); i++) {
                             listeners.get(i).handlePreferences(macEvent);
                             handled = handled || macEvent.isHandled();
                         }
                     }
 
-                    if (method.getName().equals("handleAbout")) {
-                        for (int i = 0; i < listeners.size(); i++) {
+                    if(method.getName().equals("handleAbout")) {
+                        for(int i = 0; i < listeners.size(); i++) {
                             listeners.get(i).handleAbout(macEvent);
                             handled = handled || macEvent.isHandled();
                         }
                     }
 
-                    if (method.getName().equals("handleOpenApplication")) {
-                        for (int i = 0; i < listeners.size(); i++) {
+                    if(method.getName().equals("handleOpenApplication")) {
+                        for(int i = 0; i < listeners.size(); i++) {
                             listeners.get(i).handleOpenApplication(macEvent);
                             handled = handled || macEvent.isHandled();
                         }
                     }
 
-                    if (method.getName().equals("handleOpenFile")) {
-                        for (int i = 0; i < listeners.size(); i++) {
+                    if(method.getName().equals("handleOpenFile")) {
+                        for(int i = 0; i < listeners.size(); i++) {
                             listeners.get(i).handleOpenFile(macEvent);
                             handled = handled || macEvent.isHandled();
                         }
                     }
 
-                    if (method.getName().equals("handlePrintFile")) {
-                        for (int i = 0; i < listeners.size(); i++) {
+                    if(method.getName().equals("handlePrintFile")) {
+                        for(int i = 0; i < listeners.size(); i++) {
                             listeners.get(i).handlePrintFile(macEvent);
                             handled = handled || macEvent.isHandled();
                         }
                     }
 
-                    if (method.getName().equals("handleReOpenApplication")) {
-                        for (int i = 0; i < listeners.size(); i++) {
+                    if(method.getName().equals("handleReOpenApplication")) {
+                        for(int i = 0; i < listeners.size(); i++) {
                             listeners.get(i).handleReOpenApplication(macEvent);
                             handled = handled || macEvent.isHandled();
                         }
@@ -107,19 +110,18 @@ public class MacApplication {
                     try {
                         Method ms = event.getClass().getMethod("setHandled", boolean.class);
                         ms.invoke(event, handled);
-                    } catch (Exception ex) {
+                    } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                         log.fatal(ex.getMessage(), ex);
                     }
 
                     return null;
                 }
-
             });
 
             try {
                 Method m = appc.getMethod("addApplicationListener", lc);
                 m.invoke(app, listener);
-            } catch (Exception ex) {
+            } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 log.fatal(ex.getMessage(), ex);
             }
         }
@@ -135,7 +137,7 @@ public class MacApplication {
             Method mf = event.getClass().getMethod("getFilename");
             Object mfr = mf.invoke(event);
             filename = mfr != null ? mfr.toString() : null;
-        } catch (Exception ex) {
+        } catch(NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             log.fatal(ex.getMessage(), ex);
             source = null;
             filename = null;
@@ -148,12 +150,10 @@ public class MacApplication {
     private MacApplication() {
         try {
             createInstance();
-        } catch (Exception ex) {
+        } catch(ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             log.warn(ex.getMessage(), ex);
         }
     }
-
-    private static List<MacApplicationListener> listeners = new ArrayList<MacApplicationListener>();
 
     public void addApplicationListener(MacApplicationListener listener) {
         listeners.add(listener);
@@ -164,22 +164,22 @@ public class MacApplication {
     }
 
     public void setEnabledAboutMenu(boolean value) {
-        if (isMacOS()) {
+        if(isMacOS()) {
             try {
                 Method m = appc.getMethod("setEnabledAboutMenu", boolean.class);
                 m.invoke(app, Boolean.valueOf(value));
-            } catch (Exception ex) {
+            } catch(Exception ex) {
                 log.fatal(ex.getMessage(), ex);
             }
         }
     }
 
     public void setEnabledPreferencesMenu(boolean value) {
-        if (isMacOS()) {
+        if(isMacOS()) {
             try {
                 Method m = appc.getMethod("setEnabledPreferencesMenu", boolean.class);
                 m.invoke(app, Boolean.valueOf(value));
-            } catch (Exception ex) {
+            } catch(Exception ex) {
                 log.fatal(ex.getMessage(), ex);
             }
         }
@@ -197,13 +197,12 @@ public class MacApplication {
 
     /**
      * Must be called before setting Look and Feel
+     *
      * @param title
      * @param value
      */
     public static void setScreenMenuBar(String title, boolean value) {
-        System.setProperty("apple.laf.useScreenMenuBar", value?"true":"false");
+        System.setProperty("apple.laf.useScreenMenuBar", value ? "true" : "false");
         System.setProperty("com.apple.mrj.application.apple.menu.about.name", title);
     }
-
-    private Logger log = Logger.getLogger(this.getClass());
 }

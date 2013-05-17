@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,22 +26,21 @@ import java.util.Properties;
  * @author rambow
  */
 public class History {
+    private String HISTORY = "runtime-history.";
+    private String path = "";
+    private int buffer = 5;
+    private List<String> v = new ArrayList<>();
 
     /** Creates a new instance of History */
     public History(String path) {
         this.path = HISTORY.concat(path);
 
-        if (path.lastIndexOf(".") != path.length() - 1) {
+        if(path.lastIndexOf(".") != path.length() - 1) {
             this.path = path.concat(".");
         }
 
         read(System.getProperties());
     }
-
-    private String HISTORY = "runtime-history.";
-    private String path = "";
-    private int buffer = 5;
-    private List<String> v = new ArrayList<String>();
 
     public void clear() {
         v.clear();
@@ -52,11 +51,11 @@ public class History {
     }
 
     public void set(String o) {
-        if (v.contains(o)) {
+        if(v.contains(o)) {
             v.remove(o);
         }
 
-        while (v.size() >= buffer) {
+        while(v.size() >= buffer) {
             v.remove(v.size() - 1);
         }
 
@@ -82,23 +81,23 @@ public class History {
 
             next = prop.containsKey(key);
 
-            if (next) {
+            if(next) {
                 prop.setProperty(key, null);
             }
 
             i++;
-        } while (next);
+        } while(next);
     }
 
     public void write(Properties prop) {
         String p = path;
 
-        if (!System.getProperties().equals(prop)) {
+        if(!System.getProperties().equals(prop)) {
             clearProperties(prop);
             p = path.substring(HISTORY.length());
         }
 
-        for (int i = 0; i < v.size(); i++) {
+        for(int i = 0; i < v.size(); i++) {
             String key = p + Integer.toString(i + 1);
             String value = v.get(i);
 
@@ -117,13 +116,12 @@ public class History {
 
             next = prop.containsKey(key);
 
-            if (next) {
+            if(next) {
                 String value = prop.getProperty(key);
                 v.add(value);
             }
 
             i++;
-        } while (next);
+        } while(next);
     }
-
 }

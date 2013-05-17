@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "data-element")
 @XmlAccessorType(XmlAccessType.NONE)
 public final class DataElement {
+    private String name = "";
+    private String item = "";
+    private String segment = "";
+    private int seq = 0;
+    private String chapter = "";
+    private int len = 0;
+    private String dataType = "";
+    private String repeat = "N";
+    private String table = "";
 
     /** Creates a new instance of FieldId */
     public DataElement() {
@@ -42,8 +51,6 @@ public final class DataElement {
         setTable(table);
     }
 
-    private String name = "";
-
     @XmlElement(name = "name", required = false)
     public String getName() {
         return name;
@@ -53,8 +60,6 @@ public final class DataElement {
         this.name = name;
     }
 
-    private String item = "";
-
     @XmlElement(name = "item", required = false)
     public String getItem() {
         return item;
@@ -63,12 +68,10 @@ public final class DataElement {
     public void setItem(String id) {
         try {
             this.item = Integer.toString(Integer.parseInt(id));
-        } catch (Exception e) {
+        } catch(Exception e) {
             this.item = id;
         }
     }
-
-    private String segment = "";
 
     @XmlElement(name = "segment", required = false)
     public String getSegment() {
@@ -79,8 +82,6 @@ public final class DataElement {
         this.segment = value.trim();
     }
 
-    private int seq = 0;
-
     @XmlElement(name = "sequence", required = false)
     public int getSequence() {
         return seq;
@@ -89,8 +90,6 @@ public final class DataElement {
     public void setSequence(int s) {
         this.seq = s;
     }
-
-    private String chapter = "";
 
     @XmlElement(name = "chapter", required = false)
     public String getChapter() {
@@ -101,8 +100,6 @@ public final class DataElement {
         this.chapter = value;
     }
 
-    private int len = 0;
-
     @XmlElement(name = "length", required = false)
     public int getLen() {
         return len;
@@ -111,8 +108,6 @@ public final class DataElement {
     public void setLen(int len) {
         this.len = len;
     }
-
-    private String dataType = "";
 
     @XmlElement(name = "data-type", required = false)
     public String getDataType() {
@@ -123,8 +118,6 @@ public final class DataElement {
         this.dataType = dataType.trim();
     }
 
-    private String repeat = "N";
-
     @XmlElement(name = "repeatable", required = false)
     public String getRepeatable() {
         return repeat;
@@ -133,14 +126,12 @@ public final class DataElement {
     public void setRepeatable(String value) {
         this.repeat = value.toUpperCase();
 
-        if (repeat.startsWith("Y")) {
+        if(repeat.startsWith("Y")) {
             repeat = "Y";
-        } else if (repeat.startsWith("N")) {
+        } else if(repeat.startsWith("N")) {
             repeat = "N";
         }
     }
-
-    private String table = "";
 
     @XmlElement(name = "table")
     public String getTable() {
@@ -150,7 +141,7 @@ public final class DataElement {
     public void setTable(String table) {
         try {
             this.table = Integer.toString(Integer.parseInt(table));
-        } catch (Exception e) {
+        } catch(Exception e) {
             this.table = table.trim();
         }
     }
@@ -160,11 +151,10 @@ public final class DataElement {
 
         try {
             c = Integer.parseInt(repeat);
-        } catch (Exception e) {
+        } catch(Exception e) {
             c = (repeat.startsWith("Y")) ? Integer.MAX_VALUE : 1;
         }
 
         return c;
     }
-
 }

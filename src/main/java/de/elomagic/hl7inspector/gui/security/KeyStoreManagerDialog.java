@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,10 +16,17 @@
  */
 package de.elomagic.hl7inspector.gui.security;
 
+import java.awt.event.MouseListener;
+
+import javax.swing.JButton;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.VectorListModel;
@@ -28,16 +35,18 @@ import de.elomagic.hl7inspector.gui.security.actions.AddKeyStoreAction;
 import de.elomagic.hl7inspector.gui.security.actions.DefaultKeyStoreAction;
 import de.elomagic.hl7inspector.gui.security.actions.OpenKeyStoreAction;
 import de.elomagic.hl7inspector.gui.security.actions.RemoveKeyStoreAction;
-import java.awt.event.MouseListener;
-import javax.swing.JButton;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
 
 /**
  *
  * @author rambow
  */
 public class KeyStoreManagerDialog extends BaseDialog {
+    private JList lstKeyStores = new JList();
+    private JButton btAdd = new JButton(new AddKeyStoreAction(lstKeyStores));
+    private JButton btOpen = new JButton(new OpenKeyStoreAction(lstKeyStores));
+    private JButton btRemove = new JButton(new RemoveKeyStoreAction(lstKeyStores));
+    private JButton btDefault = new JButton(new DefaultKeyStoreAction(lstKeyStores));
+    private JButton btClose = new JButton(new DefaultCloseWindowAction(this));
 
     public KeyStoreManagerDialog() {
         super(Desktop.getInstance(), "Keystore Manager", true);
@@ -80,20 +89,7 @@ public class KeyStoreManagerDialog extends BaseDialog {
         setLocationRelativeTo(getOwner());
     }
 
-    private JList lstKeyStores = new JList();
-
-    private JButton btAdd = new JButton(new AddKeyStoreAction(lstKeyStores));
-
-    private JButton btOpen = new JButton(new OpenKeyStoreAction(lstKeyStores));
-
-    private JButton btRemove = new JButton(new RemoveKeyStoreAction(lstKeyStores));
-
-    private JButton btDefault = new JButton(new DefaultKeyStoreAction(lstKeyStores));
-
-    private JButton btClose = new JButton(new DefaultCloseWindowAction(this));
-
     class KeyStoreMouseClickListener implements MouseListener {
-
         @Override
         public void mouseReleased(java.awt.event.MouseEvent e) {
         }
@@ -112,10 +108,9 @@ public class KeyStoreManagerDialog extends BaseDialog {
 
         @Override
         public void mouseClicked(java.awt.event.MouseEvent e) {
-            if (e.getClickCount() == 2) {
+            if(e.getClickCount() == 2) {
                 btOpen.doClick();
             }
         }
-
     }
 }

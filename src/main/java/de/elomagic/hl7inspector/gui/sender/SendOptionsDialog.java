@@ -16,10 +16,17 @@
  */
 package de.elomagic.hl7inspector.gui.sender;
 
+import java.awt.BorderLayout;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
@@ -27,18 +34,19 @@ import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.io.Frame;
 import de.elomagic.hl7inspector.io.SendOptionsBean;
 import de.elomagic.hl7inspector.utils.History;
-import java.awt.BorderLayout;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 
 /**
  *
  * @author rambow
  */
 public class SendOptionsDialog extends BaseDialog {
-
     private static final long serialVersionUID = 4327622002676720941L;
+    private JComboBox cbStartChar;
+    private JComboBox cbStopChar1;
+    private JComboBox cbStopChar2;
+    private JComboBox cbDest;
+    private JComboBox cbEncoding;
+    private JCheckBox cbReuse;
 
     /** Creates a new instance of SendOptionsDialog */
     public SendOptionsDialog() {
@@ -56,7 +64,7 @@ public class SendOptionsDialog extends BaseDialog {
 
         History h = new History(StartupProperties.SENDER_OPTIONS_DEST);
         //h.read(StartupProperties.getInstance());
-        if (h.size() == 0) {
+        if(h.size() == 0) {
             h.set("localhost:2100");
         }
         cbDest = new JComboBox(h.getList().toArray());
@@ -65,10 +73,10 @@ public class SendOptionsDialog extends BaseDialog {
         cbStartChar = new JComboBox();
         cbStopChar1 = new JComboBox();
         cbStopChar2 = new JComboBox();
-        cbEncoding = new JComboBox(new String[]{"ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16"});
+        cbEncoding = new JComboBox(new String[] {"ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16"});
         try {
             cbEncoding.setSelectedItem("ISO-8859-1");
-        } catch (Exception e) {
+        } catch(Exception e) {
             cbEncoding.setSelectedItem("US-ASCII");
         }
         cbReuse = new JCheckBox();
@@ -173,7 +181,7 @@ public class SendOptionsDialog extends BaseDialog {
         cbStartChar.setSelectedIndex(bean.getFrame().getStartFrame());
         cbStopChar1.setSelectedIndex(bean.getFrame().getStopFrame()[0]);
         cbStopChar2.setSelectedIndex((bean.getFrame().getStopFrameLength() < 2) ? cbStopChar2.getItemCount() - 1 : bean.getFrame().getStopFrame()[1]);
-//        cbDest.setSelectedItem(bean.getHost().concat(Integer.toString(bean.getPort())));        
+//        cbDest.setSelectedItem(bean.getHost().concat(Integer.toString(bean.getPort())));
         cbEncoding.setSelectedItem(bean.getEncoding());
         cbReuse.setSelected(bean.isReuseSocket());
     }
@@ -183,7 +191,7 @@ public class SendOptionsDialog extends BaseDialog {
         try {
             String hp = cbDest.getSelectedItem().toString();
 
-            if (cbDest.getSelectedItem().toString().indexOf(':') == -1) {
+            if(cbDest.getSelectedItem().toString().indexOf(':') == -1) {
                 throw new Exception("Invalid destination format! Syntax for destination is <hostname>:<port>. Example: localhost:2100");
             }
 
@@ -192,11 +200,11 @@ public class SendOptionsDialog extends BaseDialog {
 
             try {
                 Integer.parseInt(port);
-            } catch (Exception ee) {
+            } catch(Exception ee) {
                 throw new Exception("Destination port must an integer value!");
             }
 
-            if (host.length() == 0) {
+            if(host.length() == 0) {
                 throw new Exception("Destination host missing!");
             }
 
@@ -204,7 +212,7 @@ public class SendOptionsDialog extends BaseDialog {
             h.set(cbDest.getSelectedItem().toString());
 
             super.ok();
-        } catch (Exception e) {
+        } catch(Exception e) {
             SimpleDialog.error(e.getMessage());
         }
     }
@@ -215,12 +223,12 @@ public class SendOptionsDialog extends BaseDialog {
         String port = hp.substring(hp.indexOf(':') + 1);
 
         Frame frame = new Frame();
-        frame.setStartChar((char) cbStartChar.getSelectedIndex());
+        frame.setStartChar((char)cbStartChar.getSelectedIndex());
         int stops = (cbStopChar2.getSelectedIndex() < cbStopChar2.getItemCount() - 1) ? 2 : 1;
-        if (stops == 1) {
-            frame.setStopChars(new char[]{(char) cbStopChar1.getSelectedIndex()});
+        if(stops == 1) {
+            frame.setStopChars(new char[] {(char)cbStopChar1.getSelectedIndex()});
         } else {
-            frame.setStopChars(new char[]{(char) cbStopChar1.getSelectedIndex(), (char) cbStopChar2.getSelectedIndex()});
+            frame.setStopChars(new char[] {(char)cbStopChar1.getSelectedIndex(), (char)cbStopChar2.getSelectedIndex()});
         }
 
         SendOptionsBean bean = new SendOptionsBean();
@@ -232,11 +240,4 @@ public class SendOptionsDialog extends BaseDialog {
 
         return bean;
     }
-
-    private JComboBox cbStartChar;
-    private JComboBox cbStopChar1;
-    private JComboBox cbStopChar2;
-    private JComboBox cbDest;
-    private JComboBox cbEncoding;
-    private JCheckBox cbReuse;
 }

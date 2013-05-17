@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,14 +16,18 @@
  */
 package de.elomagic.hl7inspector.io;
 
-import de.elomagic.hl7inspector.hl7.model.Message;
 import java.net.Socket;
+
+import de.elomagic.hl7inspector.hl7.model.Message;
 
 /**
  *
  * @author rambow
  */
 public class SendMessageEvent {
+    private Message message;
+    private SendThread source;
+    private Socket socket;
 
     /** Creates a new instance of MessageImportEvent */
     public SendMessageEvent(SendThread source, Socket socket, Message message) {
@@ -32,22 +36,15 @@ public class SendMessageEvent {
         this.message = message;
     }
 
-    private Message message;
-
     public Message getMessage() {
         return message;
     }
-
-    private SendThread source;
 
     public SendThread getSource() {
         return source;
     }
 
-    private Socket socket;
-
     public Socket getSocket() {
         return socket;
     }
-
 }

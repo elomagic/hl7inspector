@@ -5,6 +5,7 @@ package de.elomagic.hl7inspector.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**

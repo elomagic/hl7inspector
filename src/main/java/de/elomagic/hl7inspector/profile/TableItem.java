@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,12 +28,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "table")
 @XmlAccessorType(XmlAccessType.NONE)
 public class TableItem {
+    private String type = "HL7";
+    private String id = "";
+    private String tableDescription = "";
+    private String value = "";
+    private String desciption = "";
 
     /** Creates a new instance of TableItem */
     public TableItem() {
     }
-
-    private String type = "HL7";
 
     @XmlElement(name = "type")
     public String getType() {
@@ -44,8 +47,6 @@ public class TableItem {
         this.type = type;
     }
 
-    private String id = "";
-
     @XmlElement(name = "id")
     public String getId() {
         return id;
@@ -54,12 +55,10 @@ public class TableItem {
     public void setId(String id) {
         try {
             this.id = Integer.toString(Integer.parseInt(id));
-        } catch (Exception e) {
+        } catch(Exception e) {
             this.id = id;
         }
     }
-
-    private String tableDescription = "";
 
     @XmlElement(name = "table-description")
     public String getTableDescription() {
@@ -70,8 +69,6 @@ public class TableItem {
         this.tableDescription = tableDescription;
     }
 
-    private String value = "";
-
     @XmlElement(name = "value")
     public String getValue() {
         return value;
@@ -81,8 +78,6 @@ public class TableItem {
         this.value = value;
     }
 
-    private String desciption = "";
-
     @XmlElement(name = "description")
     public String getDescription() {
         return desciption;
@@ -91,5 +86,4 @@ public class TableItem {
     public void setDescription(String desciption) {
         this.desciption = desciption;
     }
-
 }

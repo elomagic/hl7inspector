@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,12 +21,17 @@ package de.elomagic.hl7inspector.io;
  * @author rambow
  */
 public class SendOptionsBean {
+    private Frame frame = new Frame();
+    private String host = "localhost";
+    private int port = 2100;
+    private String encoding = "ISO-8859-1";
+    private boolean reuseSocket = true;
+    private boolean encryption = false;
+    private boolean authentication = false;
 
     /** Creates a new instance of SendOptionsBean */
     public SendOptionsBean() {
     }
-
-    private Frame frame = new Frame();
 
     public Frame getFrame() {
         return frame;
@@ -36,8 +41,6 @@ public class SendOptionsBean {
         this.frame = frame;
     }
 
-    private String host = "localhost";
-
     public String getHost() {
         return host;
     }
@@ -45,8 +48,6 @@ public class SendOptionsBean {
     public void setHost(String host) {
         this.host = host;
     }
-
-    private int port = 2100;
 
     public int getPort() {
         return port;
@@ -56,8 +57,6 @@ public class SendOptionsBean {
         this.port = port;
     }
 
-    private String encoding = "ISO-8859-1";
-
     public String getEncoding() {
         return encoding;
     }
@@ -65,8 +64,6 @@ public class SendOptionsBean {
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
-
-    private boolean reuseSocket = true;
 
     public boolean isReuseSocket() {
         return reuseSocket;
@@ -76,8 +73,6 @@ public class SendOptionsBean {
         this.reuseSocket = reuseSocket;
     }
 
-    private boolean encryption = false;
-
     public boolean isEncryption() {
         return encryption;
     }
@@ -86,8 +81,6 @@ public class SendOptionsBean {
         this.encryption = encryption;
     }
 
-    private boolean authentication = false;
-
     public boolean isAuthentication() {
         return authentication;
     }
@@ -95,5 +88,4 @@ public class SendOptionsBean {
     public void setAuthentication(boolean authentication) {
         this.authentication = authentication;
     }
-
 }

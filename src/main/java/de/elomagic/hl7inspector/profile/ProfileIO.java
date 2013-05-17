@@ -1,12 +1,12 @@
 /*
  * Copyright 2011 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,7 +16,6 @@
  */
 package de.elomagic.hl7inspector.profile;
 
-import de.elomagic.hl7inspector.Hl7Inspector;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -28,14 +27,18 @@ import java.io.StringWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
+
+import de.elomagic.hl7inspector.Hl7Inspector;
 
 /**
  *
  * @author carstenrambow
  */
 public class ProfileIO {
+    private static Profile defaultProfile = new Profile();
 
     public static Profile getDefault() {
         return defaultProfile;
@@ -44,8 +47,6 @@ public class ProfileIO {
     public static void setDefault(Profile profile) {
         defaultProfile = profile;
     }
-
-    private static Profile defaultProfile = new Profile();
 
     public static Profile load(InputStream in) throws Exception {
         InputStream fin = new BufferedInputStream(in);
@@ -58,19 +59,15 @@ public class ProfileIO {
 
         boolean utf = false;
 
-        if (prefix.equals("PK")) {
+        if(prefix.equals("PK")) {
             ZipInputStream zin = new ZipInputStream(fin);
             ZipEntry entry = zin.getNextEntry();
             utf = entry.getName().toLowerCase().endsWith(".xml");
             fin = zin;
         }
-
-        InputStreamReader reader = utf ? new InputStreamReader(fin, "utf-8") : new InputStreamReader(fin);
-        try {
+        try (InputStreamReader reader = utf ? new InputStreamReader(fin, "utf-8") : new InputStreamReader(fin)) {
             //return loadFromOld(reader);
             return JAXB.unmarshal(reader, Profile.class);
-        } finally {
-            reader.close();
         }
     }
 
@@ -96,5 +93,4 @@ public class ProfileIO {
 
         p.reindex();
     }
-
 }

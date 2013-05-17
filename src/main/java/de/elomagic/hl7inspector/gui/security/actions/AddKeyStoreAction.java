@@ -16,29 +16,32 @@
  */
 package de.elomagic.hl7inspector.gui.security.actions;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+
+import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+
 import de.elomagic.hl7inspector.file.filters.KeyStoreFileFilter;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
 
 /**
  *
  * @author rambow
  */
 public class AddKeyStoreAction extends AbstractAction {
+    private JList list;
 
     /** Creates a new instance of FileOpenAction */
-    public AddKeyStoreAction(JList _list) {
+    public AddKeyStoreAction(JList list) {
         super("Add", ResourceLoader.loadImageIcon("edit_add.png"));
 
-        list = _list;
+        this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Add keystore");
         putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
@@ -53,20 +56,18 @@ public class AddKeyStoreAction extends AbstractAction {
         fc.addChoosableFileFilter(new KeyStoreFileFilter());
 
         fc.setDialogTitle("Choose keystore");
-        if (fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+        if(fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
             fc.setVisible(false);
 
             File file = fc.getSelectedFile();
             try {
-                VectorListModel model = ((VectorListModel) list.getModel());
-                if (model.indexOf(file) == -1) {
+                VectorListModel model = ((VectorListModel)list.getModel());
+                if(model.indexOf(file) == -1) {
                     model.add(file);
                 }
-            } catch (Exception ee) {
+            } catch(Exception ee) {
                 SimpleDialog.error(ee.getMessage());
             }
         }
     }
-
-    private JList list;
 }

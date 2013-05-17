@@ -1,12 +1,12 @@
 /*
  * Copyright 2010 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,21 +16,28 @@
  */
 package de.elomagic.hl7inspector.io;
 
-import de.elomagic.hl7inspector.gui.MessageWriterBean;
-import de.elomagic.hl7inspector.hl7.model.Message;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.log4j.Logger;
+
+import de.elomagic.hl7inspector.gui.MessageWriterBean;
+import de.elomagic.hl7inspector.hl7.model.Message;
 
 /**
  *
  * @author rambow
  */
 public class MessageWriterThread extends Thread {
+    public boolean terminate = false;
+    private List<MessageWriterListener> listener = new ArrayList<>();
+    private MessageWriterBean bean;
+    private OutputStreamWriter wout;
+    private List<Message> messages = new ArrayList<>();
 
     /** Creates a new instance of MessageImportThread */
     public MessageWriterThread(List<Message> messageList, MessageWriterBean mwb) {
@@ -48,22 +55,20 @@ public class MessageWriterThread extends Thread {
         listener.remove(value);
     }
 
-    public boolean terminate = false;
-
     @Override
     public void run() {
         try {
             int i = 0;
 
             File messageFile = null;
-            if (!bean.isManyFiles()) {
+            if(!bean.isManyFiles()) {
                 wout = new OutputStreamWriter(new FileOutputStream(bean.getSingleFileName(), false), bean.getEncoding());
             }
 
-            while (!terminate && (i < messages.size())) {
+            while(!terminate && (i < messages.size())) {
                 Message message = messages.get(i);
                 try {
-                    if (bean.isManyFiles()) {
+                    if(bean.isManyFiles()) {
                         messageFile = createDataFile(i);
                         wout = new OutputStreamWriter(new FileOutputStream(messageFile), bean.getEncoding());
                     }
@@ -72,10 +77,10 @@ public class MessageWriterThread extends Thread {
                     wout.flush();
                 }
 
-                if (bean.isManyFiles()) {
+                if(bean.isManyFiles()) {
                     wout.close();
 
-                    if (bean.isGenerateSempahore()) {
+                    if(bean.isGenerateSempahore()) {
                         createSemaphoreFile(i);
                     }
                 }
@@ -84,10 +89,10 @@ public class MessageWriterThread extends Thread {
                 i++;
             }
 
-            if (!bean.isManyFiles()) {
+            if(!bean.isManyFiles()) {
                 wout.close();
             }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
             //SimpleDialog.error(e, "Reading stream error");
         }
@@ -95,32 +100,27 @@ public class MessageWriterThread extends Thread {
     }
 
     protected void fireMessageSavedEvent(File file, int count) {
-        for (MessageWriterListener l : listener) {
+        for(MessageWriterListener l : listener) {
             l.messageSaved(this, file, count);
         }
     }
 
     protected void fireWriterDoneEvent(int count) {
-        for (MessageWriterListener l : listener) {
+        for(MessageWriterListener l : listener) {
             l.writerDone(this, 0);
         }
     }
 
-    private List<MessageWriterListener> listener = new ArrayList<MessageWriterListener>();
-    private MessageWriterBean bean;
-    private OutputStreamWriter wout;
-    private List<Message> messages = new ArrayList<Message>();
-
     private void writeMessage(Message message) throws IOException {
         String msgText = message.toString();
 
-        if (!bean.isManyFiles()) {
+        if(!bean.isManyFiles()) {
             wout.write(bean.getFrame().getStartFrame());
         }
 
         wout.write(msgText);
 
-        if (!bean.isManyFiles()) {
+        if(!bean.isManyFiles()) {
             wout.write(bean.getFrame().getStopFrame());
         }
     }
@@ -136,7 +136,7 @@ public class MessageWriterThread extends Thread {
     private File createIndexFile(int indexName, String extension) throws IOException {
         File file = new File(bean.getDestinationFolder().getAbsolutePath().concat("\\" + getFileWithoutExtension(indexName)).concat(".").concat(extension));
 
-        if (!file.exists()) {
+        if(!file.exists()) {
             file.createNewFile();
         }
 
@@ -146,7 +146,7 @@ public class MessageWriterThread extends Thread {
     private String getFileWithoutExtension(int indexName) {
         String result = Integer.toString(indexName);
 
-        while (result.length() < 5) {
+        while(result.length() < 5) {
             result = "0".concat(result);
         }
 
@@ -154,5 +154,4 @@ public class MessageWriterThread extends Thread {
 
         return result;
     }
-
 }

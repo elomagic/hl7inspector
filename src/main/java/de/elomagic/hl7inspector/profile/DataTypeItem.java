@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -28,6 +28,15 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "data-type")
 @XmlAccessorType(XmlAccessType.NONE)
 public final class DataTypeItem {
+    private int len = 0;
+    private int index = 0;
+    private String description = "";
+    private String dataType = "";
+    private String parentDataType = "";
+    private String opt = "O";
+    private String chapter = "";
+    private String parentDataTypeName = "";
+    private String table = "";
 
     /** Creates a new instance of DataType */
     public DataTypeItem() {
@@ -39,8 +48,6 @@ public final class DataTypeItem {
         setDescription(desc);
         setDataType(dataType);
     }
-
-    private int len = 0;
 
     @XmlElement(name = "length")
     public int getLength() {
@@ -54,12 +61,10 @@ public final class DataTypeItem {
     public void setLength(String l) {
         try {
             this.len = Integer.parseInt(l);
-        } catch (Exception e) {
+        } catch(Exception e) {
             this.len = 0;
         }
     }
-
-    private int index = 0;
 
     @XmlElement(name = "index")
     public int getIndex() {
@@ -73,12 +78,10 @@ public final class DataTypeItem {
     public void setIndex(String index) {
         try {
             this.index = Integer.parseInt(index);
-        } catch (Exception e) {
+        } catch(Exception e) {
             this.index = 0;
         }
     }
-
-    private String description = "";
 
     @XmlElement(name = "description")
     public String getDescription() {
@@ -89,8 +92,6 @@ public final class DataTypeItem {
         this.description = description;
     }
 
-    private String dataType = "";
-
     @XmlElement(name = "datatype")
     public String getDataType() {
         return dataType;
@@ -99,8 +100,6 @@ public final class DataTypeItem {
     public void setDataType(String dataType) {
         this.dataType = dataType.trim();
     }
-
-    private String parentDataType = "";
 
     @XmlElement(name = "parent")
     public String getParentDataType() {
@@ -111,8 +110,6 @@ public final class DataTypeItem {
         this.parentDataType = dataType.trim();
     }
 
-    private String opt = "O";
-
     @XmlElement(name = "opt")
     public String getOptionality() {
         return opt;
@@ -121,8 +118,6 @@ public final class DataTypeItem {
     public void setOptionality(String value) {
         opt = value.trim();
     }
-
-    private String chapter = "";
 
     @XmlElement(name = "chapter")
     public String getChapter() {
@@ -133,8 +128,6 @@ public final class DataTypeItem {
         this.chapter = chapter;
     }
 
-    private String parentDataTypeName = "";
-
     @XmlElement(name = "parent-name")
     public String getParentDataTypeName() {
         return parentDataTypeName;
@@ -144,8 +137,6 @@ public final class DataTypeItem {
         this.parentDataTypeName = parentDataTypeName.trim();
     }
 
-    private String table = "";
-
     @XmlElement(name = "table")
     public String getTable() {
         return table;
@@ -154,9 +145,8 @@ public final class DataTypeItem {
     public void setTable(String table) {
         try {
             this.table = Integer.valueOf(table).toString();
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             this.table = table.trim();
         }
     }
-
 }
