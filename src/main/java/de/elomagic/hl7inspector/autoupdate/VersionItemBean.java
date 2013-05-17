@@ -16,12 +16,14 @@
  */
 package de.elomagic.hl7inspector.autoupdate;
 
-import de.elomagic.hl7inspector.utils.XmlDateAdapter;
 import java.util.Date;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import de.elomagic.hl7inspector.utils.XmlDateAdapter;
 
 /**
  *
@@ -29,8 +31,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  */
 @XmlAccessorType(XmlAccessType.NONE)
 public class VersionItemBean {
-
     private Date date;
+    private String version = "";
+    private String homepage = "";
 
     @XmlElement(name = "date")
     @XmlJavaTypeAdapter(XmlDateAdapter.class)
@@ -42,8 +45,6 @@ public class VersionItemBean {
         this.date = date;
     }
 
-    private String version = "";
-
     @XmlElement(name = "version")
     public String getVersion() {
         return version;
@@ -53,8 +54,6 @@ public class VersionItemBean {
         this.version = version;
     }
 
-    private String homepage = "";
-
     @XmlElement(name = "homepage")
     public String getHomepage() {
         return homepage;
@@ -63,5 +62,4 @@ public class VersionItemBean {
     public void setHomepage(String homepage) {
         this.homepage = homepage;
     }
-
 }

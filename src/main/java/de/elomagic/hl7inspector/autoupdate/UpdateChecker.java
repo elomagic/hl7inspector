@@ -16,8 +16,6 @@
  */
 package de.elomagic.hl7inspector.autoupdate;
 
-import de.elomagic.hl7inspector.Hl7Inspector;
-import de.elomagic.hl7inspector.StartupProperties;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -29,13 +27,21 @@ import java.net.ProxySelector;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+
 import javax.xml.bind.JAXB;
+
+import de.elomagic.hl7inspector.Hl7Inspector;
+import de.elomagic.hl7inspector.StartupProperties;
 
 /**
  *
  * @author rambow
  */
 public class UpdateChecker extends Thread {
+    private boolean terminated = false;
+    private boolean resultAvailable = false;
+    private boolean result = false;
+    private UpdateCheckException e = null;
 
     /** Creates a new instance of UpdateChecker */
     public UpdateChecker() {
@@ -47,8 +53,6 @@ public class UpdateChecker extends Thread {
         terminated = true;
     }
 
-    private boolean terminated = false;
-
     @Override
     public void run() {
         resultAvailable = false;
@@ -59,7 +63,7 @@ public class UpdateChecker extends Thread {
                 String currentVersion = Hl7Inspector.getVersion();
                 result = checkUpdates(versionFile, currentVersion);
                 resultAvailable = false;
-            } catch (Exception ex) {
+            } catch(Exception ex) {
                 e = new UpdateCheckException(ex);
             }
         } finally {
@@ -67,20 +71,16 @@ public class UpdateChecker extends Thread {
         }
     }
 
-    private boolean resultAvailable = false;
-    private boolean result = false;
-    private UpdateCheckException e = null;
-
     public static boolean checkForUpdates() throws InterruptedException, UpdateCheckException {
         UpdateChecker uc = new UpdateChecker();
 
         uc.start();
 
-        while (!uc.resultAvailable && !uc.terminated) {
+        while(!uc.resultAvailable && !uc.terminated) {
             sleep(100);
         }
 
-        if (uc.e != null) {
+        if(uc.e != null) {
             throw uc.e;
         }
 
@@ -88,7 +88,7 @@ public class UpdateChecker extends Thread {
     }
 
     /**
-     * 
+     *
      * @param xml
      * @param currentVersion
      * @return true when currentVersion higher then version inside xml
@@ -110,27 +110,27 @@ public class UpdateChecker extends Thread {
         HttpURLConnection uc = null;
         HttpURLConnection.setFollowRedirects(true);
 
-        switch (p.getProxyMode()) {
+        switch(p.getProxyMode()) {
             case 1: {
                 ProxySelector ps = ProxySelector.getDefault();
                 List<Proxy> l = ps.select(url.toURI());
 
-                if (!l.isEmpty()) {
+                if(!l.isEmpty()) {
                     Proxy proxy = l.get(0);
-                    uc = (HttpURLConnection) url.openConnection(proxy);
+                    uc = (HttpURLConnection)url.openConnection(proxy);
                 } else {
-                    uc = (HttpURLConnection) url.openConnection();
+                    uc = (HttpURLConnection)url.openConnection();
                 }
 
                 break;
             }
             case 2: {
                 InetSocketAddress isa = new InetSocketAddress(p.getProxyHost(), p.getProxyPort());
-                uc = (HttpURLConnection) url.openConnection(new Proxy(Proxy.Type.HTTP, isa));
+                uc = (HttpURLConnection)url.openConnection(new Proxy(Proxy.Type.HTTP, isa));
                 break;
             }
             default: {
-                uc = (HttpURLConnection) url.openConnection();
+                uc = (HttpURLConnection)url.openConnection();
                 break;
             }
         }
@@ -145,10 +145,10 @@ public class UpdateChecker extends Thread {
                 String s;
                 do {
                     s = bin.readLine();
-                    if (s != null) {
+                    if(s != null) {
                         versionFile = versionFile.concat(s);
                     }
-                } while (s != null);
+                } while(s != null);
             } finally {
                 bin.close();
             }
@@ -158,5 +158,4 @@ public class UpdateChecker extends Thread {
 
         return versionFile;
     }
-
 }

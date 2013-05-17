@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "elomagic")
 @XmlAccessorType(XmlAccessType.NONE)
 public class VersionBean {
-
     private VersionItemBean hl7Inspector = new VersionItemBean();
 
     @XmlElement(name = "hl7_inspector2", required = false)
@@ -39,5 +38,4 @@ public class VersionBean {
     public void setHl7Inspector2(VersionItemBean hl7Inspector) {
         this.hl7Inspector = hl7Inspector;
     }
-
 }

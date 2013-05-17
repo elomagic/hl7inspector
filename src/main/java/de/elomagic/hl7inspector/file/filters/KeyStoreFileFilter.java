@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,12 +16,13 @@
  */
 package de.elomagic.hl7inspector.file.filters;
 
+import java.io.File;
+
 /**
  *
  * @author rambow
  */
 public class KeyStoreFileFilter extends javax.swing.filechooser.FileFilter implements java.io.FileFilter {
-
     /** Creates a new instance of HIPFileFilter */
     public KeyStoreFileFilter() {
         super();
@@ -31,20 +32,20 @@ public class KeyStoreFileFilter extends javax.swing.filechooser.FileFilter imple
      * Whether the given file is accepted by this filter.
      */
     @Override
-    public boolean accept(java.io.File f) {
+    public boolean accept(File f) {
         boolean r = f.isDirectory();
 
         try {
-            if (!r) {
+            if(!r) {
                 String ap = f.getAbsolutePath();
 
                 int i = ap.lastIndexOf(".");
 
-                if (i != -1) {
+                if(i != -1) {
                     r = r || ap.substring(i + 1).equalsIgnoreCase("pem");
                 }
             }
-        } catch (Exception e) {
+        } catch(Exception e) {
             r = false;
         }
 
@@ -53,11 +54,11 @@ public class KeyStoreFileFilter extends javax.swing.filechooser.FileFilter imple
 
     /**
      * The description of this filter. For example: "JPG and GIF Images"
+     *
      * @see FileView#getName
      */
     @Override
     public String getDescription() {
         return "Keystore files";
     }
-
 }
