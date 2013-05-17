@@ -31,6 +31,7 @@ import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
 import de.elomagic.hl7inspector.profile.ProfileIO;
+import de.elomagic.hl7inspector.utils.BundleTool;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -38,6 +39,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
+import java.text.MessageFormat;
+import java.util.ResourceBundle;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -67,6 +70,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     private Hl7TreePane treePane;
     private ScrollableEditorPane detailsPanel;
     private JTabbedPane tabPanel;
+    private ResourceBundle bundle = BundleTool.getBundle(Desktop.class);
 
     /**
      * Creates a new instance of Desktop.
@@ -99,10 +103,11 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     private void init(Hl7TreeModel model) {
 //    setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-        String s = Hl7Inspector.APPLICATION_NAME
-                   + " "
-                   + Hl7Inspector.getVersionString()
-                   + " (" + System.getProperty("os.arch") + "; " + System.getProperty("os.name") + ") - An Open Source project from Carsten Rambow";
+        String s = MessageFormat.format(bundle.getString("app_title"),
+                                        Hl7Inspector.APPLICATION_NAME,
+                                        Hl7Inspector.getVersionString(),
+                                        System.getProperty("os.arch"),
+                                        System.getProperty("os.name"));
 
         setTitle(s);
 
@@ -141,7 +146,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         treePane.getTree().getSelectionModel().addTreeSelectionListener(this);
 
         detailsPanel = new ScrollableEditorPane();
-        detailsPanel.getCaption().setTitle("Node details");
+        detailsPanel.getCaption().setTitle(bundle.getString("node_details"));
         detailsPanel.addComponentListener(this);
 
         middlePanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane, detailsPanel);
@@ -218,7 +223,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
                 SimpleDialog.error(e, "Unable to load default profile.");
             }
         } else {
-            bottomPanel.setProfileText("Profile not found!");
+            bottomPanel.setProfileText(bundle.getString("profile_not_found"));
             bottomPanel.setProfileTooltTip("");
         }
         return profile;
@@ -289,7 +294,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
 
             s = md.getDescription(o, true);
 
-            if(s.length() == 0) {
+            if(s.isEmpty()) {
                 s = NO_DESCRIPTION_FOUND;
             }
         }
