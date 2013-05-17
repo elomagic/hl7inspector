@@ -8,19 +8,21 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- *
+ * Resource bundle utility class.
  */
 public final class BundleTool {
     private BundleTool() {
     }
 
+    /**
+     * Returns resource bundle of package of given class.
+     *
+     * @param c Class
+     * @return Bundle
+     */
     public static ResourceBundle getBundle(final Class c) {
         String name = c.getPackage().getName().replace('.', '/').concat("/Bundle");
 
-        try {
-            return ResourceBundle.getBundle(name);
-        } catch(MissingResourceException ex) {
-            return ResourceBundle.getBundle(name, Locale.ROOT);
-        }
+        return ResourceBundle.getBundle(name);
     }
 }
