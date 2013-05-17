@@ -26,7 +26,6 @@ import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.gui.actions.DefaultCloseWindowAction;
 import de.elomagic.hl7inspector.gui.profiles.actions.*;
-import de.elomagic.hl7inspector.profile.ProfileFile;
 import java.awt.event.MouseEvent;
 
 import java.awt.event.MouseListener;

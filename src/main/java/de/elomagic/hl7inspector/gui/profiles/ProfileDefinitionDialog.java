@@ -78,7 +78,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
             ((ProfilePanel)list.get(i)).read(profile);
         }
 
-        pnlCom.setValidateStatus(profile.validate().size() == 0);
+        pnlCom.setValidateStatus(profile.validate().isEmpty());
     }
 
     public CommonPanel getCommonPanel() {
