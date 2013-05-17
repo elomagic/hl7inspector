@@ -76,7 +76,7 @@ public class History {
 
     private void clearProperties(Properties prop) {
         int i = 1;
-        boolean next = false;
+        boolean next;
 
         do {
             String key = path.concat(Integer.toString(i));
