@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,6 +31,7 @@ import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
 import de.elomagic.hl7inspector.profile.ProfileIO;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ComponentEvent;
@@ -46,6 +47,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreeModel;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -53,10 +55,22 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class Desktop extends JFrame implements TreeSelectionListener, ComponentListener {
-
     private static final long serialVersionUID = -7355763607097590182L;
+    private MainToolBar mainToolBar;
+    private BottomPanel bottomPanel = new BottomPanel();
+    private CharacterMonitor inputTrace = new CharacterMonitor();
+    private ReceivePanel rp = new ReceivePanel();
+    private SendPanel sp = new SendPanel();
+    private final static Desktop desk = new Desktop();
+    private JSplitPane middlePanel;
+    private JSplitPane mainPanel;
+    private Hl7TreePane treePane;
+    private ScrollableEditorPane detailsPanel;
+    private JTabbedPane tabPanel;
 
-    /** Creates a new instance of Desktop */
+    /**
+     * Creates a new instance of Desktop.
+     */
     private Desktop() {
         init(null);
     }
@@ -83,12 +97,12 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     }
 
     private void init(Hl7TreeModel model) {
-//    setDefaultCloseOperation(EXIT_ON_CLOSE);        
+//    setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         String s = Hl7Inspector.APPLICATION_NAME
-                + " "
-                + Hl7Inspector.getVersionString()
-                + " (" + System.getProperty("os.arch") + "; " + System.getProperty("os.name") + ") - An Open Source project from Carsten Rambow";
+                   + " "
+                   + Hl7Inspector.getVersionString()
+                   + " (" + System.getProperty("os.arch") + "; " + System.getProperty("os.name") + ") - An Open Source project from Carsten Rambow";
 
         setTitle(s);
 
@@ -99,21 +113,19 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(
                 new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
 
-                    @Override
-                    public void windowActivated(WindowEvent e) {
-                    }
+            @Override
+            public void windowClosing(WindowEvent e) {
+                new ExitAction().actionPerformed(null);
+            }
 
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        new ExitAction().actionPerformed(null);
-                    }
-
-                    @Override
-                    public void windowIconified(WindowEvent e) {
-                    }
-
-                });
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+        });
 
         setJMenuBar(new MainMenuBar());
 
@@ -140,7 +152,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         sp.addComponentListener(this);
 
         tabPanel = new JTabbedPane();
-//        tabPanel.addTab(inputTrace.getTitle(), inputTrace.getIcon(), inputTrace);                
+//        tabPanel.addTab(inputTrace.getTitle(), inputTrace.getIcon(), inputTrace);
 //        tabPanel.addTab(rp.getTitle(), rp.getIcon(), rp);
 //        tabPanel.addTab(sp.getTitle(), sp.getIcon(), sp);
         tabPanel.addComponentListener(this);
@@ -171,7 +183,7 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
 
         ProfileFile file = new ProfileFile(prop.getProperty(StartupProperties.DEFAULT_PROFILE, ""));
         Profile profile = setProfileFile(file);
-        if (profile != null) {
+        if(profile != null) {
             ProfileIO.setDefault(profile);
         }
 
@@ -182,26 +194,23 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     public Profile setProfileFile(ProfileFile file) {
         Profile profile = null;
 
-        if (file.exists()) {
+        if(file.exists()) {
             try {
-                FileInputStream fin = new FileInputStream(file);
-                try {
+                try (FileInputStream fin = new FileInputStream(file)) {
                     profile = ProfileIO.load(fin);
-                } catch (Exception e) {
+                } catch(Exception e) {
                     profile = ProfileIO.getDefault();
-                } finally {
-                    fin.close();
                 }
 
                 bottomPanel.setProfileText(profile.getName());
                 bottomPanel.setProfileTooltTip(profile.getDescription());
 
-                if (getModel() instanceof Hl7TreeModel) {
-                    if (((Hl7TreeModel) getModel()).isViewDescription()) {
+                if(getModel() instanceof Hl7TreeModel) {
+                    if(((Hl7TreeModel)getModel()).isViewDescription()) {
                         getTree().updateUI();
                     }
                 }
-            } catch (Exception e) {
+            } catch(Exception e) {
                 bottomPanel.setProfileText("Unable to load default profile.");
                 bottomPanel.setProfileTooltTip(e.getMessage());
 
@@ -219,9 +228,6 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         return mainToolBar;
     }
 
-    private MainToolBar mainToolBar;
-    private BottomPanel bottomPanel = new BottomPanel();
-
     public void setSelectedTabIndex(int index) {
         tabPanel.setSelectedIndex(index);
     }
@@ -230,25 +236,13 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         return inputTrace;
     }
 
-    private CharacterMonitor inputTrace = new CharacterMonitor();
-
     public ReceivePanel getReceiveWindow() {
         return rp;
     }
 
-    private ReceivePanel rp = new ReceivePanel();
-
     public SendPanel getSendWindow() {
         return sp;
     }
-
-    private SendPanel sp = new SendPanel();
-    private final static Desktop desk = new Desktop();
-    private JSplitPane middlePanel;
-    private JSplitPane mainPanel;
-    private Hl7TreePane treePane;
-    private ScrollableEditorPane detailsPanel;
-    private JTabbedPane tabPanel;
 
     public ScrollableEditorPane getDetailsWindow() {
         return detailsPanel;
@@ -259,25 +253,26 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     }
 
     /**
-     * 
+     *
      * Called whenever the value of the selection changes.
+     *
      * @param e the event that characterizes the change.
      */
     @Override
     public void valueChanged(javax.swing.event.TreeSelectionEvent e) {
-        if (e.getNewLeadSelectionPath() != null) {
-            if (e.getNewLeadSelectionPath().getPathCount() > 1) {
-                if (e.getNewLeadSelectionPath().getPathComponent(1) instanceof Hl7Object) {
-                    Hl7Object o = (Hl7Object) e.getNewLeadSelectionPath().getPathComponent(1);
-                    if (o instanceof Message) {
-                        Message m = (Message) o;
+        if(e.getNewLeadSelectionPath() != null) {
+            if(e.getNewLeadSelectionPath().getPathCount() > 1) {
+                if(e.getNewLeadSelectionPath().getPathComponent(1) instanceof Hl7Object) {
+                    Hl7Object o = (Hl7Object)e.getNewLeadSelectionPath().getPathComponent(1);
+                    if(o instanceof Message) {
+                        Message m = (Message)o;
 
                         bottomPanel.setStatusText("Source: ".concat(m.getSource().length() == 0 ? "Unknown" : m.getSource()));
                     }
                 }
 
-                if (e.getNewLeadSelectionPath().getLastPathComponent() instanceof Hl7Object) {
-                    showHl7ObjectDetails((Hl7Object) e.getNewLeadSelectionPath().getLastPathComponent());
+                if(e.getNewLeadSelectionPath().getLastPathComponent() instanceof Hl7Object) {
+                    showHl7ObjectDetails((Hl7Object)e.getNewLeadSelectionPath().getLastPathComponent());
                 }
             }
         }
@@ -287,14 +282,14 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
         String s = "";
 
 
-        if (detailsPanel.isVisible()) {
+        if(detailsPanel.isVisible()) {
             String NO_DESCRIPTION_FOUND = "No description in profile found.";
 
             MessageDescriptor md = new MessageDescriptor(ProfileIO.getDefault());
 
             s = md.getDescription(o, true);
 
-            if (s.length() == 0) {
+            if(s.length() == 0) {
                 s = NO_DESCRIPTION_FOUND;
             }
         }
@@ -305,9 +300,9 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     public void setTabVisible(JComponent o) {
         int i = getTabbedBottomPanel().indexOfComponent(o);
 
-        if (i == -1) {
-            if (o instanceof CharacterMonitor) {
-                CharacterMonitor cm = (CharacterMonitor) o;
+        if(i == -1) {
+            if(o instanceof CharacterMonitor) {
+                CharacterMonitor cm = (CharacterMonitor)o;
                 getTabbedBottomPanel().addTab(cm.getTitle(), cm.getIcon(), cm);
 
                 getTabbedBottomPanel().setSelectedComponent(o);
@@ -322,16 +317,16 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
     // Interface ComponentListener
     @Override
     public void componentShown(ComponentEvent e) {
-        if (e.getSource().equals(getDetailsWindow())) {
+        if(e.getSource().equals(getDetailsWindow())) {
             StartupProperties.getInstance().setDetailsWindowVisible(getDetailsWindow().isVisible());
             middlePanel.setDividerLocation(getSize().width - 200);
             middlePanel.setDividerSize(4);
             getToolBar().getDetailsButton().setSelected(true);
 
-            if (getTree().getSelectionCount() == 1) {
-                showHl7ObjectDetails((Hl7Object) getTree().getSelectionPath().getLastPathComponent());
+            if(getTree().getSelectionCount() == 1) {
+                showHl7ObjectDetails((Hl7Object)getTree().getSelectionPath().getLastPathComponent());
             }
-        } else if (e.getSource().equals(getTabbedBottomPanel())) {
+        } else if(e.getSource().equals(getTabbedBottomPanel())) {
             mainPanel.setDividerSize(4);
             mainPanel.setDividerLocation(0.75);
 //            getToolBar().getDetailsButton().setSelected(true);
@@ -348,17 +343,16 @@ public class Desktop extends JFrame implements TreeSelectionListener, ComponentL
 
     @Override
     public void componentHidden(ComponentEvent e) {
-        if (e.getSource().equals(getDetailsWindow())) {
+        if(e.getSource().equals(getDetailsWindow())) {
             StartupProperties.getInstance().setDetailsWindowVisible(getDetailsWindow().isVisible());
             getToolBar().getDetailsButton().setSelected(false);
-            if (middlePanel.isVisible()) {
+            if(middlePanel.isVisible()) {
                 middlePanel.setDividerSize(0);
             }
-        } else if (e.getSource().equals(getTabbedBottomPanel())) {
-            if (mainPanel.isVisible()) {
+        } else if(e.getSource().equals(getTabbedBottomPanel())) {
+            if(mainPanel.isVisible()) {
                 mainPanel.setDividerSize(0);
             }
         }
     }
-
 }
