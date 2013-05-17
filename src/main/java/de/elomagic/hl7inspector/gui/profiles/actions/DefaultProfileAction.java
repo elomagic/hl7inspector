@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -22,10 +22,12 @@ import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
 import de.elomagic.hl7inspector.profile.ProfileIO;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JList;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -33,12 +35,14 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class DefaultProfileAction extends AbstractAction {
-
     private static final long serialVersionUID = -4333787361797188249L;
+    private JList list;
 
-    /** Creates a new instance of FileOpenAction */
+    /**
+     * Creates a new instance of FileOpenAction.
+     */
     public DefaultProfileAction(JList list) {
-        super("Set default", null);//ResourceLoader.loadImageIcon("edit_add.png"));
+        super("Set default", null);
 
         this.list = list;
 
@@ -49,23 +53,21 @@ public class DefaultProfileAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            if (list.getSelectedValue() != null) {
-                ProfileFile file = (ProfileFile) list.getSelectedValue();
+            if(list.getSelectedValue() != null) {
+                ProfileFile file = (ProfileFile)list.getSelectedValue();
 
                 StartupProperties.getInstance().setProperty(StartupProperties.DEFAULT_PROFILE, (file).toString());
                 list.repaint();
 
                 Profile profile = Desktop.getInstance().setProfileFile(file);
-                if (profile != null) {
+                if(profile != null) {
                     ProfileIO.setDefault(profile);
                 }
             } else {
                 SimpleDialog.error("No profile selected!");
             }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
     }
-
-    private JList list;
 }

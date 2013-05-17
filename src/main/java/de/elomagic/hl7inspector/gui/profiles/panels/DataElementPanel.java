@@ -32,7 +32,9 @@ import de.elomagic.hl7inspector.profile.Profile;
 public class DataElementPanel extends ProfileTablePanel {
     private static final long serialVersionUID = -3583520327885944253L;
 
-    /** Creates a new instance of FileIdPane */
+    /**
+     * Creates a new instance of FileIdPanel.
+     */
     public DataElementPanel(PanelDialog d) {
         super(d);
     }

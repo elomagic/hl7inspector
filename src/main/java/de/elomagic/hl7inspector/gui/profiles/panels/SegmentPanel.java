@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,18 +21,21 @@ import de.elomagic.hl7inspector.gui.profiles.model.SegmentModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.SegmentItem;
+
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.Icon;
 
 /**
  *
  * @author rambow
  */
 public class SegmentPanel extends ProfileTablePanel {
-
     private static final long serialVersionUID = 8012235037752284322L;
 
-    /** Creates a new instance of SegmentPane */
+    /**
+     * Creates a new instance of SegmentPanel.
+     */
     public SegmentPanel(PanelDialog d) {
         super(d);
     }
@@ -46,11 +49,11 @@ public class SegmentPanel extends ProfileTablePanel {
 
     @Override
     public void write(Profile profile) {
-        SegmentModel m = (SegmentModel) getModel();
+        SegmentModel m = (SegmentModel)getModel();
 
         List<SegmentItem> list = new ArrayList();
 
-        for (int i = 0; i < m.getRowCount(); i++) {
+        for(int i = 0; i < m.getRowCount(); i++) {
             list.add(m.getSegment(i));
         }
 
@@ -59,7 +62,7 @@ public class SegmentPanel extends ProfileTablePanel {
 
     @Override
     public void read(Profile profile) {
-        ((SegmentModel) model).setModel(profile.getSegmentList());
+        ((SegmentModel)model).setModel(profile.getSegmentList());
     }
 
     @Override
@@ -68,7 +71,7 @@ public class SegmentPanel extends ProfileTablePanel {
     }
 
     @Override
-    public javax.swing.Icon getIcon() {
+    public Icon getIcon() {
         return ResourceLoader.loadImageIcon("x-profile-data-editor.png", ResourceLoader.LARGE_IMAGE);
     }
 
@@ -76,5 +79,4 @@ public class SegmentPanel extends ProfileTablePanel {
     public String getDescription() {
         return "";
     }
-
 }

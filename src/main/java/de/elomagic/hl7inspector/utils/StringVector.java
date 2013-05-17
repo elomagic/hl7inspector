@@ -25,8 +25,11 @@ import java.util.Enumeration;
  */
 public class StringVector extends ArrayList<String> {
     private static final long serialVersionUID = 4981201897190482424L;
+    private char sep = ',';
 
-    /** Creates a new instance of StringVector */
+    /**
+     * Creates a new instance of StringVector.
+     */
     public StringVector() {
     }
 
@@ -42,12 +45,6 @@ public class StringVector extends ArrayList<String> {
 
     public StringVector(String text, char seperatorChar) {
         sep = seperatorChar;
-        parse(text);
-    }
-
-    public StringVector(String text, char seperatorChar, char stringEncodingChar) {
-        sep = seperatorChar;
-        enc = stringEncodingChar;
         parse(text);
     }
 
@@ -100,6 +97,4 @@ public class StringVector extends ArrayList<String> {
 
         return sb.toString().trim();
     }
-    private char sep = ',';
-    private char enc = '"';
 }

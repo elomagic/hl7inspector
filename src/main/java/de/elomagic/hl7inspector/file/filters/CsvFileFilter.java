@@ -21,7 +21,9 @@ package de.elomagic.hl7inspector.file.filters;
  * @author rambow
  */
 public class CsvFileFilter extends javax.swing.filechooser.FileFilter implements java.io.FileFilter {
-    /** Creates a new instance of HIPFileFilter */
+    /**
+     * Creates a new instance of HIPFileFilter.
+     */
     public CsvFileFilter() {
         super();
     }

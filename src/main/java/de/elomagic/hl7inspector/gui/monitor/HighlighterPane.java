@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,8 +17,10 @@
 package de.elomagic.hl7inspector.gui.monitor;
 
 import de.elomagic.hl7inspector.utils.StringEscapeUtils;
+
 import javax.swing.JEditorPane;
 import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -26,8 +28,14 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class HighlighterPane extends JEditorPane {
+    private StringBuffer buffer = new StringBuffer();
+    private DoRun doRun = new DoRun();
+    private boolean changed = false;
+    private RefreshThread refreshThread = new RefreshThread();
 
-    /** Creates a new instance of HighlighterPane */
+    /**
+     * Creates a new instance of HighlighterPanel.
+     */
     public HighlighterPane() {
         super();
 
@@ -46,19 +54,19 @@ public class HighlighterPane extends JEditorPane {
     }
 
     public void addChar(char c) {
-        if (!refreshThread.isAlive()) {
+        if(!refreshThread.isAlive()) {
             refreshThread.start();
         }
 
-        if (c < 0x20) {
+        if(c < 0x20) {
             buffer = buffer.append("<font color=\"fuchsia\">&lt;");
-//            buffer = buffer.append("&lt;");            
+//            buffer = buffer.append("&lt;");
 
-            if (c == '&') {
+            if(c == '&') {
                 buffer = buffer.append("&amp");
             } else {
                 String s = Integer.toHexString(c);
-                if (s.length() < 2) {
+                if(s.length() < 2) {
                     s = "0".concat(s);
                 }
                 s = "0x".concat(s);
@@ -68,7 +76,7 @@ public class HighlighterPane extends JEditorPane {
 //            buffer = buffer.append("&gt;");
             buffer = buffer.append("&gt;</font>");
 
-            if (c == 0x0d) {
+            if(c == 0x0d) {
                 buffer = buffer.append("<br>");
             }
         } else {
@@ -78,11 +86,11 @@ public class HighlighterPane extends JEditorPane {
     }
 
     public void addLine(String value) {
-        if (!refreshThread.isAlive()) {
+        if(!refreshThread.isAlive()) {
             refreshThread.start();
         }
 
-        if (buffer.lastIndexOf("<br>") != (buffer.length() - 4)) {
+        if(buffer.lastIndexOf("<br>") != (buffer.length() - 4)) {
             buffer.append("<br>");
         }
         buffer.append(StringEscapeUtils.escapeHtml(value) + "<br>");
@@ -93,18 +101,13 @@ public class HighlighterPane extends JEditorPane {
         buffer = new StringBuffer();
         changed = true;
 
-        if (!refreshThread.isAlive()) {
+        if(!refreshThread.isAlive()) {
             refreshThread.start();
         }
     }
 
-    private StringBuffer buffer = new StringBuffer();
-
-    private DoRun doRun = new DoRun();
-
-    private boolean changed = false;
     private String surroundHtml(StringBuffer sb) {
-        StringBuffer result = new StringBuffer();
+        StringBuilder result = new StringBuilder();
         result.append("<HTML><BODY><font face=\"Courier New, Tahoma, Arial\" size=\"3\">");
         result.append(sb);
         result.append("</font></BODY></HTML>");
@@ -112,36 +115,32 @@ public class HighlighterPane extends JEditorPane {
         return result.toString();
     }
 
-    private RefreshThread refreshThread = new RefreshThread();
-
     class RefreshThread extends Thread {
-
         @Override
         public void run() {
-            while (!terminating) {
+            while(!terminating) {
                 try {
-                    if (isVisible() && (!doRun.running)) {
+                    if(isVisible() && (!doRun.running)) {
                         SwingUtilities.invokeLater(doRun);
                     }
 
                     sleep(50);
-                } catch (Exception e) {
+                } catch(Exception e) {
                     Logger.getLogger(getClass()).error(e.getMessage(), e);
                 }
             }
         }
-
         public boolean terminating = false;
     }
 
     class DoRun implements Runnable {
-
         public boolean running = false;
+
         @Override
         public void run() {
             running = true;
             try {
-                if (changed) {
+                if(changed) {
                     changed = false;
                     String s = getText();
 
@@ -152,7 +151,7 @@ public class HighlighterPane extends JEditorPane {
 
                     String newValue = surroundHtml(buffer);
 
-                    if (!s.equals(newValue)) {
+                    if(!s.equals(newValue)) {
                         setText(newValue);
                     }
                 }
@@ -160,6 +159,5 @@ public class HighlighterPane extends JEditorPane {
                 running = false;
             }
         }
-
     }
 }

@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@ import de.elomagic.hl7inspector.gui.profiles.model.TableModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.TableItem;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,10 +30,11 @@ import java.util.List;
  * @author rambow
  */
 public class TablePanel extends ProfileTablePanel {
-
     private static final long serialVersionUID = -3661005431150970703L;
 
-    /** Creates a new instance of TablePane */
+    /**
+     * Creates a new instance of TablePanel.
+     */
     public TablePanel(PanelDialog d) {
         super(d);
     }
@@ -46,11 +48,11 @@ public class TablePanel extends ProfileTablePanel {
 
     @Override
     public void write(Profile profile) {
-        TableModel m = (TableModel) getModel();
+        TableModel m = (TableModel)getModel();
 
-        List<TableItem> list = new ArrayList<TableItem>();
+        List<TableItem> list = new ArrayList<>();
 
-        for (int i = 0; i < m.getRowCount(); i++) {
+        for(int i = 0; i < m.getRowCount(); i++) {
             list.add(m.getTableItem(i));
         }
 
@@ -59,7 +61,7 @@ public class TablePanel extends ProfileTablePanel {
 
     @Override
     public void read(Profile profile) {
-        ((TableModel) model).setModel(profile.getTableDataList());
+        ((TableModel)model).setModel(profile.getTableDataList());
     }
 
     @Override
@@ -76,5 +78,4 @@ public class TablePanel extends ProfileTablePanel {
     public String getDescription() {
         return "";
     }
-
 }

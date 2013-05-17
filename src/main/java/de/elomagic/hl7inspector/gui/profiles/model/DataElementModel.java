@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,7 +17,9 @@
 package de.elomagic.hl7inspector.gui.profiles.model;
 
 import de.elomagic.hl7inspector.profile.DataElement;
+
 import java.util.List;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -25,14 +27,15 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class DataElementModel<E extends DataElement> extends ProfileModel<DataElement> {
-
     private static final long serialVersionUID = -7858155541327476573L;
 
     public DataElementModel() {
         super();
     }
 
-    /** Creates a new instance of DataTypeModel */
+    /**
+     * Creates a new instance of DataTypeModel.
+     */
     public DataElementModel(List<E> list) {
         super();
 
@@ -48,7 +51,7 @@ public class DataElementModel<E extends DataElement> extends ProfileModel<DataEl
     public Object getValueAt(int rowIndex, int columnIndex) {
         DataElement de = getRow(rowIndex);
 
-        switch (columnIndex) {
+        switch(columnIndex) {
             case 0:
                 return de.getItem();
             case 1:
@@ -87,7 +90,7 @@ public class DataElementModel<E extends DataElement> extends ProfileModel<DataEl
 
     @Override
     public String getColumnName(int col) {
-        switch (col) {
+        switch(col) {
             case 0:
                 return "Id";
             case 1:
@@ -117,20 +120,19 @@ public class DataElementModel<E extends DataElement> extends ProfileModel<DataEl
     }
 
     /**
-     *  This empty implementation is provided so users don't have to implement
-     *  this method if their data model is not editable.
-     * 
-     * 
-     * @param aValue   value to assign to cell
-     * @param rowIndex   row of cell
-     * @param columnIndex  column of cell
+     * This empty implementation is provided so users don't have to implement this method if their data model is not editable.
+     *
+     *
+     * @param aValue value to assign to cell
+     * @param rowIndex row of cell
+     * @param columnIndex column of cell
      */
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         try {
             DataElement de = getRow(rowIndex);
 
-            switch (columnIndex) {
+            switch(columnIndex) {
                 case 0:
                     de.setItem(aValue.toString());
                     break;
@@ -162,9 +164,8 @@ public class DataElementModel<E extends DataElement> extends ProfileModel<DataEl
             }
 
             fireTableCellUpdated(rowIndex, columnIndex);
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
         }
     }
-
 }

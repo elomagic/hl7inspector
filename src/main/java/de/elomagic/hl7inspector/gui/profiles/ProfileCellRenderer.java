@@ -32,22 +32,23 @@ import de.elomagic.hl7inspector.profile.ProfileFile;
  * @author rambow
  */
 public class ProfileCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
-
     private static final long serialVersionUID = 3772768483753533378L;
 
-    /** Creates a new instance of ProfileCellRenderer */
+    /**
+     * Creates a new instance of ProfileCellRenderer.
+     */
     public ProfileCellRenderer() {
     }
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        ProfileFile file = (ProfileFile) value;
+        ProfileFile file = (ProfileFile)value;
 
         setToolTipText("File: " + file.toString());
-        if (!file.exists()) {
+        if(!file.exists()) {
             setIcon(ResourceLoader.loadImageIcon("warning.png"));
             setToolTipText("Profile " + file.toString() + " not found!");
-        } else if (file.toString().equals(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, ""))) {
+        } else if(file.toString().equals(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, ""))) {
             setIcon(ResourceLoader.loadImageIcon("ok.png"));
             setToolTipText("");
         } else {
@@ -61,5 +62,4 @@ public class ProfileCellRenderer extends DefaultListCellRenderer implements List
 
         return this;
     }
-
 }

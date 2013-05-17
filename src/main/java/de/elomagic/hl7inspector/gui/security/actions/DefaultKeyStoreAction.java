@@ -35,7 +35,9 @@ import de.elomagic.hl7inspector.gui.SimpleDialog;
 public class DefaultKeyStoreAction extends AbstractAction {
     private JList list;
 
-    /** Creates a new instance of FileOpenAction */
+    /**
+     * Creates a new instance of FileOpenAction.
+     */
     public DefaultKeyStoreAction(JList list) {
         super("Set private", null);//ResourceLoader.loadImageIcon("edit_add.png"));
 

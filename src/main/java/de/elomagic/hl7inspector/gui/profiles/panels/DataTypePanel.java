@@ -32,7 +32,9 @@ import de.elomagic.hl7inspector.profile.Profile;
 public class DataTypePanel extends ProfileTablePanel {
     private static final long serialVersionUID = -1867620600189483742L;
 
-    /** Creates a new instance of DataTypePane */
+    /**
+     * Creates a new instance of DataTypePanel.
+     */
     public DataTypePanel(PanelDialog d) {
         super(d);
     }

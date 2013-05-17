@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,15 +25,18 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class DataTypeModel<E extends DataTypeItem> extends ProfileModel<DataTypeItem> {
-
     private static final long serialVersionUID = -9155940816412596164L;
 
-    /** Creates a new instance of DataTypeModel */
+    /**
+     * Creates a new instance of DataTypeModel.
+     */
     public DataTypeModel() {
         super();
     }
 
-    /** Creates a new instance of DataTypeModel */
+    /**
+     * Creates a new instance of DataTypeModel.
+     */
     public DataTypeModel(List<E> list) {
         super();
 
@@ -49,7 +52,7 @@ public class DataTypeModel<E extends DataTypeItem> extends ProfileModel<DataType
     public Object getValueAt(int rowIndex, int columnIndex) {
         DataTypeItem de = getRow(rowIndex);
 
-        switch (columnIndex) {
+        switch(columnIndex) {
             case 0:
                 return de.getParentDataType();
             case 1:
@@ -74,20 +77,19 @@ public class DataTypeModel<E extends DataTypeItem> extends ProfileModel<DataType
     }
 
     /**
-     *  This empty implementation is provided so users don't have to implement
-     *  this method if their data model is not editable.
-     * 
-     * 
-     * @param aValue   value to assign to cell
-     * @param rowIndex   row of cell
-     * @param columnIndex  column of cell
+     * This empty implementation is provided so users don't have to implement this method if their data model is not editable.
+     *
+     *
+     * @param aValue value to assign to cell
+     * @param rowIndex row of cell
+     * @param columnIndex column of cell
      */
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
         try {
             DataTypeItem de = getRow(rowIndex);
 
-            switch (columnIndex) {
+            switch(columnIndex) {
                 case 0:
                     de.setParentDataType(aValue.toString());
                     break;
@@ -120,7 +122,7 @@ public class DataTypeModel<E extends DataTypeItem> extends ProfileModel<DataType
             }
 
             fireTableCellUpdated(rowIndex, columnIndex);
-        } catch (Exception e) {
+        } catch(Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
         }
     }
@@ -137,7 +139,7 @@ public class DataTypeModel<E extends DataTypeItem> extends ProfileModel<DataType
 
     @Override
     public String getColumnName(int col) {
-        switch (col) {
+        switch(col) {
             case 0:
                 return "Parent Data Type";
             case 1:
@@ -165,5 +167,4 @@ public class DataTypeModel<E extends DataTypeItem> extends ProfileModel<DataType
     public Class getDefaultRowClass() {
         return DataTypeItem.class;
     }
-
 }

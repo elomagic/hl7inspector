@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,12 +19,14 @@ package de.elomagic.hl7inspector.gui.options;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.AbstractPanel;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.PanelDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -32,10 +34,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
 import javax.swing.JButton;
-//import javax.swing.JCheckBox;
-//import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-//import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 /**
@@ -43,8 +42,14 @@ import javax.swing.JTextField;
  * @author rambow
  */
 public class ExternalToolsPanel extends AbstractPanel {
+    private JTextField editTextViewer;
+    private JTextField editHexViewer;
+    private JButton btChooseTextViewer;
+    private JButton btChooseHexViewer;
 
-    /** Creates a new instance of GeneralOptionPane */
+    /**
+     * Creates a new instance of GeneralOptionPanel.
+     */
     public ExternalToolsPanel(PanelDialog d) {
         super(d);
     }
@@ -111,16 +116,7 @@ public class ExternalToolsPanel extends AbstractPanel {
         p.setExternalHexViewer(editHexViewer.getText().length() != 0 ? new File(editHexViewer.getText()) : null);
     }
 
-    private JTextField editTextViewer;
-
-    private JTextField editHexViewer;
-
-    private JButton btChooseTextViewer;
-
-    private JButton btChooseHexViewer;
-
     class FileChooseAction extends AbstractAction {
-
         public FileChooseAction() {
             super("...", null);//ResourceLoader.loadImageIcon("view_tree.png"));
 
@@ -135,12 +131,12 @@ public class ExternalToolsPanel extends AbstractPanel {
                 //fc.set
 
                 fc.setDialogTitle("Choose external viewer");
-                if (fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+                if(fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
                     fc.setVisible(false);
 
-                    if (e.getSource().equals(btChooseTextViewer)) {
+                    if(e.getSource().equals(btChooseTextViewer)) {
                         editTextViewer.setText(fc.getSelectedFile().toString());
-                    } else if (e.getSource().equals(btChooseHexViewer)) {
+                    } else if(e.getSource().equals(btChooseHexViewer)) {
                         editHexViewer.setText(fc.getSelectedFile().toString());
                     }
                 }
@@ -148,6 +144,5 @@ public class ExternalToolsPanel extends AbstractPanel {
                 getDialog().setAlwaysOnTop(false);
             }
         }
-
     };
 }

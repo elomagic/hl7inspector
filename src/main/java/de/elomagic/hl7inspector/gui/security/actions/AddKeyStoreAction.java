@@ -37,7 +37,9 @@ import de.elomagic.hl7inspector.images.ResourceLoader;
 public class AddKeyStoreAction extends AbstractAction {
     private JList list;
 
-    /** Creates a new instance of FileOpenAction */
+    /**
+     * Creates a new instance of FileOpenAction.
+     */
     public AddKeyStoreAction(JList list) {
         super("Add", ResourceLoader.loadImageIcon("edit_add.png"));
 

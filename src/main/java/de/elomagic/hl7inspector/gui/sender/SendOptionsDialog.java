@@ -48,7 +48,9 @@ public class SendOptionsDialog extends BaseDialog {
     private JComboBox cbEncoding;
     private JCheckBox cbReuse;
 
-    /** Creates a new instance of SendOptionsDialog */
+    /**
+     * Creates a new instance of SendOptionsDialog.
+     */
     public SendOptionsDialog() {
         super(Desktop.getInstance());
 

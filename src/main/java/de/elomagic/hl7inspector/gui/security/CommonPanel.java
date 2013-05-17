@@ -19,11 +19,13 @@ package de.elomagic.hl7inspector.gui.security;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import de.elomagic.hl7inspector.gui.AbstractPanel;
 import de.elomagic.hl7inspector.gui.PanelDialog;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.utils.StringVector;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
@@ -42,8 +44,16 @@ import javax.swing.border.EmptyBorder;
  * @author rambow
  */
 public class CommonPanel extends KeyStorePanel {
+    private JTextField editProv;
+    private JTextField editVersion;
+    private JTextArea editInfo;
+    private JTextField editType;
+    private JLabel lbLastUpdateDate;
+    private JLabel lbValidateStatus;
 
-    /** Creates a new instance of CommonPane */
+    /**
+     * Creates a new instance of CommonPanel.
+     */
     public CommonPanel(PanelDialog d) {
         super(d);
     }
@@ -108,17 +118,6 @@ public class CommonPanel extends KeyStorePanel {
         add(builder.getPanel(), BorderLayout.CENTER);
     }
 
-    private JTextField editProv;
-
-    private JTextField editVersion;
-
-    private JTextArea editInfo;
-
-    private JTextField editType;
-
-    private JLabel lbLastUpdateDate;
-
-    private JLabel lbValidateStatus;
     public void resetValidateStatus() {
         lbValidateStatus.setText("The keystore validation status is unknown. Press 'Validate' button.");
         lbValidateStatus.setIcon(ResourceLoader.loadImageIcon("warning.png"));
@@ -162,14 +161,13 @@ public class CommonPanel extends KeyStorePanel {
     }
 
     class ValidateProfileAction extends AbstractAction {
-
         public ValidateProfileAction() {
             super("Validate keystore");
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            KeyStoreDialog dlg = (KeyStoreDialog) getDialog();
+            KeyStoreDialog dlg = (KeyStoreDialog)getDialog();
 
             List<AbstractPanel> list = dlg.getPanelList();
 
@@ -177,14 +175,13 @@ public class CommonPanel extends KeyStorePanel {
                 StringVector val = new StringVector(dlg.getKeyStore().aliases());
 
 
-                if (val.size() != 0) {
-                    SimpleDialog.warn("List of aliases", val.toString((char) 10));
+                if(val.size() != 0) {
+                    SimpleDialog.warn("List of aliases", val.toString((char)10));
                 }
-            } catch (Exception ee) {
+            } catch(Exception ee) {
                 SimpleDialog.error(ee);
             }
 
         }
-
     }
 }

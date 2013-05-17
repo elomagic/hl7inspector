@@ -23,7 +23,9 @@ import java.io.File;
  * @author rambow
  */
 public class KeyStoreFileFilter extends javax.swing.filechooser.FileFilter implements java.io.FileFilter {
-    /** Creates a new instance of HIPFileFilter */
+    /**
+     * Creates a new instance of HIPFileFilter.
+     */
     public KeyStoreFileFilter() {
         super();
     }

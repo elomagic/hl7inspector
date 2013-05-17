@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,11 +19,13 @@ package de.elomagic.hl7inspector.gui.options;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.AbstractPanel;
 import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.PanelDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -34,12 +36,22 @@ import javax.swing.JColorChooser;
 import javax.swing.JTextField;
 
 /**
- * 
+ *
  * @author rambow
  */
 public class FontsColorOptionPanel extends AbstractPanel {
+    private JTextField lblColorNodePrefix;
+    private JTextField lblNodeText;
+    private JTextField lblNodeDescription;
+    private JTextField lblNodeTruncate;
+    private JButton btNodePrefix;
+    private JButton btNodeText;
+    private JButton btNodeDescription;
+    private JButton btNodeTruncate;
 
-    /** Creates a new instance of GeneralOptionPane */
+    /**
+     * Creates a new instance of GeneralOptionPanel.
+     */
     public FontsColorOptionPanel(PanelDialog d) {
         super(d);
     }
@@ -131,39 +143,21 @@ public class FontsColorOptionPanel extends AbstractPanel {
         p.setColor(StartupProperties.COLOR_NODE_TRUNCATE, lblNodeTruncate.getForeground());
     }
 
-    private JTextField lblColorNodePrefix;
-
-    private JTextField lblNodeText;
-
-    private JTextField lblNodeDescription;
-
-    private JTextField lblNodeTruncate;
-
-    private JButton btNodePrefix;
-
-    private JButton btNodeText;
-
-    private JButton btNodeDescription;
-
-    private JButton btNodeTruncate;
-
     class ChangeColorAction extends AbstractAction {
-
         public ChangeColorAction(JTextField textField) {
             super("..");
             tf = textField;
         }
-
         private JTextField tf;
+
         @Override
         public void actionPerformed(java.awt.event.ActionEvent e) {
             JColorChooser dlg = new JColorChooser();
             Color c = JColorChooser.showDialog(tf, "Choose color", tf.getForeground());
 
-            if (c != null) {
+            if(c != null) {
                 tf.setForeground(c);
             }
         }
-
     }
 }

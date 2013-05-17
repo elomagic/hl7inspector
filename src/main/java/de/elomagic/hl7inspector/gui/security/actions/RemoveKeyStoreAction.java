@@ -33,7 +33,9 @@ import de.elomagic.hl7inspector.images.ResourceLoader;
 public class RemoveKeyStoreAction extends AbstractAction {
     private JList list;
 
-    /** Creates a new instance of FileOpenAction */
+    /**
+     * Creates a new instance of FileOpenAction.
+     */
     public RemoveKeyStoreAction(JList list) {
         super("Remove", ResourceLoader.loadImageIcon("edit_remove.png"));
 

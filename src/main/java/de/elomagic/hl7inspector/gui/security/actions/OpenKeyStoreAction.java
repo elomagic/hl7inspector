@@ -38,7 +38,9 @@ import de.elomagic.hl7inspector.security.KeyStoreUtil;
 public class OpenKeyStoreAction extends AbstractAction {
     private JList list;
 
-    /** Creates a new instance of FileOpenAction */
+    /**
+     * Creates a new instance of FileOpenAction.
+     */
     public OpenKeyStoreAction(JList list) {
         super("Open", ResourceLoader.loadImageIcon("kgpg_sign.png"));
 

@@ -27,7 +27,9 @@ import java.security.KeyStore;
 public abstract class KeyStorePanel extends AbstractPanel {
     private static final long serialVersionUID = 1L;
 
-    /** Creates a new instance of ProfilePanel */
+    /**
+     * Creates a new instance of ProfilePanel.
+     */
     public KeyStorePanel(PanelDialog d) {
         super(d);
 

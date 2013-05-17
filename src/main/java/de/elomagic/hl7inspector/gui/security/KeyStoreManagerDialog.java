@@ -16,6 +16,7 @@
  */
 package de.elomagic.hl7inspector.gui.security;
 
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.JButton;
@@ -91,23 +92,23 @@ public class KeyStoreManagerDialog extends BaseDialog {
 
     class KeyStoreMouseClickListener implements MouseListener {
         @Override
-        public void mouseReleased(java.awt.event.MouseEvent e) {
+        public void mouseReleased(MouseEvent e) {
         }
 
         @Override
-        public void mousePressed(java.awt.event.MouseEvent e) {
+        public void mousePressed(MouseEvent e) {
         }
 
         @Override
-        public void mouseExited(java.awt.event.MouseEvent e) {
+        public void mouseExited(MouseEvent e) {
         }
 
         @Override
-        public void mouseEntered(java.awt.event.MouseEvent e) {
+        public void mouseEntered(MouseEvent e) {
         }
 
         @Override
-        public void mouseClicked(java.awt.event.MouseEvent e) {
+        public void mouseClicked(MouseEvent e) {
             if(e.getClickCount() == 2) {
                 btOpen.doClick();
             }

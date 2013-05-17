@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package de.elomagic.hl7inspector.gui.monitor;
 
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.io.IOThreadListener;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
@@ -29,8 +30,13 @@ import javax.swing.JScrollPane;
  * @author rambow
  */
 public class CharacterMonitor extends JPanel implements IOThreadListener {
+    private MonitorToolBar tb;
+    private JScrollPane sp;
+    private HighlighterPane hp;
 
-    /** Creates a new instance of CharacterMonitor */
+    /**
+     * Creates a new instance of CharacterMonitor.
+     */
     public CharacterMonitor() {
         setLayout(new BorderLayout());
 
@@ -71,13 +77,8 @@ public class CharacterMonitor extends JPanel implements IOThreadListener {
     public MonitorToolBar getToolBar() {
         return tb;
     }
-
-    private MonitorToolBar tb;
-
-    private JScrollPane sp;
-
-    private HighlighterPane hp;
     // Interface IOThreadListener
+
     @Override
     public void threadStopped(Thread source) {
     }
@@ -100,5 +101,4 @@ public class CharacterMonitor extends JPanel implements IOThreadListener {
     public void status(Thread source, String status) {
         addLine(status);
     }
-
 }

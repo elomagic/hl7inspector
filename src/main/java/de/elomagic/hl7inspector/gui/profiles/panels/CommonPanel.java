@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,8 +41,14 @@ import javax.swing.border.EmptyBorder;
  * @author rambow
  */
 public class CommonPanel extends ProfilePanel {
+    private JTextField editName;
+    private JTextField edtDesc;
+    private JLabel lbLastUpdateDate;
+    private JLabel lbValidateStatus;
 
-    /** Creates a new instance of CommonPane */
+    /**
+     * Creates a new instance of CommonPanel.
+     */
     public CommonPanel(PanelDialog d) {
         super(d);
     }
@@ -101,13 +107,6 @@ public class CommonPanel extends ProfilePanel {
         add(builder.getPanel(), BorderLayout.CENTER);
     }
 
-    private JTextField editName;
-
-    private JTextField edtDesc;
-
-    private JLabel lbLastUpdateDate;
-
-    private JLabel lbValidateStatus;
     public void resetValidateStatus() {
         lbValidateStatus.setText("Validate status unknown. Press 'Validate' button.");
         lbValidateStatus.setIcon(ResourceLoader.loadImageIcon("warning.png"));
@@ -147,7 +146,6 @@ public class CommonPanel extends ProfilePanel {
     }
 
     class ValidateProfileAction extends AbstractAction {
-
         public ValidateProfileAction() {
             super("Validate profile");
         }
@@ -160,9 +158,9 @@ public class CommonPanel extends ProfilePanel {
 
             Profile p = new Profile();
 
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i) instanceof ProfilePanel) {
-                    ((ProfilePanel) list.get(i)).write(p);
+            for(int i = 0; i < list.size(); i++) {
+                if(list.get(i) instanceof ProfilePanel) {
+                    ((ProfilePanel)list.get(i)).write(p);
                 }
             }
 
@@ -170,10 +168,9 @@ public class CommonPanel extends ProfilePanel {
 
             setValidateStatus(val.size() == 0);
 
-            if (val.size() != 0) {
-                SimpleDialog.warn("List of invalid profile entries", val.toString((char) 10));
+            if(val.size() != 0) {
+                SimpleDialog.warn("List of invalid profile entries", val.toString((char)10));
             }
         }
-
     }
 }

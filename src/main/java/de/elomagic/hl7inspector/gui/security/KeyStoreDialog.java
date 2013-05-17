@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,8 +26,12 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class KeyStoreDialog extends PanelDialog {
+    private KeyStore keyStore;
+    private CommonPanel pnlCom;
 
-    /** Creates a new instance of ProfileDefinitionDialog */
+    /**
+     * Creates a new instance of ProfileDefinitionDialog.
+     */
     public KeyStoreDialog(KeyStore keyStore) throws Exception {
         super(Desktop.getInstance(), "Keystore Dialog", true);
 
@@ -35,44 +39,12 @@ public class KeyStoreDialog extends PanelDialog {
     }
 
     @Override
-    public boolean ask() {
-        boolean result = false;
-
-//        profile = new Profile();
-//
-//        try {
-//            FileInputStream fin = new FileInputStream(file);
-//            try {
-//                profile.loadFromStream(fin);
-//            } finally {
-//                fin.close();
-//            }
-//            
-//            if (profile.getSchemaVersion().compareTo(Hl7Inspector.getVersion()) > 0) {
-//                SimpleDialog.warn("Unable to handle profile format. Please update HL7 Inspector.");
-//            } else {
-//                result = super.ask();
-//            }
-//        } catch (Exception e) {
-//            Logger.getLogger(getClass()).error(e.getMessage(), e);
-//            SimpleDialog.error(e, "Unable to read profile");
-//        }
-
-        return super.ask();
-    }
-
-    @Override
     protected void read() {
         List list = getPanelList();
-        for (int i = 0; i < list.size(); i++) {
-            ((KeyStorePanel) list.get(i)).read(keyStore);
+        for(int i = 0; i < list.size(); i++) {
+            ((KeyStorePanel)list.get(i)).read(keyStore);
         }
     }
-
-    private KeyStore keyStore;
-//    private Profile     profile;
-    private CommonPanel pnlCom;
-//    public CommonPanel getCommonPanel() { return pnlCom; }
 
     @Override
     protected void init() {
@@ -91,7 +63,7 @@ public class KeyStoreDialog extends PanelDialog {
             setSize(750, 500);
 
             setLocationRelativeTo(Desktop.getInstance());
-        } catch (Exception e) {
+        } catch(Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             SimpleDialog.error(e, e.getMessage());
         }
@@ -100,5 +72,4 @@ public class KeyStoreDialog extends PanelDialog {
     public KeyStore getKeyStore() {
         return keyStore;
     }
-
 }

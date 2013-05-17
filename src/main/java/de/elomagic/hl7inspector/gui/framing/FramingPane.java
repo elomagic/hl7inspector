@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,8 +19,10 @@ package de.elomagic.hl7inspector.gui.framing;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.io.Frame;
+
 import java.awt.BorderLayout;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
@@ -31,8 +33,13 @@ import javax.swing.JPanel;
  * @author rambow
  */
 public class FramingPane extends JPanel {
+    private JComboBox cbbStartChar = new JComboBox();
+    private JComboBox cbbStopChar1 = new JComboBox();
+    private JComboBox cbbStopChar2 = new JComboBox();
 
-    /** Creates a new instance of FramingPane */
+    /**
+     * Creates a new instance of FramingPanel.
+     */
     public FramingPane() {
         init();
     }
@@ -128,9 +135,9 @@ public class FramingPane extends JPanel {
     }
 
     public Frame getMessageFrame() {
-        Character startChar = (cbbStartChar.getSelectedIndex() < 32) ? new Character((char) cbbStartChar.getSelectedIndex()) : null;
-        Character stopChar1 = (cbbStopChar1.getSelectedIndex() < 32) ? new Character((char) cbbStopChar1.getSelectedIndex()) : null;
-        Character stopChar2 = (cbbStopChar2.getSelectedIndex() < 32) ? new Character((char) cbbStopChar2.getSelectedIndex()) : null;
+        Character startChar = (cbbStartChar.getSelectedIndex() < 32) ? new Character((char)cbbStartChar.getSelectedIndex()) : null;
+        Character stopChar1 = (cbbStopChar1.getSelectedIndex() < 32) ? new Character((char)cbbStopChar1.getSelectedIndex()) : null;
+        Character stopChar2 = (cbbStopChar2.getSelectedIndex() < 32) ? new Character((char)cbbStopChar2.getSelectedIndex()) : null;
 
         return new Frame(startChar, stopChar1, stopChar2);
     }
@@ -140,10 +147,4 @@ public class FramingPane extends JPanel {
         cbbStopChar1.setSelectedIndex(value.getStopFrameLength() == 0 ? 32 : value.getStopFrame()[0]);
         cbbStopChar2.setSelectedIndex(value.getStopFrameLength() < 2 ? 32 : value.getStopFrame()[1]);
     }
-
-    private JComboBox cbbStartChar = new JComboBox();
-
-    private JComboBox cbbStopChar1 = new JComboBox();
-
-    private JComboBox cbbStopChar2 = new JComboBox();
 }

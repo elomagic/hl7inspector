@@ -27,7 +27,9 @@ import de.elomagic.hl7inspector.gui.monitor.TraceMonitorDialog;
 public class SendMessageWindow extends TraceMonitorDialog {
     private final static SendMessageWindow instance = new SendMessageWindow();
 
-    /** Creates a new instance of ToolBar */
+    /**
+     * Creates a new instance of ToolBar.
+     */
     private SendMessageWindow() {
         super("Send Message Dialog");
     }

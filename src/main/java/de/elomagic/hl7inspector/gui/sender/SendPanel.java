@@ -41,7 +41,9 @@ import de.elomagic.hl7inspector.io.SendThread;
 public class SendPanel extends CharacterMonitor implements ActionListener {
     private static final long serialVersionUID = 2164439922833152117L;
 
-    /** Creates a new instance of SendPanel */
+    /**
+     * Creates a new instance of SendPanel.
+     */
     public SendPanel() {
         super();
 

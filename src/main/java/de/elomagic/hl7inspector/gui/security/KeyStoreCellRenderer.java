@@ -34,7 +34,9 @@ import de.elomagic.hl7inspector.images.ResourceLoader;
 public class KeyStoreCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
     private static final long serialVersionUID = -2700735747239354278L;
 
-    /** Creates a new instance of ProfileCellRenderer */
+    /**
+     * Creates a new instance of ProfileCellRenderer.
+     */
     public KeyStoreCellRenderer() {
     }
 
