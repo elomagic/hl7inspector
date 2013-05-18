@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -20,6 +19,7 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.hl7.Hl7Encoder;
 import de.elomagic.hl7inspector.hl7.model.Component;
@@ -30,6 +30,7 @@ import de.elomagic.hl7inspector.hl7.model.RepetitionField;
 import de.elomagic.hl7inspector.hl7.model.Subcomponent;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.ProfileIO;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.JCheckBox;
@@ -43,10 +44,18 @@ import javax.swing.JTextField;
  * @author rambow
  */
 public class HL7ObjectEditor extends BaseDialog {
-
     private static final long serialVersionUID = 5840340196322853677L;
+    private Hl7Object o = null;
+    private JTextField editType;
+    private JTextField editValue;
+    private JPanel paneDesc;
+    private JScrollPane scrollPane;
+    private JEditorPane editorPane;
+    private JCheckBox cbEncode;
 
-    /** Creates a new instance of ImportOptionsDialog */
+    /**
+     * Creates a new instance of ImportOptionsDialog.
+     */
     public HL7ObjectEditor() {
         super(Desktop.getInstance());
 
@@ -111,13 +120,6 @@ public class HL7ObjectEditor extends BaseDialog {
         editValue.requestFocus();
     }
 
-    private JTextField editType;
-    private JTextField editValue;
-    private JPanel paneDesc;
-    private JScrollPane scrollPane;
-    private JEditorPane editorPane;
-    private JCheckBox cbEncode;
-
     private boolean isEncode() {
         return cbEncode.isSelected();
     }
@@ -128,15 +130,13 @@ public class HL7ObjectEditor extends BaseDialog {
 
     public String getValue(Delimiters d) {
         String r = getValue();
-        if (isEncode()) {
+        if(isEncode()) {
             Hl7Encoder enc = new Hl7Encoder(new Delimiters());
             r = enc.encodeString(r);
         }
 
         return r;
     }
-
-    private Hl7Object o = null;
 
     public void setValue(Hl7Object hl7Object) {
         o = hl7Object;
@@ -157,7 +157,7 @@ public class HL7ObjectEditor extends BaseDialog {
 
     private void setDescription(String value) {
         editorPane.setText(value);
-//        editDesc.getScrollPane().getVerticalScrollBar().setVisibleAmount(0);        
+//        editDesc.getScrollPane().getVerticalScrollBar().setVisibleAmount(0);
         //editDesc.getScrollPane().scrollRectToVisible(new Rectangle(0, 0, 1, 1));
         scrollPane.getVerticalScrollBar().setValue(0);
     }
@@ -166,31 +166,30 @@ public class HL7ObjectEditor extends BaseDialog {
     public void ok() {
         boolean b = isEncode();
 
-        if (!b) {
-            if (o instanceof RepetitionField) {
+        if(!b) {
+            if(o instanceof RepetitionField) {
                 b = getValue().indexOf(Delimiters.DEFAULT_FIELD) == -1;
-            } else if (o instanceof Field) {
+            } else if(o instanceof Field) {
                 b = ((getValue().indexOf(Delimiters.DEFAULT_REPETITION) == -1)
-                        && (getValue().indexOf(Delimiters.DEFAULT_FIELD) == -1));
-            } else if (o instanceof Component) {
+                     && (getValue().indexOf(Delimiters.DEFAULT_FIELD) == -1));
+            } else if(o instanceof Component) {
                 b = ((getValue().indexOf(Delimiters.DEFAULT_REPETITION) == -1)
-                        && (getValue().indexOf(Delimiters.DEFAULT_FIELD) == -1)
-                        && (getValue().indexOf(Delimiters.DEFAULT_COMPONENT) == -1));
-            } else if (o instanceof Subcomponent) {
+                     && (getValue().indexOf(Delimiters.DEFAULT_FIELD) == -1)
+                     && (getValue().indexOf(Delimiters.DEFAULT_COMPONENT) == -1));
+            } else if(o instanceof Subcomponent) {
                 b = ((getValue().indexOf(Delimiters.DEFAULT_REPETITION) == -1)
-                        && (getValue().indexOf(Delimiters.DEFAULT_FIELD) == -1)
-                        && (getValue().indexOf(Delimiters.DEFAULT_COMPONENT) == -1)
-                        && (getValue().indexOf(Delimiters.DEFAULT_SUPCOMPONENT) == -1));
+                     && (getValue().indexOf(Delimiters.DEFAULT_FIELD) == -1)
+                     && (getValue().indexOf(Delimiters.DEFAULT_COMPONENT) == -1)
+                     && (getValue().indexOf(Delimiters.DEFAULT_SUPCOMPONENT) == -1));
             } else {
                 b = true;
             }
         }
 
-        if (b) {
+        if(b) {
             super.ok();
         } else {
             SimpleDialog.error("The value includes inhibits encoding characters for type " + editType.getText());
         }
     }
-
 }
