@@ -33,6 +33,8 @@ import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.io.SendThread;
+import de.elomagic.hl7inspector.utils.BundleTool;
+import java.util.ResourceBundle;
 
 /**
  *
@@ -40,6 +42,18 @@ import de.elomagic.hl7inspector.io.SendThread;
  */
 public class SendPanel extends CharacterMonitor implements ActionListener {
     private static final long serialVersionUID = 2164439922833152117L;
+
+    private enum Command {
+        Start, Stop, Setup, Options, Auth, Crypt
+    };
+    private SendThread thread;
+    private AbstractButton btStart = createButton(JToggleButton.class, "start_service.png", "Send selected messages", Command.Start);
+    private AbstractButton btStop = createButton(JToggleButton.class, "stop_service.png", "Cancel sending message", Command.Stop);
+    private AbstractButton btOptions = createButton(JButton.class, "preferences-desktop.png", "Setup sender options", Command.Options);
+    private AbstractButton btSeqAuth = createButton(JToggleButton.class, "kgpg_sign.png", "Server authentication", Command.Auth);
+    private AbstractButton btSeqCrypt = createButton(JToggleButton.class, "encrypt.png", "Encrypt communication", Command.Crypt);
+    private final ResourceBundle bundle = BundleTool.getBundle(SendPanel.class);
+    private final Logger log = Logger.getLogger(SendPanel.class);
 
     /**
      * Creates a new instance of SendPanel.
@@ -67,17 +81,9 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
         getToolBar().addSeparator();
         getToolBar().add(btOptions);
     }
-    private SendThread thread;
-    private AbstractButton btStart = createButton(JToggleButton.class, "start_service.png", "Send selected messages", "START");
-    private AbstractButton btStop = createButton(JToggleButton.class, "stop_service.png", "Cancel sending message", "STOP");
-    private AbstractButton btOptions = createButton(JButton.class, "preferences-desktop.png", "Setup sender options", "OPTIONS");
-    private AbstractButton btSeqAuth = createButton(JToggleButton.class, "kgpg_sign.png", "Server authentication", "AUTH");
-    private AbstractButton btSeqCrypt = createButton(JToggleButton.class, "encrypt.png", "Encrypt communication", "CRYPT");
 
     private void initThread() {
         SendThread t = new SendThread();
-
-//        t.setMessages(Desktop.getInstance().getTree().getSelectedMessages());
 
         if(thread != null) {
             thread.terminateRequest();
@@ -93,21 +99,21 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch(e.getActionCommand()) {
-            case "START":
+        switch(Command.valueOf(e.getActionCommand())) {
+            case Start:
                 if(Desktop.getInstance().getTree().getSelectedMessages().isEmpty()) {
-                    SimpleDialog.error("No message(s) selected. Please select the message(s) you want to send.");
+                    SimpleDialog.error(bundle.getString("no_messages_selected"));
                 } else {
                     thread.setMessages(Desktop.getInstance().getTree().getSelectedMessages());
                     thread.start();
                 }
                 break;
-            case "STOP":
+            case Stop:
                 if(thread != null) {
                     thread.terminateRequest();
                 }
                 break;
-            case "OPTIONS":
+            case Options:
                 //            setAlwaysOnTop(false);
                 SendOptionsDialog dialog = new SendOptionsDialog();
                 dialog.setOptions(thread.getOptions());
@@ -115,29 +121,29 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
                     thread.setOptions(dialog.getOptions());
                 }
                 break;
-            case "AUTH":
+            case Auth:
                 thread.getOptions().setAuthentication(btSeqAuth.isSelected());
                 break;
-            case "CRYPT":
+            case Crypt:
                 thread.getOptions().setEncryption(btSeqCrypt.isSelected());
                 break;
             default:
-                Logger.getLogger(getClass()).error("Unknown ActionCommand '" + e.getActionCommand() + "'.");
+                log.error("Unknown ActionCommand '" + e.getActionCommand() + "'.");
                 break;
         }
     }
 
-    private AbstractButton createButton(Class c, String imageName, String text, String cmd) {
+    private AbstractButton createButton(Class c, String imageName, String text, Command cmd) {
         AbstractButton result = null;
         try {
             result = (AbstractButton)c.newInstance();
 
             result.setIcon(ResourceLoader.loadImageIcon(imageName));
             result.setToolTipText(text);
-            result.setActionCommand(cmd);
+            result.setActionCommand(cmd.name());
             result.addActionListener(this);
         } catch(InstantiationException | IllegalAccessException e) {
-            Logger.getLogger(getClass()).error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
 
         return result;
@@ -167,7 +173,7 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
 
     @Override
     public String getTitle() {
-        return "Message Sender";
+        return bundle.getString("panel_title");
     }
 
     @Override

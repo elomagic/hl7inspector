@@ -19,12 +19,14 @@ package de.elomagic.hl7inspector.gui.profiles.panels;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import de.elomagic.hl7inspector.gui.AbstractPanel;
 import de.elomagic.hl7inspector.gui.PanelDialog;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.utils.StringVector;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.SystemColor;

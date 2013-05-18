@@ -100,7 +100,7 @@ public class SendOptionsDialog extends BaseDialog {
 
         getBanner().setVisible(false);
 
-        setTitle(bundle.getString("title"));
+        setTitle(bundle.getString("dialog_title"));
         //setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setModal(true);
 
@@ -134,37 +134,37 @@ public class SendOptionsDialog extends BaseDialog {
         CellConstraints cc = new CellConstraints();
 
         // 1st row
-        builder.add(new GradientLabel("Destination"), cc.xyw(1, 1, 13));
+        builder.add(new GradientLabel(bundle.getString("destination")), cc.xyw(1, 1, 13));
 
         // 3rd row
         builder.addLabel("Hostname and port of destination: <hostname>:<port>", cc.xyw(2, 3, 12));        // Ok
 
         // 2nd row
-        builder.addLabel("Host/Port:", cc.xy(2, 5));      // Ok
+        builder.addLabel(bundle.getString("host_port_label"), cc.xy(2, 5));      // Ok
         builder.add(cbDest, cc.xyw(4, 5, 10));
 
         // 4th row
-        builder.add(new GradientLabel("Options"), cc.xyw(1, 7, 13));
+        builder.add(new GradientLabel(bundle.getString("options")), cc.xyw(1, 7, 13));
 
         // 5th row
-        builder.addLabel("Encoding:", cc.xyw(2, 9, 3));
+        builder.addLabel(bundle.getString("encoding_label"), cc.xyw(2, 9, 3));
         builder.add(cbEncoding, cc.xyw(4, 9, 2));
 
         // 6th row
-        builder.addLabel("Reuse:", cc.xyw(2, 11, 3));
+        builder.addLabel(bundle.getString("reuse_label"), cc.xyw(2, 11, 3));
         builder.add(cbReuse, cc.xyw(4, 11, 2));
 
         // 8th row
-        builder.add(new GradientLabel("Message Frame:"), cc.xyw(1, 15, 13));
+        builder.add(new GradientLabel(bundle.getString("message_frame")), cc.xyw(1, 15, 13));
 
         // 12th row
-        builder.addLabel("Start char:", cc.xy(2, 17));       // Ok
+        builder.addLabel(bundle.getString("start_char_label"), cc.xy(2, 17));       // Ok
         builder.add(cbStartChar, cc.xy(4, 17));
 
-        builder.addLabel("1. Stop char :", cc.xy(6, 17));
+        builder.addLabel(bundle.getString("stop_char1_label"), cc.xy(6, 17));
         builder.add(cbStopChar1, cc.xy(8, 17));
 
-        builder.addLabel("2. Stop char:", cc.xy(10, 17));
+        builder.addLabel(bundle.getString("stop_char2_label"), cc.xy(10, 17));
         builder.add(cbStopChar2, cc.xy(12, 17));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
@@ -191,7 +191,7 @@ public class SendOptionsDialog extends BaseDialog {
             String hp = cbDest.getSelectedItem().toString();
 
             if(cbDest.getSelectedItem().toString().indexOf(':') == -1) {
-                throw new Exception("Invalid destination format! Syntax for destination is <hostname>:<port>. Example: localhost:2100");
+                throw new IllegalArgumentException(bundle.getString("invalid_destination_format"));
             }
 
             String host = hp.substring(0, hp.indexOf(':'));
@@ -200,11 +200,11 @@ public class SendOptionsDialog extends BaseDialog {
             try {
                 Integer.parseInt(port);
             } catch(Exception ee) {
-                throw new IllegalArgumentException("Destination port must an integer value!");
+                throw new IllegalArgumentException(bundle.getString("invalid_port"));
             }
 
             if(host.isEmpty()) {
-                throw new IllegalArgumentException("Destination host missing!");
+                throw new IllegalArgumentException(bundle.getString("host_missing"));
             }
 
             RecentList list = StartupProperties.getRecentUsedSenderDestinations();
