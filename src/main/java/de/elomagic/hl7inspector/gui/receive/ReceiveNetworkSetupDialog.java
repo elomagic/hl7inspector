@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,11 +20,12 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
+
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.gui.ToolKit;
 import de.elomagic.hl7inspector.io.SendOptionsBean;
+
 import java.awt.BorderLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -34,8 +35,12 @@ import javax.swing.JComboBox;
  * @author rambow
  */
 public class ReceiveNetworkSetupDialog extends BaseDialog {
+    private JComboBox cbServerPort;
+    private JCheckBox cbReuse;
 
-    /** Creates a new instance of SendOptionsDialog */
+    /**
+     * Creates a new instance of SendOptionsDialog.
+     */
     public ReceiveNetworkSetupDialog() {
         super(Desktop.getInstance());
 
@@ -49,7 +54,7 @@ public class ReceiveNetworkSetupDialog extends BaseDialog {
         //setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setModal(true);
 
-        cbServerPort = new JComboBox(new String[]{"2100", "2200", "2300", "5555", "5556"});
+        cbServerPort = new JComboBox(new String[] {"2100", "2200", "2300", "5555", "5556"});
         cbServerPort.setEditable(true);
         cbServerPort.setSelectedItem("");
         cbReuse = new JCheckBox();
@@ -94,12 +99,12 @@ public class ReceiveNetworkSetupDialog extends BaseDialog {
         try {
             try {
                 Integer.parseInt(cbServerPort.getSelectedItem().toString());
-            } catch (Exception ee) {
-                throw new Exception("Server port must an integer value!");
+            } catch(Exception ee) {
+                throw new IllegalArgumentException("Server port must an integer value!");
             }
 
             super.ok();
-        } catch (Exception e) {
+        } catch(Exception e) {
             SimpleDialog.error(e.getMessage());
         }
     }
@@ -111,8 +116,4 @@ public class ReceiveNetworkSetupDialog extends BaseDialog {
 
         return bean;
     }
-
-    private JComboBox cbServerPort;
-
-    private JCheckBox cbReuse;
 }

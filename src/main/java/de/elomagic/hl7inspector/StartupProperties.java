@@ -35,19 +35,26 @@ import org.apache.log4j.Logger;
 
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.utils.RecentList;
 
 /**
  *
  * @author rambow
  */
 public class StartupProperties extends Properties {
-    /** Creates a new instance of StartupProperties */
+    private final static StartupProperties prop = new StartupProperties();
+    private String CONFIG_FILE = "hl7inspector.properties";
+    private List<ProfileFile> profiles = new ArrayList<>();
+    private List<File> keyStoreFiles = new ArrayList<>();
+
+    /**
+     * Creates a new instance of StartupProperties.
+     */
     private StartupProperties() {
         super();
 
         String wp = getUserHomePath(false);
         try {
-
             File file = new File(wp.concat(CONFIG_FILE));
             FileInputStream fin = null;
 
@@ -107,7 +114,7 @@ public class StartupProperties extends Properties {
     public static String getUserHomePath(boolean create) {
         String wp = System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.1").concat(File.separator);
 
-        if((!(new File(wp).exists())) && (create)) {
+        if(!new File(wp).exists() && create) {
             new File(wp).mkdir();
         }
 
@@ -143,13 +150,13 @@ public class StartupProperties extends Properties {
         return v;
     }
 
-    public void setRecentFiles(List files) {
+    public void setRecentFiles(List<File> files) {
         for(int i = 1; i < 9; i++) {
             remove(RECENT_FILE.concat(".").concat(Integer.toString(i)));
         }
 
         for(int i = 0; i < files.size(); i++) {
-            setProperty(RECENT_FILE.concat(".").concat(Integer.toString(i + 1)), ((File)files.get(i)).getAbsolutePath());
+            setProperty(RECENT_FILE.concat(".").concat(Integer.toString(i + 1)), files.get(i).getAbsolutePath());
         }
     }
 
@@ -172,7 +179,7 @@ public class StartupProperties extends Properties {
             if(s != null) {
                 v.add(s);
             }
-        } while((s != null) && (i < 10));
+        } while(s != null && i < 10);
 
         return v;
     }
@@ -250,11 +257,11 @@ public class StartupProperties extends Properties {
             q++;
             s = getProperty(KEYSTORE_FILE.concat(".").concat(Integer.toString(q + 1)), "");
 
-            if(s.length() != 0) {
+            if(!s.isEmpty()) {
                 remove(KEYSTORE_FILE.concat(".").concat(Integer.toString(q)));
 //                remove(PROFILE_DESCRIPTION.concat(".").concat(Integer.toString(q)));
             }
-        } while(s.length() != 0);
+        } while(!s.isEmpty());
 
         for(int i = 0; i < keyStoreFiles.size(); i++) {
             File keyStoreFile = keyStoreFiles.get(i);
@@ -478,8 +485,22 @@ public class StartupProperties extends Properties {
     public static void setTreeMessageNodeFormat(String value) {
         prop.setProperty(TREE_DISPLAY_MESSAGE_NODE, value);
     }
-    private List<ProfileFile> profiles = new ArrayList<>();
-    private List<File> keyStoreFiles = new ArrayList<>();
+
+    /**
+     * Returns a list of recently used sender destination hostname/ports.
+     * <p/>
+     * If list is empty then by default the list will be filled with "localhost:2100"
+     *
+     * @return List
+     */
+    public static RecentList getRecentUsedSenderDestinations() {
+        RecentList list = new RecentList(prop, SENDER_OPTIONS_DEST, 10);
+        if(list.getList().isEmpty()) {
+            list.put("localhost:2100");
+        }
+
+        return list;
+    }
     public final static String APP_ONE_INSTANCE = "application-one-instance";
     public final static String APP_LOOK_AND_FEEL = "application-look-and-feel";
     public final static String APP_DEBUG_FILE = "application-debug-file";
@@ -503,7 +524,7 @@ public class StartupProperties extends Properties {
     private final static String TREE_NODE_DOUBLE_CLICK = "tree.node.double.click";
     public final static String EXTERNAL_FILE_VIEWER = "external-file-viewer";
     public final static String EXTERNAL_HEX_VIEWER = "external-hex-viewer";
-    public final static String SENDER_OPTIONS_DEST = "sender.options.destination";
+    private final static String SENDER_OPTIONS_DEST = "sender.options.destination";
     public final static String RECENT_FILE = "recent-file";
     public final static String PHRASE_HISTORY = "phrase-history";
     public final static String PROFILE_FILE = "profile-file";
@@ -520,6 +541,4 @@ public class StartupProperties extends Properties {
     public final static String NETWORK_PROXY_MODE = "network-proxy-mode";
     public final static String NETWORK_PROXY_HOST = "network-proxy-host";
     public final static String NETWORK_PROXY_PORT = "network-proxy-port";
-    private final static StartupProperties prop = new StartupProperties();
-    private String CONFIG_FILE = "hl7inspector.properties";
 }

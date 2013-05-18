@@ -17,6 +17,7 @@
 package de.elomagic.hl7inspector;
 
 import com.jgoodies.looks.LookUtils;
+
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.UpdateCheckDialog;
@@ -28,6 +29,7 @@ import de.elomagic.hl7inspector.model.*;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
+import javax.swing.JFrame;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
@@ -93,7 +95,7 @@ public class Hl7Inspector {
             }
 
             UIManager.setLookAndFeel((LookAndFeel)StartupProperties.getInstance().getLookAndFeelClass().newInstance());
-            javax.swing.JFrame.setDefaultLookAndFeelDecorated(true);
+            JFrame.setDefaultLookAndFeelDecorated(true);
 
             Desktop desk = Desktop.getInstance();
             desk.setModel(new Hl7TreeModel());
@@ -109,7 +111,7 @@ public class Hl7Inspector {
                 }
             }
         } catch(Exception e) {
-            Logger.getLogger("de.elomagic.Hl7Inspector").error(e.getMessage(), e);
+            Logger.getLogger(getClass()).error(e.getMessage(), e);
             SimpleDialog.error(e, e.getMessage());
         }
     }
@@ -119,13 +121,10 @@ public class Hl7Inspector {
 
         try {
             ClassLoader loader = ClassLoader.getSystemClassLoader();
-            InputStream in = loader.getResourceAsStream("application.properties");
-            try {
+            try (InputStream in = loader.getResourceAsStream("application.properties")) {
                 Properties props = new Properties();
                 props.load(in);
                 version = props.getProperty("application.version", "?.?.?.?");
-            } finally {
-                in.close();
             }
         } catch(Exception e) {
             version = "?.?.?.?";

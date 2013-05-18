@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.receive;
 
@@ -39,13 +38,17 @@ import org.apache.log4j.Logger;
  */
 public class ReceivePanel extends CharacterMonitor implements ActionListener {
     private static final long serialVersionUID = 6221303181530455773L;
+
+    private enum Command {
+        Start, Stop, Setup, Options, Auth, Crypt
+    };
     private ReceiveThread thread = null;
-    private AbstractButton btStart = createButton(JToggleButton.class, "start_service.png", "Start receiving message service.", "START");
-    private AbstractButton btStop = createButton(JToggleButton.class, "stop_service.png", "Stop receiving message service.", "STOP");
-    private AbstractButton btPort = createButton(JButton.class, "server.png", "Setup network", "SETUP");
-    private AbstractButton btOptions = createButton(JButton.class, "preferences-desktop.png", "Setup import options", "OPTIONS");
-    private AbstractButton btSeqAuth = createButton(JToggleButton.class, "kgpg_sign.png", "Client authentication", "AUTH");
-    private AbstractButton btSeqCrypt = createButton(JToggleButton.class, "encrypt.png", "Encrypt communication", "CRYPT");
+    private AbstractButton btStart = createButton(JToggleButton.class, "start_service.png", "Start receiving message service.", Command.Start);
+    private AbstractButton btStop = createButton(JToggleButton.class, "stop_service.png", "Stop receiving message service.", Command.Stop);
+    private AbstractButton btPort = createButton(JButton.class, "server.png", "Setup network", Command.Setup);
+    private AbstractButton btOptions = createButton(JButton.class, "preferences-desktop.png", "Setup import options", Command.Options);
+    private AbstractButton btSeqAuth = createButton(JToggleButton.class, "kgpg_sign.png", "Client authentication", Command.Auth);
+    private AbstractButton btSeqCrypt = createButton(JToggleButton.class, "encrypt.png", "Encrypt communication", Command.Crypt);
 
     /**
      * Creates a new instance of ReceivePanel
@@ -94,49 +97,54 @@ public class ReceivePanel extends CharacterMonitor implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getActionCommand().equals("START")) {
-            thread.start();
-        } else if(e.getActionCommand().equals("STOP")) {
-            if(thread != null) {
-                thread.terminateRequest();
-            }
-        } else if(e.getActionCommand().equals("SETUP")) {
-//            setAlwaysOnTop(false);
-
-            ReceiveNetworkSetupDialog dialog = new ReceiveNetworkSetupDialog();
-
-            SendOptionsBean bean = new SendOptionsBean();
-            bean.setPort(thread.getPort());
-            bean.setReuseSocket(thread.isReuseSocket());
-            if(dialog.ask()) {
-                thread.setPort(dialog.getOptions().getPort());
-                thread.setReUseSocket(dialog.getOptions().isReuseSocket());
-            }
-        } else if(e.getActionCommand().equals("OPTIONS")) {
-            ImportOptionsDialog dlg = new ImportOptionsDialog();
-
-            if(dlg.execute(thread.getOptions())) {
-                thread.setOptions(dlg.getImportOptions());
-            }
-        } else if(e.getActionCommand().equals("AUTH")) {
-            thread.setAuthentication(btSeqAuth.isSelected());
-        } else if(e.getActionCommand().equals("CRYPT")) {
-            thread.setEncryption(btSeqCrypt.isSelected());
-        } else {
-            Logger.getLogger(getClass()).error("Unknown ActionCommand '" + e.getActionCommand() + "'.");
+        switch(Command.valueOf(e.getActionCommand())) {
+            case Start:
+                thread.start();
+                break;
+            case Stop:
+                if(thread != null) {
+                    thread.terminateRequest();
+                }
+                break;
+            case Setup:
+                //            setAlwaysOnTop(false);
+                ReceiveNetworkSetupDialog dialog = new ReceiveNetworkSetupDialog();
+                SendOptionsBean bean = new SendOptionsBean();
+                bean.setPort(thread.getPort());
+                bean.setReuseSocket(thread.isReuseSocket());
+                if(dialog.ask()) {
+                    thread.setPort(dialog.getOptions().getPort());
+                    thread.setReUseSocket(dialog.getOptions().isReuseSocket());
+                }
+                break;
+            case Options:
+                ImportOptionsDialog dlg = new ImportOptionsDialog();
+                if(dlg.execute(thread.getOptions())) {
+                    thread.setOptions(dlg.getImportOptions());
+                }
+                break;
+            case Auth:
+                thread.setAuthentication(btSeqAuth.isSelected());
+                break;
+            case Crypt:
+                thread.setEncryption(btSeqCrypt.isSelected());
+                break;
+            default:
+                Logger.getLogger(getClass()).error("Unknown ActionCommand '" + e.getActionCommand() + "'.");
+                break;
         }
     }
 
-    private AbstractButton createButton(Class c, String imageName, String text, String cmd) {
-        AbstractButton result = null;
+    private AbstractButton createButton(Class c, String imageName, String text, Command cmd) {
+        AbstractButton result;
         try {
             result = (AbstractButton)c.newInstance();
 
             result.setIcon(ResourceLoader.loadImageIcon(imageName));
             result.setToolTipText(text);
-            result.setActionCommand(cmd);
+            result.setActionCommand(cmd.name());
             result.addActionListener(this);
-        } catch(Exception e) {
+        } catch(InstantiationException | IllegalAccessException e) {
             result = null;
             Logger.getLogger(getClass()).error(e.getMessage(), e);
         }

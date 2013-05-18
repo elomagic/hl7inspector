@@ -25,7 +25,12 @@ import de.elomagic.hl7inspector.images.ResourceLoader;
  * @author rambow
  */
 public class ValidateStatus {
-    /** Creates a new instance of ValidateStatus */
+    private int status = 1;
+    private String text = "";
+
+    /**
+     * Creates a new instance of ValidateStatus.
+     */
     public ValidateStatus(int status) {
         this.status = status;
     }
@@ -95,6 +100,4 @@ public class ValidateStatus {
 
         return s;
     }
-    private int status = 1;
-    private String text = "";
 }

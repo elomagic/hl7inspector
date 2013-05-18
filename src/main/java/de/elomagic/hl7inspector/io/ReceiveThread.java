@@ -132,8 +132,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
                 fireStatusEvent("Security enabled. (Encryption=" + Boolean.toString(isEncryption()) + ", Authentication=" + Boolean.toString(isAuthentication()) + ")");
             }
             fireStatusEvent("Listening on port " + port);
-            ServerSocket server = new ServerSocket(port);
-            try {
+            try (ServerSocket server = new ServerSocket(port)) {
                 while(!terminate) {
                     try {
                         socket = server.accept();
@@ -165,8 +164,6 @@ public class ReceiveThread extends Thread implements IOCharListener {
                         fireStatusEvent("End of stream detected. Still listening on port " + port);
                     }
                 }
-            } finally {
-                server.close();
             }
         } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);

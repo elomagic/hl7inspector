@@ -46,7 +46,9 @@ public class SendThread extends Thread implements IOCharListener {
     private boolean done = false;
     private List<IOThreadListener> listener = new ArrayList<>();
 
-    /** Creates a new instance of ReceiveThread */
+    /**
+     * Creates a new instance of ReceiveThread.
+     */
     public SendThread() {
     }
 
@@ -190,15 +192,22 @@ public class SendThread extends Thread implements IOCharListener {
                 String ac = msa.get(1).toString();
 
                 String status;
-
-                if(ac.equals("AA") || ac.equals("CA")) {
-                    status = "Evaluate acknowledge: Application | Commit Accept";
-                } else if(ac.equals("AE") || ac.equals("CE")) {
-                    status = "Evaluate acknowledge: Application | Commit Error !!!";
-                } else if(ac.equals("AR") || ac.equals("CR")) {
-                    status = "Evaluate acknowledge: Application | Commit Reject !!!";
-                } else {
-                    status = "Evaluate acknowledge: Unkown or missing acknowledge code in field MSA-1 !!!";
+                switch(ac) {
+                    case "AA":
+                    case "CA":
+                        status = "Evaluate acknowledge: Application | Commit Accept";
+                        break;
+                    case "AE":
+                    case "CE":
+                        status = "Evaluate acknowledge: Application | Commit Error !!!";
+                        break;
+                    case "AR":
+                    case "CR":
+                        status = "Evaluate acknowledge: Application | Commit Reject !!!";
+                        break;
+                    default:
+                        status = "Evaluate acknowledge: Unkown or missing acknowledge code in field MSA-1 !!!";
+                        break;
                 }
 
                 fireStatusEvent(status);

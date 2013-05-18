@@ -16,7 +16,6 @@
  */
 package de.elomagic.hl7inspector.validate;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +30,14 @@ import de.elomagic.hl7inspector.profile.SegmentItem;
  * @author rambow
  */
 public class Validator {
-    /** Creates a new instance of Validator */
+    private Profile profile;
+
+    /**
+     * Creates a new instance of Validator.
+     */
     public Validator(Profile profile) {
         this.profile = profile;
     }
-    private Profile profile;
 
     public ValidateStatus validate(Message message) throws Exception {
         List<ValidateStatus> statusList = validateObject(message);
@@ -43,14 +45,13 @@ public class Validator {
         // Check results
         String s = "";
         ValidateStatus status = new ValidateStatus(ValidateStatus.OK);
-        for(int i = 0; i < statusList.size(); i++) {
-            ValidateStatus childStatus = statusList.get(i);
+        for(ValidateStatus childStatus : statusList) {
             status = (status.compareTo(childStatus) > 0) ? status : childStatus;
-            s = s.concat("\n".concat(statusList.get(i).getText()));
+            s = s.concat("\n".concat(childStatus.getText()));
         }
 
         message.setValidateStatus(status);
-        message.setValidationText(s.trim().length() == 0 ? null : s.trim());
+        message.setValidationText(s.trim().isEmpty() ? null : s.trim());
 
         return status;
     }
@@ -198,201 +199,5 @@ public class Validator {
         obj.setValidateStatus(status);
 
         return errorList;
-    }
-    private static String ILLEGAL_DATA_TYPE_FORMAT_TEXT = "Illegal data type format";
-    // Simple data type = DT, DTM, FT, GTS, ID, IS, NM, SI ST, TM, TX
-
-    private ValidateStatus validateDataTypeDT(Hl7Object obj) {
-        ValidateStatus status = null;
-
-        try {
-            if(obj.size() > 1) {
-                throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-
-            int len = obj.toString().length();
-            String pat = "";
-
-            switch(len) {
-                case 4:
-                    pat = "yyyy";
-                    break;
-                case 6:
-                    pat = "yyyyMM";
-                    break;
-                case 8:
-                    pat = "yyyyMMdd";
-                    break;
-                default:
-                    throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-
-            SimpleDateFormat sdf = new SimpleDateFormat(pat);
-
-            sdf.parse(obj.toString());
-        } catch(Exception e) {
-        }
-
-        return status;
-    }
-
-    //* Validate Hl7 object against data type TM
-    private ValidateStatus validateDataTypeDTM(Hl7Object obj) {
-        ValidateStatus status = null;
-
-        try {
-            if(obj.size() > 1) {
-                throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-
-            String pat = "";
-            String patTz = "";
-            String s = obj.toString();
-            int len = s.toString().length();
-
-            // If timezone set ...
-            if((s.indexOf('-') != -1) || (s.indexOf('+') != -1)) {
-                int i = (s.indexOf('-') != -1) ? s.indexOf('-') : s.indexOf('+');
-                len = s.substring(0, i).length();
-                patTz = "Z";
-
-                if(s.substring(i + 1).length() != 4) {
-                    throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-                }
-            }
-
-            switch(len) {
-                case 4:
-                    pat = "yyyy";
-                    break;
-                case 6:
-                    pat = "yyyyMM";
-                    break;
-                case 8:
-                    pat = "yyyyMMdd";
-                    break;
-                case 10:
-                    pat = "yyyyMMddHH";
-                    break;
-                case 12:
-                    pat = "yyyyMMddHHmm";
-                    break;
-                case 14:
-                    pat = "yyyyMMddHHmmss";
-                    break;
-                case 16:
-                    pat = "yyyyMMddHHmmss.S";
-                    break;
-                case 17:
-                    pat = "yyyyMMddHHmmss.SS";
-                    break;
-                case 18:
-                    pat = "yyyyMMddHHmmss.SSS";
-                    break;
-                case 19:
-                    pat = "yyyyMMddHHmmss.SSSS";
-                    break;
-                default:
-                    throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-
-            SimpleDateFormat sdf = new SimpleDateFormat(pat.concat(patTz));
-
-            sdf.parse(s);
-        } catch(Exception e) {
-        }
-
-        return status;
-    }
-
-    private ValidateStatus validateDataTypeNM(Hl7Object obj) {
-        ValidateStatus status = null;
-
-        try {
-            if(obj.size() > 1) {
-                throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-
-            Long.parseLong(obj.toString());
-        } catch(Exception e) {
-        }
-
-        return status;
-    }
-
-    private ValidateStatus validateDataTypeSI(Hl7Object obj) {
-        ValidateStatus status = null;
-
-        try {
-            if(obj.size() > 1) {
-                throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-
-            if(Long.parseLong(obj.toString()) < 0) {
-                throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-        } catch(Exception e) {
-        }
-
-        return status;
-    }
-
-    private ValidateStatus validateDataTypeTM(Hl7Object obj) {
-        ValidateStatus status = null;
-
-        try {
-            if(obj.size() > 1) {
-                throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-
-            String pat = "";
-            String patTz = "";
-            String s = obj.toString();
-            int len = s.toString().length();
-
-            // If timezone set ...
-            if((s.indexOf('-') != -1) || (s.indexOf('+') != -1)) {
-                int i = (s.indexOf('-') != -1) ? s.indexOf('-') : s.indexOf('+');
-                len = s.substring(0, i).length();
-                patTz = "Z";
-
-                if(s.substring(i + 1).length() != 4) {
-                    throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-                }
-            }
-
-            switch(len) {
-                case 2:
-                    pat = "HH";
-                    break;
-                case 4:
-                    pat = "HHmm";
-                    break;
-                case 6:
-                    pat = "HHmmss";
-                    break;
-                case 8:
-                    pat = "HHmmss.S";
-                    break;
-                case 9:
-                    pat = "HHmmss.SS";
-                    break;
-                case 10:
-                    pat = "HHmmss.SSS";
-                    break;
-                case 11:
-                    pat = "HHmmss.SSSS";
-                    break;
-                default:
-                    throw new Exception(ILLEGAL_DATA_TYPE_FORMAT_TEXT);
-            }
-
-            SimpleDateFormat sdf = new SimpleDateFormat(pat.concat(patTz));
-
-            sdf.parse(s);
-        } catch(Exception e) {
-        }
-
-        return status;
     }
 }

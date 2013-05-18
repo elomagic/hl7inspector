@@ -29,7 +29,9 @@ public class SendOptionsBean {
     private boolean encryption = false;
     private boolean authentication = false;
 
-    /** Creates a new instance of SendOptionsBean */
+    /**
+     * Creates a new instance of SendOptionsBean.
+     */
     public SendOptionsBean() {
     }
 

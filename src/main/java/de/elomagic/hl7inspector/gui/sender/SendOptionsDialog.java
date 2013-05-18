@@ -33,7 +33,9 @@ import de.elomagic.hl7inspector.gui.GradientLabel;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.io.Frame;
 import de.elomagic.hl7inspector.io.SendOptionsBean;
-import de.elomagic.hl7inspector.utils.History;
+import de.elomagic.hl7inspector.utils.BundleTool;
+import de.elomagic.hl7inspector.utils.RecentList;
+import java.util.ResourceBundle;
 
 /**
  *
@@ -41,12 +43,48 @@ import de.elomagic.hl7inspector.utils.History;
  */
 public class SendOptionsDialog extends BaseDialog {
     private static final long serialVersionUID = 4327622002676720941L;
+    private ResourceBundle bundle;
     private JComboBox cbStartChar;
     private JComboBox cbStopChar1;
     private JComboBox cbStopChar2;
     private JComboBox cbDest;
     private JComboBox cbEncoding;
     private JCheckBox cbReuse;
+    private static final String[] FRAME_CHARS = {
+        "0x00 - NUL",
+        "0x01 - SOH",
+        "0x02 - STX",
+        "0x03 - ETX",
+        "0x04 - EOT",
+        "0x05 - ENQ",
+        "0x06 - ACK",
+        "0x07 - BEL",
+        "0x08 - BS",
+        "0x09 - HT",
+        "0x0a - LF",
+        "0x0b - VT",
+        "0x0c - FF",
+        "0x0d - CR",
+        "0x0e - SO",
+        "0x0f - SI",
+        "0x10 - DLE",
+        "0x11 - DC1",
+        "0x12 - DC2",
+        "0x13 - DC3",
+        "0x14 - DC4",
+        "0x15 - NAK",
+        "0x16 - SYN",
+        "0x17 - ETB",
+        "0x18 - CAN",
+        "0x19 - EM",
+        "0x1a - SUB",
+        "0x1b - ESC",
+        "0x1c - FS",
+        "0x1d - GS",
+        "0x1e - RS",
+        "0x1f - US",
+        "-"
+    };
 
     /**
      * Creates a new instance of SendOptionsDialog.
@@ -58,17 +96,15 @@ public class SendOptionsDialog extends BaseDialog {
     }
 
     private void init() {
+        bundle = BundleTool.getBundle(SendOptionsDialog.class);
+
         getBanner().setVisible(false);
 
-        setTitle("Send Options");
+        setTitle(bundle.getString("title"));
         //setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         setModal(true);
 
-        History h = new History(StartupProperties.SENDER_OPTIONS_DEST);
-        //h.read(StartupProperties.getInstance());
-        if(h.size() == 0) {
-            h.set("localhost:2100");
-        }
+        RecentList h = StartupProperties.getRecentUsedSenderDestinations();
         cbDest = new JComboBox(h.getList().toArray());
         cbDest.setEditable(true);
 
@@ -82,50 +118,11 @@ public class SendOptionsDialog extends BaseDialog {
             cbEncoding.setSelectedItem("US-ASCII");
         }
         cbReuse = new JCheckBox();
-        cbReuse.setToolTipText("Reuse socket for next the message.");
+        cbReuse.setToolTipText(bundle.getString("reuse_socket"));
 
-//        btGrpMode.add(rbModeAuto);
-//        btGrpMode.add(rbModeStream);
-//        btGrpMode.add(rbModeParse);
-
-        String[] model = {
-            "0x00 - NUL",
-            "0x01 - SOH",
-            "0x02 - STX",
-            "0x03 - ETX",
-            "0x04 - EOT",
-            "0x05 - ENQ",
-            "0x06 - ACK",
-            "0x07 - BEL",
-            "0x08 - BS",
-            "0x09 - HT",
-            "0x0a - LF",
-            "0x0b - VT",
-            "0x0c - FF",
-            "0x0d - CR",
-            "0x0e - SO",
-            "0x0f - SI",
-            "0x10 - DLE",
-            "0x11 - DC1",
-            "0x12 - DC2",
-            "0x13 - DC3",
-            "0x14 - DC4",
-            "0x15 - NAK",
-            "0x16 - SYN",
-            "0x17 - ETB",
-            "0x18 - CAN",
-            "0x19 - EM",
-            "0x1a - SUB",
-            "0x1b - ESC",
-            "0x1c - FS",
-            "0x1d - GS",
-            "0x1e - RS",
-            "0x1f - US",
-            "-"
-        };
-        cbStartChar.setModel(new DefaultComboBoxModel(model));
-        cbStopChar1.setModel(new DefaultComboBoxModel(model));
-        cbStopChar2.setModel(new DefaultComboBoxModel(model));
+        cbStartChar.setModel(new DefaultComboBoxModel(FRAME_CHARS));
+        cbStopChar1.setModel(new DefaultComboBoxModel(FRAME_CHARS));
+        cbStopChar2.setModel(new DefaultComboBoxModel(FRAME_CHARS));
 
         FormLayout layout = new FormLayout(
                 "0dlu, p, 4dlu, 50dlu, 4dlu, p, 2dlu, 50dlu, 4dlu, p, 2dlu, 50dlu, p:grow",
@@ -203,15 +200,16 @@ public class SendOptionsDialog extends BaseDialog {
             try {
                 Integer.parseInt(port);
             } catch(Exception ee) {
-                throw new Exception("Destination port must an integer value!");
+                throw new IllegalArgumentException("Destination port must an integer value!");
             }
 
-            if(host.length() == 0) {
-                throw new Exception("Destination host missing!");
+            if(host.isEmpty()) {
+                throw new IllegalArgumentException("Destination host missing!");
             }
 
-            History h = new History(StartupProperties.SENDER_OPTIONS_DEST);
-            h.set(cbDest.getSelectedItem().toString());
+            RecentList list = StartupProperties.getRecentUsedSenderDestinations();
+            list.put(cbDest.getSelectedItem().toString());
+            StartupProperties.getInstance().save();
 
             super.ok();
         } catch(Exception e) {

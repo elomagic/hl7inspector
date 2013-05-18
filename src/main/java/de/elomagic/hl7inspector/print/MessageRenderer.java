@@ -20,24 +20,16 @@ import java.awt.Graphics;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-//import java.awt.print.PrinterJob;
 
 /**
  *
  * @author rambow
  */
 public class MessageRenderer implements Printable {
-    /** Creates a new instance of MessageRenderer */
+    /**
+     * Creates a new instance of MessageRenderer.
+     */
     public MessageRenderer() {
-//        PrinterJob pjob = PrinterJob.getPrinterJob();
-//        PageFormat pf = pjob.defaultPage();
-//        pjob.setPrintable(this);
-//        try {
-//            if (pjob.printDialog()) {
-//                pjob.print();
-//            }
-//        } catch (PrinterException e) {
-//        }
     }
 
     @Override

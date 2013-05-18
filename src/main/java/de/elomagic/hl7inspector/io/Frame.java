@@ -24,7 +24,9 @@ public class Frame {
     private char start;
     private char[] stops;
 
-    /** Creates a new instance of Frame */
+    /**
+     * Creates a new instance of Frame.
+     */
     public Frame() {
         start = 0xb;
         stops = new char[] {0x1c, 0xd};

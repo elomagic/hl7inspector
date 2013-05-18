@@ -25,7 +25,9 @@ import java.io.IOException;
 public class EndOfStreamException extends IOException {
     private static final long serialVersionUID = 7968793341658744507L;
 
-    /** Creates a new instance of EndOfStreamException */
+    /**
+     * Creates a new instance of EndOfStreamException.
+     */
     public EndOfStreamException() {
         super("End of stream reached");
     }

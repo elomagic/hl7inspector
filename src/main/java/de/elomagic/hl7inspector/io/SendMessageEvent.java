@@ -29,7 +29,9 @@ public class SendMessageEvent {
     private SendThread source;
     private Socket socket;
 
-    /** Creates a new instance of MessageImportEvent */
+    /**
+     * Creates a new instance of MessageImportEvent.
+     */
     public SendMessageEvent(SendThread source, Socket socket, Message message) {
         this.source = source;
         this.socket = socket;
