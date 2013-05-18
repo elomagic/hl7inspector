@@ -106,7 +106,7 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
 
     private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ReceiveMessageAction());
 
-    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new SendMessageAction());
+    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendMessageAction());
     // Interface PopupMenuListener
     @Override
     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {

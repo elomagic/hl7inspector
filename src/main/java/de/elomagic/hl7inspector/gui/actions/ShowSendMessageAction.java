@@ -32,24 +32,24 @@ import javax.swing.KeyStroke;
  *
  * @author rambow
  */
-public class SendMessageAction extends AbstractAction {
+public class ShowSendMessageAction extends AbstractAction {
     /**
      * Creates a new instance of ExitAction
      */
-    public SendMessageAction(String value) {
+    public ShowSendMessageAction(String value) {
         super(value);
 
         init();
     }
 
-    public SendMessageAction() {
+    public ShowSendMessageAction() {
         super();
 
         init();
     }
 
     public final void init() {
-        ResourceBundle bundle = BundleTool.getBundle(SendMessageAction.class);
+        ResourceBundle bundle = BundleTool.getBundle(ShowSendMessageAction.class);
 
         putValue(Action.NAME, bundle.getString("send_messages"));
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("send.png"));

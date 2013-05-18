@@ -169,7 +169,7 @@ public class MainMenuBar extends JMenuBar {
     private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
     private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
     private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ReceiveMessageAction());
-    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new SendMessageAction());
+    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendMessageAction());
 
     class RecentFileMenuListener implements ChangeListener {
 

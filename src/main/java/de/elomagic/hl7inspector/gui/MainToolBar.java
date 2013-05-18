@@ -47,7 +47,7 @@ public class MainToolBar extends JToolBar {
         btShowDetails = new JToggleButton(new ViewNodeDetailsAction(""));
         btParserWindow = new JToggleButton(new ShowParserWindowAction(""));
         btReceiveWindow = new JToggleButton(new ReceiveMessageAction(""));
-        btSendWindow = new JToggleButton(new SendMessageAction(""));
+        btSendWindow = new JToggleButton(new ShowSendMessageAction(""));
 
         // FEATURE Button for rereading file.
 
