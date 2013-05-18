@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,8 +25,16 @@ import javax.swing.JToolBar;
  * @author rambow
  */
 public class MainToolBar extends JToolBar {
+    private JToggleButton btNodeDesc;
+    private JToggleButton btCompactView;
+    private JToggleButton btShowDetails;
+    private JToggleButton btParserWindow;
+    private JToggleButton btReceiveWindow;
+    private JToggleButton btSendWindow;
 
-    /** Creates a new instance of ToolBar */
+    /**
+     * Creates a new instance of ToolBar.
+     */
     public MainToolBar() {
         super();
 
@@ -41,7 +49,7 @@ public class MainToolBar extends JToolBar {
         btReceiveWindow = new JToggleButton(new ReceiveMessageAction(""));
         btSendWindow = new JToggleButton(new SendMessageAction(""));
 
-        // FEATURE Button for rereading file.           
+        // FEATURE Button for rereading file.
 
         add(new FileNewAction());
         add(new FileOpenAction());
@@ -57,8 +65,8 @@ public class MainToolBar extends JToolBar {
         addSeparator();
         add(new ViewTextFile());
         add(new ViewHexFile());
-        /* FEATURE Print message support needed        
-        add(new PrintAction());
+        /* FEATURE Print message support needed
+         add(new PrintAction());
          */
         addSeparator();
         add(btParserWindow);
@@ -91,16 +99,4 @@ public class MainToolBar extends JToolBar {
     public JToggleButton getSendWindowButton() {
         return btSendWindow;
     }
-
-    private JToggleButton btNodeDesc;
-
-    private JToggleButton btCompactView;
-
-    private JToggleButton btShowDetails;
-
-    private JToggleButton btParserWindow;
-
-    private JToggleButton btReceiveWindow;
-
-    private JToggleButton btSendWindow;
 }
