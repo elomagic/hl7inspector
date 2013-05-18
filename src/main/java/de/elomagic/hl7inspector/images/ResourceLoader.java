@@ -28,19 +28,14 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class ResourceLoader {
+    private static Logger log = Logger.getLogger(ResourceLoader.class);
+    private final static String IMAGE_SOURCE_PATH = "de/elomagic/hl7inspector/themes/";
+    private final static String SMALL_IMAGE = "";
+    private final static String THEME = "classic/";
+    public final static String LARGE_IMAGE = "large/";
 
     public static ImageIcon loadImageIcon(String imageName) {
-        ImageIcon icon = null;
-
-        ClassLoader loader = ClassLoader.getSystemClassLoader();
-
-        try {
-            icon = new ImageIcon(loader.getResource(IMAGE_SOURCE_PATH.concat(SMALL_IMAGE).concat(imageName)));
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-        }
-
-        return icon;
+        return loadImageIcon(imageName, SMALL_IMAGE);
     }
 
     public static ImageIcon loadImageIcon(String imageName, String imageSize) {
@@ -49,8 +44,8 @@ public class ResourceLoader {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
 
         try {
-            icon = new ImageIcon(loader.getResource(IMAGE_SOURCE_PATH.concat(imageSize).concat(imageName)));
-        } catch (Exception ex) {
+            icon = new ImageIcon(loader.getResource(IMAGE_SOURCE_PATH + THEME + imageSize + imageName));
+        } catch(Exception ex) {
             log.error(ex.getMessage(), ex);
         }
 
@@ -63,16 +58,11 @@ public class ResourceLoader {
         ClassLoader loader = ClassLoader.getSystemClassLoader();
 
         try {
-            image = ImageIO.read(loader.getResource(IMAGE_SOURCE_PATH.concat(imageName)));
-        } catch (Exception ex) {
+            image = ImageIO.read(loader.getResource(IMAGE_SOURCE_PATH + THEME + imageName));
+        } catch(Exception ex) {
             log.error("Resource " + imageName + ": " + ex.getMessage(), ex);
         }
 
         return image;
     }
-
-    public static Logger log = Logger.getLogger(ResourceLoader.class);
-    public final static String IMAGE_SOURCE_PATH = "de/elomagic/hl7inspector/resources/";
-    public final static String SMALL_IMAGE = "";
-    public final static String LARGE_IMAGE = "32x32/";
 }
