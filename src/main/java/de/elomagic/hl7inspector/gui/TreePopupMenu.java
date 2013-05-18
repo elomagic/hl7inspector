@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -21,6 +20,7 @@ import de.elomagic.hl7inspector.hl7.model.EncodingObject;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
+
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
@@ -31,6 +31,12 @@ import javax.swing.tree.TreePath;
  * @author rambow
  */
 public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
+    private JCheckBoxMenuItem miCompactView = new JCheckBoxMenuItem(new ViewCompressedAction());
+    private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
+    private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
+    private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
+    private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
+    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
 
     public TreePopupMenu() {
         init();
@@ -44,20 +50,20 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
         removeAll();
 
         TreePath selPath = Desktop.getInstance().getTree().getSelectionPath();
-        if (selPath != null) {
-            if (selPath.getLastPathComponent() instanceof Hl7Object) {
-                Hl7Object hl7o = (Hl7Object) selPath.getLastPathComponent();
+        if(selPath != null) {
+            if(selPath.getLastPathComponent() instanceof Hl7Object) {
+                Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
 
-                if (!(hl7o instanceof EncodingObject)) {
-                    if (!(hl7o instanceof Message)) {
+                if(!(hl7o instanceof EncodingObject)) {
+                    if(!(hl7o instanceof Message)) {
                         add(new JMenuItem(new EditMessageItemAction(hl7o)));
                     }
 
-                    if (hl7o.getChildClass() != null) {
+                    if(hl7o.getChildClass() != null) {
                         add(new JMenuItem(new AddMessageItemAction(hl7o.getChildClass())));
                     }
 
-                    if (!(hl7o instanceof Message)) {
+                    if(!(hl7o instanceof Message)) {
                         add(new JMenuItem(new ClearMessageItemAction()));
                     }
 
@@ -69,10 +75,6 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
         add(new JMenuItem(new FileSaveAsAction()));
         add(new JMenuItem(new PasteTextAction()));
 
-//        JMenu miFile = new JMenu("File");
-//        miFile.add(new JMenuItem(new FileNewAction()));
-//        miFile.add(new JMenuItem(new FileOpenAction()));
-//        miFile.add(miOpenRecentFiles);
         addSeparator();
         add(miSendWindow);
 
@@ -81,12 +83,7 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
         add(miNodeDescription);
         add(miNodeDetails);
 
-        /* FEATURE Print message support needed
-        menuItem.addSeparator();
-        menuItem.add(new JMenuItem(new PrintAction())); */
-
-
-        Hl7TreeModel model = (Hl7TreeModel) Desktop.getInstance().getTree().getModel();
+        Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
 
         miCompactView.setSelected(model.isCompactView());
         miNodeDescription.setSelected(model.isViewDescription());
@@ -96,17 +93,6 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
         miSendWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getSendWindow()) != -1);
     }
 
-    private JCheckBoxMenuItem miCompactView = new JCheckBoxMenuItem(new ViewCompressedAction());
-
-    private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
-
-    private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
-
-    private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
-
-    private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ReceiveMessageAction());
-
-    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendMessageAction());
     // Interface PopupMenuListener
     @Override
     public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
@@ -120,5 +106,4 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
     @Override
     public void popupMenuCanceled(PopupMenuEvent e) {
     }
-
 }

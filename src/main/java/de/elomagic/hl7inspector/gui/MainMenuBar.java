@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -26,6 +25,7 @@ import de.elomagic.hl7inspector.mac.MacApplication;
 import de.elomagic.hl7inspector.mac.MacApplicationAdapter;
 import de.elomagic.hl7inspector.mac.MacApplicationEvent;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
+
 import java.io.File;
 import java.util.List;
 import javax.swing.*;
@@ -38,8 +38,9 @@ import javax.swing.tree.TreePath;
  * @author rambow
  */
 public class MainMenuBar extends JMenuBar {
-
-    /** Creates a new instance of MainMenu */
+    /**
+     * Creates a new instance of MainMenu.
+     */
     public MainMenuBar() {
         super();
 
@@ -50,7 +51,6 @@ public class MainMenuBar extends JMenuBar {
         //buildRecentUsedKeystoresMenu();
 
         MacApplication.getApplication().addApplicationListener(new MacApplicationAdapter() {
-
             @Override
             public void handleAbout(MacApplicationEvent ae) {
                 new AboutDialog().setVisible(true);
@@ -71,7 +71,6 @@ public class MainMenuBar extends JMenuBar {
 
                 ae.setHandled(true);
             }
-
         });
         MacApplication.getApplication().setEnabledAboutMenu(true);
         MacApplication.getApplication().setEnabledPreferencesMenu(true);
@@ -82,8 +81,8 @@ public class MainMenuBar extends JMenuBar {
         miFile.add(miOpenRecentFiles);
         miFile.add(new JMenuItem(new FileSaveAsAction()));
         /* FEATURE Print message support needed
-        menuItem.addSeparator();
-        menuItem.add(new JMenuItem(new PrintAction())); */
+         menuItem.addSeparator();
+         menuItem.add(new JMenuItem(new PrintAction())); */
         miFile.addSeparator();
         miFile.add(new JMenuItem(new ExitAction()));
         miFile.addChangeListener(new RecentFileMenuListener());
@@ -120,11 +119,11 @@ public class MainMenuBar extends JMenuBar {
         menuItem.addSeparator();
         menuItem.add(new JMenuItem(new ProfileManagerAction()));
 
-        if (StartupProperties.getInstance().isDebugFileOutput()) {
+        if(StartupProperties.getInstance().isDebugFileOutput()) {
             menuItem.add(new JMenuItem(new KeyStoreManagerAction()));
         }
 
-        if (!MacApplication.isMacOS()) {
+        if(!MacApplication.isMacOS()) {
             menuItem.addSeparator();
             menuItem.add(new JMenuItem(new OptionsAction()));
         }
@@ -132,13 +131,13 @@ public class MainMenuBar extends JMenuBar {
         add(menuItem);
 
         /*menuItem = new JMenu("Window");
-        menuItem.add(new JMenuItem(new DetailWindowAction()));
-        add(menuItem);*/
+         menuItem.add(new JMenuItem(new DetailWindowAction()));
+         add(menuItem);*/
 
         menuItem = new JMenu("Help");
         menuItem.add(new JMenuItem(new CheckUpdateAction()));
 
-        if (!MacApplication.isMacOS()) {
+        if(!MacApplication.isMacOS()) {
             menuItem.addSeparator();
             menuItem.add(new JMenuItem(new AboutAction()));
         }
@@ -150,14 +149,13 @@ public class MainMenuBar extends JMenuBar {
         miOpenRecentFiles.removeAll();
 
         List<File> list = StartupProperties.getInstance().getRecentFiles();
-        for (File file: list) {
+        for(File file : list) {
             JMenuItem mi = new JMenuItem(new FileRecentOpenAction(file));
             miOpenRecentFiles.add(mi);
         }
 
         miOpenRecentFiles.setEnabled(!list.isEmpty());
     }
-
     private JMenu miOpenRecentFiles = new JMenu("Open recent files");
     private JMenu miEdit;
     private JMenuItem miEditItem = new JMenuItem(new EditMessageItemAction());
@@ -168,36 +166,33 @@ public class MainMenuBar extends JMenuBar {
     private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
     private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
     private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
-    private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ReceiveMessageAction());
-    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendMessageAction());
+    private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
+    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
 
     class RecentFileMenuListener implements ChangeListener {
-
         @Override
         public void stateChanged(ChangeEvent e) {
-            if (((JMenuItem) e.getSource()).isSelected()) {
+            if(((JMenuItem)e.getSource()).isSelected()) {
                 createRecentFilesMenu();
             }
         }
-
     }
 
     class EditMenuListener implements ChangeListener {
-
         @Override
         public void stateChanged(ChangeEvent e) {
-            if (((JMenuItem) e.getSource()).isSelected()) {
+            if(((JMenuItem)e.getSource()).isSelected()) {
 
-                for (int i = 0; i < miEdit.getItemCount(); i++) {
+                for(int i = 0; i < miEdit.getItemCount(); i++) {
                     miEdit.getItem(i).setEnabled(false);
                 }
 
                 TreePath selPath = Desktop.getInstance().getTree().getSelectionPath();
-                if (selPath != null) {
-                    if (selPath.getLastPathComponent() instanceof Hl7Object) {
-                        Hl7Object hl7o = (Hl7Object) selPath.getLastPathComponent();
+                if(selPath != null) {
+                    if(selPath.getLastPathComponent() instanceof Hl7Object) {
+                        Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
 
-                        if (!(hl7o instanceof EncodingObject)) {
+                        if(!(hl7o instanceof EncodingObject)) {
 
                             miEditItem.setEnabled(!(hl7o instanceof Message));
                             miEditAppendItem.setEnabled(hl7o.getChildClass() != null);
@@ -207,15 +202,13 @@ public class MainMenuBar extends JMenuBar {
                 }
             }
         }
-
     }
 
     class ViewMenuListener implements ChangeListener {
-
         @Override
         public void stateChanged(ChangeEvent e) {
-            if (((JMenuItem) e.getSource()).isSelected()) {
-                Hl7TreeModel model = (Hl7TreeModel) Desktop.getInstance().getTree().getModel();
+            if(((JMenuItem)e.getSource()).isSelected()) {
+                Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
 
                 miCompactView.setSelected(model.isCompactView());
                 miNodeDescription.setSelected(model.isViewDescription());
@@ -225,6 +218,5 @@ public class MainMenuBar extends JMenuBar {
                 miSendWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getSendWindow()) != -1);
             }
         }
-
     }
 }

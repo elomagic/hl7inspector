@@ -12,46 +12,29 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.mac.MacApplication;
-import de.elomagic.hl7inspector.utils.BundleTool;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.ResourceBundle;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
 import javax.swing.KeyStroke;
 
 /**
  *
  * @author rambow
  */
-public class ShowSendMessageAction extends AbstractAction {
-    /**
-     * Creates a new instance of ExitAction
-     */
-    public ShowSendMessageAction(String value) {
-        super(value);
-
-        init();
-    }
-
-    public ShowSendMessageAction() {
+public class ShowSendWindowAction extends BasicAction {
+    public ShowSendWindowAction(boolean showCaption) {
         super();
 
-        init();
-    }
+        if(showCaption) {
+            putValue(NAME, bundle.getString("send_messages"));
+        }
 
-    public final void init() {
-        ResourceBundle bundle = BundleTool.getBundle(ShowSendMessageAction.class);
-
-        putValue(Action.NAME, bundle.getString("send_messages"));
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("send.png"));
         putValue(SHORT_DESCRIPTION, bundle.getString("send_selected_messages"));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, (MacApplication.isMacOS() ? InputEvent.META_DOWN_MASK : InputEvent.CTRL_DOWN_MASK) | InputEvent.SHIFT_DOWN_MASK));

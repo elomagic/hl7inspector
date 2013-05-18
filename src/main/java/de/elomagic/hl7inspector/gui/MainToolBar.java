@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -46,8 +45,8 @@ public class MainToolBar extends JToolBar {
         btCompactView.setSelected(true);
         btShowDetails = new JToggleButton(new ViewNodeDetailsAction(""));
         btParserWindow = new JToggleButton(new ShowParserWindowAction(""));
-        btReceiveWindow = new JToggleButton(new ReceiveMessageAction(""));
-        btSendWindow = new JToggleButton(new ShowSendMessageAction(""));
+        btReceiveWindow = new JToggleButton(new ShowReceiveWindowAction(false));
+        btSendWindow = new JToggleButton(new ShowSendWindowAction(false));
 
         // FEATURE Button for rereading file.
 
