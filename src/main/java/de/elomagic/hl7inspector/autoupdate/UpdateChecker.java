@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.autoupdate;
 
@@ -43,7 +42,9 @@ public class UpdateChecker extends Thread {
     private boolean result = false;
     private UpdateCheckException e = null;
 
-    /** Creates a new instance of UpdateChecker */
+    /**
+     * Creates a new instance of UpdateChecker.
+     */
     public UpdateChecker() {
         resultAvailable = false;
         terminated = false;
@@ -63,7 +64,7 @@ public class UpdateChecker extends Thread {
                 String currentVersion = Hl7Inspector.getVersion();
                 result = checkUpdates(versionFile, currentVersion);
                 resultAvailable = false;
-            } catch(Exception ex) {
+            } catch(IOException | URISyntaxException ex) {
                 e = new UpdateCheckException(ex);
             }
         } finally {
@@ -107,7 +108,7 @@ public class UpdateChecker extends Thread {
 
         URL url = new URL("http", "www.elomagic.de", "//file_versions.xml");
 
-        HttpURLConnection uc = null;
+        HttpURLConnection uc;
         HttpURLConnection.setFollowRedirects(true);
 
         switch(p.getProxyMode()) {
@@ -137,23 +138,14 @@ public class UpdateChecker extends Thread {
 
         uc.setConnectTimeout(10000);
         uc.setReadTimeout(10000);
-
-        InputStreamReader in = new InputStreamReader(uc.getInputStream());
-        try {
-            BufferedReader bin = new BufferedReader(in);
-            try {
-                String s;
-                do {
-                    s = bin.readLine();
-                    if(s != null) {
-                        versionFile = versionFile.concat(s);
-                    }
-                } while(s != null);
-            } finally {
-                bin.close();
-            }
-        } finally {
-            in.close();
+        try (InputStreamReader in = new InputStreamReader(uc.getInputStream()); BufferedReader bin = new BufferedReader(in)) {
+            String s;
+            do {
+                s = bin.readLine();
+                if(s != null) {
+                    versionFile = versionFile.concat(s);
+                }
+            } while(s != null);
         }
 
         return versionFile;
