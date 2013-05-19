@@ -43,7 +43,7 @@ public class AboutDialog extends BaseDialog {
     private JLabel lblContact;
 
     /**
-     * Creates a new instance of UpdateCheckDialog.
+     * Creates a new instance of AboutDialog.
      */
     public AboutDialog() {
         super(Desktop.getInstance());

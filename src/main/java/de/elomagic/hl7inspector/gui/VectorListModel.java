@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -27,7 +26,7 @@ public class VectorListModel<E extends Object> extends AbstractListModel {
     private List<E> list;
 
     /**
-     * Creates a new instance of ProfileManagerModel.
+     * Creates a new instance of VectorListModel.
      */
     public VectorListModel(List<E> v) {
         super();

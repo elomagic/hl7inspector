@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@ package de.elomagic.hl7inspector.gui;
 
 import com.l2fprod.common.swing.BaseDialog;
 import com.l2fprod.common.swing.JButtonBar;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -29,10 +30,13 @@ import java.util.List;
  * @author rambow
  */
 public class PanelDialog extends BaseDialog {
-
     private static final long serialVersionUID = 6158738386923154208L;
+    private List<AbstractPanel> panelList = new ArrayList<>();
+    protected AbstractPanel selectedPanel = null;
 
-    /** Creates a new instance of PanelDialog */
+    /**
+     * Creates a new instance of PanelDialog.
+     */
     public PanelDialog(Frame owner, String title, boolean modal) {
         super(owner, title, modal);
 
@@ -44,20 +48,20 @@ public class PanelDialog extends BaseDialog {
     }
 
     public void setSelected(AbstractPanel optionPanel) {
-        if (!optionPanel.equals(selectedPanel)) {
-            for (int i = 0; i < getContentPane().getComponentCount(); i++) {
-                if (getContentPane().getComponent(i) instanceof AbstractPanel) {
+        if(!optionPanel.equals(selectedPanel)) {
+            for(int i = 0; i < getContentPane().getComponentCount(); i++) {
+                if(getContentPane().getComponent(i) instanceof AbstractPanel) {
                     getContentPane().remove(i);
                 }
             }
 
-            if (selectedPanel != null) {
+            if(selectedPanel != null) {
                 selectedPanel.getBarButton().setSelected(false);
             }
 
             selectedPanel = optionPanel;
 
-            if (selectedPanel != null) {
+            if(selectedPanel != null) {
                 getContentPane().add(selectedPanel, BorderLayout.CENTER);
                 selectedPanel.getBarButton().setSelected(true);
             }
@@ -75,7 +79,7 @@ public class PanelDialog extends BaseDialog {
 
         boolean result = super.ask();
 
-        if (result) {
+        if(result) {
             write();
         }
 
@@ -83,13 +87,13 @@ public class PanelDialog extends BaseDialog {
     }
 
     protected void read() {
-        for (AbstractPanel p : panelList) {
+        for(AbstractPanel p : panelList) {
             p.read();
         }
     }
 
     protected void write() {
-        for (AbstractPanel p : panelList) {
+        for(AbstractPanel p : panelList) {
             p.write();
         }
     }
@@ -100,7 +104,7 @@ public class PanelDialog extends BaseDialog {
         JButtonBar buttonBar = new JButtonBar();
         buttonBar.setOrientation(JButtonBar.VERTICAL);
 
-        for (AbstractPanel p : panelList) {
+        for(AbstractPanel p : panelList) {
             buttonBar.add(p.getBarButton());
         }
 
@@ -110,7 +114,7 @@ public class PanelDialog extends BaseDialog {
 
         setAlwaysOnTop(true);
 
-        if (!panelList.isEmpty()) {
+        if(!panelList.isEmpty()) {
             setSelected(panelList.get(0));
         }
 
@@ -123,7 +127,4 @@ public class PanelDialog extends BaseDialog {
     public List<AbstractPanel> getPanelList() {
         return panelList;
     }
-
-    private List<AbstractPanel> panelList = new ArrayList<AbstractPanel>();
-    protected AbstractPanel selectedPanel = null;
 }

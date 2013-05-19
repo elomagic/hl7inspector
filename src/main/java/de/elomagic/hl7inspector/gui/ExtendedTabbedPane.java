@@ -1,18 +1,17 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -28,8 +27,11 @@ import javax.swing.plaf.TabbedPaneUI;
  * @author rambow
  */
 public class ExtendedTabbedPane extends JTabbedPane {
+    private List<ActionListener> actionListener = new ArrayList<>();
 
-    /** Creates a new instance of ExtendedTabbedPane */
+    /**
+     * Creates a new instance of ExtendedTabbedPane.
+     */
     public ExtendedTabbedPane() {
         super.setUI(ui);
     }
@@ -42,7 +44,6 @@ public class ExtendedTabbedPane extends JTabbedPane {
         //ui.setUI(ui);
     }
 
-    private List<ActionListener> actionListener = new ArrayList<ActionListener>();
     public synchronized void addCloseListener(ActionListener listener) {
         actionListener.add(listener);
     }
@@ -54,12 +55,11 @@ public class ExtendedTabbedPane extends JTabbedPane {
     public void fireCloseTabEvent() {
         ActionEvent event = new ActionEvent(this, 0, "");
 
-        for (int i = 0; i < actionListener.size(); i++) {
+        for(int i = 0; i < actionListener.size(); i++) {
             actionListener.get(i).actionPerformed(event);
         }
 
         setVisible(false);
     }
-
     //private ExtendedTabbedPaneUI ui = new ExtendedTabbedPaneUI();
 }

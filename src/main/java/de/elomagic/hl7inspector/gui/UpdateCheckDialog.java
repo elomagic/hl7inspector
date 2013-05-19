@@ -1,18 +1,17 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -20,8 +19,10 @@ import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.autoupdate.UpdateChecker;
+
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.util.Calendar;
@@ -35,8 +36,12 @@ import javax.swing.JProgressBar;
  * @author rambow
  */
 public class UpdateCheckDialog extends BaseDialog {
+    private JLabel lblText = new JLabel("Looking for updates...");
+    private JProgressBar pbCheck = new JProgressBar();
 
-    /** Creates a new instance of UpdateCheckDialog */
+    /**
+     * Creates a new instance of UpdateCheckDialog.
+     */
     public UpdateCheckDialog() {
         super(Desktop.getInstance());
 
@@ -50,7 +55,7 @@ public class UpdateCheckDialog extends BaseDialog {
 
         boolean doCheck = !(p.getAutoUpdatePeriod() < 0);
 
-        if (doCheck) {
+        if(doCheck) {
             lc.add(Calendar.DAY_OF_MONTH, p.getAutoUpdatePeriod());
         }
 
@@ -63,13 +68,13 @@ public class UpdateCheckDialog extends BaseDialog {
 
         doCheck = (lc.before(n) || lc.equals(n)) && (doCheck);
 
-        if ((doCheck) && (confirmCheck) && (p.isAutoUpdateAsk())) {
+        if((doCheck) && (confirmCheck) && (p.isAutoUpdateAsk())) {
             doCheck = SimpleDialog.confirmYesNo("Check for updates of Hl7Inspector ?") == 0;
         }
 
         boolean b = false;
 
-        if (!confirmCheck || doCheck) {
+        if(!confirmCheck || doCheck) {
             UpdateCheckDialog dlg = new UpdateCheckDialog();
 
             dlg.setVisible(true);
@@ -81,12 +86,12 @@ public class UpdateCheckDialog extends BaseDialog {
                 dlg.setVisible(false);
             }
 
-            if (!b) {
+            if(!b) {
                 SimpleDialog.info("No update of Hl7Inspector available");
             }
         }
 
-        if (b) {
+        if(b) {
             // FEATURE Open side with default web browser
             SimpleDialog.info("A new version of Hl7Inspector available on www.elomagic.de");
         }
@@ -137,9 +142,4 @@ public class UpdateCheckDialog extends BaseDialog {
 
         setLocationRelativeTo(getOwner());
     }
-
-    private JLabel lblText = new JLabel("Looking for updates...");
-
-    private JProgressBar pbCheck = new JProgressBar();
-//    private JButton         btCancel    = new JButton("Abort");
 }

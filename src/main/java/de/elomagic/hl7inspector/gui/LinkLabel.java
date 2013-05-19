@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -28,6 +27,7 @@ import javax.swing.JLabel;
  * @author carsten.rambow
  */
 public class LinkLabel extends JLabel implements MouseListener {
+    private URI uri;
 
     public LinkLabel(String text, String uri) throws URISyntaxException {
         super();
@@ -35,7 +35,7 @@ public class LinkLabel extends JLabel implements MouseListener {
     }
 
     private void init(String text, String uri) throws URISyntaxException {
-        if (text.indexOf("<html>") == -1) {
+        if(text.indexOf("<html>") == -1) {
             text = "<html><u><font color=blue>" + text + "</font></u></html>";
         }
 
@@ -50,16 +50,15 @@ public class LinkLabel extends JLabel implements MouseListener {
 
     }
 
-    private URI uri;
     @Override
     public void mouseClicked(MouseEvent e) {
         try {
-            if (uri.toString().indexOf('@') == -1) {
+            if(uri.toString().indexOf('@') == -1) {
                 java.awt.Desktop.getDesktop().browse(uri);
             } else {
                 java.awt.Desktop.getDesktop().mail(uri);
             }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             SimpleDialog.error(ex);
         }
     }
@@ -79,5 +78,4 @@ public class LinkLabel extends JLabel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
     }
-
 }

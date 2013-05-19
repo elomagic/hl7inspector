@@ -1,12 +1,12 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,9 @@ package de.elomagic.hl7inspector.gui;
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import de.elomagic.hl7inspector.gui.actions.DefaultCloseWindowAction;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import javax.swing.Action;
@@ -31,8 +33,12 @@ import javax.swing.JPanel;
  * @author rambow
  */
 public class SimpleOkCancelButtonPanel extends JPanel {
+    private JButton btOk;
+    private JButton btClose;
 
-    /** Creates a new instance of SimpleOkCancelButtonPanel */
+    /**
+     * Creates a new instance of SimpleOkCancelButtonPanel.
+     */
     public SimpleOkCancelButtonPanel(Component parent) {
         init(new DefaultCloseWindowAction(null), new DefaultCloseWindowAction(parent));
     }
@@ -60,8 +66,4 @@ public class SimpleOkCancelButtonPanel extends JPanel {
         //getContentPane().add(builder.getPanel());
         add(builder.getPanel(), BorderLayout.CENTER);
     }
-
-    private JButton btOk;
-
-    private JButton btClose;
 }

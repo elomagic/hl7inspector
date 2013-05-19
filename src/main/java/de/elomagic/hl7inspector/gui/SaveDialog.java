@@ -1,18 +1,17 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -21,10 +20,12 @@ import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
 import com.l2fprod.common.swing.BaseDialog;
 import com.l2fprod.common.swing.JDirectoryChooser;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.file.filters.Hl7FileFilter;
 import de.elomagic.hl7inspector.gui.framing.FramingSetupDialog;
 import de.elomagic.hl7inspector.io.Frame;
+
 import java.awt.BorderLayout;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -43,8 +44,25 @@ import javax.swing.border.LineBorder;
  * @author rambow
  */
 public class SaveDialog extends BaseDialog {
+    private Frame frame = new Frame();
+    private JTextField editDestFolder;
+    private JButton btChooseFolder;
+    private JCheckBox btSelected;
+    private JRadioButton btManyFiles;
+    private JRadioButton btOneFile;
+    private JComboBox cbEncoding;
+    private JTextField editPrefix;
+    private JComboBox editDataExt;
+    private JComboBox editSemaExt;
+    private JCheckBox btGenSema;
+    private JTextField editFilename;
+    private JButton btFilename;
+    private JEditorPane editFrame;
+    private JButton btFrame;
 
-    /** Creates a new instance of SaveDialog */
+    /**
+     * Creates a new instance of SaveDialog.
+     */
     public SaveDialog() {
         super(Desktop.getInstance(), "Save messages", true);
 
@@ -72,20 +90,20 @@ public class SaveDialog extends BaseDialog {
         MessageWriterBean options = getOptions();
 
         try {
-            if (options.isManyFiles()) {
-                if (options.getDestinationFolder() == null) {
+            if(options.isManyFiles()) {
+                if(options.getDestinationFolder() == null) {
                     throw new Exception("Destination folder not set. Please check");
                 }
 
-                if (!options.getDestinationFolder().exists()) {
+                if(!options.getDestinationFolder().exists()) {
                     throw new Exception("Destination folder does not exists. Please check");
                 }
 
-                if (options.getDataFileExtension().length() == 0) {
+                if(options.getDataFileExtension().length() == 0) {
                     throw new Exception("Invalid extension for data file. Please check");
                 }
 
-                if (options.isGenerateSempahore() && (options.getSemaphoreExtension().length() == 0)) {
+                if(options.isGenerateSempahore() && (options.getSemaphoreExtension().length() == 0)) {
                     throw new Exception("Invalid extension for semaphore file. Please check");
                 }
 
@@ -93,11 +111,11 @@ public class SaveDialog extends BaseDialog {
                 // Validation ok
                 StartupProperties.getInstance().setLastSaveFolder(options.getDestinationFolder());
             } else {
-                if (options.getSingleFileName() == null) {
+                if(options.getSingleFileName() == null) {
                     throw new Exception("Invalid file name. Please check");
                 }
 
-                if (options.getSingleFileName().isDirectory()) {
+                if(options.getSingleFileName().isDirectory()) {
                     throw new Exception("Invalid file name. Please check");
                 }
 
@@ -109,7 +127,7 @@ public class SaveDialog extends BaseDialog {
             }
 
             super.ok();
-        } catch (Exception e) {
+        } catch(Exception e) {
             SimpleDialog.error(e.getMessage());
         }
     }
@@ -124,22 +142,20 @@ public class SaveDialog extends BaseDialog {
         editDestFolder.setText(StartupProperties.getInstance().getLastSaveFolder().getAbsolutePath());
         btChooseFolder = new JButton("...");
         btChooseFolder.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 selectFolder();
             }
-
         });
         btSelected = new JCheckBox("Write only selected messages");
         btManyFiles = new JRadioButton("Many files (One file per message)");
         btManyFiles.setSelected(true);
         btOneFile = new JRadioButton("One file (Framed message stream)");
-        cbEncoding = new JComboBox(new String[]{"ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16"});
+        cbEncoding = new JComboBox(new String[] {"ISO-8859-1", "US-ASCII", "UTF-8", "UTF-16BE", "UTF-16LE", "UTF-16"});
         editPrefix = new JTextField();
-        editDataExt = new JComboBox(new String[]{"hl7", "txt", "dat"});
+        editDataExt = new JComboBox(new String[] {"hl7", "txt", "dat"});
         editDataExt.setEditable(true);
-        editSemaExt = new JComboBox(new String[]{"sem", "frg"});
+        editSemaExt = new JComboBox(new String[] {"sem", "frg"});
         editSemaExt.setEditable(true);
         btGenSema = new JCheckBox();
         btGenSema.setSelected(true);
@@ -148,12 +164,10 @@ public class SaveDialog extends BaseDialog {
         editFilename.setText(StartupProperties.getInstance().getLastSaveFolder().getAbsolutePath().concat("\\hl7messages.hl7"));
         btFilename = new JButton("...");
         btFilename.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 selectFilename();
             }
-
         });
         editFrame = new JEditorPane();
         editFrame.setContentType("text/html");
@@ -161,19 +175,17 @@ public class SaveDialog extends BaseDialog {
         editFrame.setBorder(LineBorder.createGrayLineBorder());
         btFrame = new JButton("...");
         btFrame.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(java.awt.event.ActionEvent e) {
                 FramingSetupDialog dlg = new FramingSetupDialog();
                 dlg.setMessageFrame(frame);
 
-                if (dlg.ask()) {
+                if(dlg.ask()) {
                     frame = dlg.getMessageFrame();
 
                     updateFramePreview();
                 }
             }
-
         });
 
         updateFramePreview();
@@ -242,7 +254,7 @@ public class SaveDialog extends BaseDialog {
         JDirectoryChooser dc = new JDirectoryChooser(editDestFolder.getText());
         dc.setDialogTitle("Choose filename");
 
-        if (dc.showOpenDialog(this) == JDirectoryChooser.APPROVE_OPTION) {
+        if(dc.showOpenDialog(this) == JDirectoryChooser.APPROVE_OPTION) {
             editDestFolder.setText(dc.getSelectedFile().getAbsolutePath());
         }
     }
@@ -251,7 +263,7 @@ public class SaveDialog extends BaseDialog {
         JFileChooser fc = new JFileChooser(new File(editFilename.getText()).getParent());
         fc.addChoosableFileFilter(new Hl7FileFilter());
 
-        if (fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+        if(fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             editFilename.setText(fc.getSelectedFile().getAbsolutePath());
         }
     }
@@ -264,7 +276,7 @@ public class SaveDialog extends BaseDialog {
         s = s.concat("HL7 Message");
 
         s = s.concat("<font color=\"fuchsia\">");
-        for (int i = 0; i < frame.getStopFrame().length; i++) {
+        for(int i = 0; i < frame.getStopFrame().length; i++) {
             s = s.concat("&lt;0x".concat(((frame.getStopFrame()[i] < 16) ? "0" : "") + Integer.toHexString(frame.getStopFrame()[i]))).concat("&gt;");
         }
         s = s.concat("</font>");
@@ -273,34 +285,4 @@ public class SaveDialog extends BaseDialog {
 
         editFrame.setText(s);
     }
-
-    private Frame frame = new Frame();
-
-    private JTextField editDestFolder;
-
-    private JButton btChooseFolder;
-
-    private JCheckBox btSelected;
-
-    private JRadioButton btManyFiles;
-
-    private JRadioButton btOneFile;
-
-    private JComboBox cbEncoding;
-
-    private JTextField editPrefix;
-
-    private JComboBox editDataExt;
-
-    private JComboBox editSemaExt;
-
-    private JCheckBox btGenSema;
-
-    private JTextField editFilename;
-
-    private JButton btFilename;
-
-    private JEditorPane editFrame;
-
-    private JButton btFrame;
 }

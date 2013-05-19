@@ -1,28 +1,24 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
-/*
- * SimpleDialog.java
- *
- * Created on 10. May 2005, 17:01
- */
 
 import com.l2fprod.common.swing.BaseDialog;
+
 import de.elomagic.hl7inspector.images.ResourceLoader;
+
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
@@ -33,11 +29,12 @@ import javax.swing.JTextArea;
 
 /**
  *
- * @author  rambow
+ * @author rambow
  */
 public class SimpleDialog {
-
-    /** Creates a new instance of SimpleDialog */
+    /**
+     * Creates a new instance of SimpleDialog.
+     */
     private SimpleDialog() {
     }
 
@@ -73,29 +70,28 @@ public class SimpleDialog {
     public static void warn(String title, String text) {
         showExtendedDialog(title, text, JOptionPane.WARNING_MESSAGE);
     }
-//    public static void warn(String text) { JOptionPane.showMessageDialog(getParent(), text, "Warning", JOptionPane.WARNING_MESSAGE); }   
+//    public static void warn(String text) { JOptionPane.showMessageDialog(getParent(), text, "Warning", JOptionPane.WARNING_MESSAGE); }
 
     public static int confirmYesNo(String text) {
         return JOptionPane.showConfirmDialog(getParent(), text, "Confirmation", JOptionPane.YES_NO_OPTION);
     }
-
     public static int YES_OPTION = JOptionPane.YES_OPTION;
-
     public static int NO_OPTION = JOptionPane.NO_OPTION;
     /* private */
+
     private static String getFormatedExceptionText(Exception e, int maxLines) {
         String s = "";
-        if (e.getMessage() != null) {
+        if(e.getMessage() != null) {
             s = "Message: " + e.getMessage();
         }
 
         int lines = 0;
-        for (int i = 0; (i < e.getStackTrace().length) && (i < maxLines); i++) {
+        for(int i = 0; (i < e.getStackTrace().length) && (i < maxLines); i++) {
             s = s.concat("\n" + e.getStackTrace()[i].toString());
             lines++;
         }
 
-        if (lines > e.getStackTrace().length) {
+        if(lines > e.getStackTrace().length) {
             s = s.concat("...");
         }
 
@@ -110,7 +106,7 @@ public class SimpleDialog {
         String t = "";
         String i = "";
 
-        switch (messageType) {
+        switch(messageType) {
             case JOptionPane.ERROR_MESSAGE:
                 t = "Error";
                 i = "critical.png";
@@ -131,11 +127,11 @@ public class SimpleDialog {
         BaseDialog dlg;
 
         Window c = getParent();
-        if (c instanceof Frame) {
-            dlg = new BaseDialog((Frame) c, t);
-        } else if (c instanceof Dialog) {
-            dlg = new BaseDialog((Dialog) c, t);
-        } else if (Desktop.getInstance() != null) {
+        if(c instanceof Frame) {
+            dlg = new BaseDialog((Frame)c, t);
+        } else if(c instanceof Dialog) {
+            dlg = new BaseDialog((Dialog)c, t);
+        } else if(Desktop.getInstance() != null) {
             dlg = new BaseDialog(Desktop.getInstance(), t);
         } else {
             dlg = null;
@@ -156,5 +152,4 @@ public class SimpleDialog {
 
         dlg.ask();
     }
-
 }

@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -25,10 +24,13 @@ import javax.swing.table.AbstractTableModel;
  * @author rambow
  */
 public abstract class ArrayListModel<E extends Object> extends AbstractTableModel {
-
     private static final long serialVersionUID = -649617212368934188L;
+    private int lockCount = 0;
+    protected List<E> table = new ArrayList<>();
 
-    /** Creates a new instance of ProfileTableModel */
+    /**
+     * Creates a new instance of ArrayListModel.
+     */
     public ArrayListModel() {
     }
 
@@ -42,7 +44,7 @@ public abstract class ArrayListModel<E extends Object> extends AbstractTableMode
 
         int l = table.size() - 1;
 
-        if (lockCount == 0) {
+        if(lockCount == 0) {
             fireTableRowsInserted(l, l);
         }
 
@@ -66,16 +68,14 @@ public abstract class ArrayListModel<E extends Object> extends AbstractTableMode
 
     public void unlock() {
         lockCount--;
-        if (lockCount == 0) {
+        if(lockCount == 0) {
             fireTableRowsInserted(table.size() - 1, table.size() - 1);
         }
     }
 
     /**
      * Returns the number of rows in the model. A
-     * <code>JTable</code> uses this method to determine how many rows it
-     * should display.  This method should be quick, as it
-     * is called frequently during rendering.
+     * <code>JTable</code> uses this method to determine how many rows it should display. This method should be quick, as it is called frequently during rendering.
      *
      * @return the number of rows in the model
      * @see #getColumnCount
@@ -84,7 +84,4 @@ public abstract class ArrayListModel<E extends Object> extends AbstractTableMode
     public int getRowCount() {
         return table.size();
     }
-
-    protected List<E> table = new ArrayList<E>();
-    private int lockCount = 0;
 }

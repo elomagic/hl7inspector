@@ -1,27 +1,28 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.io.MessageWriterListener;
 import de.elomagic.hl7inspector.io.MessageWriterThread;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -41,8 +42,22 @@ import javax.swing.SwingUtilities;
  * @author rambow
  */
 public class SaveProgessDialog extends JDialog implements MessageWriterListener, ActionListener {
+    private JLabel lblDest = new JLabel();
+    private JLabel lblMessageIndex = new JLabel("0");
+    private JLabel lblCount = new JLabel("0");
+    private JPanel buttonPanel = new JPanel(new FlowLayout());
+    private JProgressBar bar = new JProgressBar(JProgressBar.HORIZONTAL);
+    private JButton btAbort = new JButton("Abort");
+    private MessageWriterBean bean;
+    private List<Message> messages;
+    private MessageWriterThread thread = null;
+    private DoRun doRun = new DoRun();
+    private int messageIndex = 0;
+    private File messageFile = null;
 
-    /** Creates a new instance of ReaderProgessDialog */
+    /**
+     * Creates a new instance of SaveProgessDialog.
+     */
     public SaveProgessDialog(List<Message> messageList, MessageWriterBean options) {
         super(Desktop.getInstance());
 
@@ -54,7 +69,7 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
 
     @Override
     public void setVisible(boolean v) {
-        if (v) {
+        if(v) {
             thread = new MessageWriterThread(messages, bean);
             thread.addListener(this);
             thread.start();
@@ -110,7 +125,7 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
         // 6th row
         builder.add(bar, cc.xyw(1, 9, 10));
 
-        // 7th row        
+        // 7th row
         builder.add(buttonPanel, cc.xyw(1, 11, 10));
 
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
@@ -126,7 +141,7 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
 
     @Override
     public void actionPerformed(ActionEvent ee) {
-        if (thread != null) {
+        if(thread != null) {
             thread.terminate = true;
         }
     }
@@ -143,42 +158,17 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
     @Override
     public void writerDone(MessageWriterThread source, int count) {
         setVisible(false);
-        if (source.terminate) {
+        if(source.terminate) {
             SimpleDialog.info("Saving message abort by user.");
         } else {
             SimpleDialog.info("Saving message successfull done.");
         }
     }
 
-    private JLabel lblDest = new JLabel();
-
-    private JLabel lblMessageIndex = new JLabel("0");
-
-    private JLabel lblCount = new JLabel("0");
-
-    private JPanel buttonPanel = new JPanel(new FlowLayout());
-
-    private JProgressBar bar = new JProgressBar(JProgressBar.HORIZONTAL);
-
-    private JButton btAbort = new JButton("Abort");
-
-    private MessageWriterBean bean;
-
-    private List<Message> messages;
-
-    private MessageWriterThread thread = null;
-
-    private DoRun doRun = new DoRun();
-
-    private int messageIndex = 0;
-
-    private File messageFile = null;
-
     class DoRun implements Runnable {
-
         @Override
         public void run() {
-            if (messageFile != null) {
+            if(messageFile != null) {
                 lblDest.setText(messageFile.getAbsolutePath());
             }
 
@@ -188,6 +178,5 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
             bar.setMaximum(messages.size());
             bar.setValue(messageIndex);
         }
-
     }
 }

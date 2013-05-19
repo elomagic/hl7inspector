@@ -1,22 +1,22 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
 import com.l2fprod.common.swing.BannerPanel;
+
 import java.awt.BorderLayout;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
@@ -32,8 +32,13 @@ import javax.swing.JRootPane;
  * @author rambow
  */
 public abstract class AbstractPanel extends JPanel implements ActionListener {
+    private PanelDialog dialog;
+    private BannerPanel banner = new BannerPanel();
+    private JButton button;
 
-    /** Creates a new instance of AbstractOptionsPane */
+    /**
+     * Creates a new instance of AbstractPanel.
+     */
     public AbstractPanel(PanelDialog d) {
         super(new BorderLayout());
         dialog = d;
@@ -41,14 +46,12 @@ public abstract class AbstractPanel extends JPanel implements ActionListener {
     }
 
     public JButton getBarButton() {
-        if (button == null) {
+        if(button == null) {
             button = new JButton(new AbstractAction() {
-
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     select();
                 }
-
             });
 
             button.setText(getTitle());
@@ -96,10 +99,4 @@ public abstract class AbstractPanel extends JPanel implements ActionListener {
     protected PanelDialog getDialog() {
         return dialog;
     }
-
-    private PanelDialog dialog;
-
-    private BannerPanel banner = new BannerPanel();
-
-    private JButton button;
 }

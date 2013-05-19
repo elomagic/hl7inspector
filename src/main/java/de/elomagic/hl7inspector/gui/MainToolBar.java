@@ -16,6 +16,7 @@
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.gui.actions.*;
+
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
@@ -32,7 +33,7 @@ public class MainToolBar extends JToolBar {
     private JToggleButton btSendWindow;
 
     /**
-     * Creates a new instance of ToolBar.
+     * Creates a new instance of MainToolBar.
      */
     public MainToolBar() {
         super();

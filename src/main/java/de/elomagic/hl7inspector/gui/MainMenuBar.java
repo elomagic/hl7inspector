@@ -38,8 +38,21 @@ import javax.swing.tree.TreePath;
  * @author rambow
  */
 public class MainMenuBar extends JMenuBar {
+    private JMenu miOpenRecentFiles = new JMenu("Open recent files");
+    private JMenu miEdit;
+    private JMenuItem miEditItem = new JMenuItem(new EditMessageItemAction());
+    private JMenuItem miEditAppendItem = new JMenuItem(new AddMessageItemAction());
+    private JMenuItem miEditClearItem = new JMenuItem(new ClearMessageItemAction());
+    private JMenu viewMenu = new JMenu("View");
+    private JCheckBoxMenuItem miCompactView = new JCheckBoxMenuItem(new ViewCompressedAction());
+    private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
+    private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
+    private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
+    private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
+    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
+
     /**
-     * Creates a new instance of MainMenu.
+     * Creates a new instance of MainMenuBar.
      */
     public MainMenuBar() {
         super();
@@ -156,18 +169,6 @@ public class MainMenuBar extends JMenuBar {
 
         miOpenRecentFiles.setEnabled(!list.isEmpty());
     }
-    private JMenu miOpenRecentFiles = new JMenu("Open recent files");
-    private JMenu miEdit;
-    private JMenuItem miEditItem = new JMenuItem(new EditMessageItemAction());
-    private JMenuItem miEditAppendItem = new JMenuItem(new AddMessageItemAction());
-    private JMenuItem miEditClearItem = new JMenuItem(new ClearMessageItemAction());
-    private JMenu viewMenu = new JMenu("View");
-    private JCheckBoxMenuItem miCompactView = new JCheckBoxMenuItem(new ViewCompressedAction());
-    private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
-    private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
-    private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
-    private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
-    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
 
     class RecentFileMenuListener implements ChangeListener {
         @Override

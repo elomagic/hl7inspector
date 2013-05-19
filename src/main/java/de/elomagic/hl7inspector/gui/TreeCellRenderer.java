@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui;
 
@@ -48,7 +47,9 @@ import de.elomagic.hl7inspector.utils.StringVector;
 public class TreeCellRenderer extends JLabel implements javax.swing.tree.TreeCellRenderer {
     private static final long serialVersionUID = 7002466630618664033L;
 
-    /** Creates a new instance of TreeCellRenderer */
+    /**
+     * Creates a new instance of TreeCellRenderer.
+     */
     public TreeCellRenderer() {
         setBackground(SystemColor.textHighlight);
     }
@@ -72,7 +73,7 @@ public class TreeCellRenderer extends JLabel implements javax.swing.tree.TreeCel
         TreeModel model = (TreeModel)tree.getModel();
         int index = -1;
 
-        String nodeText = "";
+        String nodeText;
 
         if(model instanceof Hl7TreeModel) {
             if(value instanceof Hl7Object) {
