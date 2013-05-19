@@ -12,44 +12,19 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.file.filters;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
- *
- * @author rambow
+ * Text file filter.
  */
-public class TextFileFilter extends javax.swing.filechooser.FileFilter implements java.io.FileFilter {
-    /**
-     * Creates a new instance of HIPFileFilter.
-     */
-    public TextFileFilter() {
-        super();
-    }
-
-    /**
-     * Whether the given file is accepted by this filter.
-     */
+public class TextFileFilter extends AbstractFileFilter {
     @Override
-    public boolean accept(java.io.File f) {
-        boolean r = f.isDirectory();
-
-        try {
-            if(!r) {
-                String ap = f.getAbsolutePath();
-
-                int i = ap.lastIndexOf(".");
-
-                if(i != -1) {
-                    r = ap.substring(i + 1).equalsIgnoreCase("txt");
-                }
-            }
-        } catch(Exception e) {
-            r = false;
-        }
-
-        return r;
+    protected List<String> getFileExtentions() {
+        return Collections.singletonList("txt");
     }
 
     /**
