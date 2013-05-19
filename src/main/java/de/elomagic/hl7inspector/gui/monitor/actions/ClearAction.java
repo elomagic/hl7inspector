@@ -35,7 +35,7 @@ public class ClearAction extends AbstractAction {
      * Creates a new instance of FileNewAction.
      */
     public ClearAction(CharacterMonitor d) {
-        super("", ResourceLoader.loadImageIcon("edit-clear.png"));//icon);
+        super("", ResourceLoader.loadImageIcon("edit-clear.png"));
 
         dlg = d;
 

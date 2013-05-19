@@ -12,9 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-
 package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
@@ -23,11 +21,13 @@ import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 import javax.swing.tree.TreePath;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -35,60 +35,60 @@ import org.apache.log4j.Logger;
  * @author rambow
  */
 public class AddMessageItemAction extends AbstractAction {
-    
-    /** Creates a new instance of FileNewAction */
+    /**
+     * Creates a new instance of AddMessageItemAction.
+     */
     public AddMessageItemAction(Class c) {
         super("Append empty " + getObjectDescription(c));
-        
+
         init(c);
     }
-    
+
     public AddMessageItemAction() {
         super("Append empty item");
-        
+
         init(c);
-    }    
-    
+    }
+
     private void init(Class cl) {
         c = cl;
-        
+
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("edit_add.png"));
         //putValue(SHORT_DESCRIPTION, "Append empty " + getObjectDescription(c) + ".");
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0));
     }
-    
+
     private static String getObjectDescription(Class c) {
         String s = c.getName();
-        s = s.substring(s.lastIndexOf(".")+1);
+        s = s.substring(s.lastIndexOf(".") + 1);
         return s.toLowerCase();
     }
-    
     private Class c;
-    
+
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
             TreePath path = Desktop.getInstance().getTree().getSelectionPath();
-            
+
             Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();
-            
+
             String v = "";
-            
-            if (hl7o instanceof Message) {
+
+            if(hl7o instanceof Message) {
                 // todo: Select segment type
                 v = "ZZZ";
             }
-            
+
             Hl7Object o = hl7o.add(v);
-            
+
             Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
-                        
-            if (model.isCompactView() &&(v.length() == 0)) {
+
+            if(model.isCompactView() && (v.length() == 0)) {
                 SimpleDialog.info("Empty items are only visible in the non compressed view.");
             } else {
-                model.fireTreeNodesInsert(path, new Object[] { o });
+                model.fireTreeNodesInsert(path, new Object[] {o});
             }
-        } catch (Exception ex) {
+        } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
             SimpleDialog.error(ex);
         }

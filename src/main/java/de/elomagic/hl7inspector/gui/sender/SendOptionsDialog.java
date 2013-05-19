@@ -180,7 +180,6 @@ public class SendOptionsDialog extends BaseDialog {
         cbStartChar.setSelectedIndex(bean.getFrame().getStartFrame());
         cbStopChar1.setSelectedIndex(bean.getFrame().getStopFrame()[0]);
         cbStopChar2.setSelectedIndex((bean.getFrame().getStopFrameLength() < 2) ? cbStopChar2.getItemCount() - 1 : bean.getFrame().getStopFrame()[1]);
-//        cbDest.setSelectedItem(bean.getHost().concat(Integer.toString(bean.getPort())));
         cbEncoding.setSelectedItem(bean.getEncoding());
         cbReuse.setSelected(bean.isReuseSocket());
     }

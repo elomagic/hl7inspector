@@ -27,6 +27,7 @@ import de.elomagic.hl7inspector.gui.PanelDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
@@ -67,8 +68,8 @@ public class GeneralOptionPanel extends AbstractPanel {
         cbDesktopImage = new JCheckBox();
 
         List<String> lf = new ArrayList<>();
-        for(int i = 0; i < UIManager.getInstalledLookAndFeels().length; i++) {
-            lf.add(UIManager.getInstalledLookAndFeels()[i].getName());
+        for(UIManager.LookAndFeelInfo lfInfo : UIManager.getInstalledLookAndFeels()) {
+            lf.add(lfInfo.getName());
         }
         cbLookFeel = new JComboBox(lf.toArray());
         cbLookFeel.setEditable(false);
@@ -158,9 +159,9 @@ public class GeneralOptionPanel extends AbstractPanel {
         cbOneInstance.setSelected(p.isOneInstance());
         cbDesktopImage.setSelected(p.isDesktopImage());
 
-        for(int i = 0; i < UIManager.getInstalledLookAndFeels().length; i++) {
-            if(p.getLookAndFeel().equals(UIManager.getInstalledLookAndFeels()[i].getClassName())) {
-                cbLookFeel.setSelectedItem(UIManager.getInstalledLookAndFeels()[i].getName());
+        for(UIManager.LookAndFeelInfo lfInfo : UIManager.getInstalledLookAndFeels()) {
+            if(p.getLookAndFeel().equals(lfInfo.getClassName())) {
+                cbLookFeel.setSelectedItem(lfInfo.getName());
             }
         }
 
@@ -222,9 +223,9 @@ public class GeneralOptionPanel extends AbstractPanel {
         p.setOneInstance(cbOneInstance.isSelected());
         p.setDesktopImage(cbDesktopImage.isSelected());
 
-        for(int i = 0; i < UIManager.getInstalledLookAndFeels().length; i++) {
-            if(cbLookFeel.getSelectedItem().equals(UIManager.getInstalledLookAndFeels()[i].getName())) {
-                p.setLookAndFeel(UIManager.getInstalledLookAndFeels()[i].getClassName());
+        for(UIManager.LookAndFeelInfo lfInfo : UIManager.getInstalledLookAndFeels()) {
+            if(cbLookFeel.getSelectedItem().equals(lfInfo.getName())) {
+                p.setLookAndFeel(lfInfo.getClassName());
             }
         }
 
@@ -282,7 +283,7 @@ public class GeneralOptionPanel extends AbstractPanel {
         }
 
         @Override
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             boolean b = e.getActionCommand().equals("USE_PROXY");
             updateProxyModeButtons(b);
 

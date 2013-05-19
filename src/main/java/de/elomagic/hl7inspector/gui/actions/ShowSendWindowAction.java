@@ -18,6 +18,7 @@ package de.elomagic.hl7inspector.gui.actions;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.mac.MacApplication;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;

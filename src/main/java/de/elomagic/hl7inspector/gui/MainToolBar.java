@@ -64,9 +64,6 @@ public class MainToolBar extends JToolBar {
         addSeparator();
         add(new ViewTextFile());
         add(new ViewHexFile());
-        /* FEATURE Print message support needed
-         add(new PrintAction());
-         */
         addSeparator();
         add(btParserWindow);
         add(btReceiveWindow);
