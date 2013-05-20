@@ -127,7 +127,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
 
         pack();
 
-        setSize(300, getPreferredSize() != null ? getPreferredSize().height : 230);
+        setSize(300, getPreferredSize() == null ? 230 : getPreferredSize().height);
 
         setLocationRelativeTo(getOwner());
     }
@@ -138,16 +138,13 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
 
         Desktop.getInstance().getScrollPane().getVerticalScrollBar().setValue(Desktop.getInstance().getScrollPane().getVerticalScrollBar().getMaximum());
 
-        model = (readOptions.isClearBuffer()) ? new Hl7TreeModel() : (Hl7TreeModel)Desktop.getInstance().getModel();
+        model = readOptions.isClearBuffer() ? new Hl7TreeModel() : (Hl7TreeModel)Desktop.getInstance().getModel();
         model.locked();
         thread = new MessageImportThread(fin, readOptions);
         thread.addListener(this);
         thread.start();
 
         setVisible(true);
-//    } finally {
-//      setVisible(false);
-//    }
     }
 
     @Override
@@ -156,25 +153,26 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
         boolean ignore = false;
         bytesRead = event.getBytesRead();
         // Now filtering
-        if(options.getPhrase().length() != 0) {
-            String m = (options.isCaseSensitive() ? event.getMessage().toString() : event.getMessage().toString().toUpperCase());
-            String phrase = (options.isCaseSensitive() ? options.getPhrase() : options.getPhrase().toUpperCase());
+        if(!options.getPhrase().isEmpty()) {
+            String m = options.isCaseSensitive() ? event.getMessage().toString() : event.getMessage().toString().toUpperCase();
+            String phrase = options.isCaseSensitive() ? options.getPhrase() : options.getPhrase().toUpperCase();
 
             if(!options.isUseRegExpr()) {
-                boolean found = (m.indexOf(phrase) != -1);
-                ignore = (((!found && !options.isNegReg())
-                           || found && options.isNegReg()));
+                boolean found = (m.contains(phrase));
+                ignore = ((!found && !options.isNegReg())
+                          || found && options.isNegReg());
             } else {
-                boolean found = (m.matches(phrase));
+                boolean found = m.matches(phrase);
 
-                ignore = (((!found && !options.isNegReg())
-                           || found && options.isNegReg()));
+                ignore = ((!found && !options.isNegReg())
+                          || found && options.isNegReg());
             }
         }
 
-        Message msg = event.getMessage();
-
-        if(!ignore) {
+        if(ignore) {
+            Desktop.getInstance().getInputTraceWindow().addLine("Ignore message. (Filter is active)");
+        } else {
+            Message msg = event.getMessage();
             try {
                 File file = new File(options.getSource());
                 if(file.exists()) {
@@ -204,8 +202,6 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
                     model.removeChild(model, model.getChildCount(model) - 1);
                 }
             }
-        } else {
-            Desktop.getInstance().getInputTraceWindow().addLine("Ignore message. (Filter is active)");
         }
 
         SwingUtilities.invokeLater(doRun);
