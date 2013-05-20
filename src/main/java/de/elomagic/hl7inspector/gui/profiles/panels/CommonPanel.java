@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.profiles.panels;
 
@@ -33,6 +32,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -138,7 +138,7 @@ public class CommonPanel extends ProfilePanel {
     }
 
     @Override
-    public javax.swing.Icon getIcon() {
+    public Icon getIcon() {
         return ResourceLoader.loadImageIcon("info.png", ResourceLoader.LARGE_IMAGE);
     }
 
@@ -160,17 +160,17 @@ public class CommonPanel extends ProfilePanel {
 
             Profile p = new Profile();
 
-            for(int i = 0; i < list.size(); i++) {
-                if(list.get(i) instanceof ProfilePanel) {
-                    ((ProfilePanel)list.get(i)).write(p);
+            for(AbstractPanel panel : list) {
+                if(panel instanceof ProfilePanel) {
+                    ((ProfilePanel)panel).write(p);
                 }
             }
 
             StringVector val = p.validate();
 
-            setValidateStatus(val.size() == 0);
+            setValidateStatus(val.isEmpty());
 
-            if(val.size() != 0) {
+            if(!val.isEmpty()) {
                 SimpleDialog.warn("List of invalid profile entries", val.toString((char)10));
             }
         }
