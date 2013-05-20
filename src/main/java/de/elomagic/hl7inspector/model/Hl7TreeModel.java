@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.model;
 
@@ -37,7 +36,7 @@ import de.elomagic.hl7inspector.hl7.model.Segment;
  * @author rambow
  */
 public class Hl7TreeModel implements TreeModel, TreeNode {
-    private int _locked = 0;
+    private int locked = 0;
     private List<Message> objList = new ArrayList<>();
     private List<TreeModelListener> listenerList = new ArrayList<>();
     private boolean compressed;
@@ -68,7 +67,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     public final void setCompressedView(boolean value) {
         if(value != compressed) {
             compressed = value;
-            System.setProperty(Hl7Object.COMPRESSED_KEY, (value) ? "t" : "f");
+            System.setProperty(Hl7Object.COMPRESSED_KEY, value ? "t" : "f");
 
             fireTreeStructureChanged(this);
         }
@@ -79,35 +78,38 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     }
 
     public void locked() {
-        _locked++;
+        locked++;
     }
 
     public void unlock() {
-        _locked--;
+        locked--;
 
-        if(_locked == 0) {
+        if(locked == 0) {
             fireTreeStructureChanged(this);
         }
+    }
+
+    /**
+     * Removes message from tree.
+     *
+     * @param message HL7 message
+     * @return Returns true when successful
+     */
+    public boolean remove(final Message message) {
+        return objList.remove(message);
     }
 
     public Object removeChild(Object parent, int index) {
         if(parent instanceof Hl7TreeModel) {
             return objList.remove(index);
         }
+
         return null;
     }
 
     @Override
     public boolean isLeaf(Object node) {
-        boolean result;
-
-        if(node instanceof Hl7TreeModel) {
-            result = objList.isEmpty();
-        } else {
-            result = ((Hl7Object)node).isSinglePath();
-        }
-
-        return result;
+        return node instanceof Hl7TreeModel ? objList.isEmpty() : ((Hl7Object)node).isSinglePath();
     }
 
     @Override
@@ -115,13 +117,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
         if(parent instanceof Hl7TreeModel) {
             return objList.size();
         } else {
-            int result;
-
-            if(!compressed) {
-                result = ((Hl7Object)parent).size();
-            } else {
-                result = ((Hl7Object)parent).sizeCompressed();
-            }
+            int result = compressed ? ((Hl7Object)parent).sizeCompressed() : ((Hl7Object)parent).size();
 
             if(parent instanceof Segment) {
                 result--; // Filter segment from fields
@@ -140,15 +136,9 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
                 index++; // Filter segment from fields
             }
 
-            Hl7Object result;
+            Hl7Object result = compressed ? ((Hl7Object)parent).getCompressed(index) : ((Hl7Object)parent).get(index);
 
-            if(!compressed) {
-                result = ((Hl7Object)parent).get(index);
-            } else {
-                result = ((Hl7Object)parent).getCompressed(index);
-            }
-
-            if((result instanceof RepetitionField) && (result.size() == 1)) {
+            if(result instanceof RepetitionField && result.size() == 1) {
                 result = result.get(0);
             }
 
@@ -161,13 +151,9 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
         if(parent instanceof Hl7TreeModel) {
             return objList.indexOf(child);
         } else {
-            int result;
-
-            if(!compressed) {
-                result = ((Hl7Object)parent).indexOf((Hl7Object)child);
-            } else {
-                result = ((Hl7Object)parent).indexCompressedOf((Hl7Object)child);
-            }
+            Hl7Object po = (Hl7Object)parent;
+            Hl7Object co = (Hl7Object)child;
+            int result = compressed ? po.indexCompressedOf(co) : po.indexOf(co);
 
             if(parent instanceof Segment) {
                 result--; // Filter segment from fields
@@ -198,7 +184,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
 
     @Override
     public Object getRoot() {
-        return (objList.isEmpty()) ? null : this;
+        return objList.isEmpty() ? null : this;
     }
 
     @Override
@@ -206,20 +192,6 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
         return "Parsed hl7 messages";
     }
 
-//    /** @deprecated */
-//    public void fireTreeNodesRemoved(TreePath path, int _index, Hl7Object o) {
-//        int index[] = new int[1];
-//        Object nodes[] = new Object[1];
-//
-//        index[0] = _index;
-//        nodes[0] = o;
-//
-//        TreeModelEvent e = new TreeModelEvent(this, path.getParentPath(), index, nodes);
-//
-//        for (TreeModelListener l : listenerList) {
-//            l.treeNodesRemoved(e);
-//        }
-//    }
     public void fireTreeNodesInsert(TreePath parentPath, Object[] newNodes) {
         int index[] = new int[newNodes.length];
 
@@ -235,7 +207,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     }
 
     public void fireTreeStructureChanged(TreePath path) {
-        if(_locked == 0) {
+        if(locked == 0) {
             TreeModelEvent e = new TreeModelEvent(this, path);
 
             for(TreeModelListener l : listenerList) {
@@ -245,9 +217,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     }
 
     public void fireTreeStructureChanged(Object root) {
-        if(_locked == 0) {
-            int len = listenerList.size();
-
+        if(locked == 0) {
             TreeModelEvent e = new TreeModelEvent(this, new Object[] {root});
 
             for(TreeModelListener l : listenerList) {
@@ -277,10 +247,8 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
 
     /**
      * Returns the index of
-     * <code>node</code> in the receivers children.
-     * If the receiver does not contain
-     * <code>node</code>, -1 will be
-     * returned.
+     * <code>node</code> in the receivers children. If the receiver does not contain
+     * <code>node</code>, -1 will be returned.
      */
     @Override
     public int getIndex(TreeNode node) {
@@ -306,8 +274,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
 
     /**
      * Returns the number of children
-     * <code>TreeNode</code>s the receiver
-     * contains.
+     * <code>TreeNode</code>s the receiver contains.
      */
     @Override
     public int getChildCount() {
