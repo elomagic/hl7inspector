@@ -64,8 +64,10 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
                     }
 
                     if(!(hl7o instanceof Message)) {
-                        add(new JMenuItem(new ClearMessageItemAction()));
+                        add(new JMenuItem(new RemoveMessageItemAction()));
                     }
+
+                    add(new JMenuItem(new RemoveMessageAction()));
 
                     addSeparator();
                 }

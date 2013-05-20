@@ -29,6 +29,9 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDragEvent;
+import java.awt.dnd.DropTargetDropEvent;
+import java.awt.dnd.DropTargetEvent;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
@@ -49,7 +52,7 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
     private Hl7Tree tree;
 
     /**
-     * Creates a new instance of Hl7Tree.
+     * Creates a new instance of Hl7TreePane.
      */
     public Hl7TreePane() {
         init(null);
@@ -60,7 +63,7 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
     }
 
     public final void init(Hl7TreeModel model) {
-        tree = (model == null) ? new Hl7Tree() : new Hl7Tree(model);
+        tree = model == null ? new Hl7Tree() : new Hl7Tree(model);
         tree.setCellRenderer(new TreeCellRenderer());
         tree.setOpaque(false);
         tree.setComponentPopupMenu(new TreePopupMenu());
@@ -120,7 +123,7 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
 
     // Interface implementationof drag an drop
     @Override
-    public void drop(java.awt.dnd.DropTargetDropEvent dtde) {
+    public void drop(DropTargetDropEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
             if(tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
@@ -153,18 +156,18 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
     }
 
     @Override
-    public void dragExit(java.awt.dnd.DropTargetEvent dte) {
+    public void dragExit(DropTargetEvent dte) {
     }
 
     @Override
-    public void dropActionChanged(java.awt.dnd.DropTargetDragEvent dtde) {
+    public void dropActionChanged(DropTargetDragEvent dtde) {
     }
 
     @Override
-    public void dragOver(java.awt.dnd.DropTargetDragEvent dtde) { /* SimpleDialog.info(dtde.toString()); */ }
+    public void dragOver(DropTargetDragEvent dtde) { /* SimpleDialog.info(dtde.toString()); */ }
 
     @Override
-    public void dragEnter(java.awt.dnd.DropTargetDragEvent dtde) {
+    public void dragEnter(DropTargetDragEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
             if(!tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)

@@ -31,11 +31,11 @@ import javax.swing.tree.TreePath;
  *
  * @author rambow
  */
-public class ClearMessageItemAction extends BasicAction {
+public class RemoveMessageItemAction extends BasicAction {
     /**
-     * Creates a new instance of ClearMessageItemAction.
+     * Creates a new instance of RemoveMessageItemAction.
      */
-    public ClearMessageItemAction() {
+    public RemoveMessageItemAction() {
         super();
 
         putValue(NAME, "Clear selected node(s)");

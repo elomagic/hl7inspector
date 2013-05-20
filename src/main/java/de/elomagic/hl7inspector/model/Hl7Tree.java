@@ -11,8 +11,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
- * limitations under the License.
- *
+ * limitations under the License.‚
  */
 package de.elomagic.hl7inspector.model;
 
@@ -37,7 +36,9 @@ import de.elomagic.hl7inspector.hl7.model.Message;
 public class Hl7Tree extends JTree implements MouseMotionListener {
     private static final long serialVersionUID = -7337977619165561183L;
 
-    /** Creates a new instance of Hl7Tree */
+    /**
+     * Creates a new instance of Hl7Tree.
+     */
     public Hl7Tree() {
         super();
         init();
@@ -50,10 +51,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
 
     private void init() {
         setExpandsSelectedPaths(true);
-        //setShowsRootHandles()
         addMouseMotionListener(this);
-
-        // Enable ToolTiptext;
         setToolTipText("");
     }
 

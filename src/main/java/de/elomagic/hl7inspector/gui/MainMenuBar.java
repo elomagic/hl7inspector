@@ -42,7 +42,8 @@ public class MainMenuBar extends JMenuBar {
     private JMenu miEdit;
     private JMenuItem miEditItem = new JMenuItem(new EditMessageItemAction());
     private JMenuItem miEditAppendItem = new JMenuItem(new AddMessageItemAction());
-    private JMenuItem miEditClearItem = new JMenuItem(new ClearMessageItemAction());
+    private JMenuItem miEditRemoveItem = new JMenuItem(new RemoveMessageItemAction());
+    private JMenuItem miEditRemoveMessage = new JMenuItem(new RemoveMessageAction());
     private JMenu viewMenu = new JMenu("View");
     private JCheckBoxMenuItem miCompactView = new JCheckBoxMenuItem(new ViewCompressedAction());
     private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
@@ -105,8 +106,8 @@ public class MainMenuBar extends JMenuBar {
         miEdit.addChangeListener(new EditMenuListener());
         miEdit.add(miEditItem);
         miEdit.add(miEditAppendItem);
-        miEdit.add(miEditClearItem);
-//        menuItem.add(new JMenuItem(new DeleteMessageAction()));
+        miEdit.add(miEditRemoveItem);
+        miEdit.add(miEditRemoveMessage);
         add(miEdit);
 
         JMenu menuItem = new JMenu("Search");
@@ -197,7 +198,8 @@ public class MainMenuBar extends JMenuBar {
 
                             miEditItem.setEnabled(!(hl7o instanceof Message));
                             miEditAppendItem.setEnabled(hl7o.getChildClass() != null);
-                            miEditClearItem.setEnabled(!(hl7o instanceof Message));
+                            miEditRemoveItem.setEnabled(!(hl7o instanceof Message));
+                            miEditRemoveMessage.setEnabled(true);
                         }
                     }
                 }
