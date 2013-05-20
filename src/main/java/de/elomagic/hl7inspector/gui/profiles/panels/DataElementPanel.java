@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.profiles.panels;
 
@@ -24,6 +23,7 @@ import de.elomagic.hl7inspector.gui.profiles.model.DataElementModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.DataElement;
 import de.elomagic.hl7inspector.profile.Profile;
+import javax.swing.Icon;
 
 /**
  *
@@ -33,7 +33,7 @@ public class DataElementPanel extends ProfileTablePanel {
     private static final long serialVersionUID = -3583520327885944253L;
 
     /**
-     * Creates a new instance of FileIdPanel.
+     * Creates a new instance of DataElementPanel.
      */
     public DataElementPanel(PanelDialog d) {
         super(d);
@@ -70,7 +70,7 @@ public class DataElementPanel extends ProfileTablePanel {
     }
 
     @Override
-    public javax.swing.Icon getIcon() {
+    public Icon getIcon() {
         return ResourceLoader.loadImageIcon("x-profile-data-editor.png", ResourceLoader.LARGE_IMAGE);
     }
 
