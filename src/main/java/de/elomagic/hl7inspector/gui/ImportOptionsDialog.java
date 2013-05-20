@@ -25,6 +25,7 @@ import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
@@ -58,6 +59,49 @@ public class ImportOptionsDialog extends BaseDialog {
     private JCheckBox cbNegateReg = new JCheckBox("Negate result");
     private JCheckBox cbCaseSense = new JCheckBox("Case sensitive");
     private JComboBox cbbPhrase;
+    private static final String[] FRAME_CHARS = {
+        "0x00 - NUL",
+        "0x01 - SOH",
+        "0x02 - STX",
+        "0x03 - ETX",
+        "0x04 - EOT",
+        "0x05 - ENQ",
+        "0x06 - ACK",
+        "0x07 - BEL",
+        "0x08 - BS",
+        "0x09 - HT",
+        "0x0a - LF",
+        "0x0b - VT",
+        "0x0c - FF",
+        "0x0d - CR",
+        "0x0e - SO",
+        "0x0f - SI",
+        "0x10 - DLE",
+        "0x11 - DC1",
+        "0x12 - DC2",
+        "0x13 - DC3",
+        "0x14 - DC4",
+        "0x15 - NAK",
+        "0x16 - SYN",
+        "0x17 - ETB",
+        "0x18 - CAN",
+        "0x19 - EM",
+        "0x1a - SUB",
+        "0x1b - ESC",
+        "0x1c - FS",
+        "0x1d - GS",
+        "0x1e - RS",
+        "0x1f - US",
+        "-"
+    };
+    private static final String[] SUPPORTED_ENCODINGS = {
+        "ISO-8859-1",
+        "US-ASCII",
+        "UTF-8",
+        "UTF-16BE",
+        "UTF-16LE",
+        "UTF-16"
+    };
 
     /**
      * Creates a new instance of ImportOptionsDialog.
@@ -99,12 +143,14 @@ public class ImportOptionsDialog extends BaseDialog {
         cbbPhrase.setFocusable(true);
         cbbPhrase.requestFocusInWindow();
 
+
+
         return ask();
     }
 
     @Override
     public void ok() {
-        if(cbbPhrase.getSelectedItem().toString().length() != 0) {
+        if(!cbbPhrase.getSelectedItem().toString().isEmpty()) {
             StartupProperties.getInstance().putPhrase(cbbPhrase.getSelectedItem().toString());
         }
 
@@ -152,54 +198,11 @@ public class ImportOptionsDialog extends BaseDialog {
 
         rbModeAuto.setSelected(true);
 
-        String[] model = {
-            "0x00 - NUL",
-            "0x01 - SOH",
-            "0x02 - STX",
-            "0x03 - ETX",
-            "0x04 - EOT",
-            "0x05 - ENQ",
-            "0x06 - ACK",
-            "0x07 - BEL",
-            "0x08 - BS",
-            "0x09 - HT",
-            "0x0a - LF",
-            "0x0b - VT",
-            "0x0c - FF",
-            "0x0d - CR",
-            "0x0e - SO",
-            "0x0f - SI",
-            "0x10 - DLE",
-            "0x11 - DC1",
-            "0x12 - DC2",
-            "0x13 - DC3",
-            "0x14 - DC4",
-            "0x15 - NAK",
-            "0x16 - SYN",
-            "0x17 - ETB",
-            "0x18 - CAN",
-            "0x19 - EM",
-            "0x1a - SUB",
-            "0x1b - ESC",
-            "0x1c - FS",
-            "0x1d - GS",
-            "0x1e - RS",
-            "0x1f - US",
-            "-"
-        };
-        cbbStartChar.setModel(new DefaultComboBoxModel(model));
-        cbbStopChar1.setModel(new DefaultComboBoxModel(model));
-        cbbStopChar2.setModel(new DefaultComboBoxModel(model));
+        cbbStartChar.setModel(new DefaultComboBoxModel(FRAME_CHARS));
+        cbbStopChar1.setModel(new DefaultComboBoxModel(FRAME_CHARS));
+        cbbStopChar2.setModel(new DefaultComboBoxModel(FRAME_CHARS));
 
-        String[] modelEnc = {
-            "ISO-8859-1",
-            "US-ASCII",
-            "UTF-8",
-            "UTF-16BE",
-            "UTF-16LE",
-            "UTF-16"
-        };
-        cbEncoding.setModel(new DefaultComboBoxModel(modelEnc));
+        cbEncoding.setModel(new DefaultComboBoxModel(SUPPORTED_ENCODINGS));
 
         cbbPhrase = new JComboBox(StartupProperties.getInstance().getPhrases().toArray());
         cbbPhrase.setSelectedIndex(-1);
@@ -282,9 +285,9 @@ public class ImportOptionsDialog extends BaseDialog {
 
         pack();
 
-        setSize(600, getPreferredSize().height);
-
+        setSize(800, getPreferredSize().height);
         setLocationRelativeTo(getOwner());
+        getButtonPane().requestFocus();
     }
 
     class ParseModeAction extends AbstractAction {
@@ -295,7 +298,7 @@ public class ImportOptionsDialog extends BaseDialog {
         }
 
         @Override
-        public void actionPerformed(java.awt.event.ActionEvent e) {
+        public void actionPerformed(ActionEvent e) {
             boolean b = !e.getActionCommand().equals("PARSE");
             updateParseModeButtons(b);
         }
