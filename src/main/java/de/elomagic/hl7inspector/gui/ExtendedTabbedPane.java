@@ -37,26 +37,27 @@ public class ExtendedTabbedPane extends JTabbedPane {
     }
 
     /**
-     * Override JTabbedPane method. Does nothing.
+     * Override JTabbedPane method.
+     * <p/>
+     * Does nothing.
      */
     @Override
-    public void setUI(TabbedPaneUI ui) {
-        //ui.setUI(ui);
+    public void setUI(final TabbedPaneUI ui) {
     }
 
-    public synchronized void addCloseListener(ActionListener listener) {
+    public synchronized void addCloseListener(final ActionListener listener) {
         actionListener.add(listener);
     }
 
-    public synchronized void removeCloseListener(ActionListener listener) {
+    public synchronized void removeCloseListener(final ActionListener listener) {
         actionListener.remove(listener);
     }
 
     public void fireCloseTabEvent() {
         ActionEvent event = new ActionEvent(this, 0, "");
 
-        for(int i = 0; i < actionListener.size(); i++) {
-            actionListener.get(i).actionPerformed(event);
+        for(final ActionListener listener : actionListener) {
+            listener.actionPerformed(event);
         }
 
         setVisible(false);
