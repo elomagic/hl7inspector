@@ -39,6 +39,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.ResourceBundle;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -91,8 +92,8 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         return treePane;
     }
 
-    public TreeModel getModel() {
-        return treePane.getModel();
+    public Hl7TreeModel getModel() {
+        return (Hl7TreeModel)treePane.getModel();
     }
 
     public void setModel(TreeModel model) {
@@ -316,6 +317,32 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         }
 
         getTabbedBottomPanel().setVisible(getTabbedBottomPanel().getTabCount() != 0);
+    }
+
+    /**
+     * Adds message to the view.
+     *
+     * @param messages List if messages
+     * @param maxMessageInView Maximum message in the view
+     * @param readBottom When true message will be removed from the top
+     */
+    public void addMessages(final List<Message> messages, final int maxMessageInView, final boolean readBottom) {
+        Hl7TreeModel model = getModel();
+        model.locked();
+        try {
+            for(final Message message : messages) {
+                model.addMessage(message);
+
+                // Check buffer overflow
+                while(model.getChildCount(model) > maxMessageInView) {
+                    if(readBottom) {
+                        model.removeChild(model, readBottom ? 0 : model.getChildCount(model) - 1);
+                    }
+                }
+            }
+        } finally {
+            model.unlock();
+        }
     }
 
     // Interface ComponentListener
