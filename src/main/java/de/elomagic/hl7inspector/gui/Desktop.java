@@ -56,7 +56,7 @@ import org.apache.log4j.Logger;
  *
  * @author rambow
  */
-public class Desktop extends JFrame implements TreeSelectionListener, ComponentListener {
+public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListener, ComponentListener {
     private static final long serialVersionUID = -7355763607097590182L;
     private MainToolBar mainToolBar;
     private BottomPanel bottomPanel = new BottomPanel();
