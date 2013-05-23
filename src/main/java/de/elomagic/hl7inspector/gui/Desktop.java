@@ -326,6 +326,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
      * @param maxMessageInView Maximum message in the view
      * @param readBottom When true message will be removed from the top
      */
+    @Override
     public void addMessages(final List<Message> messages, final int maxMessageInView, final boolean readBottom) {
         Hl7TreeModel model = getModel();
         model.locked();

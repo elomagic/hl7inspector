@@ -15,9 +15,20 @@
  */
 package de.elomagic.hl7inspector.gui;
 
+import de.elomagic.hl7inspector.hl7.model.Message;
+import java.util.List;
+
 /**
  *
  * @author rambow
  */
 public interface DesktopIntf {
+    /**
+     * Adds message to the view.
+     *
+     * @param messages List if messages
+     * @param maxMessageInView Maximum message in the view
+     * @param readBottom When true message will be removed from the top
+     */
+    void addMessages(List<Message> messages, int maxMessageInView, boolean readBottom);
 }
