@@ -16,6 +16,7 @@
 package de.elomagic.hl7inspector.gui;
 
 import de.elomagic.hl7inspector.hl7.model.Message;
+import java.awt.Component;
 import java.util.List;
 
 /**
@@ -23,6 +24,13 @@ import java.util.List;
  * @author rambow
  */
 public interface DesktopIntf {
+    /**
+     * Returns main component.
+     *
+     * @return The component
+     */
+    Component getMainComponent();
+
     /**
      * Adds message to the view.
      *

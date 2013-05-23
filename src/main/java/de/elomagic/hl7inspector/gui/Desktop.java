@@ -33,6 +33,7 @@ import de.elomagic.hl7inspector.profile.ProfileIO;
 import de.elomagic.hl7inspector.utils.BundleTool;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -317,6 +318,11 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         }
 
         getTabbedBottomPanel().setVisible(getTabbedBottomPanel().getTabCount() != 0);
+    }
+
+    @Override
+    public Component getMainComponent() {
+        return this;
     }
 
     /**
