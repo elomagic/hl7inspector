@@ -20,6 +20,7 @@ import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.mac.MacApplication;
+import java.awt.Rectangle;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -51,12 +52,13 @@ public class ExitAction extends BasicAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(SimpleDialog.confirmYesNo("Really exit the hl7 inspector?") == 0) {
+            Rectangle bounds = Desktop.getInstance().getMainFrame().getBounds();
 
             StartupProperties prop = StartupProperties.getInstance();
-            prop.setProperty(StartupProperties.DESKTOP_X, Integer.toString(Desktop.getInstance().getBounds().x));
-            prop.setProperty(StartupProperties.DESKTOP_Y, Integer.toString(Desktop.getInstance().getBounds().y));
-            prop.setProperty(StartupProperties.DESKTOP_W, Integer.toString(Desktop.getInstance().getBounds().width));
-            prop.setProperty(StartupProperties.DESKTOP_H, Integer.toString(Desktop.getInstance().getBounds().height));
+            prop.setProperty(StartupProperties.DESKTOP_X, Integer.toString(bounds.x));
+            prop.setProperty(StartupProperties.DESKTOP_Y, Integer.toString(bounds.y));
+            prop.setProperty(StartupProperties.DESKTOP_W, Integer.toString(bounds.width));
+            prop.setProperty(StartupProperties.DESKTOP_H, Integer.toString(bounds.height));
             prop.save();
 
             System.exit(0);

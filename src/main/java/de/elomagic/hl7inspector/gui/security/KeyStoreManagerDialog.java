@@ -50,7 +50,7 @@ public class KeyStoreManagerDialog extends BaseDialog {
     private JButton btClose = new JButton(new DefaultCloseWindowAction(this));
 
     public KeyStoreManagerDialog() {
-        super(Desktop.getInstance(), "Keystore Manager", true);
+        super(Desktop.getInstance().getMainFrame(), "Keystore Manager", true);
         init();
     }
 

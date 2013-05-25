@@ -16,6 +16,7 @@
 package de.elomagic.hl7inspector.gui;
 
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URI;
@@ -54,9 +55,9 @@ public class LinkLabel extends JLabel implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         try {
             if(uri.toString().indexOf('@') == -1) {
-                java.awt.Desktop.getDesktop().browse(uri);
+                Desktop.getDesktop().browse(uri);
             } else {
-                java.awt.Desktop.getDesktop().mail(uri);
+                Desktop.getDesktop().mail(uri);
             }
         } catch(Exception ex) {
             SimpleDialog.error(ex);

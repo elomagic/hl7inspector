@@ -12,9 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-package de.elomagic.hl7inspector.io;
+package de.elomagic.hl7inspector.io.sender;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,6 +30,10 @@ import org.apache.log4j.Logger;
 import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.Segment;
+import de.elomagic.hl7inspector.io.IOCharListener;
+import de.elomagic.hl7inspector.io.IOThreadListener;
+import de.elomagic.hl7inspector.io.MessageParserStreamReader;
+import de.elomagic.hl7inspector.io.SendOptionsBean;
 
 /**
  *

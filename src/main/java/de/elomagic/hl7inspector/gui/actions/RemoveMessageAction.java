@@ -20,15 +20,12 @@ import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.mac.MacApplication;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 import javax.swing.KeyStroke;
-import javax.swing.tree.TreePath;
 
 /**
  *
@@ -48,34 +45,14 @@ public class RemoveMessageAction extends BasicAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        int selCount = Desktop.getInstance().getTree().getSelectionCount();
+    public void actionPerformed(ActionEvent event) {
+        List<Message> selectedMessages = Desktop.getInstance().getSelectedMessages();
 
-        if(selCount == 0) {
+        if(selectedMessages.isEmpty()) {
             SimpleDialog.info(bundle.getString("no_message_selected"));
         } else {
             if(SimpleDialog.confirmYesNo(bundle.getString("remove_selected_message_ask")) == SimpleDialog.YES_OPTION) {
-                List<Message> messageList = new ArrayList<>();
-                TreePath[] paths = Desktop.getInstance().getTree().getSelectionPaths();
-                for(TreePath tp : paths) {
-                    if(tp.getPathCount() > 1) {
-                        Message message = (Message)tp.getPathComponent(1);
-
-                        if(!messageList.contains(message)) {
-                            messageList.add(message);
-                        }
-                    }
-                }
-
-                Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
-
-                for(Message message : messageList) {
-                    model.remove(message);
-                }
-
-                if(model.isCompactView()) {
-                    model.fireTreeStructureChanged(model.getRoot());
-                }
+                Desktop.getInstance().removeMessages(selectedMessages);
             }
         }
     }

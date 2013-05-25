@@ -23,9 +23,11 @@ import de.elomagic.hl7inspector.gui.receive.ReceivePanel;
 import de.elomagic.hl7inspector.gui.sender.SendPanel;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
+import de.elomagic.hl7inspector.hl7.model.RepetitionField;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.model.Hl7Tree;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
+import de.elomagic.hl7inspector.model.TreeNodeSearchEngine;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
@@ -33,15 +35,19 @@ import de.elomagic.hl7inspector.profile.ProfileIO;
 import de.elomagic.hl7inspector.utils.BundleTool;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.FlowLayout;
+import java.awt.Frame;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileInputStream;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -49,8 +55,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.WindowConstants;
+import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
 
@@ -80,11 +88,10 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         init(null);
     }
 
-    public static Desktop getInstance() {
+    public static DesktopIntf getInstance() {
         return desk;
     }
 
-    //public FindBar getFindWindow() { return findWindow; }
     public Hl7Tree getTree() {
         return treePane.getTree();
     }
@@ -97,13 +104,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         return (Hl7TreeModel)treePane.getModel();
     }
 
-    public void setModel(TreeModel model) {
-        treePane.setModel(model);
-    }
-
     private void init(Hl7TreeModel model) {
-//    setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         String s = MessageFormat.format(bundle.getString("app_title"),
                                         Hl7Inspector.APPLICATION_NAME,
                                         Hl7Inspector.getVersionString(),
@@ -118,7 +119,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
 
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(
-                new java.awt.event.WindowAdapter() {
+                new WindowAdapter() {
             @Override
             public void windowActivated(WindowEvent e) {
             }
@@ -197,7 +198,8 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         getToolBar().getDetailsButton().setSelected(prop.isDetailsWindowVisible());
     }
 
-    public Profile setProfileFile(ProfileFile file) {
+    @Override
+    public Profile setProfileFile(final ProfileFile file) {
         Profile profile = null;
 
         if(file.exists()) {
@@ -212,7 +214,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
                 bottomPanel.setProfileTooltTip(profile.getDescription());
 
                 if(getModel() instanceof Hl7TreeModel) {
-                    if(((Hl7TreeModel)getModel()).isViewDescription()) {
+                    if(((Hl7TreeModel)getModel()).isNodeDescriptionVisible()) {
                         getTree().updateUI();
                     }
                 }
@@ -238,10 +240,6 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         tabPanel.setSelectedIndex(index);
     }
 
-    public CharacterMonitor getInputTraceWindow() {
-        return inputTrace;
-    }
-
     public ReceivePanel getReceiveWindow() {
         return rp;
     }
@@ -265,7 +263,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
      * @param e the event that characterizes the change.
      */
     @Override
-    public void valueChanged(javax.swing.event.TreeSelectionEvent e) {
+    public void valueChanged(TreeSelectionEvent e) {
         if(e.getNewLeadSelectionPath() != null) {
             if(e.getNewLeadSelectionPath().getPathCount() > 1) {
                 if(e.getNewLeadSelectionPath().getPathComponent(1) instanceof Hl7Object) {
@@ -321,8 +319,13 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public Component getMainComponent() {
+    public Frame getMainFrame() {
         return this;
+    }
+
+    @Override
+    public void clearMessages() {
+        treePane.setModel(new Hl7TreeModel());
     }
 
     /**
@@ -344,12 +347,208 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
                 while(model.getChildCount(model) > maxMessageInView) {
                     if(readBottom) {
                         model.removeChild(model, readBottom ? 0 : model.getChildCount(model) - 1);
+                    } else {
+                        return;
                     }
                 }
             }
         } finally {
             model.unlock();
         }
+    }
+
+    @Override
+    public void removeMessages(final List<Message> messages) {
+        Hl7TreeModel model = getModel();
+
+        for(final Message message : messages) {
+            model.remove(message);
+        }
+
+        if(model.isCompressedView()) {
+            model.fireTreeStructureChanged(model.getRoot());
+        }
+    }
+
+    @Override
+    public List<Message> getSelectedMessages() {
+        return getTree().getSelectedMessages();
+    }
+
+    @Override
+    public List<Message> getMessages() {
+        return getModel().getMessages();
+    }
+
+    @Override
+    public Hl7Object appendHl7Object(final Hl7Object parent) {
+        try {
+            String v = parent instanceof Message ? "ZZZ" : "";
+
+            Hl7Object child = parent.add(v);
+
+            Hl7TreeModel model = getModel();
+
+            if(model.isCompressedView() && v.isEmpty()) {
+                SimpleDialog.info("Empty items are only visible in the non compressed view.");
+            } else {
+                model.fireTreeNodesInsert(new Hl7Object[] {child});
+            }
+            return child;
+        } catch(IllegalAccessException | InstantiationException ex) {
+            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+            SimpleDialog.error(ex, "Unable to append a new HL7 object to the message.");
+            return null;
+        }
+    }
+
+    @Override
+    public void removeHL7Object(final Hl7Object o) {
+        o.clear();
+        if(o.getHl7Parent() instanceof RepetitionField && o.getHl7Parent().getChildCount() == 1) {
+            o.getHl7Parent().clear();
+        }
+
+        if(Desktop.getInstance().isCompressedView()) {
+            TreePath path = Hl7TreeModel.buildTreePath(o);
+            getModel().fireTreeStructureChanged(path.getParentPath());
+        }
+    }
+
+    @Override
+    public void setHL7ObjectValue(final Hl7Object o, final String value) {
+        o.parse(value);
+        getModel().fireTreeStructureChanged(o);
+    }
+
+    @Override
+    public List<Hl7Object> getSelectedObjects() {
+        List<Hl7Object> result = new ArrayList<>();
+
+        for(final TreePath path : getTree().getSelectionPaths()) {
+            result.add((Hl7Object)path.getLastPathComponent());
+        }
+
+        return result;
+    }
+
+    @Override
+    public TraceWindowIntf getInputTraceWindow() {
+        return inputTrace;
+    }
+
+    @Override
+    public boolean isCompressedView() {
+        return getModel().isCompressedView();
+    }
+
+    @Override
+    public void setCompressedView(final boolean compressed) {
+        getToolBar().getCompactViewButton().setSelected(compressed);
+        getModel().setCompressedView(compressed);
+    }
+
+    @Override
+    public boolean isReceiveWindowVisible() {
+        return getTabbedBottomPanel().indexOfComponent(getReceiveWindow()) != -1;
+    }
+
+    @Override
+    public void setReceiveWindowVisible(boolean value) {
+        if(value) {
+            setTabVisible(getReceiveWindow());
+        } else {
+            // TODO Hide/Remove tab
+        }
+    }
+
+    @Override
+    public boolean isSendWindowVisible() {
+        return getTabbedBottomPanel().indexOfComponent(getSendWindow()) != -1;
+    }
+
+    @Override
+    public void setSendWindowVisible(boolean value) {
+        if(value) {
+            setTabVisible(getSendWindow());
+        } else {
+            // TODO Hide/Remove tab
+        }
+    }
+
+    @Override
+    public boolean isInputTraceWindowVisible() {
+        return getTabbedBottomPanel().indexOfComponent(inputTrace) != -1;
+    }
+
+    @Override
+    public void setInputTraceWindowVisible(boolean value) {
+        setTabVisible((JComponent)getInputTraceWindow());
+    }
+
+    @Override
+    public void setNodeDescriptionWindowVisible(final boolean visible) {
+        getToolBar().getNodeDescriptionButton().setSelected(visible);
+        getModel().setNodeDescriptionVisible(visible);
+        getTree().updateUI();
+    }
+
+    @Override
+    public boolean isNodeDetailsWindowVisible() {
+        return getDetailsWindow().isVisible();
+    }
+
+    @Override
+    public void setNodeDetailsWindowVisible(final boolean visible) {
+    }
+
+    @Override
+    public boolean isNodeDescriptionVisible() {
+        return getModel().isNodeDescriptionVisible();
+    }
+
+    @Override
+    public void setNodeDescriptionVisible(boolean visible) {
+        getModel().setNodeDescriptionVisible(visible);
+    }
+
+    @Override
+    public void refreshHighlightPhrases() {
+        getTree().repaint();
+    }
+
+    @Override
+    public void findNextPhrase(String phrase, Hl7Object startFrom, boolean caseSensitive) {
+        if(!phrase.isEmpty() && getTree().getModel().getChildCount(getTree().getModel().getRoot()) != 0) {
+            TreeNode startingNode = startFrom == null ? (TreeNode)getTree().getModel().getRoot() : (TreeNode)startFrom;
+            TreePath path = TreeNodeSearchEngine.findNextNode(phrase, caseSensitive, startingNode);
+
+            if(path == null) {
+                SimpleDialog.info("The end of message tree reached.");
+            } else {
+                getTree().expandPath(path.getParentPath());
+
+                int row = getTree().getRowForPath(path);
+
+                getTree().scrollRowToVisible(row);
+                getTree().setSelectionRow(row);
+            }
+        }
+    }
+
+    @Override
+    public void setLockCounter(boolean increase) {
+        if(increase) {
+            setCursor(new Cursor(Cursor.WAIT_CURSOR));
+            getModel().locked();
+        } else {
+            getModel().unlock();
+
+            if(getModel().getLockCount() == 0) {
+                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
+        }
+
     }
 
     // Interface ComponentListener

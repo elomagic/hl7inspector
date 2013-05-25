@@ -33,7 +33,7 @@ public class KeyStoreDialog extends PanelDialog {
      * Creates a new instance of ProfileDefinitionDialog.
      */
     public KeyStoreDialog(KeyStore keyStore) throws Exception {
-        super(Desktop.getInstance(), "Keystore Dialog", true);
+        super(Desktop.getInstance().getMainFrame(), "Keystore Dialog", true);
 
         this.keyStore = keyStore;
     }
@@ -62,7 +62,7 @@ public class KeyStoreDialog extends PanelDialog {
 
             setSize(750, 500);
 
-            setLocationRelativeTo(Desktop.getInstance());
+            setLocationRelativeTo(Desktop.getInstance().getMainFrame());
         } catch(Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             SimpleDialog.error(e, e.getMessage());

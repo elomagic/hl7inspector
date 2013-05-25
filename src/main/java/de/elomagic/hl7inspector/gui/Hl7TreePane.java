@@ -134,7 +134,7 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
                 while(iterator.hasNext()) {
                     File file = (File)iterator.next();
 
-                    Desktop.getInstance().toFront();
+                    Desktop.getInstance().getMainFrame().toFront();
 
                     //SimpleDialog.info(file.getPath());
 

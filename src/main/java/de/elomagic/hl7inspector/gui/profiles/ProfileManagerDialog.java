@@ -51,7 +51,7 @@ public class ProfileManagerDialog extends BaseDialog {
      * Creates a new instance of ProfileRegistrationDialog.
      */
     public ProfileManagerDialog() {
-        super(Desktop.getInstance(), "Profile Manager", true);
+        super(Desktop.getInstance().getMainFrame(), "Profile Manager", true);
         init();
     }
 

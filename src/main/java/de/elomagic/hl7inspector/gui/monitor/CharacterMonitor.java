@@ -12,15 +12,16 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.monitor;
 
+import de.elomagic.hl7inspector.gui.TraceWindowIntf;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.io.IOThreadListener;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -29,7 +30,7 @@ import javax.swing.JScrollPane;
  *
  * @author rambow
  */
-public class CharacterMonitor extends JPanel implements IOThreadListener {
+public class CharacterMonitor extends JPanel implements TraceWindowIntf, IOThreadListener {
     private MonitorToolBar tb;
     private JScrollPane sp;
     private HighlighterPane hp;
@@ -58,10 +59,12 @@ public class CharacterMonitor extends JPanel implements IOThreadListener {
         return ResourceLoader.loadImageIcon("trace.png");
     }
 
+    @Override
     public void addChar(char c) {
         hp.addChar(c);
     }
 
+    @Override
     public void addLine(String value) {
         hp.addLine(value);
     }

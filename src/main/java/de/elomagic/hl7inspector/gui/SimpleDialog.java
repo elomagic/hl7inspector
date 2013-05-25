@@ -86,7 +86,7 @@ public class SimpleDialog {
         }
 
         int lines = 0;
-        for(int i = 0; (i < e.getStackTrace().length) && (i < maxLines); i++) {
+        for(int i = 0; i < e.getStackTrace().length && i < maxLines; i++) {
             s = s.concat("\n" + e.getStackTrace()[i].toString());
             lines++;
         }
@@ -103,8 +103,8 @@ public class SimpleDialog {
     }
 
     private static void showExtendedDialog(String title, String message, int messageType) {
-        String t = "";
-        String i = "";
+        String t;
+        String i;
 
         switch(messageType) {
             case JOptionPane.ERROR_MESSAGE:
@@ -132,7 +132,7 @@ public class SimpleDialog {
         } else if(c instanceof Dialog) {
             dlg = new BaseDialog((Dialog)c, t);
         } else if(Desktop.getInstance() != null) {
-            dlg = new BaseDialog(Desktop.getInstance(), t);
+            dlg = new BaseDialog(Desktop.getInstance().getMainFrame(), t);
         } else {
             dlg = null;
         }

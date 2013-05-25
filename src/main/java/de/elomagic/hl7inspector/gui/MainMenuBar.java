@@ -24,14 +24,13 @@ import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.mac.MacApplication;
 import de.elomagic.hl7inspector.mac.MacApplicationAdapter;
 import de.elomagic.hl7inspector.mac.MacApplicationEvent;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 
 import java.io.File;
 import java.util.List;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.tree.TreePath;
 
 /**
  *
@@ -45,10 +44,10 @@ public class MainMenuBar extends JMenuBar {
     private JMenuItem miEditRemoveItem = new JMenuItem(new RemoveMessageItemAction());
     private JMenuItem miEditRemoveMessage = new JMenuItem(new RemoveMessageAction());
     private JMenu viewMenu = new JMenu("View");
-    private JCheckBoxMenuItem miCompactView = new JCheckBoxMenuItem(new ViewCompressedAction());
+    private JCheckBoxMenuItem miCompressedView = new JCheckBoxMenuItem(new ViewCompressedAction());
     private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
     private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
-    private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
+    private JCheckBoxMenuItem miTraceWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
     private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
     private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
 
@@ -115,7 +114,7 @@ public class MainMenuBar extends JMenuBar {
         add(menuItem);
 
         viewMenu.addChangeListener(new ViewMenuListener());
-        viewMenu.add(miCompactView);
+        viewMenu.add(miCompressedView);
         viewMenu.addSeparator();
         viewMenu.add(miNodeDescription);
         viewMenu.add(miNodeDetails);
@@ -127,7 +126,7 @@ public class MainMenuBar extends JMenuBar {
         menuItem.add(new JMenuItem(new ViewTextFile()));
         menuItem.add(new JMenuItem(new ViewHexFile()));
         menuItem.addSeparator();
-        menuItem.add(miParseWindow);
+        menuItem.add(miTraceWindow);
         menuItem.add(miReceiveWindow);
         menuItem.add(miSendWindow);
         menuItem.addSeparator();
@@ -189,18 +188,16 @@ public class MainMenuBar extends JMenuBar {
                     miEdit.getItem(i).setEnabled(false);
                 }
 
-                TreePath selPath = Desktop.getInstance().getTree().getSelectionPath();
-                if(selPath != null) {
-                    if(selPath.getLastPathComponent() instanceof Hl7Object) {
-                        Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
+                List<Hl7Object> selectedObjects = Desktop.getInstance().getSelectedObjects();
 
-                        if(!(hl7o instanceof EncodingObject)) {
+                if(!selectedObjects.isEmpty()) {
+                    Hl7Object hl7o = selectedObjects.get(0);
 
-                            miEditItem.setEnabled(!(hl7o instanceof Message));
-                            miEditAppendItem.setEnabled(hl7o.getChildClass() != null);
-                            miEditRemoveItem.setEnabled(!(hl7o instanceof Message));
-                            miEditRemoveMessage.setEnabled(true);
-                        }
+                    if(!(hl7o instanceof EncodingObject)) {
+                        miEditItem.setEnabled(!(hl7o instanceof Message));
+                        miEditAppendItem.setEnabled(hl7o.getChildClass() != null);
+                        miEditRemoveItem.setEnabled(!(hl7o instanceof Message));
+                        miEditRemoveMessage.setEnabled(true);
                     }
                 }
             }
@@ -211,14 +208,14 @@ public class MainMenuBar extends JMenuBar {
         @Override
         public void stateChanged(ChangeEvent e) {
             if(((JMenuItem)e.getSource()).isSelected()) {
-                Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
+                DesktopIntf d = Desktop.getInstance();
 
-                miCompactView.setSelected(model.isCompactView());
-                miNodeDescription.setSelected(model.isViewDescription());
-                miNodeDetails.setSelected(Desktop.getInstance().getDetailsWindow().isVisible());
-                miParseWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getInputTraceWindow()) != -1);
-                miReceiveWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getReceiveWindow()) != -1);
-                miSendWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getSendWindow()) != -1);
+                miCompressedView.setSelected(d.isCompressedView());
+                miNodeDescription.setSelected(d.isNodeDescriptionVisible());
+                miNodeDetails.setSelected(d.isNodeDetailsWindowVisible());
+                miTraceWindow.setSelected(d.isInputTraceWindowVisible());
+                miReceiveWindow.setSelected(d.isReceiveWindowVisible());
+                miSendWindow.setSelected(d.isSendWindowVisible());
             }
         }
     }

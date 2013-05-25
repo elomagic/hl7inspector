@@ -16,13 +16,12 @@
 package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.DesktopIntf;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import de.elomagic.hl7inspector.profile.ProfileIO;
 import de.elomagic.hl7inspector.validate.Validator;
 
-import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -49,28 +48,27 @@ public class ValidateMessageAction extends BasicAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Desktop d = Desktop.getInstance();
-
-        d.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+    public void actionPerformed(final ActionEvent event) {
+        DesktopIntf d = Desktop.getInstance();
+        d.setLockCounter(true);
         try {
-            if(d.getModel().getRoot() != null) {
-                Hl7TreeModel root = (Hl7TreeModel)d.getModel().getRoot();
-                List<Message> messages = root.getMessages();
+            List<Message> messages = Desktop.getInstance().getMessages();
 
-                for(Message msg : messages) {
-                    try {
-                        Validator val = new Validator(ProfileIO.getDefault());
-                        val.validate(msg);
-                    } catch(Exception ex) {
-                        Logger.getLogger(getClass()).error(ex.getMessage(), ex);
-                    }
+            for(final Message msg : messages) {
+                try {
+                    Validator val = new Validator(ProfileIO.getDefault());
+                    val.validate(msg);
+                } catch(Exception ex) {
+                    Logger.getLogger(getClass()).error(ex.getMessage(), ex);
                 }
-
-                d.getTree().updateUI();
             }
+
+
+            //d.getTree().updateUI();
+            // TODO May be we need another method for this
+            d.refreshHighlightPhrases();
         } finally {
-            d.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            d.setLockCounter(false);
         }
     }
 }

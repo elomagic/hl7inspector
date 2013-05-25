@@ -18,14 +18,14 @@ package de.elomagic.hl7inspector.gui.actions;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.FindBar;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.model.TreeNodeSearchEngine;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
+
 import javax.swing.KeyStroke;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 
 /**
  *
@@ -45,30 +45,17 @@ public class FindNextAction extends BasicAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Desktop d = Desktop.getInstance();
-        FindBar f = FindBar.getInstance();
-
+    public void actionPerformed(final ActionEvent event) {
         try {
-            if(d.getTree().getModel().getRoot() != null) {
-                String phrase = f.getEscapedPhrase();
-                boolean cs = f.isCaseSensitive();
-                if(!phrase.isEmpty() && (d.getTree().getModel().getChildCount(d.getTree().getModel().getRoot()) != 0)) {
-                    TreeNode startingNode = (TreeNode)((d.getTree().getSelectionPath() != null) ? d.getTree().getSelectionPath().getLastPathComponent() : d.getTree().getModel().getRoot());
-                    TreePath path = TreeNodeSearchEngine.findNextNode(phrase, cs, startingNode);
+            FindBar f = FindBar.getInstance();
+            String phrase = f.getEscapedPhrase();
+            boolean cs = f.isCaseSensitive();
 
-                    if(path == null) {
-                        SimpleDialog.info("The end of message tree reached.");
-                    } else {
-                        d.getTree().expandPath(path.getParentPath());
+            List<Hl7Object> selectedObjects = Desktop.getInstance().getSelectedObjects();
 
-                        int row = d.getTree().getRowForPath(path);
-
-                        d.getTree().scrollRowToVisible(row);
-                        d.getTree().setSelectionRow(row);
-                    }
-                }
-            }
+            Desktop.getInstance().findNextPhrase(phrase,
+                                                 selectedObjects.isEmpty() ? null : selectedObjects.get(0),
+                                                 cs);
         } catch(Exception ex) {
             SimpleDialog.error(ex.getMessage());
         }

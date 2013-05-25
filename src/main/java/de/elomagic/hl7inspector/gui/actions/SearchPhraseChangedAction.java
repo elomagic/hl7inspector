@@ -49,7 +49,8 @@ public class SearchPhraseChangedAction implements DocumentListener {
 
     private void doActionPerforme() {
         if(FindBar.getInstance().isHighlight()) {
-            Desktop.getInstance().getTree().repaint(50);
+            // TODO May be another method is required
+            Desktop.getInstance().refreshHighlightPhrases();
         }
     }
 }

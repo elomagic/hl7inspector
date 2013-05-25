@@ -19,6 +19,7 @@ import de.elomagic.hl7inspector.gui.Desktop;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+
 import javax.swing.AbstractAction;
 
 /**
@@ -38,7 +39,7 @@ public class FindCaseSensitiveAction extends AbstractAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Desktop.getInstance().getTree().repaint(50);
+    public void actionPerformed(final ActionEvent event) {
+        Desktop.getInstance().refreshHighlightPhrases();
     }
 }

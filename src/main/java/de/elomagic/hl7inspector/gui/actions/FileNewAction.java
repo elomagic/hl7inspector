@@ -45,7 +45,7 @@ public class FileNewAction extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         if(SimpleDialog.confirmYesNo("Clear buffer?") == 0) {
-            Desktop.getInstance().setModel(new Hl7TreeModel());
+            Desktop.getInstance().clearMessages();
         }
     }
 }

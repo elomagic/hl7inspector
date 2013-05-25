@@ -66,7 +66,7 @@ public class NewProfileAction extends AbstractAction {
 
             fc.setDialogTitle("Create new profile");
             try {
-                if(fc.showSaveDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+                if(fc.showSaveDialog(Desktop.getInstance().getMainFrame()) == JFileChooser.APPROVE_OPTION) {
                     ProfileFile file = new ProfileFile(fc.getSelectedFile().getPath());
 
                     if(file.exists()) {
@@ -78,7 +78,7 @@ public class NewProfileAction extends AbstractAction {
                         ProfileIO.save(fout, new Profile());
                     }
 
-                    VectorListModel<ProfileFile> model = ((VectorListModel<ProfileFile>)list.getModel());
+                    VectorListModel<ProfileFile> model = (VectorListModel<ProfileFile>)list.getModel();
                     if(model.indexOf(file) == -1) {
                         model.add(file);
                     }

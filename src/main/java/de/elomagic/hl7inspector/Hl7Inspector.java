@@ -97,9 +97,8 @@ public class Hl7Inspector {
             UIManager.setLookAndFeel((LookAndFeel)StartupProperties.getInstance().getLookAndFeelClass().newInstance());
             JFrame.setDefaultLookAndFeelDecorated(true);
 
-            Desktop desk = Desktop.getInstance();
-            desk.setModel(new Hl7TreeModel());
-            desk.setVisible(true);
+            Desktop.getInstance().clearMessages();
+            Desktop.getInstance().getMainFrame().setVisible(true);
 
             UpdateCheckDialog.check(true);
 
@@ -117,7 +116,7 @@ public class Hl7Inspector {
     }
 
     public static String getVersion() {
-        String version = "";
+        String version;
 
         try {
             ClassLoader loader = ClassLoader.getSystemClassLoader();

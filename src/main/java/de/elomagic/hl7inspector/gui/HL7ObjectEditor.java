@@ -57,7 +57,7 @@ public class HL7ObjectEditor extends BaseDialog {
      * Creates a new instance of ImportOptionsDialog.
      */
     public HL7ObjectEditor() {
-        super(Desktop.getInstance());
+        super(Desktop.getInstance().getMainFrame());
 
         init();
     }

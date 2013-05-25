@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.monitor.actions;
 
@@ -64,7 +63,7 @@ public class FileSaveAction extends AbstractAction {
         fc.setSelectedFile(new File(StartupProperties.getInstance().getLastSaveFolder().getAbsolutePath().concat("\\hl7_receive_trace_log.txt")));
         fc.addChoosableFileFilter(new TextFileFilter());
 
-        if(fc.showSaveDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+        if(fc.showSaveDialog(Desktop.getInstance().getMainFrame()) == JFileChooser.APPROVE_OPTION) {
             File file = fc.getSelectedFile();
 
             if(file.exists()) {

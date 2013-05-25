@@ -59,7 +59,7 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
      * Creates a new instance of SaveProgessDialog.
      */
     public SaveProgessDialog(List<Message> messageList, MessageWriterBean options) {
-        super(Desktop.getInstance());
+        super(Desktop.getInstance().getMainFrame());
 
         messages = messageList;
         bean = options;
@@ -134,7 +134,7 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
 
         pack();
 
-        setSize(300, getPreferredSize() != null ? getPreferredSize().height : 230);
+        setSize(300, getPreferredSize() == null ? 230 : getPreferredSize().height);
 
         setLocationRelativeTo(getOwner());
     }

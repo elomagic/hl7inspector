@@ -12,9 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
-package de.elomagic.hl7inspector.io;
+package de.elomagic.hl7inspector.io.receive;
 
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -33,8 +32,14 @@ import de.elomagic.hl7inspector.gui.ImportOptionBean;
 import de.elomagic.hl7inspector.gui.ImportOptionBean.StreamFormat;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.hl7.model.Segment;
+import de.elomagic.hl7inspector.io.EndOfStreamException;
+import de.elomagic.hl7inspector.io.Frame;
+import de.elomagic.hl7inspector.io.IOCharListener;
+import de.elomagic.hl7inspector.io.IOThreadListener;
+import de.elomagic.hl7inspector.io.MessageParserStreamReader;
 import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import de.elomagic.hl7inspector.utils.StringVector;
+import java.util.Collections;
 
 /**
  *
@@ -194,22 +199,7 @@ public class ReceiveThread extends Thread implements IOCharListener {
             }
         }
 
-        Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getModel();
-        model.locked();
-        try {
-            model.addMessage(message);
-
-            // Check buffer overflow
-            while(model.getChildCount(model) > options.getBufferSize()) {
-                if(options.isReadBottom()) {
-                    model.removeChild(model, 0);
-                } else {
-                    model.removeChild(model, model.getChildCount(model) - 1);
-                }
-            }
-        } finally {
-            model.unlock();
-        }
+        Desktop.getInstance().addMessages(Collections.singletonList(message), options.getBufferSize(),options.isReadBottom());
 
         fireStatusEvent("Sending acknowledge...");
 

@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.profiles;
 
@@ -41,10 +40,10 @@ public class ProfileDefinitionDialog extends PanelDialog {
     /**
      * Creates a new instance of ProfileDefinitionDialog.
      */
-    public ProfileDefinitionDialog(ProfileFile _file) throws Exception {
-        super(Desktop.getInstance(), "Profile Definition", true);
+    public ProfileDefinitionDialog(ProfileFile file) throws Exception {
+        super(Desktop.getInstance().getMainFrame(), "Profile Definition", true);
 
-        file = _file;
+        this.file = file;
     }
 
     @Override
@@ -106,7 +105,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
 //                    ((ProfilePanel)getPanelList().get(0)).getTable().dsizeColumnsToFit(0);
 //            }
 
-            setLocationRelativeTo(Desktop.getInstance());
+            setLocationRelativeTo(Desktop.getInstance().getMainFrame());
         } catch(Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
             SimpleDialog.error(e, e.getMessage());

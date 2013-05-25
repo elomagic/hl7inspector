@@ -1,18 +1,17 @@
 /*
  * Copyright 2006 Carsten Rambow
- * 
+ *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.gnu.org/licenses/gpl.txt
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.actions;
 
@@ -31,9 +30,10 @@ import javax.swing.KeyStroke;
  * @author rambow
  */
 public class ViewNodeDetailsAction extends AbstractAction {
-
-    /** Creates a new instance of FileNewAction */
-    public ViewNodeDetailsAction(String value) {
+    /**
+     * Creates a new instance of ViewNodeDetailsAction.
+     */
+    public ViewNodeDetailsAction(final String value) {
         super(value, ResourceLoader.loadImageIcon("details_view.gif"));
 
         init();
@@ -51,10 +51,8 @@ public class ViewNodeDetailsAction extends AbstractAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        boolean c = ((AbstractButton) e.getSource()).isSelected();
-
-        Desktop.getInstance().getDetailsWindow().setVisible(c);
+    public void actionPerformed(final ActionEvent event) {
+        boolean c = ((AbstractButton)event.getSource()).isSelected();
+        Desktop.getInstance().setNodeDetailsWindowVisible(c);
     }
-
 }

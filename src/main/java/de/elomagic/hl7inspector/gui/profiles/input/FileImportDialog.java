@@ -75,7 +75,7 @@ public class FileImportDialog extends BaseDialog {
      * Creates a new instance of FileImportDialog.
      */
     public FileImportDialog(TableModel m) {
-        super(Desktop.getInstance(), "File Import Dialog", true);
+        super(Desktop.getInstance().getMainFrame(), "File Import Dialog", true);
 
         model = m;
 
@@ -172,7 +172,7 @@ public class FileImportDialog extends BaseDialog {
         add(builder.getPanel(), BorderLayout.CENTER);
         pack();
         setSize((getPreferredSize().width < 640) ? 640 : getPreferredSize().width, (getPreferredSize().height < 480) ? 480 : getPreferredSize().height);
-        setLocationRelativeTo(Desktop.getInstance());
+        setLocationRelativeTo(Desktop.getInstance().getMainFrame());
     }
 
     private void initTables() {
@@ -195,7 +195,7 @@ public class FileImportDialog extends BaseDialog {
     }
 
     private void selectFilename() {
-        File path = (editFile.getText().length() == 0) ? new File(System.getProperty("user.dir")) : new File(editFile.getText());
+        File path = new File(editFile.getText().isEmpty() ? System.getProperty("user.dir") : editFile.getText());
         JFileChooser fc = new JFileChooser(path);
         fc.addChoosableFileFilter(new TextFileFilter());
         fc.addChoosableFileFilter(new CsvFileFilter());

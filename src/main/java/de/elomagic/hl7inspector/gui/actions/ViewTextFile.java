@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.actions;
 
@@ -27,9 +26,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URI;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
-import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
 
@@ -51,46 +50,41 @@ public class ViewTextFile extends AbstractAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
         if(StartupProperties.getInstance().getExternalFileViewer() == null) {
             SimpleDialog.info("No external file viewer/editor set. Please check your configuration.");
         } else {
-            TreePath[] paths = Desktop.getInstance().getTree().getSelectionPaths();
+            List<Hl7Object> selectedObjects = Desktop.getInstance().getSelectedObjects();
+            if(selectedObjects.isEmpty()) {
+                SimpleDialog.error("One message which imported from a file must be selected.");
+            } else if(selectedObjects.size() > 1) {
+                SimpleDialog.error("Please select only one message.");
+            } else {
+                Hl7Object node = selectedObjects.get(0);
 
-            if(paths != null) {
-                if(paths.length == 0) {
-                    SimpleDialog.error("One message which imported from a file must be selected.");
-                } else if(paths.length > 1) {
-                    SimpleDialog.error("Please select only one message.");
+                while(!(node instanceof Message)) {
+                    node = node.getHl7Parent();
+                }
+
+                Message message = (Message)node;
+
+                File file;
+                try {
+                    file = new File(new URI(message.getSource()));
+                } catch(Exception ee) {
+                    file = null;
+                }
+
+                if(file == null) {
+                    SimpleDialog.error("Only messages from a file can be open.");
                 } else {
-                    TreePath path = paths[0];
-
-                    Hl7Object node = (Hl7Object)path.getLastPathComponent();
-
-                    while(!(node instanceof Message)) {
-                        node = node.getHl7Parent();
-                    }
-
-                    Message message = (Message)node;
-
-                    File file;
                     try {
-                        file = new File(new URI(message.getSource()));
+                        Runtime rt = Runtime.getRuntime();
+                        String[] cmd = {StartupProperties.getInstance().getExternalFileViewer().toString(), file.getAbsolutePath()};
+                        rt.exec(cmd);
                     } catch(Exception ee) {
-                        file = null;
-                    }
-
-                    if(file == null) {
-                        SimpleDialog.error("Only messages from a file can be open.");
-                    } else {
-                        try {
-                            Runtime rt = Runtime.getRuntime();
-                            String[] cmd = {StartupProperties.getInstance().getExternalFileViewer().toString(), file.getAbsolutePath()};
-                            rt.exec(cmd);
-                        } catch(Exception ee) {
-                            Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-                            SimpleDialog.error(ee, "Can't start external file viewer/editor application.");
-                        }
+                        Logger.getLogger(getClass()).error(ee.getMessage(), ee);
+                        SimpleDialog.error(ee, "Can't start external file viewer/editor application.");
                     }
                 }
             }

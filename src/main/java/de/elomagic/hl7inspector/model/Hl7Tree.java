@@ -75,7 +75,7 @@ public class Hl7Tree extends JTree implements MouseMotionListener {
                     path.getLastPathComponent(), isRowSelected(row),
                     isExpanded(row), true, row, false);
 
-            if(text.toUpperCase().indexOf(pharse) != -1) {
+            if(text.toUpperCase().contains(pharse)) {
                 return path;
             }
             row = (row + increment + max) % max;

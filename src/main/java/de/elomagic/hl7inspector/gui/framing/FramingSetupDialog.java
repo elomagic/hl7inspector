@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.framing;
 
@@ -34,7 +33,7 @@ public class FramingSetupDialog extends BaseDialog {
      * Creates a new instance of FramingSetupDialog.
      */
     public FramingSetupDialog() {
-        super(Desktop.getInstance(), "Message Framing Setup Dialog", true);
+        super(Desktop.getInstance().getMainFrame(), "Message Framing Setup Dialog", true);
 
         init();
     }

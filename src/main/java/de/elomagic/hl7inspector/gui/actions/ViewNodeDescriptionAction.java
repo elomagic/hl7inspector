@@ -12,13 +12,11 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -31,9 +29,9 @@ import javax.swing.AbstractButton;
  */
 public class ViewNodeDescriptionAction extends AbstractAction {
     /**
-     * Creates a new instance of FileNewAction.
+     * Creates a new instance of ViewNodeDescriptionAction.
      */
-    public ViewNodeDescriptionAction(String value) {
+    public ViewNodeDescriptionAction(final String value) {
         super(value);
 
         init();
@@ -52,13 +50,8 @@ public class ViewNodeDescriptionAction extends AbstractAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        boolean c = ((AbstractButton)e.getSource()).isSelected();
-
-        Desktop.getInstance().getToolBar().getNodeDescriptionButton().setSelected(c);
-
-        ((Hl7TreeModel)Desktop.getInstance().getModel()).setViewDescription(c);
-
-        Desktop.getInstance().getTree().updateUI();
+    public void actionPerformed(final ActionEvent event) {
+        boolean c = ((AbstractButton)event.getSource()).isSelected();
+        Desktop.getInstance().setNodeDescriptionVisible(c);
     }
 }

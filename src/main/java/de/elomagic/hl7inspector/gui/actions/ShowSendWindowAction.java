@@ -42,7 +42,7 @@ public class ShowSendWindowAction extends BasicAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Desktop.getInstance().setTabVisible(Desktop.getInstance().getSendWindow());
+    public void actionPerformed(final ActionEvent event) {
+        Desktop.getInstance().setSendWindowVisible(true);
     }
 }

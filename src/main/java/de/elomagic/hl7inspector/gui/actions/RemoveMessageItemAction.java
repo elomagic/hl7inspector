@@ -18,14 +18,13 @@ package de.elomagic.hl7inspector.gui.actions;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.hl7.model.RepetitionField;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
+
 import javax.swing.KeyStroke;
-import javax.swing.tree.TreePath;
 
 /**
  *
@@ -46,27 +45,15 @@ public class RemoveMessageItemAction extends BasicAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int selCount = Desktop.getInstance().getTree().getSelectionCount();
+        List<Hl7Object> selectedObjects = Desktop.getInstance().getSelectedObjects();
 
-        if(selCount == 0) {
+        if(selectedObjects.isEmpty()) {
             SimpleDialog.info("No node selected.");
-        } else if(selCount > 1) {
+        } else if(selectedObjects.size() > 1) {
             SimpleDialog.error("Only one selected node can clear.");
         } else {
             if(SimpleDialog.confirmYesNo("Clear selected node(s)?") == SimpleDialog.YES_OPTION) {
-
-                TreePath path = Desktop.getInstance().getTree().getSelectionPath();
-                Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();
-                hl7o.clear();
-                if((hl7o.getHl7Parent() instanceof RepetitionField) && (hl7o.getHl7Parent().getChildCount() == 1)) {
-                    hl7o.getHl7Parent().clear();
-                }
-
-                Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
-
-                if(model.isCompactView()) {
-                    model.fireTreeStructureChanged(path.getParentPath());
-                }
+                Desktop.getInstance().removeHL7Object(selectedObjects.get(0));
             }
         }
     }

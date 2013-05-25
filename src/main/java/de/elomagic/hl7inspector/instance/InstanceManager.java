@@ -102,7 +102,7 @@ public class InstanceManager extends Thread {
                                 out.flush();
 
                                 //Toolkit.getDefaultToolkit().
-                                Desktop.getInstance().toFront();
+                                Desktop.getInstance().getMainFrame().toFront();
                                 /* int paramtCount = */
                                 bin.read();
 

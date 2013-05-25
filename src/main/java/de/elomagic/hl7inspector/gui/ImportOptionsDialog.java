@@ -107,7 +107,7 @@ public class ImportOptionsDialog extends BaseDialog {
      * Creates a new instance of ImportOptionsDialog.
      */
     public ImportOptionsDialog() {
-        super(Desktop.getInstance());
+        super(Desktop.getInstance().getMainFrame());
 
         init();
     }

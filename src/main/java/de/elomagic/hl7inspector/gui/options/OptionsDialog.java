@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.options;
 
@@ -28,7 +27,7 @@ public class OptionsDialog extends PanelDialog {
      * Creates a new instance of OptionsDialog.
      */
     public OptionsDialog() {
-        super(Desktop.getInstance(), "Options", true);
+        super(Desktop.getInstance().getMainFrame(), "Options", true);
     }
 
     @Override
@@ -42,6 +41,6 @@ public class OptionsDialog extends PanelDialog {
         super.init();
 
         setSize(600, 600);
-        setLocationRelativeTo(Desktop.getInstance());
+        setLocationRelativeTo(Desktop.getInstance().getMainFrame());
     }
 }

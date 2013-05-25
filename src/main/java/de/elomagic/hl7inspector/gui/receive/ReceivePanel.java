@@ -19,7 +19,7 @@ import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.ImportOptionsDialog;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.io.ReceiveThread;
+import de.elomagic.hl7inspector.io.receive.ReceiveThread;
 import de.elomagic.hl7inspector.io.SendOptionsBean;
 
 import java.awt.event.ActionEvent;

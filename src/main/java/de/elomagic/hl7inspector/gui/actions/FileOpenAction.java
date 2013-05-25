@@ -59,7 +59,7 @@ public class FileOpenAction extends BasicAction {
         fc.addChoosableFileFilter(new Hl7FileFilter());
 
         fc.setDialogTitle("Choose file");
-        if(fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+        if(fc.showOpenDialog(Desktop.getInstance().getMainFrame()) == JFileChooser.APPROVE_OPTION) {
             fc.setVisible(false);
 
             prop.setProperty("de.elomagic.hl7inspector.import.path", fc.getCurrentDirectory().getPath());

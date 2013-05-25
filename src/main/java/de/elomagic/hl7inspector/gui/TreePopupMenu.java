@@ -19,12 +19,11 @@ import de.elomagic.hl7inspector.gui.actions.*;
 import de.elomagic.hl7inspector.hl7.model.EncodingObject;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
+import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.swing.tree.TreePath;
 
 /**
  *
@@ -34,7 +33,7 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
     private JCheckBoxMenuItem miCompactView = new JCheckBoxMenuItem(new ViewCompressedAction());
     private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
     private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
-    private JCheckBoxMenuItem miParseWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
+    private JCheckBoxMenuItem miTraceWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
     private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
     private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
 
@@ -49,28 +48,26 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
     private void createMenusItems() {
         removeAll();
 
-        TreePath selPath = Desktop.getInstance().getTree().getSelectionPath();
-        if(selPath != null) {
-            if(selPath.getLastPathComponent() instanceof Hl7Object) {
-                Hl7Object hl7o = (Hl7Object)selPath.getLastPathComponent();
+        List<Hl7Object> selectedList = Desktop.getInstance().getSelectedObjects();
+        if(!selectedList.isEmpty()) {
+            Hl7Object hl7o = selectedList.get(0);
 
-                if(!(hl7o instanceof EncodingObject)) {
-                    if(!(hl7o instanceof Message)) {
-                        add(new JMenuItem(new EditMessageItemAction(hl7o)));
-                    }
-
-                    if(hl7o.getChildClass() != null) {
-                        add(new JMenuItem(new AddMessageItemAction(hl7o.getChildClass())));
-                    }
-
-                    if(!(hl7o instanceof Message)) {
-                        add(new JMenuItem(new RemoveMessageItemAction()));
-                    }
-
-                    add(new JMenuItem(new RemoveMessageAction()));
-
-                    addSeparator();
+            if(!(hl7o instanceof EncodingObject)) {
+                if(!(hl7o instanceof Message)) {
+                    add(new JMenuItem(new EditMessageItemAction(hl7o)));
                 }
+
+                if(hl7o.getChildClass() != null) {
+                    add(new JMenuItem(new AddMessageItemAction(hl7o.getChildClass())));
+                }
+
+                if(!(hl7o instanceof Message)) {
+                    add(new JMenuItem(new RemoveMessageItemAction()));
+                }
+
+                add(new JMenuItem(new RemoveMessageAction()));
+
+                addSeparator();
             }
         }
 
@@ -85,14 +82,13 @@ public class TreePopupMenu extends JPopupMenu implements PopupMenuListener {
         add(miNodeDescription);
         add(miNodeDetails);
 
-        Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
-
-        miCompactView.setSelected(model.isCompactView());
-        miNodeDescription.setSelected(model.isViewDescription());
-        miNodeDetails.setSelected(Desktop.getInstance().getDetailsWindow().isVisible());
-        miParseWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getInputTraceWindow()) != -1);
-        miReceiveWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getReceiveWindow()) != -1);
-        miSendWindow.setSelected(Desktop.getInstance().getTabbedBottomPanel().indexOfComponent(Desktop.getInstance().getSendWindow()) != -1);
+        DesktopIntf d = Desktop.getInstance();
+        miCompactView.setSelected(d.isCompressedView());
+        miNodeDescription.setSelected(d.isNodeDescriptionVisible());
+        miNodeDetails.setSelected(d.isNodeDetailsWindowVisible());
+        miTraceWindow.setSelected(d.isInputTraceWindowVisible());
+        miReceiveWindow.setSelected(d.isReceiveWindowVisible());
+        miSendWindow.setSelected(d.isSendWindowVisible());
     }
 
     // Interface PopupMenuListener

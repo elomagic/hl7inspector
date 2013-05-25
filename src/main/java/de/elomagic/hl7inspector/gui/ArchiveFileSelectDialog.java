@@ -36,7 +36,7 @@ public class ArchiveFileSelectDialog extends BaseDialog implements MouseListener
      * Creates a new instance of ArchiveFileSelectDialog.
      */
     public ArchiveFileSelectDialog(ZipFile file) {
-        super(Desktop.getInstance(), "Choose File", true);
+        super(Desktop.getInstance().getMainFrame(), "Choose File", true);
 
         init();
 

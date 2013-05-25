@@ -219,7 +219,7 @@ public class TreeCellRenderer extends JLabel implements javax.swing.tree.TreeCel
             Hl7Object obj = (Hl7Object)value;
 //            setToolTipText(obj.getValidationText());
 
-            if(((Hl7TreeModel)model).isViewDescription()) {
+            if(((Hl7TreeModel)model).isNodeDescriptionVisible()) {
                 Profile profile = ProfileIO.getDefault();
 
                 String desc = obj.getText();

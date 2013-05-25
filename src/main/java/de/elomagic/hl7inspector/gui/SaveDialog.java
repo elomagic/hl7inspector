@@ -64,7 +64,7 @@ public class SaveDialog extends BaseDialog {
      * Creates a new instance of SaveDialog.
      */
     public SaveDialog() {
-        super(Desktop.getInstance(), "Save messages", true);
+        super(Desktop.getInstance().getMainFrame(), "Save messages", true);
 
         init();
     }
@@ -247,7 +247,7 @@ public class SaveDialog extends BaseDialog {
 
         setSize(getPreferredSize().width, getPreferredSize().height);
 
-        setLocationRelativeTo(Desktop.getInstance());
+        setLocationRelativeTo(Desktop.getInstance().getMainFrame());
     }
 
     private void selectFolder() {

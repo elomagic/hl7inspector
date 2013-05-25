@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.sender;
 
@@ -32,7 +31,7 @@ import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.io.SendThread;
+import de.elomagic.hl7inspector.io.sender.SendThread;
 import de.elomagic.hl7inspector.utils.BundleTool;
 import java.util.ResourceBundle;
 
@@ -101,10 +100,10 @@ public class SendPanel extends CharacterMonitor implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch(Command.valueOf(e.getActionCommand())) {
             case Start:
-                if(Desktop.getInstance().getTree().getSelectedMessages().isEmpty()) {
+                if(Desktop.getInstance().getSelectedMessages().isEmpty()) {
                     SimpleDialog.error(bundle.getString("no_messages_selected"));
                 } else {
-                    thread.setMessages(Desktop.getInstance().getTree().getSelectedMessages());
+                    thread.setMessages(Desktop.getInstance().getSelectedMessages());
                     thread.start();
                 }
                 break;

@@ -43,7 +43,7 @@ public class UpdateCheckDialog extends BaseDialog {
      * Creates a new instance of UpdateCheckDialog.
      */
     public UpdateCheckDialog() {
-        super(Desktop.getInstance());
+        super(Desktop.getInstance().getMainFrame());
 
         init();
     }
@@ -66,7 +66,7 @@ public class UpdateCheckDialog extends BaseDialog {
         n.set(Calendar.SECOND, lc.get(Calendar.SECOND));
         n.set(Calendar.MILLISECOND, lc.get(Calendar.MILLISECOND));
 
-        doCheck = (lc.before(n) || lc.equals(n)) && (doCheck);
+        doCheck = (lc.before(n) || lc.equals(n)) && doCheck;
 
         if((doCheck) && (confirmCheck) && (p.isAutoUpdateAsk())) {
             doCheck = SimpleDialog.confirmYesNo("Check for updates of Hl7Inspector ?") == 0;

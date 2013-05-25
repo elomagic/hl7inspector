@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.monitor;
 
@@ -32,7 +31,7 @@ public abstract class TraceMonitorDialog extends JDialog {
      * Creates a new instance of TestMonitorDialog.
      */
     public TraceMonitorDialog(String title) {
-        super(Desktop.getInstance(), title, false);
+        super(Desktop.getInstance().getMainFrame(), title, false);
         setLayout(new BorderLayout());
 
         init();
@@ -47,7 +46,7 @@ public abstract class TraceMonitorDialog extends JDialog {
     @Override
     public void setVisible(boolean v) {
         if(v && !isVisible()) {
-            setLocationRelativeTo(Desktop.getInstance());
+            setLocationRelativeTo(Desktop.getInstance().getMainFrame());
         }
 
         super.setVisible(v);

@@ -42,7 +42,9 @@ public abstract class Hl7Object implements TreeNode {
     private Object root = null;
     private Hl7Object parent = null;
 
-    /** Creates a new instance of Hl7Object */
+    /**
+     * Creates a new instance of Hl7Object
+     */
     public Hl7Object() {
     }
 
@@ -142,10 +144,10 @@ public abstract class Hl7Object implements TreeNode {
         objList.add(obj);
     }
 
-    public Hl7Object add(String text) throws Exception {
+    public Hl7Object add(final String text) throws InstantiationException, IllegalAccessException {
         Class child = getChildClass();
         if(child == null) {
-            throw new Exception("Child items are not allowed for this item type");
+            throw new IllegalArgumentException("Child items are not allowed for this item type");
         }
 
         Hl7Object obj = (Hl7Object)(child.newInstance());
@@ -340,7 +342,9 @@ public abstract class Hl7Object implements TreeNode {
     // TODO Muste be implemented
     // Interface TreeNode
 
-    /** Returns the children of the receiver as an Enumeration. */
+    /**
+     * Returns the children of the receiver as an Enumeration.
+     */
     @Override
     public Enumeration<TreeNode> children() {
         List<TreeNode> result = new ArrayList<>();

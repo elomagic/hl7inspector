@@ -16,19 +16,15 @@
 package de.elomagic.hl7inspector.gui.actions;
 
 import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.DesktopIntf;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
-import javax.swing.tree.TreePath;
-
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -66,31 +62,10 @@ public class AddMessageItemAction extends AbstractAction {
     private Class c;
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            TreePath path = Desktop.getInstance().getTree().getSelectionPath();
+    public void actionPerformed(final ActionEvent event) {
+        DesktopIntf d = Desktop.getInstance();
 
-            Hl7Object hl7o = (Hl7Object)path.getLastPathComponent();
-
-            String v = "";
-
-            if(hl7o instanceof Message) {
-                // todo: Select segment type
-                v = "ZZZ";
-            }
-
-            Hl7Object o = hl7o.add(v);
-
-            Hl7TreeModel model = (Hl7TreeModel)Desktop.getInstance().getTree().getModel();
-
-            if(model.isCompactView() && (v.length() == 0)) {
-                SimpleDialog.info("Empty items are only visible in the non compressed view.");
-            } else {
-                model.fireTreeNodesInsert(path, new Object[] {o});
-            }
-        } catch(Exception ex) {
-            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
-            SimpleDialog.error(ex);
-        }
+        List<Hl7Object> selectedObjects = d.getSelectedObjects();
+        d.appendHl7Object(selectedObjects.get(0));
     }
 }

@@ -42,7 +42,7 @@ public class ReceiveNetworkSetupDialog extends BaseDialog {
      * Creates a new instance of SendOptionsDialog.
      */
     public ReceiveNetworkSetupDialog() {
-        super(Desktop.getInstance());
+        super(Desktop.getInstance().getMainFrame());
 
         init();
     }

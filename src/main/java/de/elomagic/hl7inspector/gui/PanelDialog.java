@@ -121,7 +121,7 @@ public class PanelDialog extends BaseDialog {
         pack();
 
         setSize(500, 500);
-        setLocationRelativeTo(Desktop.getInstance());
+        setLocationRelativeTo(Desktop.getInstance().getMainFrame());
     }
 
     public List<AbstractPanel> getPanelList() {

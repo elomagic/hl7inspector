@@ -58,7 +58,7 @@ public class AddKeyStoreAction extends AbstractAction {
         fc.addChoosableFileFilter(new KeyStoreFileFilter());
 
         fc.setDialogTitle("Choose keystore");
-        if(fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+        if(fc.showOpenDialog(Desktop.getInstance().getMainFrame()) == JFileChooser.APPROVE_OPTION) {
             fc.setVisible(false);
 
             File file = fc.getSelectedFile();

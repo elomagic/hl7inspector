@@ -90,7 +90,7 @@ public class SendOptionsDialog extends BaseDialog {
      * Creates a new instance of SendOptionsDialog.
      */
     public SendOptionsDialog() {
-        super(Desktop.getInstance());
+        super(Desktop.getInstance().getMainFrame());
 
         init();
     }

@@ -46,7 +46,7 @@ public class AboutDialog extends BaseDialog {
      * Creates a new instance of AboutDialog.
      */
     public AboutDialog() {
-        super(Desktop.getInstance());
+        super(Desktop.getInstance().getMainFrame());
 
         init();
     }

@@ -46,7 +46,7 @@ public class Validator {
         String s = "";
         ValidateStatus status = new ValidateStatus(ValidateStatus.OK);
         for(ValidateStatus childStatus : statusList) {
-            status = (status.compareTo(childStatus) > 0) ? status : childStatus;
+            status = status.compareTo(childStatus) > 0 ? status : childStatus;
             s = s.concat("\n".concat(childStatus.getText()));
         }
 

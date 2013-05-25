@@ -23,7 +23,6 @@ import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.io.MessageImportEvent;
 import de.elomagic.hl7inspector.io.MessageImportListener;
 import de.elomagic.hl7inspector.io.MessageImportThread;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 import de.elomagic.hl7inspector.profile.ProfileIO;
 import de.elomagic.hl7inspector.validate.Validator;
 
@@ -35,12 +34,15 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -55,19 +57,20 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
     private JLabel lblMessages = new JLabel("0");
     private JLabel lblBytes = new JLabel("0");
     private JPanel buttonPanel = new JPanel(new FlowLayout());
-    private Hl7TreeModel model = null;
     private ImportOptionBean options = null;
     private MessageImportThread thread = null;
+    private int messagesAppend;
     private boolean userAbort = false;
     private JProgressBar bar = new JProgressBar(JProgressBar.HORIZONTAL);
     private JButton btAbort = new JButton("Abort");
     private DoRun doRun = new DoRun();
+    private DesktopIntf d = Desktop.getInstance();
 
     /**
      * Creates a new instance of ReaderProgessDialog.
      */
     public ReaderProgessDialog() {
-        super(Desktop.getInstance());
+        super(Desktop.getInstance().getMainFrame());
 
         init();
     }
@@ -136,10 +139,15 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
         setModal(true);
         options = readOptions;
 
-        Desktop.getInstance().getScrollPane().getVerticalScrollBar().setValue(Desktop.getInstance().getScrollPane().getVerticalScrollBar().getMaximum());
+        // TODO Do we need this really ???
+        //Desktop.getInstance().getScrollPane().getVerticalScrollBar().setValue(Desktop.getInstance().getScrollPane().getVerticalScrollBar().getMaximum());
 
-        model = readOptions.isClearBuffer() ? new Hl7TreeModel() : (Hl7TreeModel)Desktop.getInstance().getModel();
-        model.locked();
+        if(readOptions.isClearBuffer()) {
+            Desktop.getInstance().clearMessages();
+        }
+
+        messagesAppend = 0;
+        d.setLockCounter(true);
         thread = new MessageImportThread(fin, readOptions);
         thread.addListener(this);
         thread.start();
@@ -170,7 +178,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
         }
 
         if(ignore) {
-            Desktop.getInstance().getInputTraceWindow().addLine("Ignore message. (Filter is active)");
+            d.getInputTraceWindow().addLine("Ignore message. (Filter is active)");
         } else {
             Message msg = event.getMessage();
             try {
@@ -182,7 +190,15 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
                 Logger.getLogger(getClass()).error(e.getMessage(), e);
             }
 
-            model.addMessage(msg);
+            d.addMessages(Collections.singletonList(msg),
+                          options.getBufferSize(),
+                          options.isReadBottom());
+
+            if(d.getSelectedMessages().size() < options.getBufferSize()) {
+                messagesAppend++;
+            } else if(!options.isReadBottom()) {
+                thread.terminate = true;
+            }
 
             if(options.isValidate()) {
                 try {
@@ -192,16 +208,6 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
                     Logger.getLogger(getClass()).error(ee.getMessage(), ee);
                 }
             }
-
-            // Check buffer overflow
-            while(model.getChildCount(model) > options.getBufferSize()) {
-                if(options.isReadBottom()) {
-                    model.removeChild(model, 0);
-                } else {
-                    event.getSource().terminate = true;
-                    model.removeChild(model, model.getChildCount(model) - 1);
-                }
-            }
         }
 
         SwingUtilities.invokeLater(doRun);
@@ -209,16 +215,16 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
 
     @Override
     public void charRead(char c) {
-        Desktop.getInstance().getInputTraceWindow().addChar(c);
+        d.getInputTraceWindow().addChar(c);
     }
 
     @Override
     public void importDone(MessageImportEvent event) {
-        Desktop.getInstance().getInputTraceWindow().addLine("Import done.");
-        Desktop.getInstance().setModel(model);
-        model.unlock();
+        d.getInputTraceWindow().addLine("Import done.");
+        //Desktop.getInstance().setModel(model);
+        d.setLockCounter(false);
         setVisible(false);
-        if((event.getSource().terminate) && (userAbort)) {
+        if(event.getSource().terminate && userAbort) {
             SimpleDialog.info("Import abort by user.");
         }
     }
@@ -229,16 +235,13 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
             lblSource.setText(options.getSource());
             lblSize.setText(Long.toString(options.getFileSize()));
             lblBytes.setText(Long.toString(bytesRead));
-
-            if(model != null) {
-                lblMessages.setText(Integer.toString(model.getChildCount(model)));
-                bar.setValue(model.getChildCount(model));
-            }
+            lblMessages.setText(Integer.toString(messagesAppend));
+            bar.setValue(messagesAppend);
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent ee) {
+    public void actionPerformed(final ActionEvent event) {
         if(thread != null) {
             userAbort = true;
             thread.terminate = true;

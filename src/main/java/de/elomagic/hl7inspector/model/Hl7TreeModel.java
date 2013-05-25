@@ -73,7 +73,7 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
         }
     }
 
-    public boolean isCompactView() {
+    public boolean isCompressedView() {
         return compressed;
     }
 
@@ -87,6 +87,10 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
         if(locked == 0) {
             fireTreeStructureChanged(this);
         }
+    }
+
+    public int getLockCount() {
+        return locked;
     }
 
     /**
@@ -169,16 +173,16 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
     }
 
     @Override
-    public void valueForPathChanged(javax.swing.tree.TreePath path, Object newValue) {
+    public void valueForPathChanged(TreePath path, Object newValue) {
     }
 
     @Override
-    public void removeTreeModelListener(javax.swing.event.TreeModelListener l) {
+    public void removeTreeModelListener(TreeModelListener l) {
         listenerList.remove(l);
     }
 
     @Override
-    public void addTreeModelListener(javax.swing.event.TreeModelListener l) {
+    public void addTreeModelListener(TreeModelListener l) {
         listenerList.add(l);
     }
 
@@ -192,6 +196,30 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
         return "Parsed hl7 messages";
     }
 
+    /**
+     * Returns a tree path of the given HL7 object.
+     *
+     * @param o Hl7Object
+     * @return TreePath
+     */
+    public static TreePath buildTreePath(final Hl7Object o) {
+        Hl7Object child = o;
+        List<Object> path = new ArrayList<>();
+        while(child.getHl7Parent() != null) {
+            path.add(child.getHl7Parent());
+            child = child.getHl7Parent();
+        }
+
+        Collections.reverse(path);
+
+        return new TreePath(path.toArray());
+    }
+
+    public void fireTreeNodesInsert(final Hl7Object[] newNodes) {
+        TreePath treePath = buildTreePath(newNodes[0]);
+        fireTreeNodesInsert(treePath, newNodes);
+    }
+
     public void fireTreeNodesInsert(TreePath parentPath, Object[] newNodes) {
         int index[] = new int[newNodes.length];
 
@@ -201,36 +229,36 @@ public class Hl7TreeModel implements TreeModel, TreeNode {
 
         TreeModelEvent e = new TreeModelEvent(this, parentPath, index, newNodes);
 
-        for(TreeModelListener l : listenerList) {
+        for(final TreeModelListener l : listenerList) {
             l.treeNodesInserted(e);
         }
     }
 
-    public void fireTreeStructureChanged(TreePath path) {
+    public void fireTreeStructureChanged(final TreePath path) {
         if(locked == 0) {
             TreeModelEvent e = new TreeModelEvent(this, path);
 
-            for(TreeModelListener l : listenerList) {
+            for(final TreeModelListener l : listenerList) {
                 l.treeStructureChanged(e);
             }
         }
     }
 
-    public void fireTreeStructureChanged(Object root) {
+    public void fireTreeStructureChanged(final Object root) {
         if(locked == 0) {
             TreeModelEvent e = new TreeModelEvent(this, new Object[] {root});
 
-            for(TreeModelListener l : listenerList) {
+            for(final TreeModelListener l : listenerList) {
                 l.treeStructureChanged(e);
             }
         }
     }
 
-    public boolean isViewDescription() {
+    public boolean isNodeDescriptionVisible() {
         return viewDescription;
     }
 
-    public void setViewDescription(boolean viewDescription) {
+    public void setNodeDescriptionVisible(boolean viewDescription) {
         this.viewDescription = viewDescription;
     }
 

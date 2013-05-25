@@ -41,6 +41,6 @@ public class FindHightlightAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Desktop.getInstance().getTree().repaint();
+        Desktop.getInstance().refreshHighlightPhrases();
     }
 }

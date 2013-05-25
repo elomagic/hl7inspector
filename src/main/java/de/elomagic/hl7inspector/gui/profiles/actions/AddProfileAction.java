@@ -64,7 +64,7 @@ public class AddProfileAction extends AbstractAction {
         fc.addChoosableFileFilter(new ProfileFileFilter());
 
         fc.setDialogTitle("Choose hl7 profile");
-        if(fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+        if(fc.showOpenDialog(Desktop.getInstance().getMainFrame()) == JFileChooser.APPROVE_OPTION) {
             fc.setVisible(false);
 
             ProfileFile file = new ProfileFile(fc.getSelectedFile());

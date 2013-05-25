@@ -21,7 +21,6 @@ import de.elomagic.hl7inspector.gui.SaveProgessDialog;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.mac.MacApplication;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
@@ -47,10 +46,10 @@ public class FileSaveAsAction extends BasicAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         SaveDialog dlg = new SaveDialog();
         if(dlg.ask()) {
-            List<Message> messages = (dlg.getOptions().isOnlySelectedFiles()) ? Desktop.getInstance().getTree().getSelectedMessages() : ((Hl7TreeModel)Desktop.getInstance().getModel()).getMessages();
+            List<Message> messages = dlg.getOptions().isOnlySelectedFiles() ? Desktop.getInstance().getSelectedMessages() : Desktop.getInstance().getMessages();
 
             SaveProgessDialog dlgSave = new SaveProgessDialog(messages, dlg.getOptions());
             dlgSave.setVisible(true);

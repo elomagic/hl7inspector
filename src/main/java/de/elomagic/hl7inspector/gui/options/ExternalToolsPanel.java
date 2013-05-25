@@ -12,7 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
  */
 package de.elomagic.hl7inspector.gui.options;
 
@@ -104,16 +103,16 @@ public class ExternalToolsPanel extends AbstractPanel {
     @Override
     public void read() {
         StartupProperties p = StartupProperties.getInstance();
-        editTextViewer.setText(p.getExternalFileViewer() != null ? p.getExternalFileViewer().getAbsolutePath() : "");
-        editHexViewer.setText(p.getExternalHexViewer() != null ? p.getExternalHexViewer().getAbsolutePath() : "");
+        editTextViewer.setText(p.getExternalFileViewer() == null ? "" : p.getExternalFileViewer().getAbsolutePath());
+        editHexViewer.setText(p.getExternalHexViewer() == null ? "" : p.getExternalHexViewer().getAbsolutePath());
     }
 
     @Override
     public void write() {
         StartupProperties p = StartupProperties.getInstance();
 
-        p.setExternalFileViewer(editTextViewer.getText().length() != 0 ? new File(editTextViewer.getText()) : null);
-        p.setExternalHexViewer(editHexViewer.getText().length() != 0 ? new File(editHexViewer.getText()) : null);
+        p.setExternalFileViewer(editTextViewer.getText().isEmpty() ? null : new File(editTextViewer.getText()));
+        p.setExternalHexViewer(editHexViewer.getText().isEmpty() ? null : new File(editHexViewer.getText()));
     }
 
     class FileChooseAction extends AbstractAction {
@@ -131,7 +130,7 @@ public class ExternalToolsPanel extends AbstractPanel {
                 //fc.set
 
                 fc.setDialogTitle("Choose external viewer");
-                if(fc.showOpenDialog(Desktop.getInstance()) == JFileChooser.APPROVE_OPTION) {
+                if(fc.showOpenDialog(Desktop.getInstance().getMainFrame()) == JFileChooser.APPROVE_OPTION) {
                     fc.setVisible(false);
 
                     if(e.getSource().equals(btChooseTextViewer)) {
