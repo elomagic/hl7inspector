@@ -1,6 +1,6 @@
 # README #
 
-[![Build Status](https://travis-ci.org/elomagic/http-maven-plugin.png)](https://travis-ci.org/elomagic/hl7inspector)
+[![Build Status](https://drone.io/github.com/elomagic/hl7inspector/status.png)](https://drone.io/github.com/elomagic/hl7inspector/latest)
 
 Thank you for using HL7 Inspector Version 2.2 !
 
