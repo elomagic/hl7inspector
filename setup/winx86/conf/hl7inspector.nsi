@@ -1,6 +1,6 @@
 # elomagic HL7 Inspector Setup Script
 # Written by Carsten Rambow
-# (c)2010 Carsten Rambow, Roederheim-Gronau, Germany
+# (c)2016 Carsten Rambow, Karlsruhe, Germany
 
 !addincludedir $%NSIS_INCLUDE%
 !addplugindir $%NSIS_PLUGINS%

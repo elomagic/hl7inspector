@@ -1,8 +1,5 @@
 /*
- * Copyright 2013 Carsten Rambow, elomagic, Roedersheim/Gronau Germany. All rights reserved.
- */
-/*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +15,11 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.utils.BundleTool;
 import java.util.ResourceBundle;
+
 import javax.swing.AbstractAction;
+
+import de.elomagic.hl7inspector.utils.BundleTool;
 
 /**
  *
