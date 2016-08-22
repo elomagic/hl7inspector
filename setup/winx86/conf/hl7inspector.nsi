@@ -17,7 +17,7 @@
 !define APP_UNINSTALL "Uninstall ${APP_MANUFACTOR} ${APP_NAME}.exe"
 
 !include "nsDialogs.nsh"
-!include "elomagicLF.nsh"
+#!include "elomagicLF.nsh"
 
 # Name and file
 Name "${APP_MANUFACTOR} ${APP_NAME} ${APP_VERSION}"
