@@ -281,37 +281,33 @@
                                 </goals>
                                 
                                 <configuration>
-                                    <tasks>
+                                    <target>
                                         <!-- mkdir -p "src/HL7 Inspector.app/Contents/MacOS" -->
                                         <mkdir dir="${basedir}/target/HL7 Inspector.app/Contents/MacOS"/>
                                         <!-- mkdir -p "src/HL7 Inspector.app/Contents/Resources/Java" -->
                                         <mkdir dir="${basedir}/target/HL7 Inspector.app/Contents/Resources/Java"/>
                                         
                                         <!-- Copy system resource cp /System/Library/Frameworks/JavaVM.framework/Versions/Current/Resources/MacOS/JavaApplicationStub "src/HL7 Inspector.app/Contents/MacOS/JavaApplicationStub" -->
-                                        <copy todir="${basedir}/target/HL7 Inspector.app/Contents/MacOS/JavaApplicationStub">
-                                            <fileset dir="/System/Library/Frameworks/JavaVM.framework/Versions/Current/Resources/MacOS/JavaApplicationStub"/>
-                                        </copy>
+                                        <copy file="/System/Library/Frameworks/JavaVM.framework/Versions/Current/Resources/MacOS/JavaApplicationStub" tofile="${basedir}/target/HL7 Inspector.app/Contents/MacOS/JavaApplicationStub"/>    
                                                                                 
                                         <!-- chmod ugo+rx "src/HL7 Inspector.app/Contents/MacOS/JavaApplicationStub" -->
-                                        <chmod perm="ugo+rx">
-                                            <fileset refid="${basedir}/target/HL7 Inspector.app/Contents/MacOS/JavaApplicationStub"/>
-                                        </chmod>
+                                        <chmod file="${basedir}/target/HL7 Inspector.app/Contents/MacOS/JavaApplicationStub" perm="ugo+rx"/>
                                             
                                         <!-- Copy application icon: cp resources/AppIcon.icns "src/HL7 Inspector.app/Contents/Resources/AppIcon.icns"-->
-                                        <copy file="{basedir}/src/setup/osx/resources/AppIcon.icns" tofile="${basedir}/HL7 Inspector.app/Contents/Resources/AppIcon.icns"/>    
+                                        <copy file="${basedir}/src/setup/osx/resources/AppIcon.icns" tofile="${basedir}/target/HL7 Inspector.app/Contents/Resources/AppIcon.icns"/>    
                                         
                                         <!-- Replace #APP_VERSION# with $AppVersion: more resources/Info.plist.xml | sed "s/#APP_VERSION#/$AppVersion/g" > "src/HL7 Inspector.app/Contents/Info.plist"-->
                                         <exec executable="bash">
                                             <arg value="-c"/>
-                                            <arg value='more {basedir}/src/setup/osx/resources/Info.plist.xml | sed "s/#APP_VERSION#/${project.version}/g" > "{basedir}/target/HL7 Inspector.app/Contents/Info.plist'/>
+                                            <arg value='more ${basedir}/src/setup/osx/resources/Info.plist.xml | sed "s/#APP_VERSION#/${project.version}/g" > "${basedir}/target/HL7 Inspector.app/Contents/Info.plist"'/>
                                         </exec>
                                     
                                         <!-- cp resources/PkgInfo "src/HL7 Inspector.app/Contents/PkgInfo" -->
-                                        <copy file="{basedir}/src/setup/osx/resources/PkgInfo" tofile="${basedir}/HL7 Inspector.app/Contents/PkgInfo"/>    
+                                        <copy file="${basedir}/src/setup/osx/resources/PkgInfo" tofile="${basedir}/target/HL7 Inspector.app/Contents/PkgInfo"/>    
                                                                                 
                                         <!-- Copy main application: cp ../src/hl7inspector.jar "src/HL7 Inspector.app/Contents/Resources/Java/hl7inspector.jar"-->
-                                        <copy file="{basedir}/target/${project.build.finalName}" tofile="${basedir}/HL7 Inspector.app/Contents/Resources/Java/${project.build.finalName}"/>    
-                                    </tasks>
+                                        <copy file="${basedir}/target/hl7inspector-jar-with-dependencies.jar" tofile="${basedir}/target/HL7 Inspector.app/Contents/Resources/Java/hl7inspector.jar"/>    
+                                    </target>
                                 </configuration>
                             </execution>
                         </executions>
