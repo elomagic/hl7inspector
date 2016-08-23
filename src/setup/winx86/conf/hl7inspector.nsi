@@ -8,20 +8,26 @@
 # --------------------------------
 # General
 
-#!define APP_VERSION "1.0.0.9"
+#!define APP_VERSION "1.0.0.9" <-- Set by build job
+#!define PROJECT_PATH "" <-- Set by build job
 !define APP_NAME "HL7 Inspector"
 !define APP_MANUFACTOR "elomagic"
-!define APP_MAIN "hl7inspector.jar"
+!define APP_MAIN "hl7inspector-jar-with-dependencies.jar"
 
 !define APP_REGKEY "Software\${APP_MANUFACTOR}\${APP_NAME}" 
 !define APP_UNINSTALL "Uninstall ${APP_MANUFACTOR} ${APP_NAME}.exe"
+
+!include MUI2.nsh
 
 !include "nsDialogs.nsh"
 #!include "elomagicLF.nsh"
 
 # Name and file
 Name "${APP_MANUFACTOR} ${APP_NAME} ${APP_VERSION}"
-OutFile "..\dist\${APP_MANUFACTOR} ${APP_NAME} ${APP_VERSION} Setup.exe"
+OutFile "${PROJECT_PATH}\target\${APP_MANUFACTOR} ${APP_NAME} ${APP_VERSION} Setup.exe"
+
+Icon "${PROJECT_PATH}\src\setup\winx86\resources\application.ico"
+UninstallIcon "${PROJECT_PATH}\src\setup\winx86\resources\application.ico"
 
 # Default installation folder
 InstallDir "$PROGRAMFILES\${APP_MANUFACTOR}\${APP_NAME}"
@@ -47,7 +53,7 @@ Var hwnd
 # --------------------------------
 # Pages
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "..\src\license\license-gpl.txt"
+!insertmacro MUI_PAGE_LICENSE "${PROJECT_PATH}\src\setup\resources\license\license-gpl.txt"
 !insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
@@ -64,17 +70,18 @@ Page Custom DonatePage DonatePageLeave
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "German"
 
-;--------------------------------
-;Installer Sections
+# --------------------------------
+# Installer Sections
 
 Section "${APP_NAME} ${APP_VERSION}" SecDummy
 	SectionIn RO
-  SetOutPath "$INSTDIR"
+    SetOutPath "$INSTDIR"
   
-  ;ADD YOUR OWN FILES HERE...
-  File /r /x ".svn" "..\src\*.*"
+    # ADD YOUR OWN FILES HERE...
+    File /r /x ".svn" "${PROJECT_PATH}\src\setup\resources\*.*"
+    File /x ".svn" "${PROJECT_PATH}\target\${APP_MAIN}"
   
-    ; Store installation folder
+    # Store installation folder
     WriteRegStr HKLM "${APP_REGKEY}" "" $INSTDIR
 
     WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${APP_MANUFACTOR}${APP_NAME}" "DisplayName" "${APP_MANUFACTOR} ${APP_NAME}"
@@ -104,27 +111,26 @@ LangString DESC_SecDummy ${LANG_GERMAN} "${APP_NAME} Programm Dateien"
 
 # Assign language strings to sections
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecDummy} $(DESC_SecDummy)
+!insertmacro MUI_DESCRIPTION_TEXT ${SecDummy} $(DESC_SecDummy)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
-;--------------------------------
-;Uninstaller Section
+# --------------------------------
+# Uninstaller Section
 
 Section "Uninstall"
-  # ADD YOUR OWN FILES HERE...
-  
-  # Remove shortcuts, if any
-  Delete "$SMPROGRAMS\${APP_NAME}\*.*"
+    # ADD YOUR OWN FILES HERE...
 
-  # Remove directories used
-  RMDir "$SMPROGRAMS\${APP_NAME}"
+    # Remove shortcuts, if any
+    Delete "$SMPROGRAMS\${APP_NAME}\*.*"
 
-  Delete "$INSTDIR\${APP_UNINSTALL}"
+    # Remove directories used
+    RMDir "$SMPROGRAMS\${APP_NAME}"
 
-  RMDir /r "$INSTDIR"
+    Delete "$INSTDIR\${APP_UNINSTALL}"
 
-  DeleteRegKey /ifempty HKLM "${APP_REGKEY}"
+    RMDir /r "$INSTDIR"
 
+    DeleteRegKey /ifempty HKLM "${APP_REGKEY}"
 SectionEnd
 
 Function DonatePage
