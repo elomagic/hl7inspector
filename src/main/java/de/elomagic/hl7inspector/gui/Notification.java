@@ -44,49 +44,39 @@ public final class Notification {
      */
     public static Optional<ButtonType> confirmOkCancel(final String text) {
 
-        NotificationHelper handler = new NotificationHelper();
+        NotificationRunnable runnable = new NotificationRunnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(AlertType.CONFIRMATION, text);
+                alert.setTitle("Confirmation");
+                alert.setHeaderText(null);
 
-        Platform.runLater(()->{
-            Alert alert = new Alert(AlertType.CONFIRMATION, text);
-            alert.setTitle("Confirmation");
-            alert.setHeaderText(null);
-
-            handler.result = alert.showAndWait();
-            handler.handled = true;
-        });
-
-        try {
-            while(!handler.handled) {
-                Thread.sleep(100);
+                result = alert.showAndWait();
+                handled = true;
             }
-        } catch(Exception ex) {
-            ex.printStackTrace(System.err);
-        }
+        };
 
-        return handler.result;
+        showAndWait(runnable);
+
+        return runnable.result;
 
     }
 
     public static void info(final String text) {
 
-        NotificationHelper handler = new NotificationHelper();
+        NotificationRunnable runnable = new NotificationRunnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(AlertType.INFORMATION, text);
+                alert.setTitle("Information");
+                alert.setHeaderText(null);
 
-        Platform.runLater(()->{
-            Alert alert = new Alert(AlertType.INFORMATION, text);
-            alert.setTitle("Information");
-            alert.setHeaderText(null);
-
-            handler.result = alert.showAndWait();
-            handler.handled = true;
-        });
-
-        try {
-            while(!handler.handled) {
-                Thread.sleep(100);
+                result = alert.showAndWait();
+                handled = true;
             }
-        } catch(Exception ex) {
-            ex.printStackTrace(System.err);
-        }
+        };
+
+        showAndWait(runnable);
     }
 
     public static void error(final Exception exception) {
@@ -95,44 +85,51 @@ public final class Notification {
 
     public static void error(final Exception exception, final String text) {
 
-        NotificationHelper handler = new NotificationHelper();
+        NotificationRunnable runnable = new NotificationRunnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(AlertType.ERROR, text);
+                alert.setTitle("Error");
+                alert.setHeaderText("An error occur.");
 
-        Platform.runLater(()->{
-            Alert alert = new Alert(AlertType.ERROR, text);
-            alert.setTitle("Error");
-            alert.setHeaderText("An error occur.");
+                // Create expandable Exception.
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                exception.printStackTrace(pw);
+                String exceptionText = sw.toString();
 
-            // Create expandable Exception.
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            exception.printStackTrace(pw);
-            String exceptionText = sw.toString();
+                Label label = new Label("The exception stacktrace was:");
 
-            Label label = new Label("The exception stacktrace was:");
+                TextArea textArea = new TextArea(exceptionText);
+                textArea.setEditable(false);
+                textArea.setWrapText(true);
 
-            TextArea textArea = new TextArea(exceptionText);
-            textArea.setEditable(false);
-            textArea.setWrapText(true);
+                textArea.setMaxWidth(Double.MAX_VALUE);
+                textArea.setMaxHeight(Double.MAX_VALUE);
+                GridPane.setVgrow(textArea, Priority.ALWAYS);
+                GridPane.setHgrow(textArea, Priority.ALWAYS);
 
-            textArea.setMaxWidth(Double.MAX_VALUE);
-            textArea.setMaxHeight(Double.MAX_VALUE);
-            GridPane.setVgrow(textArea, Priority.ALWAYS);
-            GridPane.setHgrow(textArea, Priority.ALWAYS);
+                GridPane expContent = new GridPane();
+                expContent.setMaxWidth(Double.MAX_VALUE);
+                expContent.add(label, 0, 0);
+                expContent.add(textArea, 0, 1);
 
-            GridPane expContent = new GridPane();
-            expContent.setMaxWidth(Double.MAX_VALUE);
-            expContent.add(label, 0, 0);
-            expContent.add(textArea, 0, 1);
+                // Set expandable Exception into the dialog pane.
+                alert.getDialogPane().setExpandableContent(expContent);
 
-            // Set expandable Exception into the dialog pane.
-            alert.getDialogPane().setExpandableContent(expContent);
+                result = alert.showAndWait();
+                handled = true;
+            }
+        };
 
-            handler.result = alert.showAndWait();
-            handler.handled = true;
-        });
+        showAndWait(runnable);
+    }
+
+    private static void showAndWait(final NotificationRunnable runnable) {
+        Platform.runLater(runnable);
 
         try {
-            while(!handler.handled) {
+            while(!runnable.handled) {
                 Thread.sleep(100);
             }
         } catch(Exception ex) {
@@ -149,6 +146,13 @@ public final class Notification {
         public void getResultButtonType(final Optional<ButtonType> type) {
             result = type;
         }
+    }
+
+    static abstract class NotificationRunnable implements Runnable {
+
+        boolean handled = false;
+        Optional<ButtonType> result;
+
     }
 
 }
