@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,18 +31,21 @@ import java.util.Properties;
 
 import javax.swing.UIManager;
 
+import javafx.scene.control.ButtonType;
+
 import org.apache.log4j.Logger;
 
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.profile.ProfileFile;
 import de.elomagic.hl7inspector.utils.RecentList;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class StartupProperties extends Properties {
-    private final static StartupProperties prop = new StartupProperties();
+
+    private final static StartupProperties INSTANCE = new StartupProperties();
     private String CONFIG_FILE = "hl7inspector.properties";
     private List<ProfileFile> profiles = new ArrayList<>();
     private List<File> keyStoreFiles = new ArrayList<>();
@@ -62,7 +65,7 @@ public class StartupProperties extends Properties {
                 File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));
 
                 if(oldFile.exists()) {
-                    if(SimpleDialog.confirmYesNo("Import configruation from HL7 Inspector 2.0 ?") == SimpleDialog.YES_OPTION) {
+                    if(Notification.confirmOkCancel("Import configruation from HL7 Inspector 2.0 ?").get() == ButtonType.OK) {
                         fin = new FileInputStream(oldFile);
                     } else {
                         fin = new FileInputStream(wp.concat(CONFIG_FILE));
@@ -85,7 +88,7 @@ public class StartupProperties extends Properties {
             createKeyStores();
         } catch(Exception e) {
             if(!(e instanceof FileNotFoundException)) {
-                SimpleDialog.error(e);
+                Notification.error(e);
             }
         }
     }
@@ -97,7 +100,6 @@ public class StartupProperties extends Properties {
 
 //            History history = new History(StartupProperties.SENDER_OPTIONS_DEST);
 //            history.write(this);
-
             String wp = getUserHomePath(true);
             try (FileOutputStream fout = new FileOutputStream(wp.concat(CONFIG_FILE), false)) {
                 storeToXML(fout, "Inspector properties");
@@ -107,11 +109,11 @@ public class StartupProperties extends Properties {
             }
         } catch(Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
-            SimpleDialog.error(e, e.getMessage());
+            Notification.error(e, e.getMessage());
         }
     }
 
-    public static String getUserHomePath(boolean create) {
+    public static String getUserHomePath(final boolean create) {
         String wp = System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.1").concat(File.separator);
 
         if(!new File(wp).exists() && create) {
@@ -122,7 +124,7 @@ public class StartupProperties extends Properties {
     }
 
     public static StartupProperties getInstance() {
-        return prop;
+        return INSTANCE;
     }
 
     public List<File> getRecentFiles() {
@@ -150,7 +152,7 @@ public class StartupProperties extends Properties {
         return v;
     }
 
-    public void setRecentFiles(List<File> files) {
+    public void setRecentFiles(final List<File> files) {
         for(int i = 1; i < 9; i++) {
             remove(RECENT_FILE.concat(".").concat(Integer.toString(i)));
         }
@@ -160,7 +162,7 @@ public class StartupProperties extends Properties {
         }
     }
 
-    public void setPhrases(List<String> v) {
+    public void setPhrases(final List<String> v) {
         for(int i = 0; i < v.size(); i++) {
             setProperty(PHRASE_HISTORY.concat(".".concat(Integer.toString(i + 1))), v.get(i));
         }
@@ -184,7 +186,7 @@ public class StartupProperties extends Properties {
         return v;
     }
 
-    public void putPhrase(String phrase) {
+    public void putPhrase(final String phrase) {
         List<String> v = getPhrases();
 
         if(v.indexOf(phrase) != -1) {
@@ -298,7 +300,7 @@ public class StartupProperties extends Properties {
         return c;
     }
 
-    public void setLastUpdateCheck(Calendar c) {
+    public void setLastUpdateCheck(final Calendar c) {
         setProperty(AUTOUPDATE_LAST_CHECK, new SimpleDateFormat("yyyy.MM.dd").format(c.getTime()));
     }
 
@@ -306,7 +308,7 @@ public class StartupProperties extends Properties {
         return getProperty(AUTOUPDATE_ASK, "t").equals("t");
     }
 
-    public void setAutoUpdateAsk(boolean value) {
+    public void setAutoUpdateAsk(final boolean value) {
         setProperty(AUTOUPDATE_ASK, value ? "t" : "f");
     }
 
@@ -314,7 +316,7 @@ public class StartupProperties extends Properties {
         return Integer.parseInt(getProperty(AUTOUPDATE_PERIOD, "30"));
     }
 
-    public void setAutoUpdatePeriod(int period) {
+    public void setAutoUpdatePeriod(final int period) {
         setProperty(AUTOUPDATE_PERIOD, Integer.toString(period));
     }
 
@@ -322,7 +324,7 @@ public class StartupProperties extends Properties {
         return getProperty(DESKTOP_IMAGE, "t").equals("t");
     }
 
-    public void setDesktopImage(boolean value) {
+    public void setDesktopImage(final boolean value) {
         setProperty(DESKTOP_IMAGE, value ? "t" : "f");
     }
 
@@ -334,7 +336,7 @@ public class StartupProperties extends Properties {
         return ClassLoader.getSystemClassLoader().loadClass(getLookAndFeel());
     }
 
-    public void setLookAndFeel(String laf) {
+    public void setLookAndFeel(final String laf) {
         setProperty(APP_LOOK_AND_FEEL, laf);
     }
 
@@ -342,7 +344,7 @@ public class StartupProperties extends Properties {
         return getProperty(APP_ONE_INSTANCE, "f").equals("t");
     }
 
-    public void setOneInstance(boolean value) {
+    public void setOneInstance(final boolean value) {
         setProperty(APP_ONE_INSTANCE, value ? "t" : "f");
     }
 
@@ -350,7 +352,7 @@ public class StartupProperties extends Properties {
         return getProperty(EXTERNAL_FILE_VIEWER, "").equals("") ? null : new File(getProperty(EXTERNAL_FILE_VIEWER, ""));
     }
 
-    public void setExternalFileViewer(File value) {
+    public void setExternalFileViewer(final File value) {
         setProperty(EXTERNAL_FILE_VIEWER, value == null ? "" : value.getAbsolutePath());
     }
 
@@ -358,7 +360,7 @@ public class StartupProperties extends Properties {
         return getProperty(EXTERNAL_HEX_VIEWER, "").equals("") ? null : new File(getProperty(EXTERNAL_HEX_VIEWER, ""));
     }
 
-    public void setExternalHexViewer(File value) {
+    public void setExternalHexViewer(final File value) {
         setProperty(EXTERNAL_HEX_VIEWER, value == null ? "" : value.getAbsolutePath());
     }
 
@@ -366,7 +368,7 @@ public class StartupProperties extends Properties {
         return getProperty(LAST_SAVE_FOLDER, "").equals("") ? new File("") : new File(getProperty(LAST_SAVE_FOLDER, ""));
     }
 
-    public void setLastSaveFolder(File value) {
+    public void setLastSaveFolder(final File value) {
         setProperty(LAST_SAVE_FOLDER, value == null ? "" : value.getAbsolutePath());
     }
 
@@ -374,7 +376,7 @@ public class StartupProperties extends Properties {
         return Integer.parseInt("0" + getProperty(NETWORK_PROXY_MODE, "1"));
     }
 
-    public void setProxyMode(int mode) {
+    public void setProxyMode(final int mode) {
         setProperty(NETWORK_PROXY_MODE, Integer.toString(mode));
     }
 
@@ -382,7 +384,7 @@ public class StartupProperties extends Properties {
         return getProperty(NETWORK_PROXY_HOST, "");
     }
 
-    public void setProxyHost(String host) {
+    public void setProxyHost(final String host) {
         setProperty(NETWORK_PROXY_HOST, host);
     }
 
@@ -390,7 +392,7 @@ public class StartupProperties extends Properties {
         return Integer.parseInt("0" + getProperty(NETWORK_PROXY_PORT, "0"));
     }
 
-    public void setProxyPort(int port) {
+    public void setProxyPort(final int port) {
         setProperty(NETWORK_PROXY_PORT, Integer.toString(port));
     }
 
@@ -398,7 +400,7 @@ public class StartupProperties extends Properties {
         return Integer.parseInt(getProperty(TREE_NODE_LENGTH, "128"));
     }
 
-    public void setTreeNodeLength(int nodeLen) {
+    public void setTreeNodeLength(final int nodeLen) {
         setProperty(TREE_NODE_LENGTH, Integer.toString(nodeLen));
     }
 
@@ -406,7 +408,7 @@ public class StartupProperties extends Properties {
         return Integer.parseInt(getProperty(TREE_VIEW_MODE, "0"));
     }
 
-    public void setTreeViewMode(int mode) {
+    public void setTreeViewMode(final int mode) {
         setProperty(TREE_VIEW_MODE, Integer.toString(mode));
     }
 
@@ -414,7 +416,7 @@ public class StartupProperties extends Properties {
         return getProperty(TREE_FONT_NAME, "Arial");
     }
 
-    public void setTreeFontName(String name) {
+    public void setTreeFontName(final String name) {
         setProperty(TREE_FONT_NAME, name);
     }
 
@@ -422,7 +424,7 @@ public class StartupProperties extends Properties {
         return getProperty(APP_DEBUG_FILE, "f").equals("t");
     }
 
-    public void setDebuFileOutput(boolean value) {
+    public void setDebuFileOutput(final boolean value) {
         setProperty(APP_DEBUG_FILE, value ? "t" : "f");
     }
 
@@ -430,11 +432,11 @@ public class StartupProperties extends Properties {
         return "t".equals(getProperty(DESKTOP_DETAILS_VISIBLE));
     }
 
-    public void setDetailsWindowVisible(boolean value) {
+    public void setDetailsWindowVisible(final boolean value) {
         setProperty(DESKTOP_DETAILS_VISIBLE, value ? "t" : "f");
     }
 
-    public Color getColor(String COLOR_LABEL) {
+    public Color getColor(final String COLOR_LABEL) {
         String p = getProperty(COLOR_LABEL);
         Color c;
 
@@ -466,24 +468,24 @@ public class StartupProperties extends Properties {
         return new Color(c.getRGB() & 0xffffff);
     }
 
-    public void setColor(String COLOR_LABEL, Color c) {
+    public void setColor(final String COLOR_LABEL, final Color c) {
         setProperty(COLOR_LABEL, (c == null) ? null : Integer.toHexString(c.getRGB()));
     }
 
     public static boolean isTreeNodeDoubleClick() {
-        return "t".equalsIgnoreCase(prop.getProperty(TREE_NODE_DOUBLE_CLICK, "f"));
+        return "t".equalsIgnoreCase(INSTANCE.getProperty(TREE_NODE_DOUBLE_CLICK, "f"));
     }
 
-    public static void setTreeNodeDoubleClick(boolean value) {
-        prop.setProperty(TREE_NODE_DOUBLE_CLICK, value ? "t" : "f");
+    public static void setTreeNodeDoubleClick(final boolean value) {
+        INSTANCE.setProperty(TREE_NODE_DOUBLE_CLICK, value ? "t" : "f");
     }
 
     public static String getTreeMessageNodeFormat() {
-        return prop.getProperty(TREE_DISPLAY_MESSAGE_NODE, "<font color=\"#404040\"><B>%i</B></font>%m<font color=\"#ff00ff\"><B>###</B></font>");
+        return INSTANCE.getProperty(TREE_DISPLAY_MESSAGE_NODE, "<font color=\"#404040\"><B>%i</B></font>%m<font color=\"#ff00ff\"><B>###</B></font>");
     }
 
     public static void setTreeMessageNodeFormat(String value) {
-        prop.setProperty(TREE_DISPLAY_MESSAGE_NODE, value);
+        INSTANCE.setProperty(TREE_DISPLAY_MESSAGE_NODE, value);
     }
 
     /**
@@ -494,7 +496,7 @@ public class StartupProperties extends Properties {
      * @return List
      */
     public static RecentList getRecentUsedSenderDestinations() {
-        RecentList list = new RecentList(prop, SENDER_OPTIONS_DEST, 10);
+        RecentList list = new RecentList(INSTANCE, SENDER_OPTIONS_DEST, 10);
         if(list.getList().isEmpty()) {
             list.put("localhost:2100");
         }

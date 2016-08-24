@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,33 +22,39 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JList;
 
+import javafx.scene.control.ButtonType;
+
+import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class RemoveKeyStoreAction extends AbstractAction {
-    private JList list;
+
+    private final JList list;
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param list
      */
-    public RemoveKeyStoreAction(JList list) {
+    public RemoveKeyStoreAction(final JList list) {
         super("Remove", ResourceLoader.loadImageIcon("edit_remove.png"));
 
         this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Remove selected keystore");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         if(list.getSelectedValue() != null) {
-            if(SimpleDialog.confirmYesNo("Are you sure?") == 0) {
+            if(Notification.confirmOkCancel("Are you sure?").get() == ButtonType.OK) {
                 ((VectorListModel)list.getModel()).remove(list.getSelectedValue());
             }
         } else {

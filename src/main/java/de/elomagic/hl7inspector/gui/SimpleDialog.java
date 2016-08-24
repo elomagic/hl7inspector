@@ -15,23 +15,28 @@
  */
 package de.elomagic.hl7inspector.gui;
 
-import com.l2fprod.common.swing.BaseDialog;
-
-import de.elomagic.hl7inspector.images.ResourceLoader;
-
 import java.awt.Dialog;
 import java.awt.Frame;
 import java.awt.KeyboardFocusManager;
 import java.awt.Window;
+
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import com.l2fprod.common.swing.BaseDialog;
+
+import de.elomagic.hl7inspector.images.ResourceLoader;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
-public class SimpleDialog {
+public final class SimpleDialog {
+
+    public static int YES_OPTION = JOptionPane.YES_OPTION;
+    public static int NO_OPTION = JOptionPane.NO_OPTION;
+
     /**
      * Creates a new instance of SimpleDialog.
      */
@@ -45,23 +50,6 @@ public class SimpleDialog {
     public static void error(String text) {
         showExtendedDialog("Error", text, JOptionPane.ERROR_MESSAGE);
     }
-//    public static void error(String text) { JOptionPane.showMessageDialog(getParent(), text, "Error", JOptionPane.ERROR_MESSAGE); }
-
-    public static void error(Exception e) {
-        JOptionPane.showMessageDialog(getParent(), e.getMessage() + "\n\n" + getFormatedExceptionText(e, 20), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    public static void error(Exception e, String text) {
-        JOptionPane.showMessageDialog(getParent(), text + "\n\n" + getFormatedExceptionText(e, 20), "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
-    public static void info(String text) {
-        JOptionPane.showMessageDialog(getParent(), text, "Information", JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public static void info(String title, String text) {
-        showExtendedDialog(title, text, JOptionPane.INFORMATION_MESSAGE);
-    }
 
     public static void warn(String text) {
         showExtendedDialog("Warning", text, JOptionPane.WARNING_MESSAGE);
@@ -69,33 +57,6 @@ public class SimpleDialog {
 
     public static void warn(String title, String text) {
         showExtendedDialog(title, text, JOptionPane.WARNING_MESSAGE);
-    }
-//    public static void warn(String text) { JOptionPane.showMessageDialog(getParent(), text, "Warning", JOptionPane.WARNING_MESSAGE); }
-
-    public static int confirmYesNo(String text) {
-        return JOptionPane.showConfirmDialog(getParent(), text, "Confirmation", JOptionPane.YES_NO_OPTION);
-    }
-    public static int YES_OPTION = JOptionPane.YES_OPTION;
-    public static int NO_OPTION = JOptionPane.NO_OPTION;
-    /* private */
-
-    private static String getFormatedExceptionText(Exception e, int maxLines) {
-        String s = "";
-        if(e.getMessage() != null) {
-            s = "Message: " + e.getMessage();
-        }
-
-        int lines = 0;
-        for(int i = 0; i < e.getStackTrace().length && i < maxLines; i++) {
-            s = s.concat("\n" + e.getStackTrace()[i].toString());
-            lines++;
-        }
-
-        if(lines > e.getStackTrace().length) {
-            s = s.concat("...");
-        }
-
-        return s;
     }
 
     private static Window getParent() {
@@ -152,4 +113,5 @@ public class SimpleDialog {
 
         dlg.ask();
     }
+
 }

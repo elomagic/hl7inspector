@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,22 +16,12 @@
  */
 package de.elomagic.hl7inspector.gui.security;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import de.elomagic.hl7inspector.gui.AbstractPanel;
-import de.elomagic.hl7inspector.gui.PanelDialog;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.utils.StringVector;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.security.KeyStore;
-import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,11 +29,22 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.PanelDialog;
+import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.utils.StringVector;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class CommonPanel extends KeyStorePanel {
+
     private JTextField editProv;
     private JTextField editVersion;
     private JTextArea editInfo;
@@ -53,8 +54,10 @@ public class CommonPanel extends KeyStorePanel {
 
     /**
      * Creates a new instance of CommonPanel.
+     *
+     * @param d
      */
-    public CommonPanel(PanelDialog d) {
+    public CommonPanel(final PanelDialog d) {
         super(d);
     }
 
@@ -91,9 +94,7 @@ public class CommonPanel extends KeyStorePanel {
 
         add(builder.getPanel(), BorderLayout.NORTH);
 
-
         // ***************
-
         JButton btValidate = new JButton(new ValidateProfileAction());
 
         lbValidateStatus = new JLabel();
@@ -123,20 +124,20 @@ public class CommonPanel extends KeyStorePanel {
         lbValidateStatus.setIcon(ResourceLoader.loadImageIcon("warning.png"));
     }
 
-    public void setValidateStatus(boolean valid) {
+    public void setValidateStatus(final boolean valid) {
         lbValidateStatus.setText((valid) ? "The keystore is valid" : "The keystore includes invalid or expired certificate(s). Press 'Validate' to show the list of errors.");
         lbValidateStatus.setIcon(ResourceLoader.loadImageIcon((valid) ? "ok.png" : "warning.png"));
     }
 
     @Override
-    public void write(KeyStore keyStore) {
+    public void write(final KeyStore keyStore) {
 //        keyStore.get
 //        profile.setDescription(editDesc.getText());
 //        profile.setName(editName.getText());
     }
 
     @Override
-    public void read(KeyStore keyStore) {
+    public void read(final KeyStore keyStore) {
         editProv.setText(keyStore.getProvider().getName());
         editVersion.setText(Double.toString(keyStore.getProvider().getVersion()));
         editInfo.setText(keyStore.getProvider().getInfo());
@@ -161,25 +162,23 @@ public class CommonPanel extends KeyStorePanel {
     }
 
     class ValidateProfileAction extends AbstractAction {
+
         public ValidateProfileAction() {
             super("Validate keystore");
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(final ActionEvent event) {
             KeyStoreDialog dlg = (KeyStoreDialog)getDialog();
-
-            List<AbstractPanel> list = dlg.getPanelList();
 
             try {
                 StringVector val = new StringVector(dlg.getKeyStore().aliases());
 
-
-                if(val.size() != 0) {
+                if(!val.isEmpty()) {
                     SimpleDialog.warn("List of aliases", val.toString((char)10));
                 }
             } catch(Exception ee) {
-                SimpleDialog.error(ee);
+                Notification.error(ee);
             }
 
         }

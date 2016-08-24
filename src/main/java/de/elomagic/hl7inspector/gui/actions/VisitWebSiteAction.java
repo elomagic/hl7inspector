@@ -24,7 +24,7 @@ import java.net.URISyntaxException;
 
 import javax.swing.AbstractAction;
 
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.Notification;
 
 /**
  *
@@ -45,8 +45,8 @@ public class VisitWebSiteAction extends AbstractAction {
     public void actionPerformed(final ActionEvent e) {
         try {
             Desktop.getDesktop().browse(new URI(uri));
-        } catch (URISyntaxException | IOException ex) {
-            SimpleDialog.error(ex);
+        } catch(URISyntaxException | IOException ex) {
+            Notification.error(ex);
         }
     }
 }

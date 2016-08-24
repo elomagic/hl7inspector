@@ -15,23 +15,27 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.mac.MacApplication;
 import java.awt.Rectangle;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+
 import javax.swing.KeyStroke;
+
+import javafx.scene.control.ButtonType;
+
+import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.mac.MacApplication;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class ExitAction extends BasicAction {
+
     /**
      * Creates a new instance of ExitAction.
      */
@@ -45,13 +49,13 @@ public class ExitAction extends BasicAction {
         if(MacApplication.isMacOS()) {
             putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Q, InputEvent.META_DOWN_MASK));
         } else {
-            putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
+            putValue(MNEMONIC_KEY, KeyEvent.VK_X);
         }
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(SimpleDialog.confirmYesNo("Really exit the hl7 inspector?") == 0) {
+    public void actionPerformed(final ActionEvent event) {
+        if(Notification.confirmOkCancel("Really exit the HL7 Inspector?").get() == ButtonType.OK) {
             Rectangle bounds = Desktop.getInstance().getMainFrame().getBounds();
 
             StartupProperties prop = StartupProperties.getInstance();

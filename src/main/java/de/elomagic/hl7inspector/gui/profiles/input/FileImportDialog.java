@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,15 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.input;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-import com.l2fprod.common.swing.BaseDialog;
-
-import de.elomagic.hl7inspector.file.filters.CsvFileFilter;
-import de.elomagic.hl7inspector.file.filters.TextFileFilter;
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.GradientLabel;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.utils.StringVector;
-
 import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -48,18 +36,30 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+import com.l2fprod.common.swing.BaseDialog;
+
 import org.apache.log4j.Logger;
+
+import de.elomagic.hl7inspector.file.filters.CsvFileFilter;
+import de.elomagic.hl7inspector.file.filters.TextFileFilter;
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.GradientLabel;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.utils.StringVector;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class FileImportDialog extends BaseDialog {
+
     private File selectedFile = null;
     private TableModel model;
     private JTextField editFile;
@@ -74,7 +74,7 @@ public class FileImportDialog extends BaseDialog {
     /**
      * Creates a new instance of FileImportDialog.
      */
-    public FileImportDialog(TableModel m) {
+    public FileImportDialog(final TableModel m) {
         super(Desktop.getInstance().getMainFrame(), "File Import Dialog", true);
 
         model = m;
@@ -111,30 +111,21 @@ public class FileImportDialog extends BaseDialog {
         editFile.setEditable(false);
 
         btChooseFile = new JButton("...");
-        btChooseFile.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                selectFilename();
-            }
+        btChooseFile.addActionListener((ActionEvent event)->{
+            selectFilename();
         });
 
         btBeginFrom = new JSpinner(new SpinnerNumberModel(1, 1, 99, 1));
-        btBeginFrom.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if(selectedFile != null) {
-                    loadFile(selectedFile);
-                }
+        btBeginFrom.addChangeListener((ChangeEvent event)->{
+            if(selectedFile != null) {
+                loadFile(selectedFile);
             }
         });
 
         cbSepChar = new JComboBox(new String[] {",", ";", "TAB", "SPACE"});
-        cbSepChar.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if(selectedFile != null) {
-                    loadFile(selectedFile);
-                }
+        cbSepChar.addItemListener((ItemEvent event)->{
+            if(selectedFile != null) {
+                loadFile(selectedFile);
             }
         });
         //cbSepChar.setEditable(true);
@@ -167,7 +158,6 @@ public class FileImportDialog extends BaseDialog {
         builder.add(new GradientLabel("Columns mapping"), cc.xyw(1, 11, 6));
 
         builder.add(scroller, cc.xyw(1, 13, 6));
-
 
         add(builder.getPanel(), BorderLayout.CENTER);
         pack();
@@ -236,7 +226,7 @@ public class FileImportDialog extends BaseDialog {
         return Integer.parseInt(btBeginFrom.getValue().toString());
     }
 
-    private void loadFile(File file) {
+    private void loadFile(final File file) {
         ArrayList<Object> lines = new ArrayList<>();
 
         char sep = getSeparatorChar();
@@ -260,13 +250,13 @@ public class FileImportDialog extends BaseDialog {
             }
         } catch(IOException | NumberFormatException e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
-            SimpleDialog.error(e);
+            Notification.error(e);
         }
 
         updatePreview(lines);
     }
 
-    private void updatePreview(ArrayList<Object> lines) {
+    private void updatePreview(final ArrayList<Object> lines) {
         ArrayList<String> mapItems = new ArrayList<>();
         mapItems.add("-");
 
@@ -293,10 +283,11 @@ public class FileImportDialog extends BaseDialog {
     }
 
     class MappingChangeAction implements TableModelListener {
+
         @Override
-        public void tableChanged(javax.swing.event.TableModelEvent e) {
-            if(e.getType() == TableModelEvent.UPDATE) {
-                int col = e.getColumn();
+        public void tableChanged(TableModelEvent event) {
+            if(event.getType() == TableModelEvent.UPDATE) {
+                int col = event.getColumn();
                 Object aValue = tblMap.getModel().getValueAt(0, col);
 
                 for(int i = 0; i < tblMap.getModel().getColumnCount(); i++) {

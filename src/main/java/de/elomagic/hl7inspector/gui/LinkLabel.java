@@ -1,5 +1,5 @@
 /*
- * Copyright 2008 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,26 +21,29 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import javax.swing.JLabel;
 
 /**
  *
- * @author carsten.rambow
+ * @author Carsten Rambow
  */
 public class LinkLabel extends JLabel implements MouseListener {
+
     private URI uri;
 
-    public LinkLabel(String text, String uri) throws URISyntaxException {
+    public LinkLabel(final String text, final String uri) throws URISyntaxException {
         super();
         init(text, uri);
     }
 
-    private void init(String text, String uri) throws URISyntaxException {
-        if(text.indexOf("<html>") == -1) {
-            text = "<html><u><font color=blue>" + text + "</font></u></html>";
+    private void init(final String text, final String uri) throws URISyntaxException {
+        String t = text;
+        if(!t.contains("<html>")) {
+            t = "<html><u><font color=blue>" + t + "</font></u></html>";
         }
 
-        setText(text);
+        setText(t);
 
         this.uri = new URI(uri);
 
@@ -52,7 +55,7 @@ public class LinkLabel extends JLabel implements MouseListener {
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {
+    public void mouseClicked(final MouseEvent event) {
         try {
             if(uri.toString().indexOf('@') == -1) {
                 Desktop.getDesktop().browse(uri);
@@ -60,23 +63,23 @@ public class LinkLabel extends JLabel implements MouseListener {
                 Desktop.getDesktop().mail(uri);
             }
         } catch(Exception ex) {
-            SimpleDialog.error(ex);
+            Notification.error(ex);
         }
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(final MouseEvent event) {
     }
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(final MouseEvent event) {
     }
 
     @Override
-    public void mouseEntered(MouseEvent e) {
+    public void mouseEntered(final MouseEvent event) {
     }
 
     @Override
-    public void mouseExited(MouseEvent e) {
+    public void mouseExited(final MouseEvent event) {
     }
 }

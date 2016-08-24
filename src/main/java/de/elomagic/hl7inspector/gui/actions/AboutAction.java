@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,17 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.gui.AboutDialog;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import de.elomagic.hl7inspector.gui.dialogs.about.AboutDialog;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class AboutAction extends BasicAction {
+
     /**
      * Creates a new instance of AboutAction.
      */
@@ -37,7 +38,7 @@ public class AboutAction extends BasicAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         new AboutDialog().setVisible(true);
     }
 }

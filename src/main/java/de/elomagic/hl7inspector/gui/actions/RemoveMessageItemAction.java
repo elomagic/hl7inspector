@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,26 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.KeyStroke;
 
+import javafx.scene.control.ButtonType;
+
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class RemoveMessageItemAction extends BasicAction {
+
     /**
      * Creates a new instance of RemoveMessageItemAction.
      */
@@ -44,17 +48,15 @@ public class RemoveMessageItemAction extends BasicAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         List<Hl7Object> selectedObjects = Desktop.getInstance().getSelectedObjects();
 
         if(selectedObjects.isEmpty()) {
-            SimpleDialog.info("No node selected.");
+            Notification.info("No node selected.");
         } else if(selectedObjects.size() > 1) {
             SimpleDialog.error("Only one selected node can clear.");
-        } else {
-            if(SimpleDialog.confirmYesNo("Clear selected node(s)?") == SimpleDialog.YES_OPTION) {
-                Desktop.getInstance().removeHL7Object(selectedObjects.get(0));
-            }
+        } else if(Notification.confirmOkCancel("Clear selected node(s)?").get() == ButtonType.OK) {
+            Desktop.getInstance().removeHL7Object(selectedObjects.get(0));
         }
     }
 }

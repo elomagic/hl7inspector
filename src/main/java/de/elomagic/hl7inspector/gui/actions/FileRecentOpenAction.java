@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,6 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.gui.ImportOptionBean;
-import de.elomagic.hl7inspector.gui.ImportOptionsDialog;
-import de.elomagic.hl7inspector.gui.ReaderProgessDialog;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedInputStream;
@@ -32,15 +26,27 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+
 import javax.swing.filechooser.FileSystemView;
+
+import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.gui.ImportOptionBean;
+import de.elomagic.hl7inspector.gui.ImportOptionsDialog;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.ReaderProgessDialog;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class FileRecentOpenAction extends BasicAction {
+
+    private final File file;
+
     /**
      * Creates a new instance of FileRecentOpenAction.
+     *
+     * @param file
      */
     public FileRecentOpenAction(File file) {
         super();
@@ -50,11 +56,11 @@ public class FileRecentOpenAction extends BasicAction {
         putValue(NAME, file.getAbsolutePath());
         putValue(SMALL_ICON, FileSystemView.getFileSystemView().getSystemIcon(file));
         putValue(SHORT_DESCRIPTION, "Size: " + file.length() + " Bytes.");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent e) {
         List<File> files = StartupProperties.getInstance().getRecentFiles();
 
         if(files.indexOf(file) != -1) {
@@ -96,7 +102,7 @@ public class FileRecentOpenAction extends BasicAction {
 
                     // FEATURE "ChooseDialog" must popup when using archive with more then one file.
                     if(enu.hasMoreElements()) {
-                        SimpleDialog.info("The file includes more then one compressed file.\nRead file " + entry.getName() + ".");
+                        Notification.info("The file includes more then one compressed file.\nRead file " + entry.getName() + ".");
                     }
 
                     fin = zipFile.getInputStream(entry);
@@ -114,9 +120,8 @@ public class FileRecentOpenAction extends BasicAction {
                     fin.close();
                 }
             } catch(Exception ee) {
-                SimpleDialog.error(ee, "Error during reading file.");
+                Notification.error(ee, "Error during reading file.");
             }
         }
     }
-    private File file;
 }

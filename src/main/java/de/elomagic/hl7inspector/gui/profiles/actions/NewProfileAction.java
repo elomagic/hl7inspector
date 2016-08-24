@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,9 +16,22 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+
+import javax.swing.AbstractAction;
+import javax.swing.JFileChooser;
+import javax.swing.JList;
+
+import javafx.scene.control.ButtonType;
+
+import org.apache.log4j.Logger;
+
 import de.elomagic.hl7inspector.file.filters.ProfileFileFilter;
 import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.gui.profiles.ProfileDefinitionDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
@@ -26,38 +39,31 @@ import de.elomagic.hl7inspector.profile.Profile;
 import de.elomagic.hl7inspector.profile.ProfileFile;
 import de.elomagic.hl7inspector.profile.ProfileIO;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileOutputStream;
-import javax.swing.AbstractAction;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-
-import org.apache.log4j.Logger;
-
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class NewProfileAction extends AbstractAction {
+
     private static final long serialVersionUID = 4409576078805566452L;
-    private JList list;
+    private final JList list;
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param list
      */
-    public NewProfileAction(JList _list) {
+    public NewProfileAction(final JList list) {
         super("New", ResourceLoader.loadImageIcon("document-new.png"));
 
-        list = _list;
+        this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Create and edit new profile");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         try {
             File path = new File(System.getProperty("user.dir"));
 
@@ -70,7 +76,7 @@ public class NewProfileAction extends AbstractAction {
                     ProfileFile file = new ProfileFile(fc.getSelectedFile().getPath());
 
                     if(file.exists()) {
-                        if(SimpleDialog.confirmYesNo("File already exists. Overwrite?") == 0) {
+                        if(Notification.confirmOkCancel("File already exists. Overwrite?").get() == ButtonType.OK) {
                             file.delete();
                         }
                     }
@@ -91,7 +97,7 @@ public class NewProfileAction extends AbstractAction {
             }
         } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
-            SimpleDialog.error(ex);
+            Notification.error(ex);
         }
     }
 }

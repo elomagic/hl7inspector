@@ -16,33 +16,35 @@
  */
 package de.elomagic.hl7inspector;
 
-import com.jgoodies.looks.LookUtils;
-
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.gui.UpdateCheckDialog;
-import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
-import de.elomagic.hl7inspector.instance.InstanceManager;
-import de.elomagic.hl7inspector.mac.MacApplication;
-import de.elomagic.hl7inspector.model.*;
-
 import java.io.File;
 import java.io.InputStream;
 import java.util.Properties;
+
 import javax.swing.JFrame;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
+
+import com.jgoodies.looks.LookUtils;
+import com.sun.javafx.application.PlatformImpl;
 
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Logger;
 import org.apache.log4j.RollingFileAppender;
 import org.apache.log4j.SimpleLayout;
 
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.UpdateCheckDialog;
+import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
+import de.elomagic.hl7inspector.instance.InstanceManager;
+import de.elomagic.hl7inspector.mac.MacApplication;
+
 /**
  *
  * @author rambow
  */
 public class Hl7Inspector {
+
     public static final String APPLICATION_NAME = "HL7 Inspector";
     public static final String VERSION_LABEL = "";
 
@@ -55,11 +57,27 @@ public class Hl7Inspector {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new Hl7Inspector().start(args);
     }
 
-    private void start(String[] args) {
+    private void start(final String[] args) {
+
+        // Just start only a JavaFX environmental. No need to do anything here
+        PlatformImpl.startup(()->{
+            PlatformImpl.addListener(new PlatformImpl.FinishListener() {
+                @Override
+                public void idle(boolean implicitExit) {
+                    // Do nothing
+                }
+
+                @Override
+                public void exitCalled() {
+                    // Do nothing
+                }
+            });
+
+        });
 
         MacApplication.setScreenMenuBar(Hl7Inspector.APPLICATION_NAME, true);
         Logger.getRootLogger().addAppender(new ConsoleAppender(new SimpleLayout(), ConsoleAppender.SYSTEM_OUT));
@@ -111,7 +129,7 @@ public class Hl7Inspector {
             }
         } catch(Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
-            SimpleDialog.error(e, e.getMessage());
+            Notification.error(e, e.getMessage());
         }
     }
 

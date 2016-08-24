@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,46 +16,52 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.JTable;
+
+import javafx.scene.control.ButtonType;
+
+import org.apache.log4j.Logger;
+
+import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.gui.profiles.model.ProfileModel;
 import de.elomagic.hl7inspector.gui.profiles.model.SortedTableModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.AbstractAction;
-import javax.swing.JTable;
-
-import org.apache.log4j.Logger;
-
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class DeleteAllItemsAction extends AbstractAction {
-    private JTable table;
+
+    private final JTable table;
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param table
      */
-    public DeleteAllItemsAction(JTable t) {
+    public DeleteAllItemsAction(final JTable table) {
         super("Delete All", ResourceLoader.loadImageIcon("edit_remove.png"));
 
-        table = t;
+        this.table = table;
 
         putValue(SHORT_DESCRIPTION, "Delete all items");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         try {
-            if(SimpleDialog.confirmYesNo("Are you sure?") == 0) {
+            if(Notification.confirmOkCancel("Are you sure?").get() == ButtonType.OK) {
                 ((ProfileModel)((SortedTableModel)table.getModel()).getTableModel()).clear();
             }
         } catch(Exception ee) {
             Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-            SimpleDialog.error(ee, ee.getMessage());
+            Notification.error(ee, ee.getMessage());
         }
 
     }

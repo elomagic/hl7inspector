@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,6 @@
  * limitations under the License.
  */
 package de.elomagic.hl7inspector.gui;
-
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import de.elomagic.hl7inspector.hl7.model.Message;
-import de.elomagic.hl7inspector.io.MessageImportEvent;
-import de.elomagic.hl7inspector.io.MessageImportListener;
-import de.elomagic.hl7inspector.io.MessageImportThread;
-import de.elomagic.hl7inspector.profile.ProfileIO;
-import de.elomagic.hl7inspector.validate.Validator;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -43,13 +32,25 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
 import org.apache.log4j.Logger;
+
+import de.elomagic.hl7inspector.hl7.model.Message;
+import de.elomagic.hl7inspector.io.MessageImportEvent;
+import de.elomagic.hl7inspector.io.MessageImportListener;
+import de.elomagic.hl7inspector.io.MessageImportThread;
+import de.elomagic.hl7inspector.profile.ProfileIO;
+import de.elomagic.hl7inspector.validate.Validator;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class ReaderProgessDialog extends JDialog implements MessageImportListener, ActionListener {
+
     private static final long serialVersionUID = 4229125522794967128L;
     private long bytesRead;
     private JLabel lblSource = new JLabel();
@@ -87,7 +88,6 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
         btAbort.addActionListener(this);
 
         buttonPanel.add(btAbort);
-
 
         FormLayout layout = new FormLayout(
                 "8dlu, p, 4dlu, p:grow, p, 2dlu, p, p, p, p:grow",
@@ -127,7 +127,6 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
         // Button pan
-
         pack();
 
         setSize(300, getPreferredSize() == null ? 230 : getPreferredSize().height);
@@ -135,13 +134,12 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
         setLocationRelativeTo(getOwner());
     }
 
-    public void read(InputStream fin, ImportOptionBean readOptions) throws IOException {
+    public void read(final InputStream fin, final ImportOptionBean readOptions) throws IOException {
         setModal(true);
         options = readOptions;
 
         // TODO Do we need this really ???
         //Desktop.getInstance().getScrollPane().getVerticalScrollBar().setValue(Desktop.getInstance().getScrollPane().getVerticalScrollBar().getMaximum());
-
         if(readOptions.isClearBuffer()) {
             Desktop.getInstance().clearMessages();
         }
@@ -156,7 +154,7 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
     }
 
     @Override
-    public void messageRead(MessageImportEvent event) {
+    public void messageRead(final MessageImportEvent event) {
         Desktop.getInstance().getInputTraceWindow().addLine("Catch message.");
         boolean ignore = false;
         bytesRead = event.getBytesRead();
@@ -191,8 +189,8 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
             }
 
             d.addMessages(Collections.singletonList(msg),
-                          options.getBufferSize(),
-                          options.isReadBottom());
+                    options.getBufferSize(),
+                    options.isReadBottom());
 
             if(d.getSelectedMessages().size() < options.getBufferSize()) {
                 messagesAppend++;
@@ -214,22 +212,23 @@ public class ReaderProgessDialog extends JDialog implements MessageImportListene
     }
 
     @Override
-    public void charRead(char c) {
+    public void charRead(final char c) {
         d.getInputTraceWindow().addChar(c);
     }
 
     @Override
-    public void importDone(MessageImportEvent event) {
+    public void importDone(final MessageImportEvent event) {
         d.getInputTraceWindow().addLine("Import done.");
         //Desktop.getInstance().setModel(model);
         d.setLockCounter(false);
         setVisible(false);
         if(event.getSource().terminate && userAbort) {
-            SimpleDialog.info("Import abort by user.");
+            Notification.info("Import abort by user.");
         }
     }
 
     class DoRun implements Runnable {
+
         @Override
         public void run() {
             lblSource.setText(options.getSource());

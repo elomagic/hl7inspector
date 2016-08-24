@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,36 +16,42 @@
  */
 package de.elomagic.hl7inspector.gui.monitor.actions;
 
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+
+import javafx.scene.control.ButtonType;
+
+import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import javax.swing.AbstractAction;
-
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class ClearAction extends AbstractAction {
-    private CharacterMonitor dlg;
+
+    private final CharacterMonitor dlg;
 
     /**
      * Creates a new instance of FileNewAction.
+     *
+     * @param d
      */
-    public ClearAction(CharacterMonitor d) {
+    public ClearAction(final CharacterMonitor d) {
         super("", ResourceLoader.loadImageIcon("edit-clear.png"));
 
         dlg = d;
 
         putValue(SHORT_DESCRIPTION, "Clear trace log");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(SimpleDialog.confirmYesNo("Clear trace log?") == 0) {
+    public void actionPerformed(final ActionEvent event) {
+        if(Notification.confirmOkCancel("Clear trace log?").get() == ButtonType.OK) {
             dlg.clear();
         }
     }

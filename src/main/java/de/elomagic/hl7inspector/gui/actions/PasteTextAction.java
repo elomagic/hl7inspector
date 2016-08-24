@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,6 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.gui.ImportOptionBean;
-import de.elomagic.hl7inspector.gui.ImportOptionsDialog;
-import de.elomagic.hl7inspector.gui.ReaderProgessDialog;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
@@ -30,11 +24,18 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import de.elomagic.hl7inspector.gui.ImportOptionBean;
+import de.elomagic.hl7inspector.gui.ImportOptionsDialog;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.ReaderProgessDialog;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class PasteTextAction extends BasicAction {
+
     /**
      * Creates a new instance of PasteTextAction.
      */
@@ -54,11 +55,11 @@ public class PasteTextAction extends BasicAction {
 
             importText(text);
         } catch(UnsupportedFlavorException | IOException ex) {
-            SimpleDialog.error(ex, "Error during importing text");
+            Notification.error(ex, "Error during importing text");
         }
     }
 
-    public static void importText(String text) {
+    public static void importText(final String text) {
         ImportOptionBean options = new ImportOptionBean();
         options.setSource("Text string");
         options.setFileSize(text.length());
@@ -73,7 +74,7 @@ public class PasteTextAction extends BasicAction {
                     readerDlg.read(bin, options);
                 }
             } catch(Exception ee) {
-                SimpleDialog.error(ee, "Error during parsing text");
+                Notification.error(ee, "Error during parsing text");
             }
         }
     }

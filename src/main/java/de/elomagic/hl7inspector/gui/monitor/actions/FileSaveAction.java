@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,45 +15,50 @@
  */
 package de.elomagic.hl7inspector.gui.monitor.actions;
 
-import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.file.filters.TextFileFilter;
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+
+import javafx.scene.control.ButtonType;
 
 import org.apache.log4j.Logger;
 
+import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.file.filters.TextFileFilter;
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class FileSaveAction extends AbstractAction {
-    private CharacterMonitor dlg;
+
+    private final CharacterMonitor dlg;
 
     /**
      * Creates a new instance of FileSaveAsAction.
+     *
+     * @param d
      */
-    public FileSaveAction(CharacterMonitor d) {
+    public FileSaveAction(final CharacterMonitor d) {
         super("", ResourceLoader.loadImageIcon("document-save.png"));
 
         dlg = d;
 
         putValue(SHORT_DESCRIPTION, "Save trace log...");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_S));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_S);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         /**
          * TODODialog must be top mosted. Actual it will be toped by receive/send window.
          */
@@ -67,7 +72,7 @@ public class FileSaveAction extends AbstractAction {
             File file = fc.getSelectedFile();
 
             if(file.exists()) {
-                if(SimpleDialog.confirmYesNo("File already exists. Overwrite?") == JOptionPane.YES_OPTION) {
+                if(Notification.confirmOkCancel("File already exists. Overwrite?").get() == ButtonType.OK) {
                     try {
                         try (FileOutputStream fout = new FileOutputStream(file, false); BufferedOutputStream bout = new BufferedOutputStream(fout)) {
                             bout.write(dlg.getText().getBytes());

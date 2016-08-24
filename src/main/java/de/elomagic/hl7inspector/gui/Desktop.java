@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,6 @@
  * limitations under the License.
  */
 package de.elomagic.hl7inspector.gui;
-
-import de.elomagic.hl7inspector.Hl7Inspector;
-import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.gui.actions.ExitAction;
-import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
-import de.elomagic.hl7inspector.gui.receive.ReceivePanel;
-import de.elomagic.hl7inspector.gui.sender.SendPanel;
-import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.hl7.model.Message;
-import de.elomagic.hl7inspector.hl7.model.RepetitionField;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.model.Hl7Tree;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
-import de.elomagic.hl7inspector.model.TreeNodeSearchEngine;
-import de.elomagic.hl7inspector.profile.MessageDescriptor;
-import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.profile.ProfileFile;
-import de.elomagic.hl7inspector.profile.ProfileIO;
-import de.elomagic.hl7inspector.utils.BundleTool;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -62,24 +43,44 @@ import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
 
+import de.elomagic.hl7inspector.Hl7Inspector;
+import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.gui.actions.ExitAction;
+import de.elomagic.hl7inspector.gui.monitor.CharacterMonitor;
+import de.elomagic.hl7inspector.gui.receive.ReceivePanel;
+import de.elomagic.hl7inspector.gui.sender.SendPanel;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
+import de.elomagic.hl7inspector.hl7.model.RepetitionField;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.model.Hl7Tree;
+import de.elomagic.hl7inspector.model.Hl7TreeModel;
+import de.elomagic.hl7inspector.model.TreeNodeSearchEngine;
+import de.elomagic.hl7inspector.profile.MessageDescriptor;
+import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
+import de.elomagic.hl7inspector.utils.BundleTool;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListener, ComponentListener {
+
     private static final long serialVersionUID = -7355763607097590182L;
+    private static final Desktop INSTANCE = new Desktop();
+    private final BottomPanel bottomPanel = new BottomPanel();
+    private final CharacterMonitor inputTrace = new CharacterMonitor();
+    private final ReceivePanel rp = new ReceivePanel();
+    private final SendPanel sp = new SendPanel();
+    private final ResourceBundle bundle = BundleTool.getBundle(Desktop.class);
     private MainToolBar mainToolBar;
-    private BottomPanel bottomPanel = new BottomPanel();
-    private CharacterMonitor inputTrace = new CharacterMonitor();
-    private ReceivePanel rp = new ReceivePanel();
-    private SendPanel sp = new SendPanel();
-    private final static Desktop desk = new Desktop();
     private JSplitPane middlePanel;
     private JSplitPane mainPanel;
     private Hl7TreePane treePane;
     private ScrollableEditorPane detailsPanel;
     private JTabbedPane tabPanel;
-    private ResourceBundle bundle = BundleTool.getBundle(Desktop.class);
 
     /**
      * Creates a new instance of Desktop.
@@ -89,7 +90,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     public static DesktopIntf getInstance() {
-        return desk;
+        return INSTANCE;
     }
 
     public Hl7Tree getTree() {
@@ -104,12 +105,12 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         return (Hl7TreeModel)treePane.getModel();
     }
 
-    private void init(Hl7TreeModel model) {
+    private void init(final Hl7TreeModel model) {
         String s = MessageFormat.format(bundle.getString("app_title"),
-                                        Hl7Inspector.APPLICATION_NAME,
-                                        Hl7Inspector.getVersionString(),
-                                        System.getProperty("os.arch"),
-                                        System.getProperty("os.name"));
+                Hl7Inspector.APPLICATION_NAME,
+                Hl7Inspector.getVersionString(),
+                System.getProperty("os.arch"),
+                System.getProperty("os.name"));
 
         setTitle(s);
 
@@ -121,16 +122,16 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         addWindowListener(
                 new WindowAdapter() {
             @Override
-            public void windowActivated(WindowEvent e) {
+            public void windowActivated(final WindowEvent event) {
             }
 
             @Override
-            public void windowClosing(WindowEvent e) {
+            public void windowClosing(final WindowEvent event) {
                 new ExitAction().actionPerformed(null);
             }
 
             @Override
-            public void windowIconified(WindowEvent e) {
+            public void windowIconified(final WindowEvent event) {
             }
         });
 
@@ -223,7 +224,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
                 bottomPanel.setProfileTooltTip(e.getMessage());
 
                 Logger.getLogger(getClass()).error(e.getMessage(), e);
-                SimpleDialog.error(e, "Unable to load default profile.");
+                Notification.error(e, "Unable to load default profile.");
             }
         } else {
             bottomPanel.setProfileText(bundle.getString("profile_not_found"));
@@ -236,7 +237,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         return mainToolBar;
     }
 
-    public void setSelectedTabIndex(int index) {
+    public void setSelectedTabIndex(final int index) {
         tabPanel.setSelectedIndex(index);
     }
 
@@ -260,14 +261,14 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
      *
      * Called whenever the value of the selection changes.
      *
-     * @param e the event that characterizes the change.
+     * @param event the event that characterizes the change.
      */
     @Override
-    public void valueChanged(TreeSelectionEvent e) {
-        if(e.getNewLeadSelectionPath() != null) {
-            if(e.getNewLeadSelectionPath().getPathCount() > 1) {
-                if(e.getNewLeadSelectionPath().getPathComponent(1) instanceof Hl7Object) {
-                    Hl7Object o = (Hl7Object)e.getNewLeadSelectionPath().getPathComponent(1);
+    public void valueChanged(final TreeSelectionEvent event) {
+        if(event.getNewLeadSelectionPath() != null) {
+            if(event.getNewLeadSelectionPath().getPathCount() > 1) {
+                if(event.getNewLeadSelectionPath().getPathComponent(1) instanceof Hl7Object) {
+                    Hl7Object o = (Hl7Object)event.getNewLeadSelectionPath().getPathComponent(1);
                     if(o instanceof Message) {
                         Message m = (Message)o;
 
@@ -275,23 +276,22 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
                     }
                 }
 
-                if(e.getNewLeadSelectionPath().getLastPathComponent() instanceof Hl7Object) {
-                    showHl7ObjectDetails((Hl7Object)e.getNewLeadSelectionPath().getLastPathComponent());
+                if(event.getNewLeadSelectionPath().getLastPathComponent() instanceof Hl7Object) {
+                    showHl7ObjectDetails((Hl7Object)event.getNewLeadSelectionPath().getLastPathComponent());
                 }
             }
         }
     }
 
-    private void showHl7ObjectDetails(Hl7Object o) {
+    private void showHl7ObjectDetails(final Hl7Object hl7object) {
         String s = "";
-
 
         if(detailsPanel.isVisible()) {
             String NO_DESCRIPTION_FOUND = "No description in profile found.";
 
             MessageDescriptor md = new MessageDescriptor(ProfileIO.getDefault());
 
-            s = md.getDescription(o, true);
+            s = md.getDescription(hl7object, true);
 
             if(s.isEmpty()) {
                 s = NO_DESCRIPTION_FOUND;
@@ -301,18 +301,18 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
         detailsPanel.getEditorPane().setText(s);
     }
 
-    public void setTabVisible(JComponent o) {
-        int i = getTabbedBottomPanel().indexOfComponent(o);
+    public void setTabVisible(final JComponent component) {
+        int i = getTabbedBottomPanel().indexOfComponent(component);
 
         if(i == -1) {
-            if(o instanceof CharacterMonitor) {
-                CharacterMonitor cm = (CharacterMonitor)o;
+            if(component instanceof CharacterMonitor) {
+                CharacterMonitor cm = (CharacterMonitor)component;
                 getTabbedBottomPanel().addTab(cm.getTitle(), cm.getIcon(), cm);
 
-                getTabbedBottomPanel().setSelectedComponent(o);
+                getTabbedBottomPanel().setSelectedComponent(component);
             }
         } else {
-            getTabbedBottomPanel().remove(o);
+            getTabbedBottomPanel().remove(component);
         }
 
         getTabbedBottomPanel().setVisible(getTabbedBottomPanel().getTabCount() != 0);
@@ -390,14 +390,14 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
             Hl7TreeModel model = getModel();
 
             if(model.isCompressedView() && v.isEmpty()) {
-                SimpleDialog.info("Empty items are only visible in the non compressed view.");
+                Notification.info("Empty items are only visible in the non compressed view.");
             } else {
                 model.fireTreeNodesInsert(new Hl7Object[] {child});
             }
             return child;
         } catch(IllegalAccessException | InstantiationException ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
-            SimpleDialog.error(ex, "Unable to append a new HL7 object to the message.");
+            Notification.error(ex, "Unable to append a new HL7 object to the message.");
             return null;
         }
     }
@@ -454,7 +454,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public void setReceiveWindowVisible(boolean value) {
+    public void setReceiveWindowVisible(final boolean value) {
         if(value) {
             setTabVisible(getReceiveWindow());
         } else {
@@ -468,7 +468,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public void setSendWindowVisible(boolean value) {
+    public void setSendWindowVisible(final boolean value) {
         if(value) {
             setTabVisible(getSendWindow());
         } else {
@@ -482,7 +482,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public void setInputTraceWindowVisible(boolean value) {
+    public void setInputTraceWindowVisible(final boolean value) {
         setTabVisible((JComponent)getInputTraceWindow());
     }
 
@@ -508,7 +508,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public void setNodeDescriptionVisible(boolean visible) {
+    public void setNodeDescriptionVisible(final boolean visible) {
         getModel().setNodeDescriptionVisible(visible);
     }
 
@@ -518,13 +518,13 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public void findNextPhrase(String phrase, Hl7Object startFrom, boolean caseSensitive) {
+    public void findNextPhrase(final String phrase, final Hl7Object startFrom, final boolean caseSensitive) {
         if(!phrase.isEmpty() && getTree().getModel().getChildCount(getTree().getModel().getRoot()) != 0) {
             TreeNode startingNode = startFrom == null ? (TreeNode)getTree().getModel().getRoot() : (TreeNode)startFrom;
             TreePath path = TreeNodeSearchEngine.findNextNode(phrase, caseSensitive, startingNode);
 
             if(path == null) {
-                SimpleDialog.info("The end of message tree reached.");
+                Notification.info("The end of message tree reached.");
             } else {
                 getTree().expandPath(path.getParentPath());
 
@@ -537,7 +537,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public void setLockCounter(boolean increase) {
+    public void setLockCounter(final boolean increase) {
         if(increase) {
             setCursor(new Cursor(Cursor.WAIT_CURSOR));
             getModel().locked();
@@ -553,8 +553,8 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
 
     // Interface ComponentListener
     @Override
-    public void componentShown(ComponentEvent e) {
-        if(e.getSource().equals(getDetailsWindow())) {
+    public void componentShown(final ComponentEvent event) {
+        if(event.getSource().equals(getDetailsWindow())) {
             StartupProperties.getInstance().setDetailsWindowVisible(getDetailsWindow().isVisible());
             middlePanel.setDividerLocation(getSize().width - 200);
             middlePanel.setDividerSize(4);
@@ -563,7 +563,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
             if(getTree().getSelectionCount() == 1) {
                 showHl7ObjectDetails((Hl7Object)getTree().getSelectionPath().getLastPathComponent());
             }
-        } else if(e.getSource().equals(getTabbedBottomPanel())) {
+        } else if(event.getSource().equals(getTabbedBottomPanel())) {
             mainPanel.setDividerSize(4);
             mainPanel.setDividerLocation(0.75);
 //            getToolBar().getDetailsButton().setSelected(true);
@@ -571,22 +571,22 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public void componentResized(ComponentEvent e) {
+    public void componentResized(final ComponentEvent event) {
     }
 
     @Override
-    public void componentMoved(ComponentEvent e) {
+    public void componentMoved(final ComponentEvent evente) {
     }
 
     @Override
-    public void componentHidden(ComponentEvent e) {
-        if(e.getSource().equals(getDetailsWindow())) {
+    public void componentHidden(final ComponentEvent event) {
+        if(event.getSource().equals(getDetailsWindow())) {
             StartupProperties.getInstance().setDetailsWindowVisible(getDetailsWindow().isVisible());
             getToolBar().getDetailsButton().setSelected(false);
             if(middlePanel.isVisible()) {
                 middlePanel.setDividerSize(0);
             }
-        } else if(e.getSource().equals(getTabbedBottomPanel())) {
+        } else if(event.getSource().equals(getTabbedBottomPanel())) {
             if(mainPanel.isVisible()) {
                 mainPanel.setDividerSize(0);
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,45 +16,51 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.gui.profiles.input.FileImportDialog;
-import de.elomagic.hl7inspector.gui.profiles.model.ProfileModel;
-import de.elomagic.hl7inspector.gui.profiles.model.SortedTableModel;
-import de.elomagic.hl7inspector.utils.StringVector;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+
 import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
+import javafx.scene.control.ButtonType;
+
 import org.apache.log4j.Logger;
+
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.profiles.input.FileImportDialog;
+import de.elomagic.hl7inspector.gui.profiles.model.ProfileModel;
+import de.elomagic.hl7inspector.gui.profiles.model.SortedTableModel;
+import de.elomagic.hl7inspector.utils.StringVector;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class ImportProfileAction extends AbstractAction {
-    private JTable table;
+
+    private final JTable table;
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param table
      */
-    public ImportProfileAction(JTable t) {
+    public ImportProfileAction(final JTable table) {
         super("Import", null);
 
-        table = t;
+        this.table = table;
         //model = m;
 
         putValue(SHORT_DESCRIPTION, "Import data from CSV file.");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         try {
             ProfileModel model = (ProfileModel)((SortedTableModel)table.getModel()).getTableModel();
 
@@ -96,7 +102,7 @@ public class ImportProfileAction extends AbstractAction {
                                 } catch(InstantiationException | IllegalAccessException | IOException ee) {
                                     String s = "An error occur during import line #" + l + " !";
                                     Logger.getLogger(getClass()).warn(s, ee);
-                                    if(SimpleDialog.confirmYesNo(s.concat(" ! Continue?")) == SimpleDialog.NO_OPTION) {
+                                    if(Notification.confirmOkCancel(s.concat(" ! Continue?")).get() != ButtonType.OK) {
                                         throw ee;
                                     }
                                 }
@@ -113,7 +119,7 @@ public class ImportProfileAction extends AbstractAction {
             }
         } catch(IOException | InstantiationException | IllegalAccessException ee) {
             Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-            SimpleDialog.error(ee);
+            Notification.error(ee);
         }
     }
 }

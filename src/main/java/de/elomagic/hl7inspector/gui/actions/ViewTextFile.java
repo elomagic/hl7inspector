@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,28 +15,31 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.hl7.model.Message;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
 
+import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class ViewTextFile extends AbstractAction {
+
     /**
      * Creates a new instance of FileNewAction.
      */
@@ -50,9 +53,9 @@ public class ViewTextFile extends AbstractAction {
     }
 
     @Override
-    public void actionPerformed(ActionEvent event) {
+    public void actionPerformed(final ActionEvent event) {
         if(StartupProperties.getInstance().getExternalFileViewer() == null) {
-            SimpleDialog.info("No external file viewer/editor set. Please check your configuration.");
+            Notification.info("No external file viewer/editor set. Please check your configuration.");
         } else {
             List<Hl7Object> selectedObjects = Desktop.getInstance().getSelectedObjects();
             if(selectedObjects.isEmpty()) {
@@ -84,7 +87,7 @@ public class ViewTextFile extends AbstractAction {
                         rt.exec(cmd);
                     } catch(Exception ee) {
                         Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-                        SimpleDialog.error(ee, "Can't start external file viewer/editor application.");
+                        Notification.error(ee, "Can't start external file viewer/editor application.");
                     }
                 }
             }

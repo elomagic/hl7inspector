@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,23 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+
 import javax.swing.AbstractAction;
+
+import javafx.scene.control.ButtonType;
+
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.images.ResourceLoader;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class FileNewAction extends AbstractAction {
+
     /**
      * Creates a new instance of FileNewAction.
      */
@@ -39,12 +42,12 @@ public class FileNewAction extends AbstractAction {
         putValue(NAME, "New");
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("edit-clear.png"));
         putValue(SHORT_DESCRIPTION, "Clear tree.");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if(SimpleDialog.confirmYesNo("Clear buffer?") == 0) {
+    public void actionPerformed(final ActionEvent event) {
+        if(Notification.confirmOkCancel("Clear buffer?").get() == ButtonType.OK) {
             Desktop.getInstance().clearMessages();
         }
     }

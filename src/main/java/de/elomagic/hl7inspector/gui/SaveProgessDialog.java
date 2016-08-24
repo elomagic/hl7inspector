@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,21 @@
  */
 package de.elomagic.hl7inspector.gui;
 
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -23,42 +38,32 @@ import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.io.MessageWriterListener;
 import de.elomagic.hl7inspector.io.MessageWriterThread;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.List;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingUtilities;
-
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class SaveProgessDialog extends JDialog implements MessageWriterListener, ActionListener {
-    private JLabel lblDest = new JLabel();
-    private JLabel lblMessageIndex = new JLabel("0");
-    private JLabel lblCount = new JLabel("0");
-    private JPanel buttonPanel = new JPanel(new FlowLayout());
-    private JProgressBar bar = new JProgressBar(JProgressBar.HORIZONTAL);
-    private JButton btAbort = new JButton("Abort");
-    private MessageWriterBean bean;
-    private List<Message> messages;
+
+    private final JLabel lblDest = new JLabel();
+    private final JLabel lblMessageIndex = new JLabel("0");
+    private final JLabel lblCount = new JLabel("0");
+    private final JPanel buttonPanel = new JPanel(new FlowLayout());
+    private final JProgressBar bar = new JProgressBar(JProgressBar.HORIZONTAL);
+    private final JButton btAbort = new JButton("Abort");
+    private final MessageWriterBean bean;
+    private final List<Message> messages;
+    private final DoRun doRun = new DoRun();
     private MessageWriterThread thread = null;
-    private DoRun doRun = new DoRun();
     private int messageIndex = 0;
     private File messageFile = null;
 
     /**
      * Creates a new instance of SaveProgessDialog.
+     *
+     * @param messageList
+     * @param options
      */
-    public SaveProgessDialog(List<Message> messageList, MessageWriterBean options) {
+    public SaveProgessDialog(final List<Message> messageList, final MessageWriterBean options) {
         super(Desktop.getInstance().getMainFrame());
 
         messages = messageList;
@@ -68,14 +73,14 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
     }
 
     @Override
-    public void setVisible(boolean v) {
-        if(v) {
+    public void setVisible(final boolean visible) {
+        if(visible) {
             thread = new MessageWriterThread(messages, bean);
             thread.addListener(this);
             thread.start();
         }
 
-        super.setVisible(v);
+        super.setVisible(visible);
     }
 
     private void init() {
@@ -131,7 +136,6 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
         getContentPane().add(builder.getPanel(), BorderLayout.CENTER);
 
         // Button pan
-
         pack();
 
         setSize(300, getPreferredSize() == null ? 230 : getPreferredSize().height);
@@ -140,7 +144,7 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
     }
 
     @Override
-    public void actionPerformed(ActionEvent ee) {
+    public void actionPerformed(final ActionEvent ee) {
         if(thread != null) {
             thread.terminate = true;
         }
@@ -148,7 +152,7 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
 
     // Interface MessageWriterListener
     @Override
-    public void messageSaved(MessageWriterThread source, File file, int count) {
+    public void messageSaved(final MessageWriterThread source, final File file, final int count) {
         messageIndex++;
         messageFile = file;
 
@@ -156,16 +160,13 @@ public class SaveProgessDialog extends JDialog implements MessageWriterListener,
     }
 
     @Override
-    public void writerDone(MessageWriterThread source, int count) {
+    public void writerDone(final MessageWriterThread source, final int count) {
         setVisible(false);
-        if(source.terminate) {
-            SimpleDialog.info("Saving message abort by user.");
-        } else {
-            SimpleDialog.info("Saving message successfull done.");
-        }
+        Notification.info(source.terminate ? "Saving message aborted by user." : "Saving message successfull done.");
     }
 
     class DoRun implements Runnable {
+
         @Override
         public void run() {
             if(messageFile != null) {

@@ -27,6 +27,7 @@ import javax.swing.event.ChangeListener;
 
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.actions.*;
+import de.elomagic.hl7inspector.gui.dialogs.about.AboutDialog;
 import de.elomagic.hl7inspector.gui.options.OptionsDialog;
 import de.elomagic.hl7inspector.hl7.model.EncodingObject;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
@@ -43,7 +44,7 @@ public class MainMenuBar extends JMenuBar {
 
     private final JMenu miFile = new JMenu("File");
     private final JMenu miOpenRecentFiles = new JMenu("Open recent files");
-    private final JMenu miEdit = new JMenu("File");
+    private final JMenu miEdit = new JMenu("Edit");
     private final JMenuItem miEditItem = new JMenuItem(new EditMessageItemAction());
     private final JMenuItem miEditAppendItem = new JMenuItem(new AddMessageItemAction());
     private final JMenuItem miEditRemoveItem = new JMenuItem(new RemoveMessageItemAction());

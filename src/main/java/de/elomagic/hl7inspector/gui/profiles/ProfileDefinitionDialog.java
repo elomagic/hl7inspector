@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,32 +15,45 @@
  */
 package de.elomagic.hl7inspector.gui.profiles;
 
-import de.elomagic.hl7inspector.Hl7Inspector;
-import de.elomagic.hl7inspector.gui.*;
-import de.elomagic.hl7inspector.gui.profiles.panels.*;
-import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.profile.ProfileFile;
-import de.elomagic.hl7inspector.profile.ProfileIO;
-
 import java.io.FileInputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import de.elomagic.hl7inspector.Hl7Inspector;
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.PanelDialog;
+import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.profiles.panels.CommonPanel;
+import de.elomagic.hl7inspector.gui.profiles.panels.DataElementPanel;
+import de.elomagic.hl7inspector.gui.profiles.panels.DataTypePanel;
+import de.elomagic.hl7inspector.gui.profiles.panels.ProfilePanel;
+import de.elomagic.hl7inspector.gui.profiles.panels.SegmentPanel;
+import de.elomagic.hl7inspector.gui.profiles.panels.TablePanel;
+import de.elomagic.hl7inspector.gui.profiles.panels.ValidatePanel;
+import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class ProfileDefinitionDialog extends PanelDialog {
+
     private static final long serialVersionUID = -6813753748983568133L;
-    private ProfileFile file;
+    private final ProfileFile file;
     private Profile profile;
     private CommonPanel pnlCom;
 
     /**
      * Creates a new instance of ProfileDefinitionDialog.
+     *
+     * @param file
+     * @throws java.lang.Exception
      */
-    public ProfileDefinitionDialog(ProfileFile file) throws Exception {
+    public ProfileDefinitionDialog(final ProfileFile file) throws Exception {
         super(Desktop.getInstance().getMainFrame(), "Profile Definition", true);
 
         this.file = file;
@@ -64,7 +77,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
             }
         } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);
-            SimpleDialog.error(ex, "Unable to read profile");
+            Notification.error(ex, "Unable to read profile");
         }
 
         return result;
@@ -104,11 +117,10 @@ public class ProfileDefinitionDialog extends PanelDialog {
 //                if (getPanelList().get(0) instanceof ProfilePanel)
 //                    ((ProfilePanel)getPanelList().get(0)).getTable().dsizeColumnsToFit(0);
 //            }
-
             setLocationRelativeTo(Desktop.getInstance().getMainFrame());
         } catch(Exception e) {
             Logger.getLogger(getClass()).error(e.getMessage(), e);
-            SimpleDialog.error(e, e.getMessage());
+            Notification.error(e, e.getMessage());
         }
     }
 
