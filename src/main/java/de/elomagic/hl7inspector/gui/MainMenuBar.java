@@ -55,6 +55,7 @@ public class MainMenuBar extends JMenuBar {
     private final JCheckBoxMenuItem miTraceWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
     private final JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
     private final JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
+    private final JMenu miHelp = new JMenu("Help");
 
     /**
      * Creates a new instance of MainMenuBar.
@@ -149,15 +150,15 @@ public class MainMenuBar extends JMenuBar {
         /*menuItem = new JMenu("Window");
          menuItem.add(new JMenuItem(new DetailWindowAction()));
          add(menuItem);*/
-        menuItem = new JMenu("Help");
-        menuItem.add(new JMenuItem(new CheckUpdateAction()));
+        miHelp.add(new JMenuItem(new CheckUpdateAction()));
+        miHelp.add(new JMenuItem(new VisitWebSiteAction("Visit HL7Inspector NEO", "http://www.hl7inspector.com")));
 
         if(!MacApplication.isMacOS()) {
-            menuItem.addSeparator();
-            menuItem.add(new JMenuItem(new AboutAction()));
+            miHelp.addSeparator();
+            miHelp.add(new JMenuItem(new AboutAction()));
         }
 
-        add(menuItem);
+        add(miHelp);
     }
 
     private void createRecentFilesMenu() {
