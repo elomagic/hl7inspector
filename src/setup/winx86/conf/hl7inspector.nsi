@@ -80,6 +80,7 @@ Section "${APP_NAME} ${APP_VERSION}" SecDummy
     # ADD YOUR OWN FILES HERE...
     File /r /x ".svn" "${PROJECT_PATH}\src\setup\resources\*.*"
     File /x ".svn" "${PROJECT_PATH}\target\${APP_MAIN}"
+    File /x ".svn" "${PROJECT_PATH}\release-notes.md"
   
     # Store installation folder
     WriteRegStr HKLM "${APP_REGKEY}" "" $INSTDIR

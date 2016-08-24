@@ -4,7 +4,7 @@
 
 ## What is this HL7 Inspector ? ###
 
-The HL7 Inspector is a useful open source tool for integration the HL7 in a health care environmental.
+The HL7 Inspector is a useful open source tool for integration the HL7 Version 2 in a health care environmental.
 It will help you to minimize the time for tuning the HL7 communication between systems such 
 as HIS and RIS by analyzing and validating HL7 messages. 
 
