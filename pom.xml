@@ -33,6 +33,11 @@
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
         <wagon.maven.plugin.version>1.0</wagon.maven.plugin.version>
         <exec.maven.plugin.version>1.5.0</exec.maven.plugin.version>
+        <appbundle.maven.plugin.version>1.1.0</appbundle.maven.plugin.version>
+        
+        <nsis.url>https://sourceforge.net</nsis.url>
+        <nsis.path>projects/nsis/files/NSIS%203/3.0/nsis-3.0.zip/download</nsis.path>
+        <nsis.executable>${project.build.directory}/nsis-3.0/makensis.exe</nsis.executable>
     </properties>
     
     <scm>
@@ -81,6 +86,13 @@
 
     <build>
         <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                    <include>**/*.css</include>                    
+                </includes>
+            </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>false</filtering>
@@ -200,8 +212,8 @@
                                 </goals>
 
                                 <configuration>
-                                    <url>https://sourceforge.net</url>
-                                    <fromFile>projects/nsis/files/NSIS%203/3.0/nsis-3.0.zip/download</fromFile>
+                                    <url>${nsis.url}</url>
+                                    <fromFile>${nsis.path}</fromFile>
                                     <toFile>${project.build.directory}/nsis.zip</toFile>
                                 </configuration>
                             </execution>
@@ -241,7 +253,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>${project.build.directory}/nsis-3.0/makensis.exe</executable>                                    
+                                    <executable>${nsis.executable}</executable>                                    
                                     <arguments>
                                         <argument>/DPROJECT_PATH=${basedir}</argument>
                                         <argument>/DAPP_VERSION=${project.version}</argument>
@@ -271,7 +283,7 @@
                     <plugin>
                         <groupId>sh.tak.appbundler</groupId>
                         <artifactId>appbundle-maven-plugin</artifactId>
-                        <version>1.1.0</version>
+                        <version>${appbundle.maven.plugin.version}</version>
                         <configuration>
                             <mainClass>de.elomagic.hl7inspector.Hl7Inspector</mainClass>
                             <!--<dictionaryFile>YourCustomInfo.plist</dictionaryFile>-->
