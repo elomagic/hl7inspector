@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,16 @@
  */
 package de.elomagic.hl7inspector.gui;
 
+import java.io.File;
+import java.util.List;
+
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.actions.*;
 import de.elomagic.hl7inspector.gui.options.OptionsDialog;
@@ -25,31 +35,26 @@ import de.elomagic.hl7inspector.mac.MacApplication;
 import de.elomagic.hl7inspector.mac.MacApplicationAdapter;
 import de.elomagic.hl7inspector.mac.MacApplicationEvent;
 
-import java.io.File;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 /**
  *
  * @author rambow
  */
 public class MainMenuBar extends JMenuBar {
-    private JMenu miOpenRecentFiles = new JMenu("Open recent files");
-    private JMenu miEdit;
-    private JMenuItem miEditItem = new JMenuItem(new EditMessageItemAction());
-    private JMenuItem miEditAppendItem = new JMenuItem(new AddMessageItemAction());
-    private JMenuItem miEditRemoveItem = new JMenuItem(new RemoveMessageItemAction());
-    private JMenuItem miEditRemoveMessage = new JMenuItem(new RemoveMessageAction());
-    private JMenu viewMenu = new JMenu("View");
-    private JCheckBoxMenuItem miCompressedView = new JCheckBoxMenuItem(new ViewCompressedAction());
-    private JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
-    private JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
-    private JCheckBoxMenuItem miTraceWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
-    private JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
-    private JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
+
+    private final JMenu miFile = new JMenu("File");
+    private final JMenu miOpenRecentFiles = new JMenu("Open recent files");
+    private final JMenu miEdit = new JMenu("File");
+    private final JMenuItem miEditItem = new JMenuItem(new EditMessageItemAction());
+    private final JMenuItem miEditAppendItem = new JMenuItem(new AddMessageItemAction());
+    private final JMenuItem miEditRemoveItem = new JMenuItem(new RemoveMessageItemAction());
+    private final JMenuItem miEditRemoveMessage = new JMenuItem(new RemoveMessageAction());
+    private final JMenu viewMenu = new JMenu("View");
+    private final JCheckBoxMenuItem miCompressedView = new JCheckBoxMenuItem(new ViewCompressedAction());
+    private final JCheckBoxMenuItem miNodeDescription = new JCheckBoxMenuItem(new ViewNodeDescriptionAction());
+    private final JCheckBoxMenuItem miNodeDetails = new JCheckBoxMenuItem(new ViewNodeDetailsAction());
+    private final JCheckBoxMenuItem miTraceWindow = new JCheckBoxMenuItem(new ShowParserWindowAction());
+    private final JCheckBoxMenuItem miReceiveWindow = new JCheckBoxMenuItem(new ShowReceiveWindowAction(true));
+    private final JCheckBoxMenuItem miSendWindow = new JCheckBoxMenuItem(new ShowSendWindowAction(true));
 
     /**
      * Creates a new instance of MainMenuBar.
@@ -88,7 +93,6 @@ public class MainMenuBar extends JMenuBar {
         MacApplication.getApplication().setEnabledAboutMenu(true);
         MacApplication.getApplication().setEnabledPreferencesMenu(true);
 
-        JMenu miFile = new JMenu("File");
         miFile.add(new JMenuItem(new FileNewAction()));
         miFile.add(new JMenuItem(new FileOpenAction()));
         miFile.add(miOpenRecentFiles);
@@ -101,7 +105,6 @@ public class MainMenuBar extends JMenuBar {
         miFile.addChangeListener(new RecentFileMenuListener());
         add(miFile);
 
-        miEdit = new JMenu("Edit");
         miEdit.addChangeListener(new EditMenuListener());
         miEdit.add(miEditItem);
         miEdit.add(miEditAppendItem);
@@ -146,7 +149,6 @@ public class MainMenuBar extends JMenuBar {
         /*menuItem = new JMenu("Window");
          menuItem.add(new JMenuItem(new DetailWindowAction()));
          add(menuItem);*/
-
         menuItem = new JMenu("Help");
         menuItem.add(new JMenuItem(new CheckUpdateAction()));
 
@@ -171,6 +173,7 @@ public class MainMenuBar extends JMenuBar {
     }
 
     class RecentFileMenuListener implements ChangeListener {
+
         @Override
         public void stateChanged(ChangeEvent e) {
             if(((JMenuItem)e.getSource()).isSelected()) {
@@ -180,6 +183,7 @@ public class MainMenuBar extends JMenuBar {
     }
 
     class EditMenuListener implements ChangeListener {
+
         @Override
         public void stateChanged(ChangeEvent e) {
             if(((JMenuItem)e.getSource()).isSelected()) {
@@ -205,6 +209,7 @@ public class MainMenuBar extends JMenuBar {
     }
 
     class ViewMenuListener implements ChangeListener {
+
         @Override
         public void stateChanged(ChangeEvent e) {
             if(((JMenuItem)e.getSource()).isSelected()) {
