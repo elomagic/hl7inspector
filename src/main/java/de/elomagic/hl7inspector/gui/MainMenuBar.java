@@ -28,7 +28,7 @@ import javax.swing.event.ChangeListener;
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.actions.*;
 import de.elomagic.hl7inspector.gui.dialogs.about.AboutDialog;
-import de.elomagic.hl7inspector.gui.options.OptionsDialog;
+import de.elomagic.hl7inspector.gui.dialogs.options.OptionsDialog;
 import de.elomagic.hl7inspector.hl7.model.EncodingObject;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
@@ -38,7 +38,7 @@ import de.elomagic.hl7inspector.mac.MacApplicationEvent;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class MainMenuBar extends JMenuBar {
 
@@ -72,24 +72,24 @@ public class MainMenuBar extends JMenuBar {
 
         MacApplication.getApplication().addApplicationListener(new MacApplicationAdapter() {
             @Override
-            public void handleAbout(MacApplicationEvent ae) {
+            public void handleAbout(final MacApplicationEvent event) {
                 new AboutDialog().setVisible(true);
 
-                ae.setHandled(true);
+                event.setHandled(true);
             }
 
             @Override
-            public void handleQuit(MacApplicationEvent ae) {
-                ae.setHandled(true);
+            public void handleQuit(final MacApplicationEvent event) {
+                event.setHandled(true);
                 System.exit(0);
             }
 
             @Override
-            public void handlePreferences(MacApplicationEvent ae) {
+            public void handlePreferences(final MacApplicationEvent event) {
                 OptionsDialog dlg = new OptionsDialog();
                 dlg.ask();
 
-                ae.setHandled(true);
+                event.setHandled(true);
             }
         });
         MacApplication.getApplication().setEnabledAboutMenu(true);
@@ -152,7 +152,7 @@ public class MainMenuBar extends JMenuBar {
          menuItem.add(new JMenuItem(new DetailWindowAction()));
          add(menuItem);*/
         miHelp.add(new JMenuItem(new CheckUpdateAction()));
-        miHelp.add(new JMenuItem(new VisitWebSiteAction("Visit HL7Inspector NEO", "http://www.hl7inspector.com")));
+        miHelp.add(new JMenuItem(new VisitWebSiteAction("Visit HL7 Inspector NEO", "http://www.hl7inspector.com")));
 
         if(!MacApplication.isMacOS()) {
             miHelp.addSeparator();
@@ -187,8 +187,8 @@ public class MainMenuBar extends JMenuBar {
     class EditMenuListener implements ChangeListener {
 
         @Override
-        public void stateChanged(ChangeEvent e) {
-            if(((JMenuItem)e.getSource()).isSelected()) {
+        public void stateChanged(ChangeEvent event) {
+            if(((JMenuItem)event.getSource()).isSelected()) {
 
                 for(int i = 0; i < miEdit.getItemCount(); i++) {
                     miEdit.getItem(i).setEnabled(false);
@@ -213,8 +213,8 @@ public class MainMenuBar extends JMenuBar {
     class ViewMenuListener implements ChangeListener {
 
         @Override
-        public void stateChanged(ChangeEvent e) {
-            if(((JMenuItem)e.getSource()).isSelected()) {
+        public void stateChanged(ChangeEvent event) {
+            if(((JMenuItem)event.getSource()).isSelected()) {
                 DesktopIntf d = Desktop.getInstance();
 
                 miCompressedView.setSelected(d.isCompressedView());

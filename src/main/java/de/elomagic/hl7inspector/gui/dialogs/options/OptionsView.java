@@ -15,12 +15,12 @@
  */
 package de.elomagic.hl7inspector.gui.dialogs.options;
 
-import com.airhacks.afterburner.views.FXMLView;
+import de.elomagic.hl7inspector.gui.dialogs.AbstractDialogView;
 
 /**
  *
  * @author Carsten Rambow
  */
-public class OptionsView extends FXMLView {
+public class OptionsView extends AbstractDialogView<OptionsPresenter> {
 
 }

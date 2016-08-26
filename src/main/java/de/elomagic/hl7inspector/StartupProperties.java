@@ -320,24 +320,19 @@ public class StartupProperties extends Properties {
         setProperty(AUTOUPDATE_PERIOD, Integer.toString(period));
     }
 
+    @Deprecated
     public boolean isDesktopImage() {
         return getProperty(DESKTOP_IMAGE, "t").equals("t");
     }
 
-    public void setDesktopImage(final boolean value) {
-        setProperty(DESKTOP_IMAGE, value ? "t" : "f");
-    }
-
+    @Deprecated
     public String getLookAndFeel() {
         return getProperty(APP_LOOK_AND_FEEL, UIManager.getSystemLookAndFeelClassName());
     }
 
+    @Deprecated
     public Class getLookAndFeelClass() throws ClassNotFoundException {
         return ClassLoader.getSystemClassLoader().loadClass(getLookAndFeel());
-    }
-
-    public void setLookAndFeel(final String laf) {
-        setProperty(APP_LOOK_AND_FEEL, laf);
     }
 
     public boolean isOneInstance() {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,18 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.gui.options.OptionsDialog;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import de.elomagic.hl7inspector.gui.dialogs.options.OptionsDialog;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class OptionsAction extends BasicAction {
+
     /**
      * Creates a new instance of OptionsAction.
      */
@@ -35,11 +36,11 @@ public class OptionsAction extends BasicAction {
         putValue(NAME, "Options...");
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("preferences-desktop.png"));
         putValue(SHORT_DESCRIPTION, "Setup options");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_X));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_X);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         OptionsDialog dlg = new OptionsDialog();
         dlg.ask();
     }

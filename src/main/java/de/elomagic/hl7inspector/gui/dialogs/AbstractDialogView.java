@@ -13,29 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.hl7inspector.gui.dialogs.about;
+package de.elomagic.hl7inspector.gui.dialogs;
+
+import javafx.fxml.Initializable;
 
 import com.airhacks.afterburner.views.FXMLView;
 
-import de.elomagic.hl7inspector.gui.dialogs.AbstractDialog;
-
 /**
- * Wrapper class to use JavaFX in Swing context.
  *
  * @author Carsten Rambow
+ * @param <T>
  */
-public class AboutDialog extends AbstractDialog {
-
-    /**
-     * Creates a new instance of AboutDialog.
-     */
-    public AboutDialog() {
-        super("About Dialog");
-    }
+public abstract class AbstractDialogView<T extends Initializable> extends FXMLView {
 
     @Override
-    protected FXMLView getContent() {
-        return new AboutView();
+    public T getPresenter() {
+        return (T)super.getPresenter();
     }
 
 }
