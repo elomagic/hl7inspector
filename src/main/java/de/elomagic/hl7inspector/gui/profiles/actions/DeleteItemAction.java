@@ -27,7 +27,6 @@ import javafx.scene.control.ButtonType;
 import org.apache.log4j.Logger;
 
 import de.elomagic.hl7inspector.gui.Notification;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.profiles.model.ProfileModel;
 import de.elomagic.hl7inspector.gui.profiles.model.SortedTableModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
@@ -64,11 +63,11 @@ public class DeleteItemAction extends AbstractAction {
                     ((ProfileModel)((SortedTableModel)table.getModel()).getTableModel()).deleteRow(absoluteRow);
                 }
             } else {
-                SimpleDialog.error("No profile selected!");
+                Notification.error("No profile selected!");
             }
         } catch(Exception ee) {
             Logger.getLogger(getClass()).error(ee.getMessage(), ee);
-            Notification.error(ee, ee.getMessage());
+            Notification.error(ee);
         }
 
     }

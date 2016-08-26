@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,11 @@
  */
 package de.elomagic.hl7inspector.gui.receive;
 
+import java.awt.BorderLayout;
+
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -23,18 +28,15 @@ import com.l2fprod.common.swing.BaseDialog;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.io.SendOptionsBean;
-
-import java.awt.BorderLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class ReceiveNetworkSetupDialog extends BaseDialog {
+
     private JComboBox cbServerPort;
     private JCheckBox cbReuse;
 
@@ -89,7 +91,7 @@ public class ReceiveNetworkSetupDialog extends BaseDialog {
         setLocationRelativeTo(getOwner());
     }
 
-    public void setOptions(SendOptionsBean bean) {
+    public void setOptions(final SendOptionsBean bean) {
         cbServerPort.setSelectedItem(Integer.toString(bean.getPort()));
         cbReuse.setSelected(bean.isReuseSocket());
     }
@@ -105,7 +107,7 @@ public class ReceiveNetworkSetupDialog extends BaseDialog {
 
             super.ok();
         } catch(Exception e) {
-            SimpleDialog.error(e.getMessage());
+            Notification.error(e);
         }
     }
 

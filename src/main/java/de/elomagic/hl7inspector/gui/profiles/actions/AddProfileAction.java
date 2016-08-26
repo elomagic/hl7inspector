@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,43 +16,47 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
-import de.elomagic.hl7inspector.file.filters.ProfileFileFilter;
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.gui.VectorListModel;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.profile.ProfileFile;
-import de.elomagic.hl7inspector.profile.ProfileIO;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
+
 import javax.swing.AbstractAction;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 
 import org.apache.log4j.Logger;
 
+import de.elomagic.hl7inspector.file.filters.ProfileFileFilter;
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.VectorListModel;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class AddProfileAction extends AbstractAction {
+
     private static final long serialVersionUID = -8404198610253830669L;
-    private JList list;
+    private final JList list;
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param list
      */
-    public AddProfileAction(JList list) {
+    public AddProfileAction(final JList list) {
         super("Add", ResourceLoader.loadImageIcon("edit_add.png"));
 
         this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Add profile");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
@@ -78,8 +82,8 @@ public class AddProfileAction extends AbstractAction {
                     model.add(file);
                 }
             } catch(Exception ex) {
-                Logger.getLogger(getClass()).error(ex.getMessage(), ex);
-                SimpleDialog.error("Invalid file format!");
+                Logger.getLogger(getClass()).error(ex);
+                Notification.error("Invalid file format!");
             }
         }
     }

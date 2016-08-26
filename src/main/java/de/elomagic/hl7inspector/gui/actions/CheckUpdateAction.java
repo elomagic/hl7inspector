@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,18 +15,19 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.gui.UpdateCheckDialog;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.UpdateCheckDialog;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class CheckUpdateAction extends BasicAction {
+
     /**
      * Creates a new instance of CheckUpdateAction.
      */
@@ -35,16 +36,16 @@ public class CheckUpdateAction extends BasicAction {
 
         putValue(NAME, "Check update...");
         putValue(SMALL_ICON, ResourceLoader.loadImageIcon("system-software-update.png"));
-        putValue(SHORT_DESCRIPTION, "Check for updates of hl7 inspector");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(SHORT_DESCRIPTION, "Check for updates of HL7 Inspector");
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         try {
             UpdateCheckDialog.check(false);
-        } catch(Exception ee) {
-            SimpleDialog.error("Update check failed!\n\n" + ee.getMessage());
+        } catch(Exception ex) {
+            Notification.error(ex, "Update check failed!");
         }
     }
 }

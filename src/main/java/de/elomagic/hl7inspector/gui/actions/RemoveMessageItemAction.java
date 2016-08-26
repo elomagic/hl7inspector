@@ -25,7 +25,6 @@ import javafx.scene.control.ButtonType;
 
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.Notification;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 
@@ -54,7 +53,7 @@ public class RemoveMessageItemAction extends BasicAction {
         if(selectedObjects.isEmpty()) {
             Notification.info("No node selected.");
         } else if(selectedObjects.size() > 1) {
-            SimpleDialog.error("Only one selected node can clear.");
+            Notification.error("Only one selected node can clear.");
         } else if(Notification.confirmOkCancel("Clear selected node(s)?").get() == ButtonType.OK) {
             Desktop.getInstance().removeHL7Object(selectedObjects.get(0));
         }

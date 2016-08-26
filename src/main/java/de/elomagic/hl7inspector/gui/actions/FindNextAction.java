@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,23 +15,24 @@
  */
 package de.elomagic.hl7inspector.gui.actions;
 
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.FindBar;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
 
 import javax.swing.KeyStroke;
 
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.FindBar;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class FindNextAction extends BasicAction {
+
     /**
      * Creates a new instance of FindNextAction.
      */
@@ -54,10 +55,10 @@ public class FindNextAction extends BasicAction {
             List<Hl7Object> selectedObjects = Desktop.getInstance().getSelectedObjects();
 
             Desktop.getInstance().findNextPhrase(phrase,
-                                                 selectedObjects.isEmpty() ? null : selectedObjects.get(0),
-                                                 cs);
+                    selectedObjects.isEmpty() ? null : selectedObjects.get(0),
+                    cs);
         } catch(Exception ex) {
-            SimpleDialog.error(ex.getMessage());
+            Notification.error(ex);
         }
     }
 }

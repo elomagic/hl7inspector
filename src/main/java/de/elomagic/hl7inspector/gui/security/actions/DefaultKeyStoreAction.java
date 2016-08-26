@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,29 +26,32 @@ import javax.swing.JList;
 import org.apache.log4j.Logger;
 
 import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.Notification;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class DefaultKeyStoreAction extends AbstractAction {
-    private JList list;
+
+    private final JList list;
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param list
      */
-    public DefaultKeyStoreAction(JList list) {
+    public DefaultKeyStoreAction(final JList list) {
         super("Set private", null);//ResourceLoader.loadImageIcon("edit_add.png"));
 
         this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Set selected keystore as default private keystore");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         try {
             if(list.getSelectedValue() != null) {
                 File file = (File)list.getSelectedValue();
@@ -56,7 +59,7 @@ public class DefaultKeyStoreAction extends AbstractAction {
                 StartupProperties.getInstance().setProperty(StartupProperties.DEFAULT_PRIVATE_KEYSTORE, file.getAbsolutePath());
                 list.repaint();
             } else {
-                SimpleDialog.error("No keystore selected!");
+                Notification.error("No keystore selected!");
             }
         } catch(Exception ee) {
             Logger.getLogger(getClass()).error(ee.getMessage(), ee);

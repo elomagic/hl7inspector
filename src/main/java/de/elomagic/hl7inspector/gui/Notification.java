@@ -79,8 +79,44 @@ public final class Notification {
         showAndWait(runnable);
     }
 
+    public static void warn(final String text) {
+        warn(text, null);
+    }
+
+    public static void warn(final String title, final String text) {
+        NotificationRunnable runnable = new NotificationRunnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(AlertType.WARNING, text);
+                alert.setTitle("Warning");
+                alert.setHeaderText(title);
+
+                result = alert.showAndWait();
+                handled = true;
+            }
+        };
+
+        showAndWait(runnable);
+    }
+
+    public static void error(String text) {
+        NotificationRunnable runnable = new NotificationRunnable() {
+            @Override
+            public void run() {
+                Alert alert = new Alert(AlertType.ERROR, text);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+
+                result = alert.showAndWait();
+                handled = true;
+            }
+        };
+
+        showAndWait(runnable);
+    }
+
     public static void error(final Exception exception) {
-        error(exception, null);
+        error(exception, exception.getMessage());
     }
 
     public static void error(final Exception exception, final String text) {

@@ -35,7 +35,6 @@ import com.jgoodies.forms.layout.FormLayout;
 
 import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.gui.PanelDialog;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.utils.StringVector;
 
@@ -175,7 +174,7 @@ public class CommonPanel extends KeyStorePanel {
                 StringVector val = new StringVector(dlg.getKeyStore().aliases());
 
                 if(!val.isEmpty()) {
-                    SimpleDialog.warn("List of aliases", val.toString((char)10));
+                    Notification.warn("List of aliases", val.toString((char)10));
                 }
             } catch(Exception ee) {
                 Notification.error(ee);

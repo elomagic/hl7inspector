@@ -29,7 +29,6 @@ import org.apache.log4j.Logger;
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.Notification;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.hl7.model.Hl7Object;
 import de.elomagic.hl7inspector.hl7.model.Message;
 import de.elomagic.hl7inspector.images.ResourceLoader;
@@ -59,9 +58,9 @@ public class ViewHexFile extends BasicAction {
         } else {
             List<Hl7Object> selectedObjects = Desktop.getInstance().getSelectedObjects();
             if(selectedObjects.isEmpty()) {
-                SimpleDialog.error("One message which imported from a file must be selected.");
+                Notification.error("One message which imported from a file must be selected.");
             } else if(selectedObjects.size() > 1) {
-                SimpleDialog.error("Please select only one message.");
+                Notification.error("Please select only one message.");
             } else {
                 Hl7Object node = selectedObjects.get(0);
 
@@ -80,7 +79,7 @@ public class ViewHexFile extends BasicAction {
                 }
 
                 if(file == null) {
-                    SimpleDialog.error("Only messages from a file can be open.");
+                    Notification.error("Only messages from a file can be open.");
                 } else {
                     try {
                         Runtime rt = Runtime.getRuntime();

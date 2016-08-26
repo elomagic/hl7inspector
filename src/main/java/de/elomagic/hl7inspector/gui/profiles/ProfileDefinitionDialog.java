@@ -24,7 +24,6 @@ import de.elomagic.hl7inspector.Hl7Inspector;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.gui.PanelDialog;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.profiles.panels.CommonPanel;
 import de.elomagic.hl7inspector.gui.profiles.panels.DataElementPanel;
 import de.elomagic.hl7inspector.gui.profiles.panels.DataTypePanel;
@@ -71,7 +70,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
             }
 
             if(profile.getSchemaVersion().compareTo(Hl7Inspector.getVersion()) > 0) {
-                SimpleDialog.warn("Unable to handle profile format. Please update HL7 Inspector.");
+                Notification.warn("Unable to handle profile format. Please update HL7 Inspector.");
             } else {
                 result = super.ask();
             }

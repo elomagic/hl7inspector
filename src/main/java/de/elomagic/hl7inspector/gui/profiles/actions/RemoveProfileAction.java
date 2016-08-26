@@ -25,7 +25,6 @@ import javax.swing.JList;
 import javafx.scene.control.ButtonType;
 
 import de.elomagic.hl7inspector.gui.Notification;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.ProfileFile;
@@ -40,6 +39,8 @@ public class RemoveProfileAction extends AbstractAction {
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param list
      */
     public RemoveProfileAction(final JList list) {
         super("Remove", ResourceLoader.loadImageIcon("edit_remove.png"));
@@ -57,7 +58,7 @@ public class RemoveProfileAction extends AbstractAction {
                 ((VectorListModel)list.getModel()).remove((ProfileFile)list.getSelectedValue());
             }
         } else {
-            SimpleDialog.error("No profile selected!");
+            Notification.error("No profile selected!");
         }
     }
 }

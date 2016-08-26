@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package de.elomagic.hl7inspector.gui.sender;
 
 import java.awt.BorderLayout;
+import java.util.ResourceBundle;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JCheckBox;
@@ -30,16 +31,15 @@ import com.l2fprod.common.swing.BaseDialog;
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.GradientLabel;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.io.Frame;
 import de.elomagic.hl7inspector.io.SendOptionsBean;
 import de.elomagic.hl7inspector.utils.BundleTool;
 import de.elomagic.hl7inspector.utils.RecentList;
-import java.util.ResourceBundle;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class SendOptionsDialog extends BaseDialog {
     private static final long serialVersionUID = 4327622002676720941L;
@@ -176,7 +176,7 @@ public class SendOptionsDialog extends BaseDialog {
         setLocationRelativeTo(getOwner());
     }
 
-    public void setOptions(SendOptionsBean bean) {
+    public void setOptions(final SendOptionsBean bean) {
         cbStartChar.setSelectedIndex(bean.getFrame().getStartFrame());
         cbStopChar1.setSelectedIndex(bean.getFrame().getStopFrame()[0]);
         cbStopChar2.setSelectedIndex((bean.getFrame().getStopFrameLength() < 2) ? cbStopChar2.getItemCount() - 1 : bean.getFrame().getStopFrame()[1]);
@@ -212,7 +212,7 @@ public class SendOptionsDialog extends BaseDialog {
 
             super.ok();
         } catch(Exception e) {
-            SimpleDialog.error(e.getMessage());
+            Notification.error(e);
         }
     }
 

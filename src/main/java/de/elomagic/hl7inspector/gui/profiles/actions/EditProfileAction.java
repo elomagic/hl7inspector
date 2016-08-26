@@ -30,7 +30,6 @@ import org.apache.log4j.Logger;
 import de.elomagic.hl7inspector.StartupProperties;
 import de.elomagic.hl7inspector.gui.Desktop;
 import de.elomagic.hl7inspector.gui.Notification;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.profiles.ProfileDefinitionDialog;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 import de.elomagic.hl7inspector.profile.ProfileFile;
@@ -66,7 +65,7 @@ public class EditProfileAction extends AbstractAction {
                 ProfileFile file = (ProfileFile)list.getSelectedValue();
 
                 if(!file.exists()) {
-                    SimpleDialog.error("Profile not found!");
+                    Notification.error("Profile not found!");
                 } else {
                     ProfileDefinitionDialog dialog = new ProfileDefinitionDialog(file);
                     if(dialog.ask()) {
@@ -88,7 +87,7 @@ public class EditProfileAction extends AbstractAction {
                     }
                 }
             } else {
-                SimpleDialog.error("No profile selected!");
+                Notification.error("No profile selected!");
             }
         } catch(Exception ex) {
             Logger.getLogger(getClass()).error(ex.getMessage(), ex);

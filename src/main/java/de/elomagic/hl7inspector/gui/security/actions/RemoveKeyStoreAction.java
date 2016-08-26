@@ -25,7 +25,6 @@ import javax.swing.JList;
 import javafx.scene.control.ButtonType;
 
 import de.elomagic.hl7inspector.gui.Notification;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
 import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 
@@ -58,7 +57,7 @@ public class RemoveKeyStoreAction extends AbstractAction {
                 ((VectorListModel)list.getModel()).remove(list.getSelectedValue());
             }
         } else {
-            SimpleDialog.error("No keystore selected!");
+            Notification.error("No keystore selected!");
         }
     }
 }

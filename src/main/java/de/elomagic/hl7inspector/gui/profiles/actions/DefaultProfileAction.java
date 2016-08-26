@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +16,46 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.actions;
 
-import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.profile.ProfileFile;
-import de.elomagic.hl7inspector.profile.ProfileIO;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.JList;
 
 import org.apache.log4j.Logger;
 
+import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.gui.Desktop;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.profile.ProfileFile;
+import de.elomagic.hl7inspector.profile.ProfileIO;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class DefaultProfileAction extends AbstractAction {
+
     private static final long serialVersionUID = -4333787361797188249L;
-    private JList list;
+    private final JList list;
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param list
      */
-    public DefaultProfileAction(JList list) {
+    public DefaultProfileAction(final JList list) {
         super("Set default", null);
 
         this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Set selected profile as default");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(ActionEvent event) {
         try {
             if(list.getSelectedValue() != null) {
                 ProfileFile file = (ProfileFile)list.getSelectedValue();
@@ -64,10 +68,10 @@ public class DefaultProfileAction extends AbstractAction {
                     ProfileIO.setDefault(profile);
                 }
             } else {
-                SimpleDialog.error("No profile selected!");
+                Notification.error("No profile selected!");
             }
         } catch(Exception ex) {
-            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+            Logger.getLogger(getClass()).error(ex);
         }
     }
 }

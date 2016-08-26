@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,20 @@
  */
 package de.elomagic.hl7inspector.gui;
 
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.io.File;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFileChooser;
+import javax.swing.JRadioButton;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
@@ -26,24 +40,12 @@ import de.elomagic.hl7inspector.file.filters.Hl7FileFilter;
 import de.elomagic.hl7inspector.gui.framing.FramingSetupDialog;
 import de.elomagic.hl7inspector.io.Frame;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionListener;
-import java.io.File;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JEditorPane;
-import javax.swing.JFileChooser;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
-
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class SaveDialog extends BaseDialog {
+
     private Frame frame = new Frame();
     private JTextField editDestFolder;
     private JButton btChooseFolder;
@@ -107,7 +109,6 @@ public class SaveDialog extends BaseDialog {
                     throw new Exception("Invalid extension for semaphore file. Please check");
                 }
 
-
                 // Validation ok
                 StartupProperties.getInstance().setLastSaveFolder(options.getDestinationFolder());
             } else {
@@ -128,7 +129,7 @@ public class SaveDialog extends BaseDialog {
 
             super.ok();
         } catch(Exception e) {
-            SimpleDialog.error(e.getMessage());
+            Notification.error(e);
         }
     }
 
@@ -141,11 +142,8 @@ public class SaveDialog extends BaseDialog {
         editDestFolder.setEditable(false);
         editDestFolder.setText(StartupProperties.getInstance().getLastSaveFolder().getAbsolutePath());
         btChooseFolder = new JButton("...");
-        btChooseFolder.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                selectFolder();
-            }
+        btChooseFolder.addActionListener((ActionEvent event)->{
+            selectFolder();
         });
         btSelected = new JCheckBox("Write only selected messages");
         btManyFiles = new JRadioButton("Many files (One file per message)");
@@ -163,35 +161,28 @@ public class SaveDialog extends BaseDialog {
         editFilename.setEditable(false);
         editFilename.setText(StartupProperties.getInstance().getLastSaveFolder().getAbsolutePath().concat("\\hl7messages.hl7"));
         btFilename = new JButton("...");
-        btFilename.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                selectFilename();
-            }
+        btFilename.addActionListener((ActionEvent event)->{
+            selectFilename();
         });
         editFrame = new JEditorPane();
         editFrame.setContentType("text/html");
         editFrame.setEditable(false);
         editFrame.setBorder(LineBorder.createGrayLineBorder());
         btFrame = new JButton("...");
-        btFrame.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent e) {
-                FramingSetupDialog dlg = new FramingSetupDialog();
-                dlg.setMessageFrame(frame);
+        btFrame.addActionListener((ActionEvent event)->{
+            FramingSetupDialog dlg = new FramingSetupDialog();
+            dlg.setMessageFrame(frame);
 
-                if(dlg.ask()) {
-                    frame = dlg.getMessageFrame();
+            if(dlg.ask()) {
+                frame = dlg.getMessageFrame();
 
-                    updateFramePreview();
-                }
+                updateFramePreview();
             }
         });
 
         updateFramePreview();
 
         //btSave          = new JButton("Save options dialog");
-
         ButtonGroup btnGrp = new ButtonGroup();
         btnGrp.add(btManyFiles);
         btnGrp.add(btOneFile);
@@ -200,8 +191,8 @@ public class SaveDialog extends BaseDialog {
                 "8dlu, 8dlu, p, 4dlu, 50dlu, 4dlu, p, 4dlu, 50dlu, p:grow, 4dlu, 30dlu",
                 //            "8dlu, left:max(40dlu;p), 75dlu, 75dlu, 7dlu, right:p, 4dlu, 75dlu",
                 "p, 3dlu, p, 3dlu, "
-                + "p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 5dlu, p, 3dlu, p, 3dlu, "
-                + "p, 3dlu, p, 3dlu, p, 3dlu, p");   // rows
+                        + "p, 7dlu, p, 3dlu, p, 3dlu, p, 3dlu, p, 5dlu, p, 3dlu, p, 3dlu, "
+                        + "p, 3dlu, p, 3dlu, p, 3dlu, p");   // rows
 
         PanelBuilder builder = new PanelBuilder(layout);
         builder.setDefaultDialogBorder();

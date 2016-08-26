@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,15 @@
  * limitations under the License.
  */
 package de.elomagic.hl7inspector.gui;
+
+import java.awt.BorderLayout;
+import java.awt.Font;
+
+import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -31,19 +40,12 @@ import de.elomagic.hl7inspector.hl7.model.Subcomponent;
 import de.elomagic.hl7inspector.profile.MessageDescriptor;
 import de.elomagic.hl7inspector.profile.ProfileIO;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import javax.swing.JCheckBox;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class HL7ObjectEditor extends BaseDialog {
+
     private static final long serialVersionUID = 5840340196322853677L;
     private Hl7Object o = null;
     private JTextField editType;
@@ -138,7 +140,7 @@ public class HL7ObjectEditor extends BaseDialog {
         return r;
     }
 
-    public void setValue(Hl7Object hl7Object) {
+    public void setValue(final Hl7Object hl7Object) {
         o = hl7Object;
 
         String s = o.getClass().getName();
@@ -189,7 +191,7 @@ public class HL7ObjectEditor extends BaseDialog {
         if(b) {
             super.ok();
         } else {
-            SimpleDialog.error("The value includes inhibits encoding characters for type " + editType.getText());
+            Notification.error("The value includes inhibits encoding characters for type " + editType.getText());
         }
     }
 }

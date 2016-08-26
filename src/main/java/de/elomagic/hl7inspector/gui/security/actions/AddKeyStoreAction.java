@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,31 +26,34 @@ import javax.swing.JList;
 
 import de.elomagic.hl7inspector.file.filters.KeyStoreFileFilter;
 import de.elomagic.hl7inspector.gui.Desktop;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
+import de.elomagic.hl7inspector.gui.Notification;
 import de.elomagic.hl7inspector.gui.VectorListModel;
 import de.elomagic.hl7inspector.images.ResourceLoader;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class AddKeyStoreAction extends AbstractAction {
-    private JList list;
+
+    private final JList list;
 
     /**
      * Creates a new instance of FileOpenAction.
+     *
+     * @param list
      */
-    public AddKeyStoreAction(JList list) {
+    public AddKeyStoreAction(final JList list) {
         super("Add", ResourceLoader.loadImageIcon("edit_add.png"));
 
         this.list = list;
 
         putValue(SHORT_DESCRIPTION, "Add keystore");
-        putValue(MNEMONIC_KEY, new Integer(KeyEvent.VK_L));
+        putValue(MNEMONIC_KEY, KeyEvent.VK_L);
     }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void actionPerformed(final ActionEvent event) {
         //StartupProperties prop = StartupProperties.getInstance();
         File path = new File(System.getProperty("user.dir"));
 
@@ -68,7 +71,7 @@ public class AddKeyStoreAction extends AbstractAction {
                     model.add(file);
                 }
             } catch(Exception ee) {
-                SimpleDialog.error(ee.getMessage());
+                Notification.error(ee);
             }
         }
     }

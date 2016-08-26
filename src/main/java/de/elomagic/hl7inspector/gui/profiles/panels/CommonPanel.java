@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,22 +15,12 @@
  */
 package de.elomagic.hl7inspector.gui.profiles.panels;
 
-import com.jgoodies.forms.builder.PanelBuilder;
-import com.jgoodies.forms.layout.CellConstraints;
-import com.jgoodies.forms.layout.FormLayout;
-
-import de.elomagic.hl7inspector.gui.AbstractPanel;
-import de.elomagic.hl7inspector.gui.PanelDialog;
-import de.elomagic.hl7inspector.gui.SimpleDialog;
-import de.elomagic.hl7inspector.images.ResourceLoader;
-import de.elomagic.hl7inspector.profile.Profile;
-import de.elomagic.hl7inspector.utils.StringVector;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.util.List;
+
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.JButton;
@@ -38,11 +28,23 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.jgoodies.forms.builder.PanelBuilder;
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
+
+import de.elomagic.hl7inspector.gui.AbstractPanel;
+import de.elomagic.hl7inspector.gui.Notification;
+import de.elomagic.hl7inspector.gui.PanelDialog;
+import de.elomagic.hl7inspector.images.ResourceLoader;
+import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.utils.StringVector;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class CommonPanel extends ProfilePanel {
+
     private JTextField editName;
     private JTextField edtDesc;
     private JLabel lbLastUpdateDate;
@@ -50,9 +52,11 @@ public class CommonPanel extends ProfilePanel {
 
     /**
      * Creates a new instance of CommonPanel.
+     *
+     * @param dialog
      */
-    public CommonPanel(PanelDialog d) {
-        super(d);
+    public CommonPanel(PanelDialog dialog) {
+        super(dialog);
     }
 
     @Override
@@ -82,9 +86,7 @@ public class CommonPanel extends ProfilePanel {
 
         add(builder.getPanel(), BorderLayout.NORTH);
 
-
         // ***************
-
         JButton btValidate = new JButton(new ValidateProfileAction());
 
         lbValidateStatus = new JLabel();
@@ -114,19 +116,19 @@ public class CommonPanel extends ProfilePanel {
         lbValidateStatus.setIcon(ResourceLoader.loadImageIcon("warning.png"));
     }
 
-    public void setValidateStatus(boolean valid) {
+    public void setValidateStatus(final boolean valid) {
         lbValidateStatus.setText((valid) ? "The profile is valid" : "The profile includes errors. Press 'Validate' to show the list of errors.");
         lbValidateStatus.setIcon(ResourceLoader.loadImageIcon((valid) ? "ok.png" : "warning.png"));
     }
 
     @Override
-    public void write(Profile profile) {
+    public void write(final Profile profile) {
         profile.setDescription(edtDesc.getText());
         profile.setName(editName.getText());
     }
 
     @Override
-    public void read(Profile profile) {
+    public void read(final Profile profile) {
         editName.setText(profile.getName());
         edtDesc.setText(profile.getDescription());
         lbLastUpdateDate.setText(profile.getSchemaVersion());
@@ -148,12 +150,13 @@ public class CommonPanel extends ProfilePanel {
     }
 
     class ValidateProfileAction extends AbstractAction {
+
         public ValidateProfileAction() {
             super("Validate profile");
         }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
+        public void actionPerformed(final ActionEvent event) {
             PanelDialog dlg = getDialog();
 
             List<AbstractPanel> list = dlg.getPanelList();
@@ -171,7 +174,7 @@ public class CommonPanel extends ProfilePanel {
             setValidateStatus(val.isEmpty());
 
             if(!val.isEmpty()) {
-                SimpleDialog.warn("List of invalid profile entries", val.toString((char)10));
+                Notification.warn("List of invalid profile entries", val.toString((char)10));
             }
         }
     }

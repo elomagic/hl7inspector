@@ -86,7 +86,7 @@ public class OpenKeyStoreAction extends AbstractAction {
                      }                    */
                 }
             } else {
-                SimpleDialog.error("No keystore selected!");
+                Notification.error("No keystore selected!");
             }
         } catch(Exception ee) {
             Logger.getLogger(getClass()).error(ee.getMessage(), ee);
