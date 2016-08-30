@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="397.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.elomagic.hl7inspector.gui.dialogs.profiles.ProfilesPresenter">
+   <right>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="8.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Import" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="New" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Edit" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Remove" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Set default" />
+            <Pane prefHeight="200.0" prefWidth="200.0" />
+            <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Close" />
+         </children>
+         <BorderPane.margin>
+            <Insets left="8.0" />
+         </BorderPane.margin>
+      </VBox>
+   </right>
+   <center>
+      <ListView fx:id="listProfiles" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
