@@ -13,27 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.hl7inspector.gui.dialogs.profiles;
+package de.elomagic.hl7inspector.gui.desktop;
 
 import com.airhacks.afterburner.views.FXMLView;
-
-import de.elomagic.hl7inspector.gui.dialogs.AbstractDialog;
 
 /**
  *
  * @author Carsten Rambow
  */
-public class ProfilesDialog extends AbstractDialog {
-
-    public ProfilesDialog() {
-        super("Profile Manager");
-
-        setSize(400, 300);
-    }
-
-    @Override
-    protected FXMLView getContent() {
-        return new ProfilesView();
-    }
-
+public class DesktopView extends FXMLView {
+    
 }

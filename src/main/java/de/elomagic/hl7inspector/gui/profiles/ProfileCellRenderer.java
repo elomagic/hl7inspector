@@ -18,6 +18,7 @@ package de.elomagic.hl7inspector.gui.profiles;
 
 import java.awt.Component;
 import java.awt.SystemColor;
+import java.nio.file.Files;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
@@ -32,6 +33,7 @@ import de.elomagic.hl7inspector.profile.ProfileFile;
  * @author rambow
  */
 public class ProfileCellRenderer extends DefaultListCellRenderer implements ListCellRenderer<Object> {
+
     private static final long serialVersionUID = 3772768483753533378L;
 
     /**
@@ -42,13 +44,13 @@ public class ProfileCellRenderer extends DefaultListCellRenderer implements List
 
     @Override
     public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-        ProfileFile file = (ProfileFile)value;
+        ProfileFile profileFile = (ProfileFile)value;
 
-        setToolTipText("File: " + file.toString());
-        if(!file.exists()) {
+        setToolTipText("File: " + profileFile.toString());
+        if(!Files.notExists(profileFile.getFile())) {
             setIcon(ResourceLoader.loadImageIcon("warning.png"));
-            setToolTipText("Profile " + file.toString() + " not found!");
-        } else if(file.toString().equals(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, ""))) {
+            setToolTipText("Profile " + profileFile.toString() + " not found!");
+        } else if(profileFile.equals(new ProfileFile(StartupProperties.getDefaultProfileFile()))) {
             setIcon(ResourceLoader.loadImageIcon("ok.png"));
             setToolTipText("");
         } else {
@@ -56,7 +58,7 @@ public class ProfileCellRenderer extends DefaultListCellRenderer implements List
             setToolTipText("");
         }
 
-        setText(file.getDescription().isEmpty() ? file.toString() : file.getDescription());
+        setText(profileFile.getDescription().isEmpty() ? profileFile.toString() : profileFile.getDescription());
         setBackground(isSelected ? SystemColor.textHighlight : SystemColor.text);
         setForeground(isSelected ? SystemColor.textHighlightText : SystemColor.textText);
 

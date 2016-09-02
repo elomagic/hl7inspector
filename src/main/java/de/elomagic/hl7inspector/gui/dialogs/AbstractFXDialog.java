@@ -13,27 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.elomagic.hl7inspector.gui.dialogs.profiles;
+package de.elomagic.hl7inspector.gui.dialogs;
 
-import com.airhacks.afterburner.views.FXMLView;
-
-import de.elomagic.hl7inspector.gui.dialogs.AbstractDialog;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  *
  * @author Carsten Rambow
  */
-public class ProfilesDialog extends AbstractDialog {
+public abstract class AbstractFXDialog {
 
-    public ProfilesDialog() {
-        super("Profile Manager");
+    private final Stage stage = new Stage();
 
-        setSize(400, 300);
+    public AbstractFXDialog(final String title) {
+        stage.setTitle(title);
     }
 
-    @Override
-    protected FXMLView getContent() {
-        return new ProfilesView();
+    public boolean ask() {
+
+        stage.setScene(getScene());
+        stage.show();
+
+        stage.showAndWait();
+
+        return false;
     }
+
+    public abstract Scene getScene();
 
 }

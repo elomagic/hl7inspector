@@ -18,8 +18,10 @@ package de.elomagic.hl7inspector.gui.profiles.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 
 import javax.swing.AbstractAction;
 import javax.swing.JList;
@@ -62,23 +64,23 @@ public class EditProfileAction extends AbstractAction {
     public void actionPerformed(final ActionEvent event) {
         try {
             if(list.getSelectedValue() != null) {
-                ProfileFile file = (ProfileFile)list.getSelectedValue();
+                ProfileFile profileFile = (ProfileFile)list.getSelectedValue();
 
-                if(!file.exists()) {
+                if(Files.notExists(profileFile.getFile())) {
                     Notification.error("Profile not found!");
                 } else {
-                    ProfileDefinitionDialog dialog = new ProfileDefinitionDialog(file);
+                    ProfileDefinitionDialog dialog = new ProfileDefinitionDialog(profileFile);
                     if(dialog.ask()) {
                         try {
-                            try (FileOutputStream fout = new FileOutputStream(dialog.getProfileFile())) {
-                                ProfileIO.save(fout, dialog.getProfile());
+                            try (OutputStream out = Files.newOutputStream(dialog.getProfileFile().getFile(), StandardOpenOption.CREATE)) {
+                                ProfileIO.save(out, dialog.getProfile());
                                 dialog.getProfileFile().setDescription(dialog.getProfile().getName());
                             }
 
-                            StartupProperties.getInstance().setProperty(StartupProperties.DEFAULT_PROFILE, (file).toString());
+                            StartupProperties.setDefaultProfileFile(profileFile.getFile());
 
-                            if(file.equals(new ProfileFile(StartupProperties.getInstance().getProperty(StartupProperties.DEFAULT_PROFILE, "")))) {
-                                Desktop.getInstance().setProfileFile(file);
+                            if(profileFile.equals(new ProfileFile(StartupProperties.getDefaultProfileFile()))) {
+                                Desktop.getInstance().setProfileFile(profileFile);
                             }
                         } catch(IOException | JAXBException ee) {
                             Logger.getLogger(getClass()).error(ee.getMessage(), ee);

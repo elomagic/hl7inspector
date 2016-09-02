@@ -1,5 +1,5 @@
 /*
- * Copyright 2006 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,30 +16,60 @@
  */
 package de.elomagic.hl7inspector.profile;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.util.Objects;
 
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
-public class ProfileFile extends File {
-    private static final long serialVersionUID = -8484823376425619787L;
+public class ProfileFile {
+
+    private final Path file;
     private String desc = "";
 
-    /** Creates a new instance of ProfileFile */
-    public ProfileFile(String pathname) {
-        super(pathname);
+//    public ProfileFile(final String pathname) {
+//        this(Paths.get(pathname));
+//    }
+    public ProfileFile(final Path file) {
+        this.file = file;
     }
 
-    public ProfileFile(File file) {
-        super(file.getAbsolutePath());
+    public Path getFile() {
+        return file;
     }
 
     public String getDescription() {
         return desc;
     }
 
-    public void setDescription(String value) {
+    public void setDescription(final String value) {
         desc = value;
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 29 * hash + Objects.hashCode(this.file);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj) {
+            return true;
+        }
+        if(obj == null) {
+            return false;
+        }
+        if(getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProfileFile other = (ProfileFile)obj;
+        if(!Objects.equals(this.file, other.file)) {
+            return false;
+        }
+        return true;
+    }
+
 }

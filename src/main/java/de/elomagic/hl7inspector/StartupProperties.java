@@ -22,14 +22,17 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
-
-import javax.swing.UIManager;
 
 import javafx.scene.control.ButtonType;
 
@@ -58,29 +61,30 @@ public class StartupProperties extends Properties {
 
         String wp = getUserHomePath(false);
         try {
-            File file = new File(wp.concat(CONFIG_FILE));
-            FileInputStream fin = null;
+            Path file = Paths.get(wp, CONFIG_FILE);
+            InputStream in = null;
 
-            if(!file.exists()) {
-                File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));
+            if(!Files.notExists(file)) {
+                Path oldFile = Paths.get(System.getProperty("user.home"), ".hl7inspector-2.0", CONFIG_FILE);
+                //File oldFile = new File(System.getProperty("user.home").concat(File.separator).concat(".hl7inspector-2.0").concat(File.separator).concat(CONFIG_FILE));
 
-                if(oldFile.exists()) {
+                if(Files.exists(oldFile)) {
                     if(Notification.confirmOkCancel("Import configruation from HL7 Inspector 2.0 ?").get() == ButtonType.OK) {
-                        fin = new FileInputStream(oldFile);
+                        in = Files.newInputStream(oldFile, StandardOpenOption.READ);
                     } else {
-                        fin = new FileInputStream(wp.concat(CONFIG_FILE));
+                        in = new FileInputStream(wp.concat(CONFIG_FILE));
                     }
                 }
             } else {
-                fin = new FileInputStream(wp.concat(CONFIG_FILE));
+                in = new FileInputStream(wp.concat(CONFIG_FILE));
             }
 
-            if(fin != null) {
+            if(in != null) {
                 try {
-                    loadFromXML(fin);
+                    loadFromXML(in);
                     //load(fin);
                 } finally {
-                    fin.close();
+                    in.close();
                 }
             }
 
@@ -189,7 +193,7 @@ public class StartupProperties extends Properties {
     public void putPhrase(final String phrase) {
         List<String> v = getPhrases();
 
-        if(v.indexOf(phrase) != -1) {
+        if(v.contains(phrase)) {
             v.remove(phrase);
         }
 
@@ -221,7 +225,7 @@ public class StartupProperties extends Properties {
 
         for(int i = 0; i < profiles.size(); i++) {
             ProfileFile profile = profiles.get(i);
-            setProperty(PROFILE_FILE.concat(".").concat(Integer.toString(i + 1)), profile.getAbsolutePath());
+            setProperty(PROFILE_FILE.concat(".").concat(Integer.toString(i + 1)), profile.getFile().toString());
             setProperty(PROFILE_DESCRIPTION.concat(".").concat(Integer.toString(i + 1)), profile.getDescription());
         }
     }
@@ -238,7 +242,7 @@ public class StartupProperties extends Properties {
                 s = getProperty(PROFILE_FILE.concat(".").concat(Integer.toString(i)));
 
                 if(s != null) {
-                    ProfileFile file = new ProfileFile(s);
+                    ProfileFile file = new ProfileFile(Paths.get(s));
                     file.setDescription(getProperty(PROFILE_DESCRIPTION.concat(".").concat(Integer.toString(i))));
                     profiles.add(file);
                 }
@@ -320,19 +324,17 @@ public class StartupProperties extends Properties {
         setProperty(AUTOUPDATE_PERIOD, Integer.toString(period));
     }
 
-    @Deprecated
-    public boolean isDesktopImage() {
-        return getProperty(DESKTOP_IMAGE, "t").equals("t");
+    /**
+     *
+     * @return
+     */
+    public static Path getDefaultProfileFile() {
+        Path file = INSTANCE.containsKey(StartupProperties.DEFAULT_PROFILE) ? Paths.get(INSTANCE.getProperty(StartupProperties.DEFAULT_PROFILE)) : null;
+        return file;
     }
 
-    @Deprecated
-    public String getLookAndFeel() {
-        return getProperty(APP_LOOK_AND_FEEL, UIManager.getSystemLookAndFeelClassName());
-    }
-
-    @Deprecated
-    public Class getLookAndFeelClass() throws ClassNotFoundException {
-        return ClassLoader.getSystemClassLoader().loadClass(getLookAndFeel());
+    public static void setDefaultProfileFile(final Path file) {
+        INSTANCE.setProperty(StartupProperties.DEFAULT_PROFILE, file.toString());
     }
 
     public boolean isOneInstance() {
@@ -499,16 +501,14 @@ public class StartupProperties extends Properties {
         return list;
     }
     public final static String APP_ONE_INSTANCE = "application-one-instance";
-    public final static String APP_LOOK_AND_FEEL = "application-look-and-feel";
     public final static String APP_DEBUG_FILE = "application-debug-file";
-    public final static String DEFAULT_PROFILE = "profile-default";
+    private final static String DEFAULT_PROFILE = "profile-default";
     public final static String DEFAULT_PRIVATE_KEYSTORE = "security-default-private-keystore";
     public final static String DEFAULT_PUBLIC_KEYSTORE = "security-default-public-keystore";
     public final static String DESKTOP_X = "desktop.x";
     public final static String DESKTOP_Y = "desktop.y";
     public final static String DESKTOP_W = "desktop.w";
     public final static String DESKTOP_H = "desktop.h";
-    public final static String DESKTOP_IMAGE = "desktop-image";
     public final static String DESKTOP_DETAILS_VISIBLE = "desktop-details-visible";
     private final static String TREE_DISPLAY_MESSAGE_NODE = "tree.display.message.node";
     public final static String COLOR_NODE_PREFIX = "tree-node-prefix-color";

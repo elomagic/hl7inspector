@@ -17,9 +17,10 @@ package de.elomagic.hl7inspector.gui;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.Collections;
 
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Window;
 
 /**
@@ -31,15 +32,24 @@ public final class UITool {
     private UITool() {
     }
 
-    public static Path chooseFile(final String title, final Window ownerStage) {
+    public static Path chooseFile(final String title, final Window ownerStage, final Collection<? extends FileChooser.ExtensionFilter> filters, final Path initialDirectory) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
-        fileChooser.getExtensionFilters().addAll(
-                new ExtensionFilter("Executeable Files", "*.exe"),
-                new ExtensionFilter("All Files", "*.*")
-        );
+        fileChooser.setInitialDirectory(initialDirectory.toFile());
+        fileChooser.getExtensionFilters().addAll(filters == null ? Collections.EMPTY_LIST : filters);
 
         File selectedFile = fileChooser.showOpenDialog(ownerStage);
+
+        return selectedFile == null ? null : selectedFile.toPath();
+    }
+
+    public static Path saveFile(final String title, final Window ownerStage, final Collection<? extends FileChooser.ExtensionFilter> filters, final Path initialDirectory) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle(title);
+        fileChooser.setInitialDirectory(initialDirectory.toFile());
+        fileChooser.getExtensionFilters().addAll(filters == null ? Collections.EMPTY_LIST : filters);
+
+        File selectedFile = fileChooser.showSaveDialog(ownerStage);
 
         return selectedFile == null ? null : selectedFile.toPath();
     }

@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import javax.swing.JFrame;
-import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
 import com.jgoodies.looks.LookUtils;
@@ -112,7 +111,6 @@ public class Hl7Inspector {
                 UIManager.installLookAndFeel("JGoodies Windows", "com.jgoodies.looks.windows.WindowsLookAndFeel");
             }
 
-            UIManager.setLookAndFeel((LookAndFeel)StartupProperties.getInstance().getLookAndFeelClass().newInstance());
             JFrame.setDefaultLookAndFeelDecorated(true);
 
             Desktop.getInstance().clearMessages();

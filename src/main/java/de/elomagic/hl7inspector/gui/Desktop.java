@@ -23,7 +23,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,9 @@ import de.elomagic.hl7inspector.utils.BundleTool;
 public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListener, ComponentListener {
 
     private static final long serialVersionUID = -7355763607097590182L;
+
+    private static final Logger LOGGER = Logger.getLogger(Desktop.class);
+
     private static final Desktop INSTANCE = new Desktop();
     private final BottomPanel bottomPanel = new BottomPanel();
     private final CharacterMonitor inputTrace = new CharacterMonitor();
@@ -189,8 +193,8 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
 
         tabPanel.setVisible(false);
 
-        ProfileFile file = new ProfileFile(prop.getProperty(StartupProperties.DEFAULT_PROFILE, ""));
-        Profile profile = setProfileFile(file);
+        ProfileFile profileFile = new ProfileFile(StartupProperties.getDefaultProfileFile());
+        Profile profile = setProfileFile(profileFile);
         if(profile != null) {
             ProfileIO.setDefault(profile);
         }
@@ -200,14 +204,19 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
     }
 
     @Override
-    public Profile setProfileFile(final ProfileFile file) {
+    public Profile setProfileFile(final ProfileFile profileFile) {
+        if(profileFile == null || profileFile.getFile() == null) {
+            return null;
+        }
+
         Profile profile = null;
 
-        if(file.exists()) {
+        if(Files.exists(profileFile.getFile())) {
             try {
-                try (FileInputStream fin = new FileInputStream(file)) {
-                    profile = ProfileIO.load(fin);
-                } catch(Exception e) {
+                System.out.println("FILE=" + profileFile.getFile().toString());
+                try (InputStream in = Files.newInputStream(profileFile.getFile())) {
+                    profile = ProfileIO.load(in);
+                } catch(Exception ex) {
                     profile = ProfileIO.getDefault();
                 }
 
@@ -223,13 +232,14 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
                 bottomPanel.setProfileText("Unable to load default profile.");
                 bottomPanel.setProfileTooltTip(e.getMessage());
 
-                Logger.getLogger(getClass()).error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
                 Notification.error(e, "Unable to load default profile.");
             }
         } else {
             bottomPanel.setProfileText(bundle.getString("profile_not_found"));
             bottomPanel.setProfileTooltTip("");
         }
+
         return profile;
     }
 
@@ -396,7 +406,7 @@ public class Desktop extends JFrame implements DesktopIntf, TreeSelectionListene
             }
             return child;
         } catch(IllegalAccessException | InstantiationException ex) {
-            Logger.getLogger(getClass()).error(ex.getMessage(), ex);
+            LOGGER.error(ex.getMessage(), ex);
             Notification.error(ex, "Unable to append a new HL7 object to the message.");
             return null;
         }

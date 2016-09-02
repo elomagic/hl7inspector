@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 Carsten Rambow
+ * Copyright 2016 Carsten Rambow
  *
  * Licensed under the GNU Public License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,6 @@
  * limitations under the License.
  */
 package de.elomagic.hl7inspector.gui;
-
-import de.elomagic.hl7inspector.StartupProperties;
-import de.elomagic.hl7inspector.gui.actions.EditMessageItemAction;
-import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
-import de.elomagic.hl7inspector.gui.actions.PasteTextAction;
-import de.elomagic.hl7inspector.hl7.model.Hl7Object;
-import de.elomagic.hl7inspector.hl7.model.Message;
-import de.elomagic.hl7inspector.model.Hl7Tree;
-import de.elomagic.hl7inspector.model.Hl7TreeModel;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -39,16 +30,28 @@ import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
-import javax.swing.*;
-import javax.swing.tree.*;
+
+import javax.swing.JScrollPane;
+import javax.swing.tree.TreeModel;
+import javax.swing.tree.TreePath;
 
 import org.apache.log4j.Logger;
 
+import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.gui.actions.EditMessageItemAction;
+import de.elomagic.hl7inspector.gui.actions.FileRecentOpenAction;
+import de.elomagic.hl7inspector.gui.actions.PasteTextAction;
+import de.elomagic.hl7inspector.hl7.model.Hl7Object;
+import de.elomagic.hl7inspector.hl7.model.Message;
+import de.elomagic.hl7inspector.model.Hl7Tree;
+import de.elomagic.hl7inspector.model.Hl7TreeModel;
+
 /**
  *
- * @author rambow
+ * @author Carsten Rambow
  */
 public class Hl7TreePane extends JScrollPane implements DropTargetListener {
+
     private Hl7Tree tree;
 
     /**
@@ -104,7 +107,6 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
 
         new DropTarget(tree, this);
 
-        setViewport(new ImageBackground());
         setViewportView(tree);
 
     }
@@ -137,7 +139,6 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
                     Desktop.getInstance().getMainFrame().toFront();
 
                     //SimpleDialog.info(file.getPath());
-
                     new FileRecentOpenAction(file).actionPerformed(null);
                 }
 
@@ -164,14 +165,15 @@ public class Hl7TreePane extends JScrollPane implements DropTargetListener {
     }
 
     @Override
-    public void dragOver(DropTargetDragEvent dtde) { /* SimpleDialog.info(dtde.toString()); */ }
+    public void dragOver(DropTargetDragEvent dtde) {
+        /* SimpleDialog.info(dtde.toString()); */ }
 
     @Override
     public void dragEnter(DropTargetDragEvent dtde) {
         try {
             Transferable tr = dtde.getTransferable();
             if(!tr.isDataFlavorSupported(DataFlavor.javaFileListFlavor)
-               && !tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+                       && !tr.isDataFlavorSupported(DataFlavor.stringFlavor)) {
                 dtde.rejectDrag();
             }
         } catch(Exception e) {

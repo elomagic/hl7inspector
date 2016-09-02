@@ -15,10 +15,40 @@
  */
 package de.elomagic.hl7inspector.gui.dialogs.profile;
 
+import javafx.scene.Scene;
+
+import de.elomagic.hl7inspector.gui.dialogs.AbstractFXDialog;
+import de.elomagic.hl7inspector.profile.Profile;
+import de.elomagic.hl7inspector.profile.ProfileFile;
+
 /**
  *
  * @author Carsten Rambow
  */
-public class ProfileDialog {
-    
+public class ProfileDialog extends AbstractFXDialog {
+
+    private final ProfileFile profileFile;
+    private final ProfileView profileView = new ProfileView();
+
+    public ProfileDialog(final ProfileFile profileFile) {
+
+        super("Profile Definition");
+
+        this.profileFile = profileFile;
+
+    }
+
+    public ProfileFile getProfileFile() {
+        return profileFile;
+    }
+
+    public Profile getProfile() {
+        return null;
+    }
+
+    @Override
+    public Scene getScene() {
+        return new Scene(profileView, 450, 450);
+    }
+
 }

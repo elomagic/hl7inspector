@@ -15,7 +15,9 @@
  */
 package de.elomagic.hl7inspector.gui.profiles;
 
-import java.io.FileInputStream;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -42,20 +44,20 @@ import de.elomagic.hl7inspector.profile.ProfileIO;
 public class ProfileDefinitionDialog extends PanelDialog {
 
     private static final long serialVersionUID = -6813753748983568133L;
-    private final ProfileFile file;
+    private final ProfileFile profileFile;
     private Profile profile;
     private CommonPanel pnlCom;
 
     /**
      * Creates a new instance of ProfileDefinitionDialog.
      *
-     * @param file
+     * @param profileFile
      * @throws java.lang.Exception
      */
-    public ProfileDefinitionDialog(final ProfileFile file) throws Exception {
+    public ProfileDefinitionDialog(final ProfileFile profileFile) throws Exception {
         super(Desktop.getInstance().getMainFrame(), "Profile Definition", true);
 
-        this.file = file;
+        this.profileFile = profileFile;
     }
 
     @Override
@@ -65,7 +67,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
         profile = new Profile();
 
         try {
-            try (FileInputStream fin = new FileInputStream(file)) {
+            try (InputStream fin = Files.newInputStream(profileFile.getFile(), StandardOpenOption.READ)) {
                 profile = ProfileIO.load(fin);
             }
 
@@ -124,7 +126,7 @@ public class ProfileDefinitionDialog extends PanelDialog {
     }
 
     public ProfileFile getProfileFile() {
-        return file;
+        return profileFile;
     }
 
     public Profile getProfile() {

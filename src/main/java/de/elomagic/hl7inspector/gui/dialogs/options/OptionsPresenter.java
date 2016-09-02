@@ -18,6 +18,7 @@ package de.elomagic.hl7inspector.gui.dialogs.options;
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -32,6 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 import de.elomagic.hl7inspector.StartupProperties;
+import de.elomagic.hl7inspector.file.filters.ExtensionFilters;
 import de.elomagic.hl7inspector.gui.UITool;
 
 /**
@@ -165,12 +167,12 @@ public class OptionsPresenter implements Initializable {
 
         // Tab External viewers
         btTextViewer.setOnAction((ActionEvent event)->{
-            Path file = UITool.chooseFile("Choose external viewer", null);
+            Path file = UITool.chooseFile("Choose external viewer", null, ExtensionFilters.getExecutableExtensionFilters(), Paths.get(System.getProperty("user.dir")));
             tfTextViewer.setText(file == null ? "" : file.toString());
         });
 
         btHexViewer.setOnAction((ActionEvent event)->{
-            Path file = UITool.chooseFile("Choose external viewer", null);
+            Path file = UITool.chooseFile("Choose external viewer", null, ExtensionFilters.getExecutableExtensionFilters(), Paths.get(System.getProperty("user.dir")));
             tfHexViewer.setText(file == null ? "" : file.toString());
         });
     }
