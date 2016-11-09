@@ -1,6 +1,6 @@
 # README #
 
-[![Build Status](https://drone.io/github.com/elomagic/hl7inspector/status.png)](https://drone.io/github.com/elomagic/hl7inspector/latest)
+[![Build Status](https://travis-ci.org/elomagic/hl7inspector.svg?branch=master)](https://travis-ci.org/elomagic/hl7inspector)
 
 ## What is this HL7 Inspector ? ###
 
